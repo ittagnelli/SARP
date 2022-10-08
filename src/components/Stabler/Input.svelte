@@ -1,5 +1,5 @@
-<script lang="ts">
-	export let title: string, placeholder: string;
+<script >
+	export let title, placeholder;
 	import { onMount } from 'svelte';
 
 	// @ts-ignore

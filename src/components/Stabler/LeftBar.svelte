@@ -1,9 +1,9 @@
-<script lang="ts">
-	export let logo: string,
-		logoAlt: string,
-		logoHeight: number,
-		logoWidth: number,
-		submenus: Array<SubMenu>;
+<script>
+	export let logo,
+		logoAlt,
+		logoHeight,
+		logoWidth,
+		submenus;
 
 	// import { onMount } from 'svelte';
 

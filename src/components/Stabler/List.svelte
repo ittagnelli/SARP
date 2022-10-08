@@ -1,5 +1,5 @@
-<script lang="ts">
-	export let title: string, cols: Array<string>, rows: Array<string>;
+<script>
+	export let title, cols, rows;
 </script>
 
 <div class="card">

@@ -10,8 +10,7 @@
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json --watch",
 		"test": "playwright test",
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
-		"format": "prettier --plugin-search-dir . --write .",
-		"update-stabler": "git pull --recurse-submodules"
+		"format": "prettier --plugin-search-dir . --write ."
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.25.0",
@@ -27,8 +26,5 @@
 		"typescript": "^4.7.4",
 		"vite": "^3.1.0"
 	},
-	"type": "module",
-	"dependencies": {
-		"svelte-preprocess": "^4.10.7"
-	}
+	"type": "module"
 }

@@ -1,5 +1,5 @@
-<script lang="ts">
-	export let btnName: string, modalName: string;
+<script>
+	export let btnName, modalName;
 	// import { onMount } from 'svelte';
 
 	// // @ts-ignore
