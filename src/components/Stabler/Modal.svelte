@@ -1,5 +1,5 @@
 <script>
-	export let btnName, modalName;
+	export let btn_name, modal_name;
 	// import { onMount } from 'svelte';
 
 	// // @ts-ignore
@@ -7,13 +7,13 @@
 </script>
 
 <a href="0#" class="btn" data-bs-toggle="modal" data-bs-target="#modal-report">
-	{btnName}
+	{btn_name}
 </a>
 <div class="modal modal-blur fade" id="modal-report" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title">{modalName}</h5>
+				<h5 class="modal-title">{modal_name}</h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" />
 			</div>
 			<div class="modal-body">
@@ -48,6 +48,6 @@
 	</div>
 </div>
 
-<style>
+<!-- <style>
 	@import './css/tabler.min.css';
-</style>
+</style> -->

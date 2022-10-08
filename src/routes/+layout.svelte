@@ -26,7 +26,7 @@
 	<title>SARP</title>
 </svelte:head>
 
-<LeftBar logoAlt="This is the logo" logo="logo.jpg" logoHeight="120" logoWidth="138" {submenus} />
+<LeftBar logo_alt="This is the logo" logo="/img/logo_agnelli.png" logo_height="55" logo_width="138" {submenus} />
 <!-- Page Body-->
 <div class="page-wrapper">
 	<div class="container-xl">
@@ -41,7 +41,7 @@
 					</h2>
 				</div>
 				<div class="col-12 col-md-auto ms-auto d-print-none">
-					<Modal btnName={$page_action} modalName={$page_action}>
+					<Modal btn_name={$page_action} modal_name={$page_action}>
 						<p>Qua c'è il body del modale</p>
 					</Modal>
 				</div>

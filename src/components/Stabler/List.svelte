@@ -47,7 +47,7 @@
 		</table>
 	</div>
 </div>
-
+<!-- 
 <style>
 	@import './css/tabler.min.css';
-</style>
+</style> -->

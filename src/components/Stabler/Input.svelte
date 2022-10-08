@@ -1,9 +1,9 @@
 <script >
 	export let title, placeholder;
-	import { onMount } from 'svelte';
+	// import { onMount } from 'svelte';
 
 	// @ts-ignore
-	onMount(async () => await import('./js/tabler.min.js'));
+	// onMount(async () => await import('../../../static/js/tabler.min.js'));
 </script>
 
 <div class="mb-3">
@@ -11,6 +11,6 @@
 	<input type="text" class="form-control" name="example-text-input" {placeholder} />
 </div>
 
-<style>
+<!-- <style>
 	@import './css/tabler.min.css';
-</style>
+</style> -->

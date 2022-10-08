@@ -1,8 +1,8 @@
 <script>
 	export let logo,
-		logoAlt,
-		logoHeight,
-		logoWidth,
+		logo_alt,
+		logo_height,
+		logo_width,
 		submenus;
 
 	// import { onMount } from 'svelte';
@@ -27,9 +27,9 @@
 			<a href=".">
 				<img
 					src={logo}
-					width={logoWidth}
-					height={logoHeight}
-					alt={logoAlt}
+					width={logo_width}
+					height={logo_height}
+					alt={logo_alt}
 					style="position: relative; left: -1.5rem;"
 				/>
 			</a>
@@ -85,6 +85,6 @@
 	</div>
 </aside>
 
-<style>
+<!-- <style>
 	@import './css/tabler.min.css';
-</style>
+</style> -->
