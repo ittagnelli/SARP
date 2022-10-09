@@ -6561,9 +6561,9 @@ let CONTA_EVENTI = 0;
 	    const showEvent = EventHandler.trigger(this._element, EVENT_SHOW$3, {
 	      relatedTarget
 	    });
-	    if (showEvent.defaultPrevented) {
-	      return;
-	    }
+	    // if (showEvent.defaultPrevented) {
+	    //   return;
+	    // }
 	    this._isShown = true;
 	    if (this._isAnimated()) {
 	      this._isTransitioning = true;
@@ -6587,9 +6587,9 @@ let CONTA_EVENTI = 0;
 	      return;
 	    }
 	    const hideEvent = EventHandler.trigger(this._element, EVENT_HIDE$3);
-	    if (hideEvent.defaultPrevented) {
-	      return;
-	    }
+	    // if (hideEvent.defaultPrevented) {
+	    //   return;
+	    // }
 	    this._isShown = false;
 	    const isAnimated = this._isAnimated();
 	    if (isAnimated) {
