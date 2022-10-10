@@ -24,7 +24,7 @@
 		</button>
 		<!-- logo -->
 		<h1 class="navbar-brand navbar-brand-autodark">
-			<a href=".">
+			<a href="/">
 				<img
 					src={logo}
 					width={logo_width}
@@ -53,7 +53,7 @@
 						<li class="nav-item dropdown">
 							<a
 								class="nav-link dropdown-toggle"
-								href="#navbar-base"
+								href={submenu.href}
 								data-bs-toggle="dropdown"
 								data-bs-auto-close="false"
 								role="button"
