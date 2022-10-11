@@ -8,9 +8,9 @@
 			submenus: [
 				{
 					submenus: [],
-					title: 'Submenu 1',
+					title: 'Convenzioni',
 					icon: '',
-					href: '/index'
+					href: '/convenzioni'
 				}
 			],
 			title: 'Submenu 1',
@@ -27,6 +27,7 @@
 </svelte:head>
 
 <LeftBar logo_alt="This is the logo" logo="/img/logo_agnelli.png" logo_height="55" logo_width="138" {submenus} />
+
 <!-- Page Body-->
 <div class="page-wrapper">
 	<div class="container-xl">
@@ -44,6 +45,10 @@
 					<Modal btn_name={$page_action} modal_name={$page_action}>
 						<p>Qua c'è il body del modale</p>
 					</Modal>
+				</div>
+				<!-- Need this to contain page and align it to left -->
+				<div>
+					<slot/>
 				</div>
 			</div>
 		</div>
