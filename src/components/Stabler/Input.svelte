@@ -1,4 +1,4 @@
-<script >
+<script>
 	export let title, placeholder;
 	// import { onMount } from 'svelte';
 

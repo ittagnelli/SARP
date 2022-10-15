@@ -21,8 +21,8 @@
 			</NavSubItem>
 		</NavMenu>
 	</Navbar>
-	
-    <!-- Page Header -->
+
+	<!-- Page Header -->
 	<div class="page-wrapper">
 		<div class="container-xl">
 			<div class="page-header d-print-none">
@@ -43,8 +43,8 @@
 								data-bs-toggle="modal"
 								data-bs-target="#{$page_action_modal}"
 							>
-                                <i class="ti ti-plus icon"></i>
-							    {$page_action}
+								<i class="ti ti-plus icon" />
+								{$page_action}
 							</a>
 						</div>
 					</div>
@@ -52,7 +52,7 @@
 			</div>
 		</div>
 
-        <!-- page body -->
+		<!-- page body -->
 		<div class="page-body">
 			<div class="container-xl">
 				<slot />

@@ -1,9 +1,5 @@
 <script>
-	export let logo,
-		logo_alt,
-		logo_height,
-		logo_width,
-		submenus;
+	export let logo, logo_alt, logo_height, logo_width, submenus;
 
 	// import { onMount } from 'svelte';
 

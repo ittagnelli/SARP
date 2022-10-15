@@ -24,7 +24,7 @@
 		<!-- navigation bar -->
 		<div class="collapse navbar-collapse" id="navbar-menu">
 			<ul class="navbar-nav pt-lg-3">
-                <slot />
+				<slot />
 			</ul>
 		</div>
 	</div>
