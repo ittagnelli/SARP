@@ -17,5 +17,11 @@
 		</span>
 		<span class="nav-link-title">{text}</span>
 	</a>
-	<slot name="subitem" />
+    <div class="dropdown-menu">
+        <div class="dropdown-menu-columns">
+            <div class="dropdown-menu-column">
+                <slot />
+            </div>
+        </div>
+    </div>
 </li>
