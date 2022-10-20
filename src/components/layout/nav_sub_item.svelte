@@ -3,11 +3,12 @@
 	export let link;
 </script>
 
-<div class="dropdown-menu">
+<!-- <div class="dropdown-menu">
 	<div class="dropdown-menu-columns">
-		<div class="dropdown-menu-column">
+		<div class="dropdown-menu-column"> -->
 			<a class="dropdown-item" href={link}>{text}</a>
-			<slot name="submenu" />
+			<!-- <slot name="submenu" /> -->
+            <!-- <slot />
 		</div>
 	</div>
-</div>
+</div> -->

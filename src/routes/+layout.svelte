@@ -3,23 +3,19 @@
 	import Footer from '../components/layout/footer.svelte';
 	import Navbar from '../components/layout/nav_bar.svelte';
 	import NavItem from '../components/layout/nav_item.svelte';
-	import NavSubSubItem from '../components/layout/nav_sub_sub_item.svelte';
 	import NavMenu from '../components/layout/nav_menu.svelte';
 	import NavSubItem from '../components/layout/nav_sub_item.svelte';
-	import NavSubMenu from '../components/layout/nav_sub_menu.svelte';
 </script>
 
 <div class="page">
 	<Navbar>
-		<NavItem text="Home" icon="home-2" link="/" />
-		<NavItem text="PDP" icon="clipboard" link="convenzioni" />
-		<NavMenu text="PCTO" icon="building-factory-2">
-			<NavSubItem slot="subitem" text="Aziende" link="Xxxx">
-				<NavSubMenu slot="submenu" text="Stage">
-					<NavSubSubItem slot="subsubitem" text="Presenze" link="543e" />
-				</NavSubMenu>
-			</NavSubItem>
-		</NavMenu>
+        <NavItem text="Home" icon="home-2" link="/" />
+        <NavMenu text="PCTO" icon="building-factory-2">
+            <NavSubItem text="Aziende" link="aziende"></NavSubItem>
+            <NavSubItem text="Stage" link="stage"></NavSubItem>
+            <NavSubItem text="Presenze" link="presenze"></NavSubItem>
+            <NavSubItem text="Valutazioni" link="valutazioni"></NavSubItem>
+        </NavMenu>
 	</Navbar>
 
 	<!-- Page Header -->
