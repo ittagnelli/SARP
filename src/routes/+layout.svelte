@@ -9,13 +9,15 @@
 
 <div class="page">
 	<Navbar>
-        <NavItem text="Home" icon="home-2" link="/" />
-        <NavMenu text="PCTO" icon="building-factory-2">
-            <NavSubItem text="Aziende" link="aziende"></NavSubItem>
-            <NavSubItem text="Stage" link="stage"></NavSubItem>
-            <NavSubItem text="Presenze" link="presenze"></NavSubItem>
-            <NavSubItem text="Valutazioni" link="valutazioni"></NavSubItem>
-        </NavMenu>
+		<NavItem text="Home" icon="home-2" link="/" />
+		<NavMenu text="PCTO" icon="building-factory-2">
+			<NavSubItem text="Aziende" link="aziende" />
+			<NavSubItem text="Stage" link="stage" />
+			<NavSubItem text="Presenze" link="presenze" />
+			<NavSubItem text="Valutazioni" link="valutazioni" />
+		</NavMenu>
+		<NavItem text="Submenu2" icon="home-2" link="/" />
+		<NavItem text="Submenu3" icon="home-2" link="/" />
 	</Navbar>
 
 	<!-- Page Header -->
