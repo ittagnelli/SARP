@@ -2,6 +2,7 @@
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
 	import { identity, text } from 'svelte/internal';
+	import { createEventDispatcher } from 'svelte';
 
 	// dichiara le colonne della tabella
 	// il nome di ogni colonna deve coincidere esattamente con il nome
@@ -9,8 +10,11 @@
 	export let columns;
 	export let rows;
 	export let page_size;
+	export let modal_name;
 
-	let num_pages = Math.ceil(rows.length / page_size); //numero di pagines
+	const dispatch = createEventDispatcher();
+	
+    let num_pages = Math.ceil(rows.length / page_size); //numero di pagines
 	let current_page = 1; //pagina da visualizzare nella tabella
 	let col_names = columns.map((item) => item.name); //nomi delle colonne
 	let page_start = 0; //inizio della pagine nell'array rows
@@ -18,6 +22,7 @@
 	let rows_paged = []; //pagina attuale di rows
 	let rows_filtered = []; // contiene le righe di rows con le chiavi ordinate come la tabella
 
+	// console.log("TABLE AZIENDE:", rows)
 	onMount(async () => {
 		//configura la tabella per l'ordinamento delle colonne dinamico
 		// questo collide con la paginazione quindi per il momento è disabilitato
@@ -74,6 +79,13 @@
 		}
 		console.log('prev', current_page);
 	}
+
+	function update_row(id) {
+	    console.log("UPDATING ID:", id)
+	    dispatch('update_start', { id: id });
+	}
+
+    
 </script>
 
 <div class="card">
@@ -84,17 +96,21 @@
 					<thead>
 						<tr>
 							{#each columns as col}
-								<th
-									><button class="table-sort" data-sort="sort-{col.name}">{col.display}</button></th
-								>
+								{#if col.name != 'id'}
+									<th
+										><button class="table-sort" data-sort="sort-{col.name}">{col.display}</button
+										></th
+									>
+								{/if}
 							{/each}
+							<th>Azioni</th>
 						</tr>
 					</thead>
 					<tbody class="table-tbody">
 						{#each rows_paged as row}
 							<tr>
 								{#each Object.keys(row) as col, i}
-									{#if col_names.includes(col)}
+									{#if col_names.includes(col) && col != 'id'}
 										{#if columns[i].type == 'date'}
 											<td class="sort-{col}" valign="middle">{row[col].toLocaleDateString()}</td>
 										{:else}
@@ -102,6 +118,33 @@
 										{/if}
 									{/if}
 								{/each}
+								<td valign="middle">
+									<!-- <div class="commands"> -->
+										<!-- <form id="form-update" method="POST">
+											<button class="icon-button" name="id" value={row.id}
+												> -->
+										<a
+											href="##"
+											class=""
+											data-bs-toggle="modal"
+											data-bs-target="#{modal_name}"
+                                            on:click={() => update_row(row.id)}
+										>
+											<icon class="ti ti-edit icon" />
+										</a>
+										<!-- </button
+											> -->
+										<!-- </form> -->
+										<form id="form-delete" method="POST" action="/aziende?/delete">
+											<button class="icon-button" name="id" value={row.id}
+												><icon class="ti ti-trash icon" /></button
+											>
+										</form>
+										<!-- <form method="POST" action="/aziende?/delete">
+                                        <button name="id" value="{row.id}"><icon class="ti ti-trash icon" /></button>
+                                    </form> -->
+									<!-- </div> -->
+								</td>
 							</tr>
 						{/each}
 					</tbody>
@@ -136,3 +179,26 @@
 		{/if}
 	</div>
 </div>
+
+<style>
+	.icon-button {
+		background: none;
+		padding: 0px;
+		border: none;
+	}
+
+	form {
+		display: inline;
+	}
+
+	#form-delete {
+		border: 0px solid red;
+		/* padding-left: 0rem; */
+		position: relative;
+		left: 1.5rem;
+	}
+
+	a {
+        color: black;
+    }
+</style>
