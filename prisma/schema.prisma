@@ -1,5 +1,15 @@
+// v 2.0
+
 generator client {
     provider = "prisma-client-js"
+}
+
+generator erd {
+    provider                  = "prisma-erd-generator"
+    output                    = "./SARP_ERD.png"
+    theme                     = "neutral"
+    tableOnly                 = false
+    includeRelationFromFields = false
 }
 
 datasource db {
@@ -7,54 +17,63 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model User {
-    id         Int               @id @default(autoincrement())
-    role       String
-    first_name String
-    last_name  String
-    email      String            @unique
-    evaluate   PCTO_Evaluation[]
-    attends    PCTO_Attendance[]
+model Utente {
+    id         Int                @id @default(autoincrement())
+    tipo       String             @default("STUDENTE")
+    ruolo      String?
+    nome       String
+    cognome    String
+    email      String             @unique
+    valuta     pcto_Valutazione[]
+    presente   pcto_Presenza[]
+    stabilisce pcto_Azienda[]
 }
 
-model PCTO_Attendance {
-    date       DateTime
-    start_time DateTime?
-    end_time   DateTime?
-    presence   User      @relation(fields: [user_id], references: [id])
-    user_id    Int
-    works_on   PCTO      @relation(fields: [pcto_id], references: [id])
-    pcto_id    Int
+model pcto_Presenza {
+    id        Int       @id @default(autoincrement())
+    data      DateTime  @default(now())
+    oraInizio DateTime?
+    oraFine   DateTime?
+    presenza  Utente    @relation(fields: [idUtente], references: [id])
+    idUtente  Int
+    lavoraPer pcto_Pcto @relation(fields: [idPcto], references: [id])
+    idPcto    Int
 
-    @@id([pcto_id, user_id, date])
+    // @@id([idPcto, idUtente, data])
 }
 
-model PCTO_Evaluation {
-    user      User   @relation(fields: [user_id], references: [id])
-    user_id   Int
-    pcto      PCTO   @relation(fields: [pcto_id], references: [id])
-    pcto_id   Int
-    evaluator String
-    mark      Int
+model pcto_Valutazione {
+    utente     Utente    @relation(fields: [idUtente], references: [id])
+    idUtente   Int
+    pcto       pcto_Pcto @relation(fields: [idPcto], references: [id])
+    idPcto     Int
+    valutatore String
+    voto       Int
 
-    @@id([user_id, pcto_id, evaluator])
+    @@id([idUtente, idPcto, valutatore])
 }
 
-model PCTO_Company {
-    id      Int    @id @default(autoincrement())
-    name    String
-    address String @unique
-    offers  PCTO?
+model pcto_Azienda {
+    id              Int        @id @default(autoincrement())
+    nome            String
+    indirizzo       String?    @unique
+    idConvenzione   String?    @unique
+    creatoDa        Utente     @relation(fields: [idUtente], references: [id])
+    idUtente        Int
+    dataConvenzione DateTime   @default(now())
+    dataProtocollo  DateTime   @default(now())
+    istituto        String     @default("ITT")
+    offre           pcto_Pcto?
 }
 
-model PCTO {
-    id          Int               @id @default(autoincrement())
-    start_date  DateTime?
-    end_date    DateTime?
-    title       String
-    description String
-    offered_by  PCTO_Company      @relation(fields: [company_id], references: [id])
-    company_id  Int               @unique
-    evaluate    PCTO_Evaluation[]
-    attended_by PCTO_Attendance[]
+model pcto_Pcto {
+    id          Int                @id @default(autoincrement())
+    dataInizio  DateTime?
+    dataFine    DateTime?
+    titolo      String
+    descrizione String
+    offertoDa   pcto_Azienda       @relation(fields: [idAzienda], references: [id])
+    idAzienda   Int                @unique
+    valuta      pcto_Valutazione[]
+    svoltoDa    pcto_Presenza[]
 }
