@@ -19,27 +19,33 @@
 	$page_action = 'Aggiungi Azienda';
 	$page_action_modal = 'modal-add-azienda';
 
-	let idConvenzione, nome, idUtente, dataConvenzione, dataProtocollo, istituto;
-    let istituto_select = "ITT";
+	let idConvenzione, nome, idUtente, istituto;
+	let dataConvenzione = convert_date(new Date());
+	let dataProtocollo = convert_date(new Date());
+
+	let istituto_select = 'ITT';
+
+	let modal_action = 'create';
+	let company_id;
+
 	// function modal_add_azienda() {
 	// 	console.log('ADD AZIENDA', n_convenzione);
 	// }
 
-	async function bget() {
-		console.log('GET');
+	function convert_date(d) {
+		let data = d.toLocaleDateString().split('/');
+		return `${data[2]}-${data[1]}-${data[0]}`;
 	}
 
 	async function start_update(e) {
-		function convert_date(d) {
-			let data = d.toLocaleDateString().split('/');
-			return `${data[2]}-${data[1]}-${data[0]}`;
-		}
+		modal_action = 'update';
 
-		let id = e.detail.id;
-		console.log('STARING UPDATE:', id);
+		// let id = e.detail.id;
+		company_id = e.detail.id;
+		console.log('STARING UPDATE:', company_id);
 		// idConvenzione = "919"
 		//cerca l'azienda da fare update
-		let azienda = aziende.filter((item) => item.id == id)[0];
+		let azienda = aziende.filter((item) => item.id == company_id)[0];
 		console.log(azienda.istituto);
 		console.log(azienda.dataConvenzione.toLocaleDateString());
 		console.log('XXXXXX:', convert_date(azienda.dataConvenzione));
@@ -63,12 +69,10 @@
 		{ name: 'istituto', type: 'string', display: 'Istituto' }
 	]}
 	rows={aziende}
-	page_size={5}
+	page_size={4}
 	modal_name="modal-add-azienda"
 	on:update_start={start_update}
 />
-
-<button on:click={bget}>GET</button>
 
 <!-- Modal from Page action -->
 <div
@@ -78,11 +82,18 @@
 	role="dialog"
 	aria-hidden="true"
 >
-	<form method="POST" action="?/create">
+	<form method="POST" action="?/{modal_action}">
+		{#if modal_action == 'update'}
+			<input type="hidden" name="id" bind:value={company_id} />
+		{/if}
 		<div class="modal-dialog modal-lg" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">Nuova Azienda</h5>
+					{#if modal_action == 'create'}
+						<h5 class="modal-title">Nuova Azienda</h5>
+					{:else}
+						<h5 class="modal-title">Aggiorna Azienda</h5>
+					{/if}
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" />
 				</div>
 				<div class="modal-body">
@@ -155,7 +166,7 @@
 											name="istituto"
 											value="LICEO"
 											class="form-selectgroup-input"
-                                            bind:group={istituto_select}
+											bind:group={istituto_select}
 										/>
 										<span class="form-selectgroup-label">LICEO</span>
 									</label>
@@ -170,8 +181,12 @@
 					</a>
 					<button class="btn btn-success ms-auto" data-bs-dismiss="modal">
 						<i class="ti ti-plus icon" />
-						<b>Crea Azienda</b></button
-					>
+						{#if modal_action == 'create'}
+							<b>Crea Azienda</b>
+						{:else}
+							<b>Aggiorna Azienda</b>
+						{/if}
+					</button>
 				</div>
 			</div>
 		</div>

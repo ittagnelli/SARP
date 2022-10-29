@@ -6,8 +6,8 @@ const SARP = new PrismaClient();
 export async function load({ params }) {
 	// query SQL al DB per tutte le entry nella tabella todo
 	const companies = await SARP.pCTO_Azienda.findMany({
-        orderBy: [ { id: 'desc' } ]
-    });
+		orderBy: [{ id: 'desc' }]
+	});
 
 	// console.log('Query Aziende da SARP: ', companies);
 
@@ -18,9 +18,10 @@ export async function load({ params }) {
 /** @type {import('./$types').Actions} */
 export const actions = {
 	create: async ({ cookies, request }) => {
-		console.log('SERVER REGISTER ACTION');
+		console.log('SERVER CREATE ACTION');
 		const form_data = await request.formData();
 
+		console.log(form_data);
 		//     no_convenzione', value: '1' },
 		// { name: 'azienda', value: 'aaaaaaaaaaa' },
 		// { name: 'data_convenzione', value: '2022-10-14' },
@@ -40,9 +41,27 @@ export const actions = {
 
 		console.log('FORM DATA:', form_data);
 	},
-    update: async ({ cookies, request }) => {
-        console.log("UPDATE LATO SERVER")
-    },
+	update: async ({ cookies, request }) => {
+		console.log('UPDATE LATO SERVER');
+		const form_data = await request.formData();
+
+		let id = form_data.get('id');
+		console.log(+id);
+
+		await SARP.pCTO_Azienda.update({
+			where: { id: +id },
+			data: {
+				nome: form_data.get('azienda'),
+				idConvenzione: form_data.get('no_convenzione'),
+				idUtente: 1,
+				dataConvenzione: new Date(form_data.get('data_convenzione')),
+				dataProtocollo: new Date(form_data.get('data_protocollo')),
+				istituto: form_data.get('istituto')
+			}
+		});
+
+		console.log(form_data);
+	},
 	delete: async ({ cookies, request }) => {
 		console.log('SERVER DELETE ACTION');
 		const form_data = await request.formData();

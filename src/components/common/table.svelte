@@ -13,8 +13,8 @@
 	export let modal_name;
 
 	const dispatch = createEventDispatcher();
-	
-    let num_pages = Math.ceil(rows.length / page_size); //numero di pagines
+
+	let num_pages = Math.ceil(rows.length / page_size); //numero di pagines
 	let current_page = 1; //pagina da visualizzare nella tabella
 	let col_names = columns.map((item) => item.name); //nomi delle colonne
 	let page_start = 0; //inizio della pagine nell'array rows
@@ -48,11 +48,14 @@
 		rows_filtered.push(tmp_row);
 	});
 
+    console.log("COLONNE:", col_names)
+    console.log("COLONNE:", columns)
+    console.log("ROW_FILTERED:", rows_filtered)
 	$: {
 		console.log(`PAGE: ${current_page}/${num_pages} -- ${page_start}->${page_end}`);
 		//al cambiamento dell'inizio e fine pagina aggiorno le righe della tabella
 		rows_paged = [...rows_filtered.slice(page_start, page_end)];
-		console.log(rows_paged);
+		console.log("ROWS_PAGED:", rows_paged);
 	}
 
 	function change_page(page) {
@@ -81,11 +84,9 @@
 	}
 
 	function update_row(id) {
-	    console.log("UPDATING ID:", id)
-	    dispatch('update_start', { id: id });
+		console.log('UPDATING ID:', id);
+		dispatch('update_start', { id: id });
 	}
-
-    
 </script>
 
 <div class="card">
@@ -111,36 +112,45 @@
 							<tr>
 								{#each Object.keys(row) as col, i}
 									{#if col_names.includes(col) && col != 'id'}
-										{#if columns[i].type == 'date'}
+										<!-- {#if columns[i].type == 'date'}
 											<td class="sort-{col}" valign="middle">{row[col].toLocaleDateString()}</td>
 										{:else}
+											<td class="sort-{col}" valign="middle">{row[col]}</td>
+										{/if} -->
+                                        {#if columns[i].type == 'date'}
+											<td class="sort-{col}" valign="middle">{row[col].toLocaleDateString()}</td>
+										{:else if columns[i].type == 'object'}
+                                        <!-- {console.log("XXXXXXXXXXXXX", row[col].titolo)} -->
+                                        <!-- {console.log("XXXXXXXXXXXXX", columns.filter(item => item.name == col)[0].key)} -->
+                                            <td class="sort-{col}" valign="middle">{row[col][columns.filter(item => item.name == col)[0].key]}</td>
+                                        {:else}
 											<td class="sort-{col}" valign="middle">{row[col]}</td>
 										{/if}
 									{/if}
 								{/each}
 								<td valign="middle">
 									<!-- <div class="commands"> -->
-										<!-- <form id="form-update" method="POST">
+									<!-- <form id="form-update" method="POST">
 											<button class="icon-button" name="id" value={row.id}
 												> -->
-										<a
-											href="##"
-											class=""
-											data-bs-toggle="modal"
-											data-bs-target="#{modal_name}"
-                                            on:click={() => update_row(row.id)}
-										>
-											<icon class="ti ti-edit icon" />
-										</a>
-										<!-- </button
+									<a
+										href="##"
+										class=""
+										data-bs-toggle="modal"
+										data-bs-target="#{modal_name}"
+										on:click={() => update_row(row.id)}
+									>
+										<icon class="ti ti-edit icon" />
+									</a>
+									<!-- </button
 											> -->
-										<!-- </form> -->
-										<form id="form-delete" method="POST" action="/aziende?/delete">
-											<button class="icon-button" name="id" value={row.id}
-												><icon class="ti ti-trash icon" /></button
-											>
-										</form>
-										<!-- <form method="POST" action="/aziende?/delete">
+									<!-- </form> -->
+									<form id="form-delete" method="POST" action="/aziende?/delete">
+										<button class="icon-button" name="id" value={row.id}
+											><icon class="ti ti-trash icon" /></button
+										>
+									</form>
+									<!-- <form method="POST" action="/aziende?/delete">
                                         <button name="id" value="{row.id}"><icon class="ti ti-trash icon" /></button>
                                     </form> -->
 									<!-- </div> -->
@@ -199,6 +209,6 @@
 	}
 
 	a {
-        color: black;
-    }
+		color: black;
+	}
 </style>

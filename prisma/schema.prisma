@@ -30,6 +30,7 @@ model Utente {
 }
 
 model PCTO_Presenza {
+    id        Int       @id @default(autoincrement())
     data      DateTime  @default(now())
     oraInizio DateTime?
     oraFine   DateTime?
@@ -38,7 +39,7 @@ model PCTO_Presenza {
     lavoraPer PCTO_Pcto @relation(fields: [idPcto], references: [id])
     idPcto    Int
 
-    @@id([idPcto, idUtente, data])
+    // @@id([idPcto, idUtente, data])
 }
 
 model PCTO_Valutazione {
