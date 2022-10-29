@@ -3,32 +3,22 @@ import { PrismaClient } from '@prisma/client';
 // Istanzia il client per il SARP
 const SARP = new PrismaClient();
 
+
 export async function load({ params }) {
 	// query SQL al DB per tutte le entry nella tabella todo
-	const companies = await SARP.pCTO_Azienda.findMany({
+	const companies = await SARP.pcto_Azienda.findMany({
 		orderBy: [{ id: 'desc' }]
 	});
-
-	// console.log('Query Aziende da SARP: ', companies);
 
 	// restituisco il risultato della query SQL
 	return companies;
 }
 
-/** @type {import('./$types').Actions} */
 export const actions = {
 	create: async ({ cookies, request }) => {
-		console.log('SERVER CREATE ACTION');
 		const form_data = await request.formData();
 
-		console.log(form_data);
-		//     no_convenzione', value: '1' },
-		// { name: 'azienda', value: 'aaaaaaaaaaa' },
-		// { name: 'data_convenzione', value: '2022-10-14' },
-		// { name: 'data_protocollo', value: '2022-10-07' },
-		// { name: 'istituto', value: 'ITT' }
-
-		await SARP.pCTO_Azienda.create({
+		await SARP.pcto_Azienda.create({
 			data: {
 				nome: form_data.get('azienda'),
 				idConvenzione: form_data.get('no_convenzione'),
@@ -38,17 +28,13 @@ export const actions = {
 				istituto: form_data.get('istituto')
 			}
 		});
-
-		console.log('FORM DATA:', form_data);
 	},
+
 	update: async ({ cookies, request }) => {
-		console.log('UPDATE LATO SERVER');
 		const form_data = await request.formData();
-
 		let id = form_data.get('id');
-		console.log(+id);
 
-		await SARP.pCTO_Azienda.update({
+		await SARP.pcto_Azienda.update({
 			where: { id: +id },
 			data: {
 				nome: form_data.get('azienda'),
@@ -59,34 +45,14 @@ export const actions = {
 				istituto: form_data.get('istituto')
 			}
 		});
-
-		console.log(form_data);
 	},
+
 	delete: async ({ cookies, request }) => {
-		console.log('SERVER DELETE ACTION');
 		const form_data = await request.formData();
 		const id = form_data.get('id');
 
-		console.log('TIPO:', typeof +id);
-
-		await SARP.pCTO_Azienda.delete({
+		await SARP.pcto_Azienda.delete({
 			where: { id: +id }
 		});
-
-		console.log('FORM DATA:', form_data.get('id'));
 	}
-	// create_todo: async ({ cookies, request }) => {
-	// 	const form_data = await request.formData();
-	// 	const todo_text = form_data.get('new-todo');
-
-	//     // inserisco un nuovo todo nel DB
-	// 	await DB.todo.create({
-	// 		data: {
-	// 			text: todo_text
-	// 		}
-	// 	});
-	// 	console.log("Inserito nel DB il todo: ", todo_text);
-
-	// 	return { success: true };
-	// },
 };

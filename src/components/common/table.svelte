@@ -1,4 +1,6 @@
 <script>
+	// @ts-nocheck
+
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
 	import { identity, text } from 'svelte/internal';
@@ -22,21 +24,6 @@
 	let rows_paged = []; //pagina attuale di rows
 	let rows_filtered = []; // contiene le righe di rows con le chiavi ordinate come la tabella
 
-	// console.log("TABLE AZIENDE:", rows)
-	onMount(async () => {
-		//configura la tabella per l'ordinamento delle colonne dinamico
-		// questo collide con la paginazione quindi per il momento è disabilitato
-		// const list = new List('table-default', {
-		// 	sortClass: 'table-sort',
-		// 	listClass: 'table-tbody',
-		// 	valueNames: (function () {
-		// 		let tmpa = [];
-		// 		columns.forEach((item) => tmpa.push(`sort-${item.name}`));
-		// 		return tmpa;
-		// 	})()
-		// });
-	});
-
 	// filtra da rows le chiavi non presenti nelle colonne della tabella
 	//in questo modo viene rispettato l'ordine di visualizzazione
 	//come definito in columns
@@ -48,18 +35,12 @@
 		rows_filtered.push(tmp_row);
 	});
 
-    console.log("COLONNE:", col_names)
-    console.log("COLONNE:", columns)
-    console.log("ROW_FILTERED:", rows_filtered)
 	$: {
-		console.log(`PAGE: ${current_page}/${num_pages} -- ${page_start}->${page_end}`);
 		//al cambiamento dell'inizio e fine pagina aggiorno le righe della tabella
 		rows_paged = [...rows_filtered.slice(page_start, page_end)];
-		console.log("ROWS_PAGED:", rows_paged);
 	}
 
 	function change_page(page) {
-		console.log('CHANGIN PAGE TO:', page);
 		current_page = page;
 		page_start = (current_page - 1) * page_size;
 		page_end = page_start + page_size;
@@ -71,7 +52,6 @@
 			page_start = page_end;
 			page_end += page_size;
 		}
-		console.log('next', current_page);
 	}
 
 	function prev_page() {
@@ -80,7 +60,6 @@
 			page_end = page_start;
 			page_start -= page_size;
 		}
-		console.log('prev', current_page);
 	}
 
 	function update_row(id) {
@@ -98,10 +77,9 @@
 						<tr>
 							{#each columns as col}
 								{#if col.name != 'id'}
-									<th
-										><button class="table-sort" data-sort="sort-{col.name}">{col.display}</button
-										></th
-									>
+									<th>
+										<button class="table-sort" data-sort="sort-{col.name}">{col.display}</button>
+									</th>
 								{/if}
 							{/each}
 							<th>Azioni</th>
@@ -112,27 +90,18 @@
 							<tr>
 								{#each Object.keys(row) as col, i}
 									{#if col_names.includes(col) && col != 'id'}
-										<!-- {#if columns[i].type == 'date'}
-											<td class="sort-{col}" valign="middle">{row[col].toLocaleDateString()}</td>
-										{:else}
-											<td class="sort-{col}" valign="middle">{row[col]}</td>
-										{/if} -->
-                                        {#if columns[i].type == 'date'}
+										{#if columns[i].type == 'date'}
 											<td class="sort-{col}" valign="middle">{row[col].toLocaleDateString()}</td>
 										{:else if columns[i].type == 'object'}
-                                        <!-- {console.log("XXXXXXXXXXXXX", row[col].titolo)} -->
-                                        <!-- {console.log("XXXXXXXXXXXXX", columns.filter(item => item.name == col)[0].key)} -->
-                                            <td class="sort-{col}" valign="middle">{row[col][columns.filter(item => item.name == col)[0].key]}</td>
-                                        {:else}
+											<td class="sort-{col}" valign="middle">
+												{row[col][columns.filter((item) => item.name == col)[0].key]}
+											</td>
+										{:else}
 											<td class="sort-{col}" valign="middle">{row[col]}</td>
 										{/if}
 									{/if}
 								{/each}
 								<td valign="middle">
-									<!-- <div class="commands"> -->
-									<!-- <form id="form-update" method="POST">
-											<button class="icon-button" name="id" value={row.id}
-												> -->
 									<a
 										href="##"
 										class=""
@@ -142,18 +111,11 @@
 									>
 										<icon class="ti ti-edit icon" />
 									</a>
-									<!-- </button
-											> -->
-									<!-- </form> -->
 									<form id="form-delete" method="POST" action="/aziende?/delete">
-										<button class="icon-button" name="id" value={row.id}
-											><icon class="ti ti-trash icon" /></button
-										>
+										<button class="icon-button" name="id" value={row.id}>
+											<icon class="ti ti-trash icon" />
+										</button>
 									</form>
-									<!-- <form method="POST" action="/aziende?/delete">
-                                        <button name="id" value="{row.id}"><icon class="ti ti-trash icon" /></button>
-                                    </form> -->
-									<!-- </div> -->
 								</td>
 							</tr>
 						{/each}
@@ -203,7 +165,6 @@
 
 	#form-delete {
 		border: 0px solid red;
-		/* padding-left: 0rem; */
 		position: relative;
 		left: 1.5rem;
 	}

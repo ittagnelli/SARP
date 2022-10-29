@@ -28,10 +28,6 @@
 	let modal_action = 'create';
 	let company_id;
 
-	// function modal_add_azienda() {
-	// 	console.log('ADD AZIENDA', n_convenzione);
-	// }
-
 	function convert_date(d) {
 		let data = d.toLocaleDateString().split('/');
 		return `${data[2]}-${data[1]}-${data[0]}`;
@@ -39,16 +35,9 @@
 
 	async function start_update(e) {
 		modal_action = 'update';
-
-		// let id = e.detail.id;
 		company_id = e.detail.id;
-		console.log('STARING UPDATE:', company_id);
-		// idConvenzione = "919"
 		//cerca l'azienda da fare update
 		let azienda = aziende.filter((item) => item.id == company_id)[0];
-		console.log(azienda.istituto);
-		console.log(azienda.dataConvenzione.toLocaleDateString());
-		console.log('XXXXXX:', convert_date(azienda.dataConvenzione));
 		idConvenzione = azienda.idConvenzione;
 		nome = azienda.nome;
 		idUtente = azienda.idUtente;
@@ -69,7 +58,7 @@
 		{ name: 'istituto', type: 'string', display: 'Istituto' }
 	]}
 	rows={aziende}
-	page_size={4}
+	page_size={5}
 	modal_name="modal-add-azienda"
 	on:update_start={start_update}
 />

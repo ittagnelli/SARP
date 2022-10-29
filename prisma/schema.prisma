@@ -24,28 +24,28 @@ model Utente {
     nome       String
     cognome    String
     email      String             @unique
-    valuta     PCTO_Valutazione[]
-    presente   PCTO_Presenza[]
-    stabilisce PCTO_Azienda[]
+    valuta     pcto_Valutazione[]
+    presente   pcto_Presenza[]
+    stabilisce pcto_Azienda[]
 }
 
-model PCTO_Presenza {
+model pcto_Presenza {
     id        Int       @id @default(autoincrement())
     data      DateTime  @default(now())
     oraInizio DateTime?
     oraFine   DateTime?
     presenza  Utente    @relation(fields: [idUtente], references: [id])
     idUtente  Int
-    lavoraPer PCTO_Pcto @relation(fields: [idPcto], references: [id])
+    lavoraPer pcto_Pcto @relation(fields: [idPcto], references: [id])
     idPcto    Int
 
     // @@id([idPcto, idUtente, data])
 }
 
-model PCTO_Valutazione {
+model pcto_Valutazione {
     utente     Utente    @relation(fields: [idUtente], references: [id])
     idUtente   Int
-    pcto       PCTO_Pcto @relation(fields: [idPcto], references: [id])
+    pcto       pcto_Pcto @relation(fields: [idPcto], references: [id])
     idPcto     Int
     valutatore String
     voto       Int
@@ -53,7 +53,7 @@ model PCTO_Valutazione {
     @@id([idUtente, idPcto, valutatore])
 }
 
-model PCTO_Azienda {
+model pcto_Azienda {
     id              Int        @id @default(autoincrement())
     nome            String
     indirizzo       String?    @unique
@@ -63,17 +63,17 @@ model PCTO_Azienda {
     dataConvenzione DateTime   @default(now())
     dataProtocollo  DateTime   @default(now())
     istituto        String     @default("ITT")
-    offre           PCTO_Pcto?
+    offre           pcto_Pcto?
 }
 
-model PCTO_Pcto {
+model pcto_Pcto {
     id          Int                @id @default(autoincrement())
     dataInizio  DateTime?
     dataFine    DateTime?
     titolo      String
     descrizione String
-    offertoDa   PCTO_Azienda       @relation(fields: [idAzienda], references: [id])
+    offertoDa   pcto_Azienda       @relation(fields: [idAzienda], references: [id])
     idAzienda   Int                @unique
-    valuta      PCTO_Valutazione[]
-    svoltoDa    PCTO_Presenza[]
+    valuta      pcto_Valutazione[]
+    svoltoDa    pcto_Presenza[]
 }
