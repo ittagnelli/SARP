@@ -61,6 +61,7 @@
 	page_size={5}
 	modal_name="modal-add-azienda"
 	on:update_start={start_update}
+	type="aziende"
 />
 
 <!-- Modal from Page action -->

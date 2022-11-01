@@ -112,17 +112,5 @@ new_title="Nuova valutazione" update_title="Aggiorna valutazione" >
 		</div>
 	</div>
 </div>
-<div class="modal-footer">
-<a href="#" class="btn btn-danger" data-bs-dismiss="modal">
-	<b>Cancel</b>
-</a>
-<button class="btn btn-success ms-auto" data-bs-dismiss="modal">
-	<i class="ti ti-plus icon" />
-	{#if modal_action == 'create'}
-		<b>Crea Azienda</b>
-	{:else}
-		<b>Aggiorna Azienda</b>
-	{/if}
-</button>
-</div>
+
 </Modal>

@@ -33,6 +33,20 @@
 				<div class="modal-body">
 					<slot></slot>
 			</div>
+			<div class="modal-footer">
+				<a href="#" class="btn btn-danger" data-bs-dismiss="modal">
+					<b>Cancel</b>
+				</a>
+				<button class="btn btn-success ms-auto" data-bs-dismiss="modal">
+					<i class="ti ti-plus icon" />
+					{#if modal_action == 'create'}
+						<b>{new_title}</b>
+					{:else}
+						<b>{update_title}</b>
+					{/if}
+				</button>
+				</div>
 		</div>
 	</form>
 </div>
+
