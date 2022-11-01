@@ -57,8 +57,7 @@ export async function load({ params }) {
 					nome: company?.nome
 				});
 			}
-
-	});
+		});
 	}
 
 	return {
@@ -81,31 +80,28 @@ export const actions = {
 				idUtente: 1	// Default user, we need to change this
 			}
 		});
-		// await SARP.pcto_Azienda.create({
-		// 	data: {
-		// 		nome: form_data.get('azienda'),
-		// 		idConvenzione: form_data.get('no_convenzione'),
-		// 		idUtente: 1,
-		// 		dataConvenzione: new Date(form_data.get('data_convenzione')),
-		// 		dataProtocollo: new Date(form_data.get('data_protocollo')),
-		// 		istituto: form_data.get('istituto')
-		// 	}
-		// });
 	},
 
 	update: async ({ cookies, request }) => {
 		const form_data = await request.formData();
-		let id = form_data.get('id');
+		const ids_raw = form_data.get('ids').split(',');
+		const old_ids_raw = form_data.get('old_ids').split(',');
 
-		await SARP.pcto_Azienda.update({
-			where: { id: +id },
+		const voto = form_data.get('voto');	// We need to cast it to a number, so declare as variable and then cast it 
+
+		await SARP.pcto_Valutazione.update({
+			where: { 
+				idUtente_idPcto_valutatore: {
+					idUtente: parseInt(old_ids_raw[0]),	// This index is a string by default so we need to convert it to a number
+					idPcto: parseInt(old_ids_raw[1]),
+					valutatore: old_ids_raw[2]
+				},
+			},
 			data: {
-				nome: form_data.get('azienda'),
-				idConvenzione: form_data.get('no_convenzione'),
-				idUtente: 1,
-				dataConvenzione: new Date(form_data.get('data_convenzione')),
-				dataProtocollo: new Date(form_data.get('data_protocollo')),
-				istituto: form_data.get('istituto')
+				voto: parseInt(voto),
+				valutatore: ids_raw[2],
+				idPcto: parseInt(ids_raw[1]),
+				idUtente: parseInt(ids_raw[0])	
 			}
 		});
 	},
@@ -116,7 +112,7 @@ export const actions = {
 		const raw_data = form_data.get('id').split(',');	// array from form data is a string without brackets so we parse it 
 												// index 0 = id_utente, 1 = id_pcto, 2 = valutatore
 		
-												await SARP.pcto_Valutazione.delete({
+		await SARP.pcto_Valutazione.delete({
 			where: { 
 				idUtente_idPcto_valutatore: {
 					idUtente: parseInt(raw_data[0]),	// This index is a string by default so we need to convert it to a number

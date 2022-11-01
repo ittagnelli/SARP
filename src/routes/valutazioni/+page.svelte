@@ -20,25 +20,32 @@
 	let istituto_select = 'ITT';
 
 	let modal_action = 'create';
-	let company_id;
-
-	function convert_date(d) {
-		let data = d.toLocaleDateString().split('/');
-		return `${data[2]}-${data[1]}-${data[0]}`;
-	}
+	let company_id = 0;
+	let utente = 0;
+	let valutatore = "";
+	let ids_update = [];	// index 0 = id_utente, 1 = id_pcto, 2 = valutatore, needed for update
+	let old_ids = [];
 
 	async function start_update(e) {
 		modal_action = 'update';
-		company_id = e.detail.id;
-		//cerca l'azienda da fare update
-		let azienda = aziende.filter((item) => item.id == company_id)[0];
-		idConvenzione = azienda.idConvenzione;
-		nome = azienda.nome;
-		idUtente = azienda.idUtente;
-		dataConvenzione = convert_date(azienda.dataConvenzione);
-		dataProtocollo = convert_date(azienda.dataProtocollo);
-		istituto_select = azienda.istituto;
+		const data = e.detail.id; // index 0 = id_utente, 1 = id_pcto, 2 = valutatore
+		utente = data[0];
+		company_id = data[1];	
+		valutatore = data[2];
+		ids_update = data;
+		old_ids = data;
 	}
+
+	function update_ids_id(){
+		if(modal_action == 'update')
+			ids_update[1] = company_id;	// Update company_id in ids if update data
+	}
+
+	function update_ids_val(){
+		if(modal_action == 'update')
+			ids_update[2] = valutatore;	// Update company_id in ids if update data
+	}
+	
 </script>
 
 <Table
@@ -82,14 +89,18 @@
 			</div>
 			<div class="col-lg-4">
 				<label for="valutatore" title="text" class="select_text">Valutatore</label>
-				<input type="text" id="valutatore" name="valutatore"/>
+				<input type="text" id="valutatore" name="valutatore" bind:value={valutatore} on:change={update_ids_val}/>
 			</div>
 		</div>
+		{#if modal_action == "update"}
+			<input type="hidden" id="valutatore" name="ids" bind:value={ids_update}/>
+			<input type="hidden" id="valutatore" name="old_ids" bind:value={old_ids}/>
+		{/if}
 		<div class="row">
 			<div class="col-lg-6">
 				<div class="select_companies">
 					<div class="form-label select_text">Azienda che fornisce PCTO</div>
-					<select class="form-select" name="id_pcto">
+					<select class="form-select" name="id_pcto" bind:value={company_id} on:change={update_ids_id}>
 						{#each data.companies as company}
 							<option value={company.id}>{company.nome}</option>
 						{/each}
