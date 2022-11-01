@@ -5,10 +5,12 @@ const SARP = new PrismaClient();
 
 
 export async function load({ params }) {
-	// query SQL al DB per tutte le entry nella tabella todo
+	// query SQL al DB per tutte le entry nella tabella valutazioni
 	const valutation = await SARP.pcto_Valutazione.findMany();
+	const companies_raw = await SARP.pcto_Azienda.findMany();	// Get all companies, we need for the modal and if present for valutation
 
 	let valutations = [];
+	let companies = [];
 
 	for(let i = 0; i < valutation.length; i++) {	// foreach don't work with array.push
 		const pcto = await SARP.pcto_Pcto.findUnique({	// Get single PCTO contract from valutation, we need this to get company name
@@ -17,50 +19,78 @@ export async function load({ params }) {
 			}
 		});
 		
-		const company = await SARP.pcto_Azienda.findUnique({	// Get company of PCTO
-			where: {
-				id: pcto?.idAzienda
-			}
-		});
-
 		const autor = await SARP.utente.findUnique({	// Get the autor
 			where: {
 				id: valutation[i].idUtente
 			}
 		})
 
+		let company_name = "";
+
+		companies_raw?.forEach(company => {
+			if(company.id == pcto?.idAzienda)
+				company_name = company.nome;
+		});
+
 		valutations.push({					// Push name in array
-				nome: company?.nome,
+				nome: company_name,
 				valutation: valutation[i].voto,
 				valutatore: valutation[i].valutatore,
 				autore: `${autor?.cognome} ${autor?.nome}`,
 				id: [valutation[i].idUtente, valutation[i].idPcto, valutation[i].valutatore]
-		//      id:{	// Object don't work so I use an array
+		});
+		//      id:{	// Object doesn't work so I use an array
 		// 			id_utente: ,
 		// 			id_pcto: ,
 		// 			valutatore: 
 		// 		}
-		});
 
 	}
 
-	return valutations;
+	const pctos = await SARP.pcto_Pcto.findMany();
+
+	for(let i = 0; i < pctos.length; i++) {	// foreach don't work with array.push
+		companies_raw?.forEach(company => {
+			if(company.id == pctos[i].idAzienda){
+				companies.push({
+					id: pctos[i].id,	// id of PCTO
+					nome: company?.nome
+				});
+			}
+
+	});
+	}
+
+	return {
+		val: valutations,
+		companies: companies
+	};
 }
 
 export const actions = {
 	create: async ({ cookies, request }) => {
 		const form_data = await request.formData();
+		const voto = form_data.get('voto');	// We need to cast it to a number, so declare as variable and then cast it 
+		const id_pcto = form_data.get('id_pcto');
 
-		await SARP.pcto_Azienda.create({
+		await SARP.pcto_Valutazione.create({
 			data: {
-				nome: form_data.get('azienda'),
-				idConvenzione: form_data.get('no_convenzione'),
-				idUtente: 1,
-				dataConvenzione: new Date(form_data.get('data_convenzione')),
-				dataProtocollo: new Date(form_data.get('data_protocollo')),
-				istituto: form_data.get('istituto')
+				voto: parseInt(voto),
+				valutatore: form_data.get('valutatore'),
+				idPcto: parseInt(id_pcto),
+				idUtente: 1	// Default user, we need to change this
 			}
 		});
+		// await SARP.pcto_Azienda.create({
+		// 	data: {
+		// 		nome: form_data.get('azienda'),
+		// 		idConvenzione: form_data.get('no_convenzione'),
+		// 		idUtente: 1,
+		// 		dataConvenzione: new Date(form_data.get('data_convenzione')),
+		// 		dataProtocollo: new Date(form_data.get('data_protocollo')),
+		// 		istituto: form_data.get('istituto')
+		// 	}
+		// });
 	},
 
 	update: async ({ cookies, request }) => {

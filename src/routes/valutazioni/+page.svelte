@@ -5,20 +5,17 @@
 
 	export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
 	let aziende = []; // alias per maggior leggibilità
-	// inizializzo la lista delle aziende con il risultato della query SQL
-	Object.keys(data).forEach((key) => {
-		aziende = [...aziende, data[key]];
+
+	// inizializzo la lista delle aziende con il risultato della query SQL, data.val si riferisce alle valutazioni
+	Object.keys(data.val).forEach((key) => {
+		aziende = [...aziende, data.val[key]];
 	});
 
 	//configura la pagina pre-titolo, titolo e nome del modale
 	$page_pre_title = 'PCTO';
-	$page_title = 'Aziende';
-	$page_action = 'Aggiungi Azienda';
+	$page_title = 'Valutazioni';
+	$page_action = 'Aggiungi valutazione';
 	$page_action_modal = 'modal-add-azienda';
-
-	let idConvenzione, nome, idUtente, istituto;
-	let dataConvenzione = convert_date(new Date());
-	let dataProtocollo = convert_date(new Date());
 
 	let istituto_select = 'ITT';
 
@@ -71,16 +68,32 @@
 			<div class="col-lg-4">
 				<p class="text">Voto:</p>
 				<div class="rate">
-					<input type="radio" id="star5" name="rate" value="5" />
+					<input type="radio" id="star5" name="voto" value="5" />
 					<label for="star5" title="text">5 stars</label>
-					<input type="radio" id="star4" name="rate" value="4" />
+					<input type="radio" id="star4" name="voto" value="4" />
 					<label for="star4" title="text">4 stars</label>
-					<input type="radio" id="star3" name="rate" value="3" />
+					<input type="radio" id="star3" name="voto" value="3" />
 					<label for="star3" title="text">3 stars</label>
-					<input type="radio" id="star2" name="rate" value="2" />
+					<input type="radio" id="star2" name="voto" value="2" />
 					<label for="star2" title="text">2 stars</label>
-					<input type="radio" id="star1" name="rate" value="1" />
+					<input type="radio" id="star1" name="voto" value="1" />
 					<label for="star1" title="text">1 star</label>
+				</div>
+			</div>
+			<div class="col-lg-4">
+				<label for="valutatore" title="text" class="select_text">Valutatore</label>
+				<input type="text" id="valutatore" name="valutatore"/>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-6">
+				<div class="select_companies">
+					<div class="form-label select_text">Azienda che fornisce PCTO</div>
+					<select class="form-select" name="id_pcto">
+						{#each data.companies as company}
+							<option value={company.id}>{company.nome}</option>
+						{/each}
+					</select>		
 				</div>
 			</div>
 		</div>
@@ -88,6 +101,12 @@
 </Modal>
 
 <style>
+	.select_text{
+		margin-bottom: 7px;
+	}
+	.select_companies{
+		padding: 0 14px;
+	}
 	.text {
 		padding: 0 14px;
 	}
