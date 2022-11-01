@@ -63,6 +63,7 @@
 		console.log('UPDATING ID:', id);
 		dispatch('update_start', { id: id });
 	}
+
 </script>
 
 <div class="card">
@@ -108,7 +109,7 @@
 									>
 										<icon class="ti ti-edit icon" />
 									</a>
-									<form id="form-delete" method="POST" action="/aziende?/delete">
+									<form id="form-delete" method="POST" action={`/${type}?/delete`}>
 										<button class="icon-button" name="id" value={row.id}>
 											<icon class="ti ti-trash icon" />
 										</button>

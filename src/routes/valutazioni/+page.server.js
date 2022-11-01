@@ -9,6 +9,7 @@ export async function load({ params }) {
 	const valutation = await SARP.pcto_Valutazione.findMany();
 
 	let valutations = [];
+
 	for(let i = 0; i < valutation.length; i++) {	// foreach don't work with array.push
 		const pcto = await SARP.pcto_Pcto.findUnique({	// Get single PCTO contract from valutation, we need this to get company name
 			where: {
@@ -22,10 +23,25 @@ export async function load({ params }) {
 			}
 		});
 
+		const autor = await SARP.utente.findUnique({	// Get the autor
+			where: {
+				id: valutation[i].idUtente
+			}
+		})
+
 		valutations.push({					// Push name in array
 				nome: company?.nome,
-				valutation: valutation[i].voto
+				valutation: valutation[i].voto,
+				valutatore: valutation[i].valutatore,
+				autore: `${autor?.cognome} ${autor?.nome}`,
+				id: [valutation[i].idUtente, valutation[i].idPcto, valutation[i].valutatore]
+		//      id:{	// Object don't work so I use an array
+		// 			id_utente: ,
+		// 			id_pcto: ,
+		// 			valutatore: 
+		// 		}
 		});
+
 	}
 
 	return valutations;
@@ -66,10 +82,19 @@ export const actions = {
 
 	delete: async ({ cookies, request }) => {
 		const form_data = await request.formData();
-		const id = form_data.get('id');
 
-		await SARP.pcto_Azienda.delete({
-			where: { id: +id }
+		const raw_data = form_data.get('id').split(',');	// array from form data is a string without brackets so we parse it 
+												// index 0 = id_utente, 1 = id_pcto, 2 = valutatore
+		
+												await SARP.pcto_Valutazione.delete({
+			where: { 
+				idUtente_idPcto_valutatore: {
+					idUtente: parseInt(raw_data[0]),	// This index is a string by default so we need to convert it to a number
+					idPcto: parseInt(raw_data[1]),
+					valutatore: raw_data[2]
+				}
+			 }
 		});
+		
 	}
 };

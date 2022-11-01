@@ -47,10 +47,13 @@
 <Table
 	columns={[
 		{ name: 'nome', type: 'string', display: 'Azienda/Ente' },
-		{ name: 'valutation', type: 'number', display: 'Valutazione' }
+		{ name: 'valutatore', type: 'number', display: 'Valutatore' },
+		{ name: 'valutation', type: 'string', display: 'Valutazione' },
+		{ name: 'autore', type: 'number', display: 'Autore' },
+		{ name: 'id', type: 'hidden', display: 'id'}
 	]}
 	rows={aziende}
-	type="convenzioni"
+	type="valutazioni"
 	page_size={5}
 	modal_name="modal-add-azienda"
 	on:update_start={start_update}
