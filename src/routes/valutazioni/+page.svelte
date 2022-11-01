@@ -58,4 +58,71 @@
 	on:update_start={start_update}
 />
 
-<Modal {modal_action} {company_id} {dataConvenzione} {dataProtocollo} {istituto_select}></Modal>
+<Modal {modal_action} {company_id} {dataConvenzione}
+{dataProtocollo} {istituto_select}
+new_title="Nuova valutazione" update_title="Aggiorna valutazione" >
+<div class="row">
+	<div class="col-lg-4">
+		<div class="mb-3">
+			<label class="form-label">Data Convenzione</label>
+			<input
+				type="date"
+				name="data_convenzione"
+				class="form-control"
+				bind:value={dataConvenzione}
+			/>
+		</div>
+	</div>
+	<div class="col-lg-4">
+		<div class="mb-3">
+			<label class="form-label">Data Protocollo</label>
+			<input
+				type="date"
+				name="data_protocollo"
+				class="form-control"
+				bind:value={dataProtocollo}
+			/>
+		</div>
+	</div>
+	<div class="col-lg-4">
+		<div class="mb-3">
+			<label class="form-label">Istituto</label>
+			<div class="form-selectgroup">
+				<label class="form-selectgroup-item">
+					<input
+						type="radio"
+						name="istituto"
+						value="ITT"
+						class="form-selectgroup-input"
+						bind:group={istituto_select}
+					/>
+					<span class="form-selectgroup-label">ITI</span>
+				</label>
+				<label class="form-selectgroup-item">
+					<input
+						type="radio"
+						name="istituto"
+						value="LICEO"
+						class="form-selectgroup-input"
+						bind:group={istituto_select}
+					/>
+					<span class="form-selectgroup-label">LICEO</span>
+				</label>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+<a href="#" class="btn btn-danger" data-bs-dismiss="modal">
+	<b>Cancel</b>
+</a>
+<button class="btn btn-success ms-auto" data-bs-dismiss="modal">
+	<i class="ti ti-plus icon" />
+	{#if modal_action == 'create'}
+		<b>Crea Azienda</b>
+	{:else}
+		<b>Aggiorna Azienda</b>
+	{/if}
+</button>
+</div>
+</Modal>
