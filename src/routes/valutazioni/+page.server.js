@@ -6,12 +6,29 @@ const SARP = new PrismaClient();
 
 export async function load({ params }) {
 	// query SQL al DB per tutte le entry nella tabella todo
-	const companies = await SARP.pcto_Azienda.findMany({
-		orderBy: [{ id: 'desc' }]
-	});
+	const valutation = await SARP.pcto_Valutazione.findMany();
 
-	// restituisco il risultato della query SQL
-	return companies;
+	let valutations = [];
+	for(let i = 0; i < valutation.length; i++) {	// foreach don't work with array.push
+		const pcto = await SARP.pcto_Pcto.findUnique({	// Get single PCTO contract from valutation, we need this to get company name
+			where: {
+				id: valutation[i].idPcto
+			}
+		});
+		
+		const company = await SARP.pcto_Azienda.findUnique({	// Get company of PCTO
+			where: {
+				id: pcto?.idAzienda
+			}
+		});
+
+		valutations.push({					// Push name in array
+				nome: company?.nome,
+				valutation: valutation[i].voto
+		});
+	}
+
+	return valutations;
 }
 
 export const actions = {

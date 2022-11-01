@@ -1,5 +1,4 @@
 <script>
-	
 	import Modal from '$lib/components/common/modal.svelte';
 	import { page_pre_title, page_title, page_action, page_action_modal } from '../../js/store';
 	import Table from '$lib/components/common/table.svelte';
@@ -48,8 +47,7 @@
 <Table
 	columns={[
 		{ name: 'nome', type: 'string', display: 'Azienda/Ente' },
-		{ name: 'idUtente', type: 'string', display: 'Creato da' },
-		{ name: 'valutazione', type: 'string', display: 'Valutazione' }
+		{ name: 'valutation', type: 'number', display: 'Valutazione' }
 	]}
 	rows={aziende}
 	type="convenzioni"
@@ -58,59 +56,75 @@
 	on:update_start={start_update}
 />
 
-<Modal {modal_action} {company_id} {dataConvenzione}
-{dataProtocollo} {istituto_select}
-new_title="Nuova valutazione" update_title="Aggiorna valutazione" >
-<div class="row">
-	<div class="col-lg-4">
-		<div class="mb-3">
-			<label class="form-label">Data Convenzione</label>
-			<input
-				type="date"
-				name="data_convenzione"
-				class="form-control"
-				bind:value={dataConvenzione}
-			/>
-		</div>
-	</div>
-	<div class="col-lg-4">
-		<div class="mb-3">
-			<label class="form-label">Data Protocollo</label>
-			<input
-				type="date"
-				name="data_protocollo"
-				class="form-control"
-				bind:value={dataProtocollo}
-			/>
-		</div>
-	</div>
-	<div class="col-lg-4">
-		<div class="mb-3">
-			<label class="form-label">Istituto</label>
-			<div class="form-selectgroup">
-				<label class="form-selectgroup-item">
-					<input
-						type="radio"
-						name="istituto"
-						value="ITT"
-						class="form-selectgroup-input"
-						bind:group={istituto_select}
-					/>
-					<span class="form-selectgroup-label">ITI</span>
-				</label>
-				<label class="form-selectgroup-item">
-					<input
-						type="radio"
-						name="istituto"
-						value="LICEO"
-						class="form-selectgroup-input"
-						bind:group={istituto_select}
-					/>
-					<span class="form-selectgroup-label">LICEO</span>
-				</label>
+<Modal
+	{modal_action}
+	{company_id}
+	{istituto_select}
+	new_title="Nuova valutazione"
+	update_title="Aggiorna valutazione"
+>
+	<div class="row">
+		<div class="row">
+			<div class="col-lg-4">
+				<p class="text">Voto:</p>
+				<div class="rate">
+					<input type="radio" id="star5" name="rate" value="5" />
+					<label for="star5" title="text">5 stars</label>
+					<input type="radio" id="star4" name="rate" value="4" />
+					<label for="star4" title="text">4 stars</label>
+					<input type="radio" id="star3" name="rate" value="3" />
+					<label for="star3" title="text">3 stars</label>
+					<input type="radio" id="star2" name="rate" value="2" />
+					<label for="star2" title="text">2 stars</label>
+					<input type="radio" id="star1" name="rate" value="1" />
+					<label for="star1" title="text">1 star</label>
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
-
 </Modal>
+
+<style>
+	.text {
+		padding: 0 14px;
+	}
+	* {
+		margin: 0;
+		padding: 0;
+	}
+	.rate {
+		float: left;
+		height: 46px;
+		padding: 0 10px;
+	}
+	.rate:not(:checked) > input {
+		position: absolute;
+		top: -9999px;
+	}
+	.rate:not(:checked) > label {
+		float: right;
+		width: 1em;
+		overflow: hidden;
+		white-space: nowrap;
+		cursor: pointer;
+		font-size: 30px;
+		color: #ccc;
+	}
+	.rate:not(:checked) > label:before {
+		content: '★ ';
+	}
+	.rate > input:checked ~ label {
+		color: #ffc700;
+	}
+	.rate:not(:checked) > label:hover,
+	.rate:not(:checked) > label:hover ~ label {
+		color: #deb217;
+	}
+	.rate > input:checked + label:hover,
+	.rate > input:checked + label:hover ~ label,
+	.rate > input:checked ~ label:hover,
+	.rate > input:checked ~ label:hover ~ label,
+	.rate > label:hover ~ input:checked ~ label {
+		color: #c59b08;
+	}
+</style>
