@@ -3,7 +3,7 @@
 
 	import { onMount } from 'svelte';
 	import { page_pre_title, page_title, page_action, page_action_modal } from '../../js/store';
-	import Table from '/src/components/common/table.svelte';
+	import Table from '$lib/components/common/table.svelte';
 
 	export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
 	let aziende = []; // alias per maggior leggibilità

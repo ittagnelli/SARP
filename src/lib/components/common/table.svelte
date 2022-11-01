@@ -1,9 +1,5 @@
 <script>
 	// @ts-nocheck
-
-	import { page } from '$app/stores';
-	import { onMount } from 'svelte';
-	import { identity, text } from 'svelte/internal';
 	import { createEventDispatcher } from 'svelte';
 
 	// dichiara le colonne della tabella
@@ -13,6 +9,7 @@
 	export let rows;
 	export let page_size;
 	export let modal_name;
+	export let type;	// Cosa visualizza la tabella?
 
 	const dispatch = createEventDispatcher();
 
@@ -127,7 +124,7 @@
 
 	<!-- pager -->
 	<div class="card-footer d-flex align-items-center">
-		<p class="m-0 text-muted">Ci sono <span>{rows.length}</span> convenzioni attive</p>
+		<p class="m-0 text-muted">Ci sono <span>{rows.length}</span> {type} attive</p>
 		{#if rows.length > page_size}
 			<ul class="pagination m-0 ms-auto">
 				<li class="page-item" class:disabled={current_page == 1}>
