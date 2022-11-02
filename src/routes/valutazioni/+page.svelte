@@ -7,8 +7,8 @@
 	let aziende = []; // alias per maggior leggibilità
 
 	// inizializzo la lista delle aziende con il risultato della query SQL, data.val si riferisce alle valutazioni
-	Object.keys(data.val).forEach((key) => {
-		aziende = [...aziende, data.val[key]];
+	Object.keys(data).forEach((key) => {
+		aziende = [...aziende, data[key]];
 	});
 
 	//configura la pagina pre-titolo, titolo e nome del modale
@@ -50,10 +50,10 @@
 
 <Table
 	columns={[
-		{ name: 'nome', type: 'string', display: 'Azienda/Ente' },
-		{ name: 'valutatore', type: 'number', display: 'Valutatore' },
-		{ name: 'valutation', type: 'string', display: 'Valutazione' },
-		{ name: 'autore', type: 'number', display: 'Autore' },
+		{ name: 'company', type: 'string', display: 'Azienda/Ente' },
+		{ name: 'valutatore', type: 'string', display: 'Valutatore' },
+		{ name: 'voto', type: 'string', display: 'Valutazione' },
+		{ name: 'utente', type: 'object', display: 'Autore', key: 'nome' },
 		{ name: 'id', type: 'hidden', display: 'id'}
 	]}
 	rows={aziende}
@@ -62,7 +62,7 @@
 	modal_name="modal-add-azienda"
 	on:update_start={start_update}
 />
-
+<!-- 
 <Modal
 	{modal_action}
 	{company_id}
@@ -109,7 +109,7 @@
 			</div>
 		</div>
 	</div>
-</Modal>
+</Modal> -->
 
 <style>
 	.select_text{

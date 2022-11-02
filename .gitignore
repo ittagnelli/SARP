@@ -4,5 +4,7 @@ node_modules
 /.svelte-kit
 /package
 !.env.example
-*.sql
-prisma/migrations
+prisma/SARP.db
+prisma/SARP.db-journal
+prisma/SARP_ERD.png
+prisma/migrations/*

@@ -6,64 +6,23 @@ const SARP = new PrismaClient();
 
 export async function load({ params }) {
 	// query SQL al DB per tutte le entry nella tabella valutazioni
-	const valutation = await SARP.pcto_Valutazione.findMany();
-	const companies_raw = await SARP.pcto_Azienda.findMany();	// Get all companies, we need for the modal and if present for valutation
+	const valutations = await SARP.pcto_Valutazione.findMany({
+		include: {
+			utente: true,
+			pcto: true
+		}
+	});
 
-	let valutations = [];
-	let companies = [];
+	const companies = await SARP.pcto_Azienda.findMany();
 
-	for(let i = 0; i < valutation.length; i++) {	// foreach don't work with array.push
-		const pcto = await SARP.pcto_Pcto.findUnique({	// Get single PCTO contract from valutation, we need this to get company name
-			where: {
-				id: valutation[i].idPcto
-			}
-		});
-		
-		const autor = await SARP.utente.findUnique({	// Get the autor
-			where: {
-				id: valutation[i].idUtente
-			}
-		})
+	valutations.forEach(val => {
+		const company = companies.filter(company => company.id == val.pcto.idAzienda)[0];
+		// @ts-ignore
+		val["company"] = company.nome;
+	});
 
-		let company_name = "";
+	return valutations;
 
-		companies_raw?.forEach(company => {
-			if(company.id == pcto?.idAzienda)
-				company_name = company.nome;
-		});
-
-		valutations.push({					// Push name in array
-				nome: company_name,
-				valutation: valutation[i].voto,
-				valutatore: valutation[i].valutatore,
-				autore: `${autor?.cognome} ${autor?.nome}`,
-				id: [valutation[i].idUtente, valutation[i].idPcto, valutation[i].valutatore]
-		});
-		//      id:{	// Object doesn't work so I use an array
-		// 			id_utente: ,
-		// 			id_pcto: ,
-		// 			valutatore: 
-		// 		}
-
-	}
-
-	const pctos = await SARP.pcto_Pcto.findMany();
-
-	for(let i = 0; i < pctos.length; i++) {	// foreach don't work with array.push
-		companies_raw?.forEach(company => {
-			if(company.id == pctos[i].idAzienda){
-				companies.push({
-					id: pctos[i].id,	// id of PCTO
-					nome: company?.nome
-				});
-			}
-		});
-	}
-
-	return {
-		val: valutations,
-		companies: companies
-	};
 }
 
 export const actions = {
