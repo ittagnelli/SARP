@@ -1,5 +1,5 @@
 <script>
-	import { page_pre_title, page_title, page_action, page_action_modal } from '../js/store';
+	import { page_pre_title, page_title, page_action_title, page_action_modal } from '../js/store';
 	import Footer from '$lib/components/layout/footer.svelte';
 	import Navbar from '$lib/components/layout/nav_bar.svelte';
 	import NavItem from '$lib/components/layout/nav_item.svelte';
@@ -42,7 +42,7 @@
 								data-bs-target="#{$page_action_modal}"
 							>
 								<i class="ti ti-plus icon" />
-								{$page_action}
+								{$page_action_title}
 							</a>
 						</div>
 					</div>

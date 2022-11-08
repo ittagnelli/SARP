@@ -2,9 +2,10 @@
 	import { get } from 'svelte/store';
 
 	import { onMount } from 'svelte';
-	import { page_pre_title, page_title, page_action, page_action_modal } from '../../js/store';
+	import { page_pre_title, page_title, page_action_title, page_action_modal } from '../../js/store';
 	import Table from '$lib/components/common/table.svelte';
-
+    import { convert_date } from '../../js/helper';
+    
 	export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
 	let aziende = []; // alias per maggior leggibilità
 
@@ -16,7 +17,7 @@
 	//configura la pagina pre-titolo, titolo e nome del modale
 	$page_pre_title = 'PCTO';
 	$page_title = 'Aziende';
-	$page_action = 'Aggiungi Azienda';
+	$page_action_title = 'Aggiungi Azienda';
 	$page_action_modal = 'modal-add-azienda';
 
 	let idConvenzione, nome, idUtente, istituto;
@@ -27,11 +28,6 @@
 
 	let modal_action = 'create';
 	let company_id;
-
-	function convert_date(d) {
-		let data = d.toLocaleDateString().split('/');
-		return `${data[2]}-${data[1]}-${data[0]}`;
-	}
 
 	async function start_update(e) {
 		modal_action = 'update';
@@ -59,7 +55,7 @@
 	]}
 	rows={aziende}
 	page_size={5}
-	modal_name="modal-add-azienda"
+	modal_name={$page_action_modal}
 	on:update_start={start_update}
 	type="aziende"
 />
@@ -67,7 +63,7 @@
 <!-- Modal from Page action -->
 <div
 	class="modal modal-blur fade"
-	id="modal-add-azienda"
+	id={$page_action_modal}
 	tabindex="-1"
 	role="dialog"
 	aria-hidden="true"
@@ -121,7 +117,7 @@
 									type="date"
 									name="data_convenzione"
 									class="form-control"
-									bind:value={dataConvenzione}
+                                    bind:value={dataConvenzione}
 								/>
 							</div>
 						</div>
