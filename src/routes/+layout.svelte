@@ -1,10 +1,10 @@
 <script>
 	import { page_pre_title, page_title, page_action, page_action_modal } from '../js/store';
-	import Footer from '../components/layout/footer.svelte';
-	import Navbar from '../components/layout/nav_bar.svelte';
-	import NavItem from '../components/layout/nav_item.svelte';
-	import NavMenu from '../components/layout/nav_menu.svelte';
-	import NavSubItem from '../components/layout/nav_sub_item.svelte';
+	import Footer from '$lib/components/layout/footer.svelte';
+	import Navbar from '$lib/components/layout/nav_bar.svelte';
+	import NavItem from '$lib/components/layout/nav_item.svelte';
+	import NavMenu from '$lib/components/layout/nav_menu.svelte';
+	import NavSubItem from '$lib/components/layout/nav_sub_item.svelte';
 </script>
 
 <div class="page">
