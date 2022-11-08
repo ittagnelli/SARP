@@ -7,10 +7,10 @@
 	let aziende = []; // alias per maggior leggibilità
 
 	// inizializzo la lista delle aziende con il risultato della query SQL, data.val si riferisce alle valutazioni
-	Object.keys(data).forEach((key) => {
-		aziende = [...aziende, data[key]];
+	Object.keys(data.vals).forEach((key) => {
+		aziende = [...aziende, data.vals[key]];
 	});
-
+	console.log(data);
 	//configura la pagina pre-titolo, titolo e nome del modale
 	$page_pre_title = 'PCTO';
 	$page_title = 'Valutazioni';
@@ -62,7 +62,7 @@
 	modal_name="modal-add-azienda"
 	on:update_start={start_update}
 />
-<!-- 
+
 <Modal
 	{modal_action}
 	{company_id}
@@ -109,7 +109,7 @@
 			</div>
 		</div>
 	</div>
-</Modal> -->
+</Modal>
 
 <style>
 	.select_text{
