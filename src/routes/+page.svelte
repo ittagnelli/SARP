@@ -1,9 +1,9 @@
 <script>
-	import { page_pre_title, page_title, page_action, page_action_modal } from '../js/store';
+	import { page_pre_title, page_title, page_action_title, page_action_modal } from '../js/store';
 
 	$page_pre_title = 'Home';
 	$page_title = 'Page';
-	$page_action = 'Aggiungi Qualcosa';
+	$page_action_title = 'Aggiungi Qualcosa';
 	$page_action_modal = 'modal-name';
 </script>
 
