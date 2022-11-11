@@ -24,6 +24,7 @@ model Utente {
     nome       String
     cognome    String
     email      String             @unique
+    istituto   String?
     valuta     pcto_Valutazione[]
     presente   pcto_Presenza[]
     stabilisce pcto_Azienda[]
