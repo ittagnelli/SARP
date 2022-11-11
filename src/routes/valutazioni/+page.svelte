@@ -1,6 +1,6 @@
 <script>
 	import Modal from '$lib/components/common/modal.svelte';
-	import { page_pre_title, page_title, page_action, page_action_modal } from '../../js/store';
+	import { page_pre_title, page_title, page_action_title, page_action_modal } from '../../js/store';
 	import Table from '$lib/components/common/table.svelte';
 
 	export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
@@ -14,7 +14,7 @@
 	//configura la pagina pre-titolo, titolo e nome del modale
 	$page_pre_title = 'PCTO';
 	$page_title = 'Valutazioni';
-	$page_action = 'Aggiungi valutazione';
+	$page_action_title = 'Aggiungi valutazione';
 	$page_action_modal = 'modal-add-azienda';
 
 	let istituto_select = 'ITT';
