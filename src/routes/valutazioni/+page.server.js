@@ -21,7 +21,7 @@ export async function load({ params }) {
 		val["company"] = company.nome;
 	});
 
-	return valutations;
+	return { vals: valutations, companies: companies };
 
 }
 
