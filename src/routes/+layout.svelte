@@ -10,6 +10,7 @@
 <div class="page">
 	<Navbar>
 		<NavItem text="Home" icon="home-2" link="/" />
+        <NavItem text="Utenti" icon="users" link="/utenti" />
 		<NavMenu text="PCTO" icon="building-factory-2">
 			<NavSubItem text="Aziende" link="aziende" />
 			<NavSubItem text="Stage" link="stage" />
@@ -33,7 +34,8 @@
 							{$page_title}
 						</h2>
 					</div>
-					<div class="col-12 col-md-auto ms-auto d-print-none">
+					{#if $page_action_title}
+                    <div class="col-12 col-md-auto ms-auto d-print-none">
 						<div class="btn-list">
 							<a
 								href="/"
@@ -46,6 +48,7 @@
 							</a>
 						</div>
 					</div>
+                    {/if}
 				</div>
 			</div>
 		</div>
