@@ -13,7 +13,7 @@
 	Object.keys(data).forEach((key) => {
 		aziende = [...aziende, data[key]];
 	});
-
+    
 	//configura la pagina pre-titolo, titolo e nome del modale
 	$page_pre_title = 'PCTO';
 	$page_title = 'Aziende';

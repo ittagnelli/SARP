@@ -24,10 +24,22 @@ model Utente {
     nome       String
     cognome    String
     email      String             @unique
+    telefono   String?
+    bes        Boolean?
     istituto   String?
     valuta     pcto_Valutazione[]
     presente   pcto_Presenza[]
     stabilisce pcto_Azienda[]
+}
+
+model tipo_Utente {
+    id   Int    @id @default(autoincrement())
+    tipo String
+}
+
+model ruolo_Utente {
+    id    Int    @id @default(autoincrement())
+    ruolo String
 }
 
 model pcto_Presenza {
@@ -64,7 +76,7 @@ model pcto_Azienda {
     dataConvenzione DateTime   @default(now())
     dataProtocollo  DateTime   @default(now())
     istituto        String     @default("ITT")
-    offre           pcto_Pcto?
+    offre           pcto_Pcto[]
 }
 
 model pcto_Pcto {
@@ -74,7 +86,7 @@ model pcto_Pcto {
     titolo      String
     descrizione String
     offertoDa   pcto_Azienda       @relation(fields: [idAzienda], references: [id])
-    idAzienda   Int                @unique
+    idAzienda   Int                
     valuta      pcto_Valutazione[]
     svoltoDa    pcto_Presenza[]
 }

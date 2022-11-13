@@ -3,7 +3,6 @@
 
 	$page_pre_title = 'Home';
 	$page_title = 'Page';
-	// $page_action_title = 'Aggiungi Qualcosa';
 	$page_action_modal = 'modal-name';
 </script>
 

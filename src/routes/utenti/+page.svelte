@@ -8,10 +8,18 @@
     
 	export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
 	let utenti = []; // alias per maggior leggibilità
+    let tipi_utente = [];
+	let ruoli_utente = [];
 
-	// inizializzo la lista delle utenti con il risultato della query SQL
-	Object.keys(data).forEach((key) => {
-		utenti = [...utenti, data[key]];
+    // inizializzo la lista delle utenti con il risultato della query SQL
+	Object.keys(data.utenti).forEach((key) => {
+		utenti = [...utenti, data.utenti[key]];
+	});
+    Object.keys(data.tipi_utente).forEach((key) => {
+		tipi_utente = [...tipi_utente, data.tipi_utente[key]];
+	});
+    Object.keys(data.ruoli_utente).forEach((key) => {
+		ruoli_utente = [...ruoli_utente, data.ruoli_utente[key]];
 	});
 
 	//configura la pagina pre-titolo, titolo e nome del modale
@@ -20,9 +28,10 @@
 	$page_action_title = 'Aggiungi Utente';
 	$page_action_modal = 'modal-add-utente';
 
-	let user_id, nome, cognome, idUtente, istituto, email;
+	let user_id, nome, cognome, idUtente, istituto, email, telefono, bes;
 	
 	let istituto_select = 'ITT';
+    let bes_select = 'NO';
     let tipo = "studente";
     let ruolo = "admin";
 
@@ -39,9 +48,12 @@
         nome = utente.nome;
         cognome = utente.cognome;
         email = utente.email;
+        telefono = utente.telefono;
         tipo = utente.tipo;
         ruolo = utente.ruolo;
-        istituto = utente.istituto;
+        istituto_select = utente.istituto;
+        bes_select = utente.bes ? "SI" : "NO";
+        console.log("BES:", bes_select)
 	}
 </script>
 
@@ -53,10 +65,12 @@
         { name: 'tipo', type: 'string', display: 'Tipo' },
         { name: 'ruolo', type: 'string', display: 'Ruolo' },
         { name: 'email', type: 'string', display: 'email' },
+        { name: 'telefono', type: 'string', display: 'telefono' },
+        { name: 'bes', type: 'boolean', display: 'bes' }, 
         { name: 'istituto', type: 'string', display: 'istituto' },
 	]}
 	rows={utenti}
-	page_size={5}
+	page_size={14}
 	modal_name={$page_action_modal}
 	on:update_start={start_update}
 	type="utenti"
@@ -86,6 +100,16 @@
 				</div>
 				<div class="modal-body">
 					<div class="row">
+                        <div class="col-lg-4">
+							<div class="mb-3">
+								<div class="form-label select_text">Tipo</div>
+                                <select class="form-select" name="tipo" bind:value={tipo}>
+                                    {#each tipi_utente as type}
+                                        <option value={type.tipo}>{type.tipo}</option>
+                                    {/each}
+                                </select>	
+							</div>
+						</div>
 						<div class="col-lg-4">
 							<div class="mb-3">
 								<label class="form-label">Nome</label>
@@ -110,6 +134,8 @@
 								/>
 							</div>
 						</div>
+					</div>
+                    <div class="row">
                         <div class="col-lg-4">
 							<div class="mb-3">
 								<label class="form-label">Email</label>
@@ -122,36 +148,59 @@
 								/>
 							</div>
 						</div>
-					</div>
-					<div class="row">
                         <div class="col-lg-4">
 							<div class="mb-3">
-								<div class="form-label select_text">Tipo</div>
-                                <select class="form-select" name="tipo" bind:value={tipo}>
-                                    <!-- {#each data.companies as company}
-                                        <option value={company.id}>{company.nome}</option>
-                                    {/each} -->
-                                    <option value="studente">STUDENTE</option>
-                                    <option value="ed">TUTOR</option>
-                                    <option value="docente">DOCENTE</option>
-                                </select>	
+								<label class="form-label">Telefono</label>
+								<input
+									type="text"
+									class="form-control"
+									name="telefono"
+									placeholder="Telefono Utente"
+									bind:value={telefono}
+								/>
 							</div>
 						</div>
                         <div class="col-lg-4">
 							<div class="mb-3">
 								<div class="form-label select_text">Ruolo</div>
                                 <select class="form-select" name="ruolo" bind:value={ruolo}>
-                                    <!-- {#each data.companies as company}
-                                        <option value={company.id}>{company.nome}</option>
-                                    {/each} -->
-                                    <option value="admim">ADMIM</option>
-                                    <option value="e3d">SEGRETERIA</option>
-                                    <option value="de3">PCTO</option>
+                                    {#each ruoli_utente as role}
+                                        <option value="{role.ruolo}">{role.ruolo}</option>
+                                    {/each}
                                 </select>	
 							</div>
 						</div>
-
-                        {#if tipo == "studente" || tipo == "docente"}
+					</div>
+					<div class="row">
+                        {#if tipo == "STUDENTE"}
+                        <div class="col-lg-4">
+							<div class="mb-3">
+								<label class="form-label">BES</label>
+								<div class="form-selectgroup">
+									<label class="form-selectgroup-item">
+										<input
+											type="radio"
+											name="bes"
+											value="SI"
+											class="form-selectgroup-input"
+											bind:group={bes_select}
+										/>
+										<span class="form-selectgroup-label">SI</span>
+									</label>
+									<label class="form-selectgroup-item">
+										<input
+											type="radio"
+											name="bes"
+											value="NO"
+											class="form-selectgroup-input"
+											bind:group={bes_select}
+										/>
+										<span class="form-selectgroup-label">NO</span>
+									</label>
+								</div>
+							</div>
+						</div>
+                        {/if}
 						<div class="col-lg-4">
 							<div class="mb-3">
 								<label class="form-label">Istituto</label>
@@ -179,7 +228,6 @@
 								</div>
 							</div>
 						</div>
-                        {/if}
 					</div>
 				</div>
 				<div class="modal-footer">

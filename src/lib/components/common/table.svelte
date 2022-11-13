@@ -1,6 +1,7 @@
 <script>
 	// @ts-nocheck
 	import { createEventDispatcher } from 'svelte';
+    import { ellipses } from '../../../js/helper';
 
 	// dichiara le colonne della tabella
 	// il nome di ogni colonna deve coincidere esattamente con il nome
@@ -89,13 +90,17 @@
 								{#each Object.keys(row) as col, i}
 									{#if col_names.includes(col) && col != 'id'}
 										{#if columns[i].type == 'date'}
-											<td class="sort-{col}" valign="middle">{row[col].toLocaleDateString()}</td>
+											<td class="sort-{col}" valign="middle">{row[col] ? row[col].toLocaleDateString() : "--"}</td>
 										{:else if columns[i].type == 'object'}
 											<td class="sort-{col}" valign="middle">
-												{row[col][columns.filter((item) => item.name == col)[0].key]}
+												{ellipses(row[col][columns.filter((item) => item.name == col)[0].key])}
+											</td>
+                                        {:else if columns[i].type == 'boolean'}
+											<td class="sort-{col}" valign="middle">
+												{row[col] ? "SI" : "NO"}
 											</td>
 										{:else}
-											<td class="sort-{col}" valign="middle">{row[col]}</td>
+											<td class="sort-{col}" valign="middle">{ellipses(row[col])}</td>
 										{/if}
 									{/if}
 								{/each}

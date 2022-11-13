@@ -6,12 +6,25 @@ const SARP = new PrismaClient();
 
 export async function load({ params }) {
 	// query SQL al DB per tutte le entry nella tabella todo
-	const users = await SARP.Utente.findMany({
+	const utenti = await SARP.Utente.findMany({
 		orderBy: [{ id: 'desc' }]
 	});
 
+    const tipi_utente = await SARP.tipo_Utente.findMany({
+        orderBy: [{ id: 'desc' }]
+    });
+    
+    const ruoli_utente = await SARP.ruolo_Utente.findMany({
+        orderBy: [{ id: 'desc' }]
+    });
+
+    console.log("LOAD UTENTI SERVER")
 	// restituisco il risultato della query SQL
-	return users;
+	return {
+        utenti: utenti,
+        tipi_utente: tipi_utente,
+        ruoli_utente: ruoli_utente
+    }
 }
 
 export const actions = {
@@ -25,9 +38,11 @@ export const actions = {
 				nome: form_data.get('nome'),
                 cognome: form_data.get('cognome'),
                 email: form_data.get('email'),
+                telefono: form_data.get('telefono'),
                 tipo: form_data.get('tipo'),
                 ruolo: form_data.get('ruolo'),
-                istituto: form_data.get('istituto')
+                istituto: form_data.get('istituto'),
+                bes: form_data.get('bes') == "SI" ? true : false
 			}
 		});
 	},
@@ -42,9 +57,11 @@ export const actions = {
 				nome: form_data.get('nome'),
                 cognome: form_data.get('cognome'),
                 email: form_data.get('email'),
+                telefono: form_data.get('telefono'),
                 tipo: form_data.get('tipo'),
                 ruolo: form_data.get('ruolo'),
-                istituto: form_data.get('istituto')
+                istituto: form_data.get('istituto'),
+                bes: form_data.get('bes') == "SI" ? true : false
 			}
 		});
 	},
