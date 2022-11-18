@@ -13,15 +13,14 @@ export async function load({ params }) {
 		}
 	});
 
-	const companies = await SARP.pcto_Azienda.findMany();
-
-	valutations.forEach(val => {
+	valutations.forEach(async val => {
+		const companies = await SARP.pcto_Azienda.findMany();
 		const company = companies.filter(company => company.id == val.pcto.idAzienda)[0];
 		// @ts-ignore
 		val["company"] = company.nome;
 	});
 
-	return { vals: valutations, companies: companies };
+	return { vals: valutations, companies: await SARP.pcto_Pcto.findMany(), users: await SARP.utente.findMany() };
 
 }
 
@@ -30,13 +29,14 @@ export const actions = {
 		const form_data = await request.formData();
 		const voto = form_data.get('voto');	// We need to cast it to a number, so declare as variable and then cast it 
 		const id_pcto = form_data.get('id_pcto');
+		const valutatore = JSON.parse(form_data.get('valutatore'));
 
 		await SARP.pcto_Valutazione.create({
 			data: {
 				voto: parseInt(voto),
-				valutatore: form_data.get('valutatore'),
+				valutatore: valutatore.tipo,
 				idPcto: parseInt(id_pcto),
-				idUtente: 1	// Default user, we need to change this
+				idUtente: valutatore.id
 			}
 		});
 	},

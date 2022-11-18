@@ -10,7 +10,7 @@
 	Object.keys(data.vals).forEach((key) => {
 		aziende = [...aziende, data.vals[key]];
 	});
-	console.log(data);
+
 	//configura la pagina pre-titolo, titolo e nome del modale
 	$page_pre_title = 'PCTO';
 	$page_title = 'Valutazioni';
@@ -89,7 +89,11 @@
 			</div>
 			<div class="col-lg-4">
 				<label for="valutatore" title="text" class="select_text">Valutatore</label>
-				<input type="text" id="valutatore" name="valutatore" bind:value={valutatore} on:change={update_ids_val}/>
+				<select class="form-select" name="valutatore" on:change={update_ids_val}>
+					{#each data.users as user}
+						<option value={JSON.stringify(user)}>{user.nome} {user.cognome}</option>
+					{/each}
+				</select>
 			</div>
 		</div>
 		{#if modal_action == "update"}
@@ -99,10 +103,10 @@
 		<div class="row">
 			<div class="col-lg-6">
 				<div class="select_companies">
-					<div class="form-label select_text">Azienda che fornisce PCTO</div>
+					<div class="form-label select_text">PCTO</div>
 					<select class="form-select" name="id_pcto" bind:value={company_id} on:change={update_ids_id}>
 						{#each data.companies as company}
-							<option value={company.id}>{company.nome}</option>
+							<option value={company.id}>{company.titolo}</option>
 						{/each}
 					</select>		
 				</div>
