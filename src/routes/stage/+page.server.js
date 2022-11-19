@@ -17,10 +17,15 @@ export async function load({ params }) {
 		orderBy: [{ id: 'desc' }]
 	});
 
+    const utenti = await SARP.Utente.findMany({
+        orderBy: [{ id: 'desc' }]
+    });
+
 	// restituisco il risultato della query SQL
 	return {
         stages: stages,
-        companies: companies
+        companies: companies,
+        utenti: utenti
     }
 }
 
@@ -29,6 +34,14 @@ export const actions = {
 		const form_data = await request.formData();
 
         console.log(form_data);
+        console.log(form_data.get('studenti'))
+        let studenti = form_data.get('studenti').split(',')
+        let ids = [];
+        studenti.forEach(element => {
+            ids.push({id: +element})
+        });
+        console.log("IDS:", ids)
+        
 
 		await SARP.pcto_Pcto.create({
 			data: {
@@ -36,7 +49,13 @@ export const actions = {
                 descrizione: form_data.get('descrizione'),
 				dataInizio: new Date(form_data.get('data_inizo')),
 				dataFine: new Date(form_data.get('data_fine')),
-                idAzienda: +form_data.get('azienda')
+                idAzienda: +form_data.get('azienda'),
+                // svoltoDa: {
+                //     connect: [{id: 15189}, {id: 15191}]
+                // }
+                svoltoDa: {
+                    connect: ids
+                }
 			}
 		});
 	},

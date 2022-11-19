@@ -37,7 +37,7 @@ async function create() {
 
 async function main() {
     let db = await load();
-    for(let i = 0; i < 30; i++)
+    for(let i = 0; i < 500; i++)
         create();
     //setInterval(() => create(), 20);
 }

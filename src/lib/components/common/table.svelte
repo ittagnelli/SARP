@@ -91,7 +91,9 @@
 									{#if col_names.includes(col) && col != 'id'}
 										{#if columns[i].type == 'date'}
 											<td class="sort-{col}" valign="middle">{row[col] ? row[col].toLocaleDateString() : "--"}</td>
-										{:else if columns[i].type == 'object'}
+                                        {:else if columns[i].type == 'time'}
+                                            <td class="sort-{col}" valign="middle">{row[col] ? row[col].toLocaleTimeString() : "--"}</td>
+                                        {:else if columns[i].type == 'object'}
 											<td class="sort-{col}" valign="middle">
 												{ellipses(row[col][columns.filter((item) => item.name == col)[0].key])}
 											</td>

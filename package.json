@@ -38,6 +38,7 @@
 		}
 	},
 	"dependencies": {
-		"@prisma/client": "^4.4.0"
+		"@prisma/client": "^4.4.0",
+		"svelte-select": "^4.4.7"
 	}
 }

@@ -5,10 +5,12 @@
 	import { page_pre_title, page_title, page_action_title, page_action_modal } from '../../js/store';
 	import Table from '$lib/components/common/table.svelte';
     import { convert_date } from '../../js/helper';
+    import Select from 'svelte-select';
     
 	export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
 	let stages = []; // alias per maggior leggibilità
     let aziende = [];
+    let utenti = [];
 
 	// inizializzo la lista delle stage con il risultato della query SQL
 	Object.keys(data.stages).forEach((key) => {
@@ -18,6 +20,18 @@
     Object.keys(data.companies).forEach((key) => {
 		aziende = [...aziende, data.companies[key]];
 	});
+
+    Object.keys(data.utenti).forEach((key) => {
+		utenti = [...utenti, data.utenti[key]];
+	});
+
+    
+    utenti.forEach((utente) => {
+        utente['label'] = utente.cognome.concat(' ', utente.nome);
+        utente['value'] = utente.id;
+    })
+
+    let svolto = [];
 
 	//configura la pagina pre-titolo, titolo e nome del modale
 	$page_pre_title = 'PCTO';
@@ -42,6 +56,17 @@
 		dataInizio = convert_date(stage.dataInizio);
 		dataFine = convert_date(stage.dataFine);
 	}
+
+    function handleSelect(event) {
+		let user_selected = event.detail;
+        svolto = [];
+        user_selected.forEach((item) => {
+            svolto = [...svolto, item.value];
+        })
+        
+        console.log(svolto)
+	}
+
 </script>
 
 <Table
@@ -69,6 +94,7 @@
 	aria-hidden="true"
 >
 	<form method="POST" action="?/{modal_action}">
+        <input type="hidden" name="studenti" bind:value={svolto} />
 		{#if modal_action == 'update'}
 			<input type="hidden" name="id" bind:value={pcto_id} />
 		{/if}
@@ -135,10 +161,6 @@
                         <div class="col-lg-12">
 							<div class="mb-3">
 								<label class="form-label">Descrizione</label>
-                                <!-- <textarea 
-                                    class="form-control" 
-                                    placeholder="Descrizione del PCTO…">
-                                </textarea> -->
                                 <textarea 
                                     class="form-control" 
                                     name="descrizione" 
@@ -149,6 +171,20 @@
 							</div>
 						</div>
 					</div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                        <div class="mb-3">
+                            <label class="form-label">Studenti</label>
+                            <Select 
+                            class="form-select"
+                            name="utenti" 
+                            items={utenti} 
+                            isMulti={true}
+                            placeholder="Selezione gli studenti..."
+                            on:select={handleSelect}
+                            ></Select>
+                        </div>
+                    </div>
 				</div>
 				<div class="modal-footer">
 					<a href="#" class="btn btn-danger" data-bs-dismiss="modal">
@@ -167,3 +203,9 @@
 		</div>
 	</form>
 </div>
+
+
+
+
+
+
