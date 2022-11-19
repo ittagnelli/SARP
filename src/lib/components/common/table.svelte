@@ -101,6 +101,19 @@
 											<td class="sort-{col}" valign="middle">
 												{row[col] ? "SI" : "NO"}
 											</td>
+                                        {:else if columns[i].type == 'image'}
+                                            <td class="sort-{col}" valign="middle">
+                                                <img src={row[col]} width="32"> 
+                                            </td>
+                                        {:else if columns[i].type == 'array'}
+                                            {#if columns[i].subtype == 'picture'}
+                                                <td class="sort-{col}" valign="middle">
+                                                    
+                                                    {#each row[col] as item }
+                                                    <img class="picture" src={item[columns.filter((item) => item.name == col)[0].key]}>
+                                                    {/each}
+                                                </td>
+                                            {/if}
 										{:else}
 											<td class="sort-{col}" valign="middle">{ellipses(row[col])}</td>
 										{/if}
@@ -177,4 +190,11 @@
 	a {
 		color: black;
 	}
+
+    .picture {
+        width: 32px;
+        margin-right: 10px;
+        border: 0px solid black;
+        border-radius: 32px;
+    }
 </style>

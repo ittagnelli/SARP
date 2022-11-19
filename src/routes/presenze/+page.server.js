@@ -16,14 +16,19 @@ export async function load({ params }) {
 
     console.log(presenze)
 
-    // const companies = await SARP.pcto_Azienda.findMany({
-	// 	orderBy: [{ id: 'desc' }]
-	// });
+    const stages = await SARP.pcto_Pcto.findMany({
+		orderBy: [{ id: 'desc' }],
+        include: {
+			offertoDa: true,
+            svoltoDa: true
+
+		}
+	});
 
 	// restituisco il risultato della query SQL
 	return {
         presenze: presenze,
-        // companies: companies
+        stages: stages
     }
 }
 

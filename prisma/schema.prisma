@@ -25,6 +25,7 @@ model Utente {
     cognome    String
     email      String             @unique
     telefono   String?
+    picture    String?
     bes        Boolean?
     istituto   String?
     valuta     pcto_Valutazione[]

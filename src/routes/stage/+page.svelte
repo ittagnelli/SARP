@@ -17,6 +17,8 @@
 		stages = [...stages, data.stages[key]];
 	});
 
+    console.log("STAGES:", stages)
+
     Object.keys(data.companies).forEach((key) => {
 		aziende = [...aziende, data.companies[key]];
 	});
@@ -25,13 +27,20 @@
 		utenti = [...utenti, data.utenti[key]];
 	});
 
-    
     utenti.forEach((utente) => {
         utente['label'] = utente.cognome.concat(' ', utente.nome);
         utente['value'] = utente.id;
     })
 
     let svolto = [];
+    let svoltoDa = [];
+
+    $: {
+        if(modal_action == 'create') {
+            svoltoDa = [];
+            console.log("CRERATE................")
+        }
+    }
 
 	//configura la pagina pre-titolo, titolo e nome del modale
 	$page_pre_title = 'PCTO';
@@ -50,6 +59,14 @@
         pcto_id = e.detail.id;
 		//cerca l'azienda da fare update
 		let stage = stages.filter((item) => item.id == pcto_id)[0];
+        console.log("UPDATE STAGE:", stage)
+        console.log("STAGE SVOLTO DA:", stage.svoltoDa);
+        azienda =  stage.offertoDa.id;
+        stage.svoltoDa.forEach((utente) => {
+            utente['label'] = utente.cognome.concat(' ', utente.nome);
+            utente['value'] = utente.id;
+        });
+        svoltoDa = stage.svoltoDa;
 		
         titolo = stage.titolo;
         descrizione = stage.descrizione;
@@ -67,7 +84,24 @@
         console.log(svolto)
 	}
 
+console.log("UTEnTI:", utenti.slice(0,5))
+
+// let items = [
+//     {value: 'chocolate', label: 'Chocolate'},
+//     {value: 'pizza', label: 'Pizza'},
+//     {value: 'cake', label: 'Cake'},
+//     {value: 'chips', label: 'Chips'},
+//     {value: 'ice-cream', label: 'Ice Cream'},
+//   ];
+
+//   let value = [ {value: 'pizza', label: 'Pizza'}, {value: 'ice-cream', label: 'Ice Cream'}];
 </script>
+<!-- 
+<Select {items} value={value} isMulti={true} ></Select> -->
+
+
+
+
 
 <Table
 	columns={[
@@ -77,6 +111,7 @@
         { name: 'dataInizio', type: 'date', display: 'Inizio' },
         { name: 'dataFine', type: 'date', display: 'Fine' },
         { name: 'descrizione', type: 'string', display: 'descrizione' },
+        { name: 'svoltoDa', type: 'array', subtype: 'picture', key: 'picture', display: 'iscritti' },
 	]}
 	rows={stages}
 	page_size={5}
@@ -179,6 +214,7 @@
                             class="form-select"
                             name="utenti" 
                             items={utenti} 
+                            value={svoltoDa}
                             isMulti={true}
                             placeholder="Selezione gli studenti..."
                             on:select={handleSelect}
@@ -203,9 +239,3 @@
 		</div>
 	</form>
 </div>
-
-
-
-
-
-

@@ -8,16 +8,30 @@
     
 	export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
 	let presenze = []; // alias per maggior leggibilità
-    // let aziende = [];
+    let pcto = [];
+    let pcto_studenti = [];
 
 	// inizializzo la lista delle stage con il risultato della query SQL
 	Object.keys(data.presenze).forEach((key) => {
 		presenze = [...presenze, data.presenze[key]];
 	});
 
-    // Object.keys(data.companies).forEach((key) => {
-	// 	aziende = [...aziende, data.companies[key]];
-	// });
+    console.log("PRESENZE:", presenze);
+
+    Object.keys(data.stages).forEach((key) => {
+		pcto = [...pcto, data.stages[key]];
+	});
+
+    console.log("PCTO:", pcto)
+
+    $: {
+        // pcto_studenti = [];
+        let selected_stage = pcto.filter((item) => item.id == stage);
+        console.log("STAGE SELEZIONATO", stage, selected_stage);
+        if(selected_stage[0])
+            pcto_studenti = selected_stage[0].svoltoDa;
+        console.log("PCTO STUDENTI:", pcto_studenti);
+    }
 
 	//configura la pagina pre-titolo, titolo e nome del modale
 	$page_pre_title = 'PCTO';
@@ -26,7 +40,7 @@
 	$page_action_modal = 'modal-add-presenze';
 	let modal_action = 'create';
 
-    let presenza_id, pcto, studente;
+    let presenza_id, stage, studente;
 	let dataPresenza = convert_date(new Date());
 	let oraInizio = convert_date(new Date());
     let oraFine = convert_date(new Date());
@@ -88,10 +102,10 @@
                         <div class="col-lg-6">
 							<div class="mb-3">
 								<div class="form-label select_text">PCTO</div>
-                                <select class="form-select" name="azienda" bind:value={pcto}>
-                                    <!-- {#each aziende as azienda}
-                                        <option value={azienda.id}>{azienda.nome}</option>
-                                    {/each} -->
+                                <select class="form-select" name="stage" bind:value={stage}>
+                                    {#each pcto as stage}
+                                        <option value={stage.id}>{stage.titolo}</option>
+                                    {/each}
                                 </select>	
 							</div>
 						</div>
@@ -99,9 +113,9 @@
 							<div class="mb-3">
 								<div class="form-label select_text">Studente</div>
                                 <select class="form-select" name="azienda" bind:value={studente}>
-                                    <!-- {#each aziende as azienda}
-                                        <option value={azienda.id}>{azienda.nome}</option>
-                                    {/each} -->
+                                    {#each pcto_studenti as studente}
+                                        <option value={studente.id}>{studente.nome}</option>
+                                    {/each}
                                 </select>	
 							</div>
 						</div>

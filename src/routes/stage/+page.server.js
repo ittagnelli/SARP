@@ -10,6 +10,8 @@ export async function load({ params }) {
 		orderBy: [{ id: 'desc' }],
         include: {
 			offertoDa: true,
+            svoltoDa: true
+
 		}
 	});
 
@@ -36,10 +38,14 @@ export const actions = {
         console.log(form_data);
         console.log(form_data.get('studenti'))
         let studenti = form_data.get('studenti').split(',')
+        console.log("STUDENTI", studenti)
         let ids = [];
-        studenti.forEach(element => {
-            ids.push({id: +element})
-        });
+        
+        if(studenti != '') {
+            studenti.forEach(element => {
+                ids.push({id: +element})
+            });
+        }
         console.log("IDS:", ids)
         
 
@@ -50,9 +56,6 @@ export const actions = {
 				dataInizio: new Date(form_data.get('data_inizo')),
 				dataFine: new Date(form_data.get('data_fine')),
                 idAzienda: +form_data.get('azienda'),
-                // svoltoDa: {
-                //     connect: [{id: 15189}, {id: 15191}]
-                // }
                 svoltoDa: {
                     connect: ids
                 }
@@ -64,6 +67,15 @@ export const actions = {
 		const form_data = await request.formData();
 		let id = form_data.get('id');
 
+        console.log(form_data);
+        console.log(form_data.get('studenti'))
+        let studenti = form_data.get('studenti').split(',')
+        let ids = [];
+        studenti.forEach(element => {
+            ids.push({id: +element})
+        });
+        console.log("IDS:", ids)
+
         console.log(form_data)
 		await SARP.pcto_Pcto.update({
 			where: { id: +id },
@@ -72,7 +84,10 @@ export const actions = {
                 descrizione: form_data.get('descrizione'),
 				dataInizio: new Date(form_data.get('data_inizo')),
 				dataFine: new Date(form_data.get('data_fine')),
-                idAzienda: +form_data.get('azienda')
+                idAzienda: +form_data.get('azienda'),
+                svoltoDa: {
+                    set: ids
+                }
 			}
 		});
 	},

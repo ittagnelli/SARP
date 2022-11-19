@@ -15,6 +15,7 @@
 	Object.keys(data.utenti).forEach((key) => {
 		utenti = [...utenti, data.utenti[key]];
 	});
+
     Object.keys(data.tipi_utente).forEach((key) => {
 		tipi_utente = [...tipi_utente, data.tipi_utente[key]];
 	});
@@ -60,6 +61,7 @@
 <Table
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
+        { name: 'picture', type: 'image', display: 'Utente' },
         { name: 'cognome', type: 'string', display: 'Cognome' },
 		{ name: 'nome', type: 'string', display: 'Nome' },
         { name: 'tipo', type: 'string', display: 'Tipo' },
@@ -70,7 +72,7 @@
         { name: 'istituto', type: 'string', display: 'istituto' },
 	]}
 	rows={utenti}
-	page_size={14}
+	page_size={10}
 	modal_name={$page_action_modal}
 	on:update_start={start_update}
 	type="utenti"

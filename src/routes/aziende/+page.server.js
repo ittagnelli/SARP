@@ -22,7 +22,7 @@ export const actions = {
 			data: {
 				nome: form_data.get('azienda'),
 				idConvenzione: form_data.get('no_convenzione'),
-				idUtente: 15189,
+				idUtente: 1,
 				dataConvenzione: new Date(form_data.get('data_convenzione')),
 				dataProtocollo: new Date(form_data.get('data_protocollo')),
 				istituto: form_data.get('istituto')
@@ -39,7 +39,7 @@ export const actions = {
 			data: {
 				nome: form_data.get('azienda'),
 				idConvenzione: form_data.get('no_convenzione'),
-				idUtente: 15189,
+				idUtente: 1,
 				dataConvenzione: new Date(form_data.get('data_convenzione')),
 				dataProtocollo: new Date(form_data.get('data_protocollo')),
 				istituto: form_data.get('istituto')
