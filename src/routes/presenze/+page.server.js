@@ -33,45 +33,57 @@ export async function load({ params }) {
 }
 
 export const actions = {
-	// create: async ({ cookies, request }) => {
-	// 	const form_data = await request.formData();
+	create: async ({ cookies, request }) => {
+		const form_data = await request.formData();
 
-    //     console.log(form_data);
+        console.log(form_data)
 
-	// 	await SARP.pcto_Pcto.create({
-	// 		data: {
-    //             titolo: form_data.get('titolo'),
-    //             descrizione: form_data.get('descrizione'),
-	// 			dataInizio: new Date(form_data.get('data_inizo')),
-	// 			dataFine: new Date(form_data.get('data_fine')),
-    //             idAzienda: +form_data.get('azienda')
-	// 		}
-	// 	});
-	// },
+        let hh_inizio = form_data.get('oraInizio').split(':')[0];
+        let mm_inizio = form_data.get('oraInizio').split(':')[1];
+        let hh_fine = form_data.get('oraFine').split(':')[0];
+        let mm_fine = form_data.get('oraFine').split(':')[1];
+        
+          
+		await SARP.pcto_Presenza.create({
+			data: {
+                dataPresenza: new Date(form_data.get('dataPresenza')),
+                oraInizio: new Date(1970, 1, 1, hh_inizio, mm_inizio),
+                oraFine: new Date(1970,1 ,1, hh_fine, mm_fine),
+                idUtente: +form_data.get('studente'),
+                idPcto: +form_data.get('stage')
+			}
+		});
+	},
 
-	// update: async ({ cookies, request }) => {
-	// 	const form_data = await request.formData();
-	// 	let id = form_data.get('id');
+	update: async ({ cookies, request }) => {
+		const form_data = await request.formData();
+		let id = form_data.get('id');
 
-    //     console.log(form_data)
-	// 	await SARP.pcto_Pcto.update({
-	// 		where: { id: +id },
-	// 		data: {
-    //             titolo: form_data.get('titolo'),
-    //             descrizione: form_data.get('descrizione'),
-	// 			dataInizio: new Date(form_data.get('data_inizo')),
-	// 			dataFine: new Date(form_data.get('data_fine')),
-    //             idAzienda: +form_data.get('azienda')
-	// 		}
-	// 	});
-	// },
+        console.log(form_data)
 
-	// delete: async ({ cookies, request }) => {
-	// 	const form_data = await request.formData();
-	// 	const id = form_data.get('id');
+        let hh_inizio = form_data.get('oraInizio').split(':')[0];
+        let mm_inizio = form_data.get('oraInizio').split(':')[1];
+        let hh_fine = form_data.get('oraFine').split(':')[0];
+        let mm_fine = form_data.get('oraFine').split(':')[1];
+        
+		await SARP.pcto_Presenza.update({
+			where: { id: +id },
+			data: {
+                dataPresenza: new Date(form_data.get('dataPresenza')),
+                oraInizio: new Date(1970, 1, 1, hh_inizio, mm_inizio),
+                oraFine: new Date(1970,1 ,1, hh_fine, mm_fine),
+                idUtente: +form_data.get('studente'),
+                idPcto: +form_data.get('stage')
+			}
+		});
+	},
 
-	// 	await SARP.pcto_Pcto.delete({
-	// 		where: { id: +id }
-	// 	});
-	// }
+	delete: async ({ cookies, request }) => {
+		const form_data = await request.formData();
+		const id = form_data.get('id');
+
+		await SARP.pcto_Presenza.delete({
+			where: { id: +id }
+		});
+	}
 };

@@ -48,14 +48,21 @@
 	async function start_update(e) {
 		modal_action = 'update';
 		
-        pcto_id = e.detail.id;
+        console.log("UPDATE:", e.detail)
+        presenza_id = e.detail.id;
 		//cerca l'azienda da fare update
-		let stage = presenze.filter((item) => item.id == pcto_id)[0];
+		let presenza = presenze.filter((item) => item.id == presenza_id)[0];
 		
-        titolo = stage.titolo;
-        descrizione = stage.descrizione;
-		dataInizio = convert_date(stage.dataInizio);
-		dataFine = convert_date(stage.dataFine);
+        console.log("PRESENZA:", presenza)
+        // titolo = stage.titolo;
+        // descrizione = stage.descrizione;
+		// dataInizio = convert_date(stage.dataInizio);
+		// dataFine = convert_date(stage.dataFine);
+        stage =  presenza.idPcto;
+        studente = presenza.idUtente;
+        dataPresenza = convert_date(presenza.dataPresenza);
+        oraInizio = presenza.oraInizio.toTimeString().substring(0,5);
+        oraFine = presenza.oraFine.toTimeString().substring(0,5);
 	}
 </script>
 
@@ -112,7 +119,7 @@
                         <div class="col-lg-6">
 							<div class="mb-3">
 								<div class="form-label select_text">Studente</div>
-                                <select class="form-select" name="azienda" bind:value={studente}>
+                                <select class="form-select" name="studente" bind:value={studente}>
                                     {#each pcto_studenti as studente}
                                         <option value={studente.id}>{studente.nome}</option>
                                     {/each}
