@@ -20,7 +20,20 @@
 	$page_action_title = 'Aggiungi Azienda';
 	$page_action_modal = 'modal-add-azienda';
 
-	let idConvenzione, nome, idUtente, istituto;
+	let idConvenzione, nome, idUtente, indirizzo,piva, telefono;
+    let direttore, natoA, natoIl, codiceF;
+
+
+    idConvenzione="2223-1"
+    nome="ACME"
+    indirizzo="via tale"
+    piva="3434232"
+    telefono="555555"
+    direttore="MARIO"
+    natoA="VC"
+    codiceF = "erfvkdmklerfcm"
+
+
 	let dataConvenzione = convert_date(new Date());
 	let dataProtocollo = convert_date(new Date());
 
@@ -40,6 +53,13 @@
 		dataConvenzione = convert_date(azienda.dataConvenzione);
 		dataProtocollo = convert_date(azienda.dataProtocollo);
 		istituto_select = azienda.istituto;
+        indirizzo = azienda.indirizzo;
+        piva = azienda.piva;
+        telefono = azienda.telefono;
+        direttore = azienda.direttore;
+        natoA = azienda.natoA;
+        natoIl = convert_date(azienda.natoIl);
+        codiceF = azienda.codiceF;
 	}
 </script>
 
@@ -48,6 +68,10 @@
 		{ name: 'id', type: 'hidden', display: 'ID' },
 		{ name: 'idConvenzione', type: 'string', display: 'NO.' },
 		{ name: 'nome', type: 'string', display: 'Azienda/Ente' },
+        { name: 'indirizzo', type: 'string', display: 'indirizzo' },
+        { name: 'piva', type: 'string', display: 'piva' },
+        { name: 'telefono', type: 'string', display: 'telefono' },
+        { name: 'direttore', type: 'string', display: 'direttore' },
 		{ name: 'idUtente', type: 'string', display: 'Creato da' },
 		{ name: 'dataConvenzione', type: 'date', display: 'Data Convenzione' },
 		{ name: 'dataProtocollo', type: 'date', display: 'Data Protocollo' },
@@ -58,6 +82,7 @@
 	modal_name={$page_action_modal}
 	on:update_start={start_update}
 	type="aziende"
+    print={true}
 />
 
 <!-- Modal from Page action -->
@@ -108,6 +133,94 @@
 								/>
 							</div>
 						</div>
+					</div>
+                    <div class="row">
+						<div class="col-lg-12">
+							<div class="mb-3">
+								<label class="form-label">Indirizzo</label>
+								<input
+									type="text"
+									class="form-control"
+									name="indirizzo"
+									placeholder="Indirizzo"
+									bind:value={indirizzo}
+								/>
+							</div>
+						</div>
+					</div>
+                    <div class="row">
+						<div class="col-lg-6">
+							<div class="mb-3">
+								<label class="form-label">P.IVA</label>
+								<input
+									type="text"
+									class="form-control"
+									name="piva"
+									placeholder="Partita Iva"
+									bind:value={piva}
+								/>
+							</div>
+						</div>
+                        <div class="col-lg-6">
+							<div class="mb-3">
+								<label class="form-label">Telefono</label>
+								<input
+									type="text"
+									class="form-control"
+									name="telefono"
+									placeholder="Telefono"
+									bind:value={telefono}
+								/>
+							</div>
+						</div>
+					</div>
+                    <div class="row">
+						<div class="col-lg-3">
+							<div class="mb-3">
+								<label class="form-label">Direttore</label>
+								<input
+									type="text"
+									class="form-control"
+									name="direttore"
+									placeholder="Direttore"
+									bind:value={direttore}
+								/>
+							</div>
+
+						</div>
+                        <div class="col-lg-3">
+                            <div class="mb-3">
+                                <label class="form-label">Nato A</label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    name="natoA"
+                                    bind:value={natoA}
+                                />
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+							<div class="mb-3">
+								<label class="form-label">Nato Il</label>
+								<input
+									type="date"
+									name="natoIl"
+									class="form-control"
+                                    bind:value={natoIl}
+								/>
+							</div>
+						</div>
+                        <div class="col-lg-3">
+                            <div class="mb-3">
+                                <label class="form-label">Codice Fiscale</label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    name="codiceF"
+                                    bind:value={codiceF}
+                                />
+                            </div>
+                        </div>
 					</div>
 					<div class="row">
 						<div class="col-lg-4">
