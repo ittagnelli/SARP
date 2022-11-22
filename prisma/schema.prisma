@@ -25,11 +25,14 @@ model Utente {
     cognome    String
     email      String             @unique
     telefono   String?
+    picture    String?
     bes        Boolean?
     istituto   String?
     valuta     pcto_Valutazione[]
     presente   pcto_Presenza[]
     stabilisce pcto_Azienda[]
+    iscritto   pcto_Pcto[]
+
 }
 
 model tipo_Utente {
@@ -43,14 +46,14 @@ model ruolo_Utente {
 }
 
 model pcto_Presenza {
-    id        Int       @id @default(autoincrement())
-    data      DateTime  @default(now())
-    oraInizio DateTime?
-    oraFine   DateTime?
-    presenza  Utente    @relation(fields: [idUtente], references: [id])
-    idUtente  Int
-    lavoraPer pcto_Pcto @relation(fields: [idPcto], references: [id])
-    idPcto    Int
+    id           Int       @id @default(autoincrement())
+    dataPresenza DateTime  @default(now())
+    oraInizio    DateTime?
+    oraFine      DateTime?
+    presenza     Utente    @relation(fields: [idUtente], references: [id])
+    idUtente     Int
+    lavoraPer    pcto_Pcto @relation(fields: [idPcto], references: [id])
+    idPcto       Int
 
     // @@id([idPcto, idUtente, data])
 }
@@ -67,26 +70,27 @@ model pcto_Valutazione {
 }
 
 model pcto_Azienda {
-    id              Int        @id @default(autoincrement())
+    id              Int         @id @default(autoincrement())
     nome            String
-    indirizzo       String?    @unique
-    idConvenzione   String?    @unique
-    creatoDa        Utente     @relation(fields: [idUtente], references: [id])
+    indirizzo       String?     @unique
+    idConvenzione   String?     @unique
+    creatoDa        Utente      @relation(fields: [idUtente], references: [id])
     idUtente        Int
-    dataConvenzione DateTime   @default(now())
-    dataProtocollo  DateTime   @default(now())
-    istituto        String     @default("ITT")
+    dataConvenzione DateTime    @default(now())
+    dataProtocollo  DateTime    @default(now())
+    istituto        String      @default("ITT")
     offre           pcto_Pcto[]
 }
 
 model pcto_Pcto {
-    id          Int                @id @default(autoincrement())
-    dataInizio  DateTime?
-    dataFine    DateTime?
-    titolo      String
-    descrizione String
-    offertoDa   pcto_Azienda       @relation(fields: [idAzienda], references: [id])
-    idAzienda   Int                
-    valuta      pcto_Valutazione[]
-    svoltoDa    pcto_Presenza[]
+    id            Int                @id @default(autoincrement())
+    dataInizio    DateTime?
+    dataFine      DateTime?
+    titolo        String
+    descrizione   String
+    offertoDa     pcto_Azienda       @relation(fields: [idAzienda], references: [id])
+    idAzienda     Int
+    valuta        pcto_Valutazione[]
+    presenziatoDa pcto_Presenza[]
+    svoltoDa      Utente[]
 }
