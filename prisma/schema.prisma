@@ -1,4 +1,4 @@
-// v 2.0
+// v 3.1
 
 generator client {
     provider = "prisma-client-js"
@@ -32,7 +32,6 @@ model Utente {
     presente   pcto_Presenza[]
     stabilisce pcto_Azienda[]
     iscritto   pcto_Pcto[]
-
 }
 
 model tipo_Utente {
@@ -72,8 +71,14 @@ model pcto_Valutazione {
 model pcto_Azienda {
     id              Int         @id @default(autoincrement())
     nome            String
-    indirizzo       String?     @unique
-    idConvenzione   String?     @unique
+    indirizzo       String      @unique
+    piva            String
+    telefono        String
+    direttore       String
+    natoA           String
+    natoIl          DateTime
+    codiceF         String
+    idConvenzione   String      @unique
     creatoDa        Utente      @relation(fields: [idUtente], references: [id])
     idUtente        Int
     dataConvenzione DateTime    @default(now())

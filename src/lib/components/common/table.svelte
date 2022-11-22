@@ -11,6 +11,7 @@
 	export let page_size;
 	export let modal_name;
 	export let type;	// Cosa visualizza la tabella?
+    export let print;
 
 	const dispatch = createEventDispatcher();
 
@@ -120,6 +121,13 @@
 									{/if}
 								{/each}
 								<td valign="middle">
+                                    {#if print == true}
+                                    <form id="form-pdf" method="POST" action={`/${type}?/pdf`}>
+										<button class="icon-button" name="id" value={row.id}>
+											<icon class="ti ti-printer icon" />
+										</button>
+									</form>
+                                    {/if}
 									<a
 										href="##"
 										class=""
@@ -185,6 +193,12 @@
 		border: 0px solid red;
 		position: relative;
 		left: 1.5rem;
+	}
+
+    #form-pdf {
+		border: 0px solid red;
+		position: relative;
+		left: -1.5rem;
 	}
 
 	a {
