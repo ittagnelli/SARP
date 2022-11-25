@@ -15,20 +15,19 @@ Scuola Agnelli Resource Planning
 
 ### Team
 
-| Studente  | Ore allocate  | Note  |
-|:---:|:---:|---|
-| Jon  | 5  |   |
-| Cello  | 2  |   |
-| Furina  | 3  |   |
-| Gcc  | 2  |   |
-| Clang  | 3  |   |
-| Liccia  | 2  |   |
-| Peluso  | 2  |   |
-| Seba  | 2  |   |
-| Rizzo  |  3 |   |
-| Small | 3 ||
+| Studente  | Ore allocate  | Ruolo Principlae | Note  |
+|:---:|:---:|:---:|:---:|
+| Gcc  | 2  | DB & dev  | |
+| Jon  | 5  |  Security & dev | |
+| Furina  | 3  |  Security & dev | |
+| Cello  | 2  |Senior dev   | |
+| Rizzo  |  3 | Senior dev  | |
+| Clang  | 3  | Junior dev & tester  | |
+| Seba  | 2  | Junior dev & tester  | |
+| Small | 3 |Junior dev & tester| |
+| Liccia  | 2  | QA & testing  | |
+| Peluso  | 2  | QA & testing  | |
  
-
 
 ## Mockup
 
