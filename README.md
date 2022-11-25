@@ -13,6 +13,23 @@ Scuola Agnelli Resource Planning
 - agevolare le attività amministrative dei vari attori coinvolti (docenti, preside, amministrazione)
 - "palestra" per gli studenti del triennio informatico per cimentarsi con un'attività non didattica di sviluppo software utilizzando moderne tecnologie web
 
+### Team
+
+| Studente  | Ore allocate  | Note  |
+|:---:|:---:|---|
+| Jon  | 5  |   |
+| Cello  | 2  |   |
+| Furina  | 3  |   |
+| Gcc  | 2  |   |
+| Clang  | 3  |   |
+| Liccia  | 2  |   |
+| Peluso  | 2  |   |
+| Seba  | 2  |   |
+| Rizzo  |  3 |   |
+| Small | 3 ||
+ 
+
+
 ## Mockup
 
 ![mockup01](doc/img/mockup01.png)
