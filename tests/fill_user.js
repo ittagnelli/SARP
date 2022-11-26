@@ -37,10 +37,10 @@ async function create() {
 
 
 async function main() {
-    let db = await load();
-    // for(let i = 0; i < 500; i++)
-    //     create();
-    setInterval(() => create(), 30);
+    await load();
+    for(let i = 0; i < 500; i++)    // Secondo me deve generare un numero definito di utenti per agevolare lo sviluppatore nella creazione
+        create();
+    // setInterval(() => create(), 30);
 }
 
 main()
