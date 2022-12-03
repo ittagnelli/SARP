@@ -1,3 +1,7 @@
+<script>
+    export let version;
+</script>
+
 <footer class="footer footer-transparent d-print-none">
 	<div class="container-xl">
 		<div class="row text-center align-items-center flex-row-reverse">
@@ -13,7 +17,7 @@
 						<a href="./license.html" class="link-secondary">Segnalazioni</a>
 					</li>
 					<li class="list-inline-item">
-						<a href="./changelog.html" class="link-secondary">v1.0.0-beta10</a>
+						<a href="./changelog.html" class="link-secondary">v{version}</a>
 					</li>
 				</ul>
 			</div>

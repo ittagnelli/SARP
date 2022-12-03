@@ -1,4 +1,4 @@
-// v 3.1
+// v 0.1.0
 
 generator client {
     provider = "prisma-client-js"
@@ -19,6 +19,8 @@ datasource db {
 
 model Utente {
     id         Int                @id @default(autoincrement())
+    createdAt  DateTime           @default(now())
+    updatedAt  DateTime           @updatedAt
     tipo       String             @default("STUDENTE")
     ruolo      String?
     nome       String
@@ -35,17 +37,23 @@ model Utente {
 }
 
 model tipo_Utente {
-    id   Int    @id @default(autoincrement())
-    tipo String
+    id        Int      @id @default(autoincrement())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    tipo      String
 }
 
 model ruolo_Utente {
-    id    Int    @id @default(autoincrement())
-    ruolo String
+    id        Int      @id @default(autoincrement())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    ruolo     String
 }
 
 model pcto_Presenza {
     id           Int       @id @default(autoincrement())
+    createdAt    DateTime  @default(now())
+    updatedAt    DateTime  @updatedAt
     dataPresenza DateTime  @default(now())
     oraInizio    DateTime?
     oraFine      DateTime?
@@ -53,8 +61,6 @@ model pcto_Presenza {
     idUtente     Int
     lavoraPer    pcto_Pcto @relation(fields: [idPcto], references: [id])
     idPcto       Int
-
-    // @@id([idPcto, idUtente, data])
 }
 
 model pcto_Valutazione {
@@ -69,30 +75,35 @@ model pcto_Valutazione {
 }
 
 model pcto_Azienda {
-    id              Int         @id @default(autoincrement())
-    nome            String
-    indirizzo       String      @unique
-    piva            String
-    telefono        String
-    direttore       String
-    natoA           String
-    natoIl          DateTime
-    codiceF         String
-    idConvenzione   String      @unique
-    creatoDa        Utente      @relation(fields: [idUtente], references: [id])
-    idUtente        Int
-    dataConvenzione DateTime    @default(now())
-    dataProtocollo  DateTime    @default(now())
-    istituto        String      @default("ITT")
-    offre           pcto_Pcto[]
+    id                Int         @id @default(autoincrement())
+    createdAt         DateTime    @default(now())
+    updatedAt         DateTime    @updatedAt
+    nome              String
+    indirizzo         String?
+    piva              String?
+    telefono          String?
+    direttore_nome    String?
+    direttore_natoA   String?
+    direttore_natoIl  DateTime?
+    direttore_codiceF String?
+    idConvenzione     String      @unique
+    creatoDa          Utente      @relation(fields: [idUtente], references: [id])
+    idUtente          Int
+    dataConvenzione   DateTime    @default(now())
+    dataProtocollo    DateTime    @default(now())
+    istituto          String      @default("ITT")
+    offre             pcto_Pcto[]
 }
 
 model pcto_Pcto {
     id            Int                @id @default(autoincrement())
-    dataInizio    DateTime?
-    dataFine      DateTime?
+    createdAt     DateTime           @default(now())
+    updatedAt     DateTime           @updatedAt
     titolo        String
-    descrizione   String
+    descrizione   String?
+    tutor         String?
+    dataInizio    DateTime
+    dataFine      DateTime
     offertoDa     pcto_Azienda       @relation(fields: [idAzienda], references: [id])
     idAzienda     Int
     valuta        pcto_Valutazione[]

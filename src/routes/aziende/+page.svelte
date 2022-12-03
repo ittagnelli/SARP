@@ -1,19 +1,16 @@
 <script>
-	import { get } from 'svelte/store';
-
-	import { onMount } from 'svelte';
 	import { page_pre_title, page_title, page_action_title, page_action_modal } from '../../js/store';
 	import Table from '$lib/components/common/table.svelte';
-    import { convert_date } from '../../js/helper';
-    
-	export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
-	let aziende = []; // alias per maggior leggibilità
+    import * as helper from '../../js/helper';
+    import * as yup from 'yup';
 
-	// inizializzo la lista delle aziende con il risultato della query SQL
-	Object.keys(data).forEach((key) => {
-		aziende = [...aziende, data[key]];
-	});
-    
+    import InputText from '$lib/components/modal/input_text.svelte';
+    import InputDate from '$lib/components/modal/input_date.svelte';
+	
+	export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
+    // inizializzo la lista delle aziende con il risultato della query SQL
+    let aziende = helper.data2arr(data); // alias per maggior leggibilità
+
 	//configura la pagina pre-titolo, titolo e nome del modale
 	$page_pre_title = 'PCTO';
 	$page_title = 'Aziende';
@@ -23,44 +20,78 @@
 	let idConvenzione, nome, idUtente, indirizzo,piva, telefono;
     let direttore, natoA, natoIl, codiceF;
 
-
-    idConvenzione="2223-1"
-    nome="ACME"
-    indirizzo="via tale"
-    piva="3434232"
-    telefono="555555"
-    direttore="MARIO"
-    natoA="VC"
-    codiceF = "erfvkdmklerfcm"
-
-
-	let dataConvenzione = convert_date(new Date());
-	let dataProtocollo = convert_date(new Date());
-
-	let istituto_select = 'ITT';
-
 	let modal_action = 'create';
-	let company_id;
+    let modal_form; // entry point del form nel modale 
+    let errors = {}; //traccia gli errori di validazione del form
 
-	async function start_update(e) {
+    // campi del form
+    // quest'oggetto deve contenere tutti i valori presenti nel form per
+    // le operazione di create e update
+    let form_values = {
+        company_id: 0,
+        nome: "",
+        indirizzo: "",      
+        piva: "",
+        telefono: "",
+        direttore_nome: "",
+        direttore_natoA: "",
+        direttore_natoIl: helper.convert_date(new Date()),
+        direttore_codiceF: "",
+        idConvenzione: "",
+        idUtente: undefined,
+        dataConvenzione: helper.convert_date(new Date()),
+        dataProtocollo: helper.convert_date(new Date()),
+        istituto: "ITT"
+    };
+
+    // schema di validazione del form
+    const form_schema = yup.object().shape({
+        nome: yup.string().required("Nome Azienda necessario"),
+        idConvenzione: yup.string().required("Numero Convenzione necessario"),
+        idUtente: yup.number().positive(),
+        direttore_natoIl: yup.date().max(new Date(2004,1,1), "Data Invalida"),
+        dataConvenzione: yup.date().min(new Date(2022, 1, 1), "Data antecedente al 01/01/2022"),
+        dataProtocollo: yup.date().min(new Date(2022, 1, 1), "Data antecedente al 01/01/2022"),
+    });
+
+    async function start_update(e) {
 		modal_action = 'update';
-		company_id = e.detail.id;
+		
+        form_values.company_id = e.detail.id;
 		//cerca l'azienda da fare update
-		let azienda = aziende.filter((item) => item.id == company_id)[0];
-		idConvenzione = azienda.idConvenzione;
-		nome = azienda.nome;
-		idUtente = azienda.idUtente;
-		dataConvenzione = convert_date(azienda.dataConvenzione);
-		dataProtocollo = convert_date(azienda.dataProtocollo);
-		istituto_select = azienda.istituto;
-        indirizzo = azienda.indirizzo;
-        piva = azienda.piva;
-        telefono = azienda.telefono;
-        direttore = azienda.direttore;
-        natoA = azienda.natoA;
-        natoIl = convert_date(azienda.natoIl);
-        codiceF = azienda.codiceF;
+		let azienda = aziende.filter((item) => item.id == form_values.company_id)[0];
+
+        console.log("UPDATE AZIENDA:", azienda);
+		
+        form_values.nome = azienda.nome;
+		form_values.indirizzo = azienda.indirizzo;
+        form_values.piva = azienda.piva;
+        form_values.telefono = azienda.telefono;
+        form_values.direttore_nome = azienda.direttore_nome;
+        form_values.direttore_natoA = azienda.direttore_natoA;
+        form_values.direttore_natoIl = convert_date(azienda.direttore_natoIl);
+        form_values.direttore_codiceF = azienda.direttore_codiceF;
+        form_values.idConvenzione = azienda.idConvenzione;
+        form_values.idUtente = azienda.idUtente;
+		form_values.dataConvenzione = convert_date(azienda.dataConvenzione);
+		form_values.dataProtocollo = convert_date(azienda.dataProtocollo);
+        form_values.istituto = azienda.istituto;
 	}
+
+    async function handleSubmit() {
+        console.log("VALIDAZIONE FORM")
+        try {
+            // valida il form prima del submit
+            await form_schema.validate(form_values, { abortEarly: false });
+            errors = {};
+            modal_form.submit();
+        } catch (err) {
+            errors = err.inner.reduce((acc, err) => {
+                return { ...acc, [err.path]: err.message };
+            }, {});
+            console.log("CI SONO ERORRI:", errors)
+        }
+    }
 </script>
 
 <Table
@@ -71,7 +102,7 @@
         { name: 'indirizzo', type: 'string', display: 'indirizzo' },
         { name: 'piva', type: 'string', display: 'piva' },
         { name: 'telefono', type: 'string', display: 'telefono' },
-        { name: 'direttore', type: 'string', display: 'direttore' },
+        { name: 'direttore_nome', type: 'string', display: 'direttore' },
 		{ name: 'idUtente', type: 'string', display: 'Creato da' },
 		{ name: 'dataConvenzione', type: 'date', display: 'Data Convenzione' },
 		{ name: 'dataProtocollo', type: 'date', display: 'Data Protocollo' },
@@ -93,9 +124,9 @@
 	role="dialog"
 	aria-hidden="true"
 >
-	<form method="POST" action="?/{modal_action}">
+	<form method="POST" action="?/{modal_action}" on:submit|preventDefault={handleSubmit} bind:this={modal_form}>
 		{#if modal_action == 'update'}
-			<input type="hidden" name="id" bind:value={company_id} />
+			<input type="hidden" name="id" bind:value={form_values.company_id} />
 		{/if}
 		<div class="modal-dialog modal-lg" role="document">
 			<div class="modal-content">
@@ -110,140 +141,109 @@
 				<div class="modal-body">
 					<div class="row">
 						<div class="col-lg-4">
-							<div class="mb-3">
-								<label class="form-label">NO. Convenzione</label>
-								<input
-									type="text"
-									class="form-control"
-									name="no_convenzione"
-									placeholder="Numero Convenzione"
-									bind:value={idConvenzione}
-								/>
-							</div>
+                            <InputText
+                            label="NO. Convenzione"
+                            name="idConvenzione"
+                            {errors}
+                            placeholder="2223/01"
+                            bind:val={form_values.idConvenzione}
+                        />
 						</div>
 						<div class="col-lg-8">
-							<div class="mb-3">
-								<label class="form-label">Azienda</label>
-								<input
-									type="text"
-									class="form-control"
-									name="azienda"
-									placeholder="Nome Azienda o Ente"
-									bind:value={nome}
-								/>
-							</div>
+                            <InputText
+                            label="Azienda"
+                            name="nome"
+                            {errors}
+                            placeholder="Nome Azienda o Ente"
+                            bind:val={form_values.nome}
+                        />
 						</div>
 					</div>
                     <div class="row">
 						<div class="col-lg-12">
-							<div class="mb-3">
-								<label class="form-label">Indirizzo</label>
-								<input
-									type="text"
-									class="form-control"
-									name="indirizzo"
-									placeholder="Indirizzo"
-									bind:value={indirizzo}
-								/>
-							</div>
+                            <InputText
+                                label="Indirizzo"
+                                name="indirizzo"
+                                {errors}
+                                placeholder="Corso Unione Sovietica 312, 10135 Torino"
+                                bind:val={form_values.indirizzo}
+                            />
 						</div>
 					</div>
                     <div class="row">
 						<div class="col-lg-6">
-							<div class="mb-3">
-								<label class="form-label">P.IVA</label>
-								<input
-									type="text"
-									class="form-control"
-									name="piva"
-									placeholder="Partita Iva"
-									bind:value={piva}
-								/>
-							</div>
+                            <InputText
+                                label="P.IVA"
+                                name="piva"
+                                {errors}
+                                placeholder="86334519757"
+                                bind:val={form_values.piva}
+                            />
 						</div>
                         <div class="col-lg-6">
-							<div class="mb-3">
-								<label class="form-label">Telefono</label>
-								<input
-									type="text"
-									class="form-control"
-									name="telefono"
-									placeholder="Telefono"
-									bind:value={telefono}
-								/>
-							</div>
+                            <InputText
+                                label="Telefono"
+                                name="telefono"
+                                {errors}
+                                placeholder="3331234567"
+                                bind:val={form_values.telefono}
+                            />
 						</div>
 					</div>
                     <div class="row">
 						<div class="col-lg-3">
-							<div class="mb-3">
-								<label class="form-label">Direttore</label>
-								<input
-									type="text"
-									class="form-control"
-									name="direttore"
-									placeholder="Direttore"
-									bind:value={direttore}
-								/>
-							</div>
+                            <InputText
+                                label="Direttore"
+                                name="direttore_nome"
+                                {errors}
+                                placeholder="Nome e Cognome"
+                                bind:val={form_values.direttore_nome}
+                            />
 
 						</div>
                         <div class="col-lg-3">
-                            <div class="mb-3">
-                                <label class="form-label">Nato A</label>
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    name="natoA"
-                                    bind:value={natoA}
-                                />
-                            </div>
+                            <InputText
+                                label="Nato A"
+                                name="direttore_natoA"
+                                placeholder="Località"
+                                {errors}
+                                bind:val={form_values.direttore_natoA}
+                            />
                         </div>
                         <div class="col-lg-3">
-							<div class="mb-3">
-								<label class="form-label">Nato Il</label>
-								<input
-									type="date"
-									name="natoIl"
-									class="form-control"
-                                    bind:value={natoIl}
-								/>
-							</div>
+                            <InputDate
+                                label="Nato Il"
+                                name="direttore_natoIl"
+                                {errors}
+                                bind:val={form_values.direttore_natoIl}
+                            />
 						</div>
                         <div class="col-lg-3">
-                            <div class="mb-3">
-                                <label class="form-label">Codice Fiscale</label>
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    name="codiceF"
-                                    bind:value={codiceF}
-                                />
-                            </div>
+                            <InputText
+                                label="Codice Fiscale"
+                                name="direttore_codiceF"
+                                placeholder="RSSMRA85T10A562S"
+                                {errors}
+                                bind:val={form_values.direttore_codiceF}
+                            />
                         </div>
 					</div>
 					<div class="row">
 						<div class="col-lg-4">
-							<div class="mb-3">
-								<label class="form-label">Data Convenzione</label>
-								<input
-									type="date"
-									name="data_convenzione"
-									class="form-control"
-                                    bind:value={dataConvenzione}
-								/>
-							</div>
+                            <InputDate
+                                label="Data Convenzione"
+                                name="dataConvenzione"
+                                {errors}
+                                bind:val={form_values.dataConvenzione}
+                            />
 						</div>
 						<div class="col-lg-4">
-							<div class="mb-3">
-								<label class="form-label">Data Protocollo</label>
-								<input
-									type="date"
-									name="data_protocollo"
-									class="form-control"
-									bind:value={dataProtocollo}
-								/>
-							</div>
+                            <InputDate
+                            label="Data Protocollo"
+                            name="dataProtocollo"
+                            {errors}
+                            bind:val={form_values.dataProtocollo}
+                        />
 						</div>
 						<div class="col-lg-4">
 							<div class="mb-3">
@@ -255,7 +255,7 @@
 											name="istituto"
 											value="ITT"
 											class="form-selectgroup-input"
-											bind:group={istituto_select}
+											bind:group={form_values.istituto}
 										/>
 										<span class="form-selectgroup-label">ITI</span>
 									</label>
@@ -265,7 +265,7 @@
 											name="istituto"
 											value="LICEO"
 											class="form-selectgroup-input"
-											bind:group={istituto_select}
+											bind:group={form_values.istituto}
 										/>
 										<span class="form-selectgroup-label">LICEO</span>
 									</label>
@@ -278,7 +278,7 @@
 					<a href="#" class="btn btn-danger" data-bs-dismiss="modal">
 						<b>Cancel</b>
 					</a>
-					<button class="btn btn-success ms-auto" data-bs-dismiss="modal">
+					<button class="btn btn-success ms-auto">
 						<i class="ti ti-plus icon" />
 						{#if modal_action == 'create'}
 							<b>Crea Azienda</b>

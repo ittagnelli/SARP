@@ -1,33 +1,21 @@
 <script>
-	import { get } from 'svelte/store';
-
-	import { onMount } from 'svelte';
 	import { page_pre_title, page_title, page_action_title, page_action_modal } from '../../js/store';
 	import Table from '$lib/components/common/table.svelte';
-    import { convert_date } from '../../js/helper';
+    import * as helper from '../../js/helper';
+    import * as yup from 'yup';
+
+	import InputDate from '$lib/components/modal/input_date.svelte';
+    import InputTime from '$lib/components/modal/input_time.svelte';
     
 	export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
-	let presenze = []; // alias per maggior leggibilità
-    let pcto = [];
+	let presenze = helper.data2arr(data.presenze);
+    let pcto = helper.data2arr(data.stages);
     let pcto_studenti = [];
-
-	// inizializzo la lista delle stage con il risultato della query SQL
-	Object.keys(data.presenze).forEach((key) => {
-		presenze = [...presenze, data.presenze[key]];
-	});
-
-    console.log("PRESENZE:", presenze);
-
-    Object.keys(data.stages).forEach((key) => {
-		pcto = [...pcto, data.stages[key]];
-	});
-
-    console.log("PCTO:", pcto)
 
     $: {
         // pcto_studenti = [];
-        let selected_stage = pcto.filter((item) => item.id == stage);
-        console.log("STAGE SELEZIONATO", stage, selected_stage);
+        let selected_stage = pcto.filter((item) => item.id == form_values.stage);
+        console.log("STAGE SELEZIONATO", form_values.stage, selected_stage);
         if(selected_stage[0])
             pcto_studenti = selected_stage[0].svoltoDa;
         console.log("PCTO STUDENTI:", pcto_studenti);
@@ -40,30 +28,60 @@
 	$page_action_modal = 'modal-add-presenze';
 	let modal_action = 'create';
 
-    let presenza_id, stage, studente;
-	let dataPresenza = convert_date(new Date());
-	let oraInizio = convert_date(new Date());
-    let oraFine = convert_date(new Date());
+    let modal_form; // entry point del form nel modale
+	let errors = {}; //traccia gli errori di validazione del form
+
+    // campi del form
+	// quest'oggetto deve contenere tutti i valori presenti nel form per
+	// le operazione di create e update
+	let form_values = {
+		presenza_id: 0,
+		stage: 0,
+		studente: 0,
+        dataPresenza: helper.convert_date(new Date()),
+        oraInizio: '',
+        oraFine: ''
+	};
+
+	// schema di validazione del form
+	const form_schema = yup.object().shape({
+        stage: yup.number().min(1, 'PCTO necessario'),
+        studente: yup.number().min(1, 'Studente necessario'),
+        dataPresenza: yup.string().length(10, "Data necessaria"),
+        oraInizio: yup.string().length(5, "Orario necessario")
+	});
 
 	async function start_update(e) {
 		modal_action = 'update';
 		
         console.log("UPDATE:", e.detail)
-        presenza_id = e.detail.id;
+        form_values.presenza_id = e.detail.id;
 		//cerca l'azienda da fare update
-		let presenza = presenze.filter((item) => item.id == presenza_id)[0];
+		let presenza = presenze.filter((item) => item.id == form_values.presenza_id)[0];
 		
         console.log("PRESENZA:", presenza)
-        // titolo = stage.titolo;
-        // descrizione = stage.descrizione;
-		// dataInizio = convert_date(stage.dataInizio);
-		// dataFine = convert_date(stage.dataFine);
-        stage =  presenza.idPcto;
-        studente = presenza.idUtente;
-        dataPresenza = convert_date(presenza.dataPresenza);
-        oraInizio = presenza.oraInizio.toTimeString().substring(0,5);
-        oraFine = presenza.oraFine.toTimeString().substring(0,5);
+        form_values.stage =  presenza.idPcto;
+        form_values.studente = presenza.idUtente;
+        form_values.dataPresenza = helper.convert_date(presenza.dataPresenza);
+        form_values.oraInizio = presenza.oraInizio.toTimeString().substring(0,5);
+        form_values.oraFine = presenza.oraFine ? presenza.oraFine.toTimeString().substring(0,5) : '';
 	}
+
+    async function handleSubmit() {
+		console.log('VALIDAZIONE FORM');
+		try {
+			// valida il form prima del submit
+			await form_schema.validate(form_values, { abortEarly: false });
+			errors = {};
+			modal_form.submit();
+		} catch (err) {
+			errors = err.inner.reduce((acc, err) => {
+				return { ...acc, [err.path]: err.message };
+			}, {});
+			console.log('CI SONO ERORRI:', errors);
+		}
+	}
+
 </script>
 
 <Table
@@ -90,9 +108,9 @@
 	role="dialog"
 	aria-hidden="true"
 >
-	<form method="POST" action="?/{modal_action}">
+	<form method="POST" action="?/{modal_action}" on:submit|preventDefault={handleSubmit} bind:this={modal_form}>
 		{#if modal_action == 'update'}
-			<input type="hidden" name="id" bind:value={presenza_id} />
+			<input type="hidden" name="id" bind:value={form_values.presenza_id} />
 		{/if}
 		<div class="modal-dialog modal-lg" role="document">
 			<div class="modal-content">
@@ -107,81 +125,68 @@
 				<div class="modal-body">
 					<div class="row">
                         <div class="col-lg-6">
+                            <!-- InputSelect component ha dei problemi (two way binding) non ancora risolti
+                            che non permettono di usarlo qui -->
 							<div class="mb-3">
 								<div class="form-label select_text">PCTO</div>
-                                <select class="form-select" name="stage" bind:value={stage}>
+                                <select class="form-select" class:is-invalid="{errors.stage}" name="stage" bind:value={form_values.stage}>
                                     {#each pcto as stage}
                                         <option value={stage.id}>{stage.titolo}</option>
                                     {/each}
-                                </select>	
+                                </select>
+                                {#if errors.stage}
+                                    <span class="invalid-feedback">{errors.stage}</span>
+                                {/if}	
 							</div>
 						</div>
                         <div class="col-lg-6">
+                            <!-- InputSelect component ha dei problemi (two way binding) non ancora risolti
+                            che non permettono di usarlo qui -->
 							<div class="mb-3">
 								<div class="form-label select_text">Studente</div>
-                                <select class="form-select" name="studente" bind:value={studente}>
+                                <select class="form-select" class:is-invalid="{errors.studente}" name="studente" bind:value={form_values.studente}>
                                     {#each pcto_studenti as studente}
                                         <option value={studente.id}>{studente.nome}</option>
                                     {/each}
-                                </select>	
+                                </select>
+                                {#if errors.studente}
+                                    <span class="invalid-feedback">{errors.studente}</span>
+                                {/if}	
 							</div>
 						</div>
 					</div>
                     <div class="row">
                         <div class="col-lg-4">
-							<div class="mb-3">
-								<label class="form-label">Data Inizo</label>
-								<input
-									type="date"
-									name="dataPresenza"
-									class="form-control"
-                                    bind:value={dataPresenza}
-								/>
-							</div>
+                            <InputDate
+								label="Data Inizio"
+								name="dataPresenza"
+								{errors}
+								bind:val={form_values.dataPresenza}
+							/>
 						</div>
 						<div class="col-lg-4">
-							<div class="mb-3">
-								<label class="form-label">Ingresso</label>
-								<input
-									type="time"
-									name="oraInizio"
-									class="form-control"
-									bind:value={oraInizio}
-								/>
-							</div>
+                            <InputTime
+								label="Ingresso"
+								name="oraInizio"
+								{errors}
+								bind:val={form_values.oraInizio}
+							/>
 						</div>
                         <div class="col-lg-4">
-							<div class="mb-3">
-								<label class="form-label">Uscita</label>
-								<input
-									type="time"
-									name="oraFine"
-									class="form-control"
-									bind:value={oraFine}
-								/>
-							</div>
+                            <InputTime
+								label="Uscita"
+								name="oraFine"
+								{errors}
+								bind:val={form_values.oraFine}
+							/>
 						</div>
                     </div>
-                    <!-- <div class="row">
-                        <div class="col-lg-12">
-							<div class="mb-3">
-								<label class="form-label">Descrizione</label>
-                                <textarea 
-                                    class="form-control" 
-                                    name="descrizione" 
-                                    rows="3" 
-                                    placeholder="Descrizione PCTO..."
-                                    bind:value={descrizione}
-                                />
-							</div>
-						</div>
-					</div> -->
 				</div>
 				<div class="modal-footer">
 					<a href="#" class="btn btn-danger" data-bs-dismiss="modal">
 						<b>Cancel</b>
 					</a>
-					<button class="btn btn-success ms-auto" data-bs-dismiss="modal">
+					<button class="btn btn-success ms-auto">
 						<i class="ti ti-plus icon" />
 						{#if modal_action == 'create'}
 							<b>Crea Presenza</b>
