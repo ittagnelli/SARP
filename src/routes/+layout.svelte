@@ -5,6 +5,8 @@
 	import NavItem from '$lib/components/layout/nav_item.svelte';
 	import NavMenu from '$lib/components/layout/nav_menu.svelte';
 	import NavSubItem from '$lib/components/layout/nav_sub_item.svelte';
+
+    let version = "0.1.0"
 </script>
 
 <div class="page">
@@ -61,6 +63,6 @@
 		</div>
 
 		<!-- Page Footer -->
-		<Footer />
+		<Footer {version} />
 	</div>
 </div>

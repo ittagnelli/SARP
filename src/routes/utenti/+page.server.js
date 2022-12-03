@@ -51,6 +51,9 @@ export const actions = {
 		const form_data = await request.formData();
 		let id = form_data.get('id');
 
+        console.log("UTENTE:", form_data);
+
+        
 		await SARP.Utente.update({
 			where: { id: +id },
 			data: {

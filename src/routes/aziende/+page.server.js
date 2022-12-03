@@ -14,32 +14,31 @@ export async function load({ params }) {
 		orderBy: [{ id: 'desc' }]
 	});
 
-    console.log("AZIENDE:", companies)
 	// restituisco il risultato della query SQL
-	return companies;
+    return companies;
 }
 
 export const actions = {
 	create: async ({ cookies, request }) => {
 		const form_data = await request.formData();
 
-        console.log(form_data)
+        console.log("CREATE AZIENDA:", form_data);
 
 		await SARP.pcto_Azienda.create({
 			data: {
-				nome: form_data.get('azienda'),
-				idConvenzione: form_data.get('no_convenzione'),
-				idUtente: 2,
-				dataConvenzione: new Date(form_data.get('data_convenzione')),
-				dataProtocollo: new Date(form_data.get('data_protocollo')),
-				istituto: form_data.get('istituto'),
+                idUtente: 3,
+                idConvenzione: form_data.get('idConvenzione'),
+                nome: form_data.get('nome'),
                 indirizzo: form_data.get('indirizzo'),
                 piva: form_data.get('piva'),
                 telefono: form_data.get('telefono'),
-                direttore: form_data.get('direttore'),
-                natoA: form_data.get('natoA'),
-                natoIl: new Date(form_data.get('natoIl')),
-                codiceF: form_data.get('codiceF'),
+                direttore_nome: form_data.get('direttore_nome'),
+                direttore_natoA: form_data.get('direttore_natoA'),
+                direttore_natoIl: new Date(form_data.get('direttore_natoIl')),
+                direttore_codiceF: form_data.get('direttore_codiceF'),
+                dataConvenzione: new Date(form_data.get('dataConvenzione')),
+				dataProtocollo: new Date(form_data.get('dataProtocollo')),
+                istituto: form_data.get('istituto')
 			}
 		});
 	},
@@ -48,22 +47,24 @@ export const actions = {
 		const form_data = await request.formData();
 		let id = form_data.get('id');
 
+        console.log("UPDATE AZIENDA:", form_data);
+
 		await SARP.pcto_Azienda.update({
 			where: { id: +id },
 			data: {
-				nome: form_data.get('azienda'),
-				idConvenzione: form_data.get('no_convenzione'),
-				idUtente: 2,
-				dataConvenzione: new Date(form_data.get('data_convenzione')),
-				dataProtocollo: new Date(form_data.get('data_protocollo')),
-				istituto: form_data.get('istituto'),
+				idUtente: 3,
+                idConvenzione: form_data.get('idConvenzione'),
+                nome: form_data.get('nome'),
                 indirizzo: form_data.get('indirizzo'),
                 piva: form_data.get('piva'),
                 telefono: form_data.get('telefono'),
-                direttore: form_data.get('direttore'),
-                natoA: form_data.get('natoA'),
-                natoIl: new Date(form_data.get('natoIl')),
-                codiceF: form_data.get('codiceF'),
+                direttore_nome: form_data.get('direttore_nome'),
+                direttore_natoA: form_data.get('direttore_natoA'),
+                direttore_natoIl: new Date(form_data.get('direttore_natoIl')),
+                direttore_codiceF: form_data.get('direttore_codiceF'),
+                dataConvenzione: new Date(form_data.get('dataConvenzione')),
+				dataProtocollo: new Date(form_data.get('dataProtocollo')),
+                istituto: form_data.get('istituto'),
 			}
 		});
 	},
@@ -89,9 +90,8 @@ export const actions = {
         });
         //arricchisce l'oggetto
         company['today'] =  new Date().toLocaleDateString();
-        company['natoIl'] = company['natoIl'].toLocaleDateString();
+        company['direttore_natoIl'] = company['direttore_natoIl'].toLocaleDateString();
 
-        console.log("RENDER DOC CON:", company)
         const content = fs.readFileSync(
             path.resolve("static/pcto_templates/", "01-Convenzione-generale.docx"), "binary");
         
@@ -102,39 +102,13 @@ export const actions = {
             linebreaks: true,
         });
         
-        // let no_convenzione = "2223-28";
-        // Render the document (Replace {first_name} by John, {last_name} by Doe, ...)
-        // doc.render({
-        //     no_convenzione: no_convenzione,
-        // });
-        
         doc.render(company);
+        
         const buf = doc.getZip().generate({
             type: "nodebuffer",
-            // compression: DEFLATE adds a compression step.
-            // For a 50MB output document, expect 500ms additional CPU time
-            // compression: "DEFLATE",
+            compression: "DEFLATE",
         });
-        
-        // buf is a nodejs Buffer, you can either write it to a
-        // file or res.send it with express for example.
         fs.writeFileSync(path.resolve("static/pcto_output/", `01-Convenzione-generale-${company.idConvenzione}.docx`), buf);
-     
-        throw redirect(303, `pcto_output/01-Convenzione-generale-${company.idConvenzione}.docx`);
-        // return new Response('custom response');
-        
-        // var pdf = fs.readFileSync("static/pcto_templates/01-Convenzione-generale.docx")
-
-//   return{
-//     status:400,
-//     headers: {
-//       "Content-type" : "application/octet-stream",
-//       "Content-Disposition": 'attachment; filename="01-Convenzione-generale.docx"'
-
-//     },
-//     body: content
-//   }
-     
-        
+        throw redirect(303, `pcto_output/01-Convenzione-generale-${company.idConvenzione}.docx`);   
     }   
 };

@@ -53,8 +53,9 @@ export const actions = {
 			data: {
                 titolo: form_data.get('titolo'),
                 descrizione: form_data.get('descrizione'),
-				dataInizio: new Date(form_data.get('data_inizo')),
-				dataFine: new Date(form_data.get('data_fine')),
+				tutor: form_data.get('tutor'),
+                dataInizio: new Date(form_data.get('dataInizio')),
+				dataFine: new Date(form_data.get('dataFine')),
                 idAzienda: +form_data.get('azienda'),
                 svoltoDa: {
                     connect: ids
@@ -70,20 +71,26 @@ export const actions = {
         console.log(form_data);
         console.log(form_data.get('studenti'))
         let studenti = form_data.get('studenti').split(',')
+        console.log("STUDENTI:", studenti)
         let ids = [];
         studenti.forEach(element => {
-            ids.push({id: +element})
+            if(+element > 0) ids.push({id: +element})
         });
         console.log("IDS:", ids)
 
         console.log(form_data)
+
+        console.log("DATAINIZIO:", form_data.get('dataInizio'))
+        console.log("DATAFINE:", form_data.get('dataFine'))
+
 		await SARP.pcto_Pcto.update({
 			where: { id: +id },
 			data: {
                 titolo: form_data.get('titolo'),
                 descrizione: form_data.get('descrizione'),
-				dataInizio: new Date(form_data.get('data_inizo')),
-				dataFine: new Date(form_data.get('data_fine')),
+                tutor: form_data.get('tutor'),
+				dataInizio: new Date(form_data.get('dataInizio')),
+				dataFine: new Date(form_data.get('dataFine')),
                 idAzienda: +form_data.get('azienda'),
                 svoltoDa: {
                     set: ids

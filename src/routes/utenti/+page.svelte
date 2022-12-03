@@ -1,27 +1,15 @@
 <script>
-	import { get } from 'svelte/store';
-
-	import { onMount } from 'svelte';
 	import { page_pre_title, page_title, page_action_title, page_action_modal } from '../../js/store';
 	import Table from '$lib/components/common/table.svelte';
-    import { convert_date } from '../../js/helper';
-    
+    import * as helper from '../../js/helper';
+    import * as yup from 'yup';
+
+    import InputText from '$lib/components/modal/input_text.svelte';
+	
 	export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
-	let utenti = []; // alias per maggior leggibilità
-    let tipi_utente = [];
-	let ruoli_utente = [];
-
-    // inizializzo la lista delle utenti con il risultato della query SQL
-	Object.keys(data.utenti).forEach((key) => {
-		utenti = [...utenti, data.utenti[key]];
-	});
-
-    Object.keys(data.tipi_utente).forEach((key) => {
-		tipi_utente = [...tipi_utente, data.tipi_utente[key]];
-	});
-    Object.keys(data.ruoli_utente).forEach((key) => {
-		ruoli_utente = [...ruoli_utente, data.ruoli_utente[key]];
-	});
+	let utenti = helper.data2arr(data.utenti);
+    let tipi_utente = helper.data2arr(data.tipi_utente);
+	let ruoli_utente = helper.data2arr(data.ruoli_utente);
 
 	//configura la pagina pre-titolo, titolo e nome del modale
 	$page_pre_title = 'ADMIN';
@@ -38,23 +26,63 @@
 
 	let modal_action = 'create';
 
+    let modal_form; // entry point del form nel modale
+	let errors = {}; //traccia gli errori di validazione del form
+
+	// campi del form
+	// quest'oggetto deve contenere tutti i valori presenti nel form per
+	// le operazione di create e update
+	let form_values = {
+        user_id: 0,
+        tipo: '', 
+        ruolo: '',
+        nome: '',
+        cognome: '',
+        email: '',
+        telefono: '',
+        bes_select: 'NO',
+        istituto_select: ''
+	};
+
+	// schema di validazione del form
+	const form_schema = yup.object().shape({
+		tipo: yup.string().required('Tipo utente necessatrio'),
+        ruolo: yup.string().required('Ruolo utente necessario'),
+        nome: yup.string().required('Nome utente necessario'),
+        cognome: yup.string().required('Cognome utente necessario'),
+	});
+
 	async function start_update(e) {
 		modal_action = 'update';
         console.log("UPDATE:", e.detail)
-		user_id = e.detail.id;
+		form_values.user_id = e.detail.id;
 		//cerca l'utente da fare update
-		let utente = utenti.filter((item) => item.id == user_id)[0];
+		let utente = utenti.filter((item) => item.id == form_values.user_id)[0];
 
         console.log("UTENTE UPDATE:", utente);
-        nome = utente.nome;
-        cognome = utente.cognome;
-        email = utente.email;
-        telefono = utente.telefono;
-        tipo = utente.tipo;
-        ruolo = utente.ruolo;
-        istituto_select = utente.istituto;
-        bes_select = utente.bes ? "SI" : "NO";
-        console.log("BES:", bes_select)
+        form_values.nome = utente.nome;
+        form_values.cognome = utente.cognome;
+        form_values.email = utente.email;
+        form_values.telefono = utente.telefono;
+        form_values.tipo = utente.tipo;
+        form_values.ruolo = utente.ruolo;
+        form_values.istituto_select = utente.istituto;
+        form_values.bes_select = utente.bes ? "SI" : "NO";
+	}
+
+    async function handleSubmit() {
+		console.log('VALIDAZIONE FORM');
+		try {
+			// valida il form prima del submit
+			await form_schema.validate(form_values, { abortEarly: false });
+			errors = {};
+			modal_form.submit();
+		} catch (err) {
+			errors = err.inner.reduce((acc, err) => {
+				return { ...acc, [err.path]: err.message };
+			}, {});
+			console.log('CI SONO ERORRI:', errors);
+		}
 	}
 </script>
 
@@ -86,9 +114,9 @@
 	role="dialog"
 	aria-hidden="true"
 >
-	<form method="POST" action="?/{modal_action}">
+	<form method="POST" action="?/{modal_action}" on:submit|preventDefault={handleSubmit} bind:this={modal_form}>
 		{#if modal_action == 'update'}
-			<input type="hidden" name="id" bind:value={user_id} />
+			<input type="hidden" name="id" bind:value={form_values.user_id} />
 		{/if}
 		<div class="modal-dialog modal-lg" role="document">
 			<div class="modal-content">
@@ -103,73 +131,69 @@
 				<div class="modal-body">
 					<div class="row">
                         <div class="col-lg-4">
+                            <!-- InputSelect component ha dei problemi (two way binding) non ancora risolti
+                            che non permettono di usarlo qui -->
 							<div class="mb-3">
 								<div class="form-label select_text">Tipo</div>
-                                <select class="form-select" name="tipo" bind:value={tipo}>
+                                <select class="form-select" class:is-invalid="{errors.tipo}" name="tipo" bind:value={form_values.tipo}>
                                     {#each tipi_utente as type}
                                         <option value={type.tipo}>{type.tipo}</option>
                                     {/each}
-                                </select>	
+                                </select>
+                                {#if errors.tipo}
+                                    <span class="invalid-feedback">{errors.tipo}</span>
+                                {/if}	
 							</div>
 						</div>
 						<div class="col-lg-4">
-							<div class="mb-3">
-								<label class="form-label">Nome</label>
-								<input
-									type="text"
-									class="form-control"
-									name="nome"
-									placeholder="Nome Utente"
-									bind:value={nome}
-								/>
-							</div>
+                            <InputText
+                                label="Nome"
+                                name="nome"
+                                placeholder="Nome Utente"
+                                bind:val={form_values.nome}
+                                {errors}
+                            />
 						</div>
 						<div class="col-lg-4">
-							<div class="mb-3">
-								<label class="form-label">Cognome</label>
-								<input
-									type="text"
-									class="form-control"
-									name="cognome"
-									placeholder="Cognome Utente"
-									bind:value={cognome}
-								/>
-							</div>
+                            <InputText
+                                label="Cognome"
+                                name="cognome"
+                                placeholder="Cognome Utente"
+                                bind:val={form_values.cognome}
+                                {errors}
+                            />
 						</div>
 					</div>
                     <div class="row">
                         <div class="col-lg-4">
-							<div class="mb-3">
-								<label class="form-label">Email</label>
-								<input
-									type="text"
-									class="form-control"
-									name="email"
-									placeholder="email Utente"
-									bind:value={email}
-								/>
-							</div>
+                            <InputText
+                                label="Email"
+                                name="email"
+                                placeholder="email Utente"
+                                bind:val={form_values.email}
+                                {errors}
+                            />
 						</div>
                         <div class="col-lg-4">
-							<div class="mb-3">
-								<label class="form-label">Telefono</label>
-								<input
-									type="text"
-									class="form-control"
-									name="telefono"
-									placeholder="Telefono Utente"
-									bind:value={telefono}
-								/>
-							</div>
+                            <InputText
+                                label="Telefono"
+                                name="telefono"
+                                placeholder="Telefono Utente"
+                                bind:val={form_values.telefono}
+                                {errors}
+                            />
 						</div>
                         <div class="col-lg-4">
 							<div class="mb-3">
 								<div class="form-label select_text">Ruolo</div>
-                                <select class="form-select" name="ruolo" bind:value={ruolo}>
+                                <select class="form-select" class:is-invalid="{errors.ruolo}" name="ruolo" bind:value={form_values.ruolo}>
                                     {#each ruoli_utente as role}
                                         <option value="{role.ruolo}">{role.ruolo}</option>
                                     {/each}
                                 </select>	
+                                {#if errors.ruolo}
+                                    <span class="invalid-feedback">{errors.ruolo}</span>
+                                {/if}	
 							</div>
 						</div>
 					</div>
@@ -236,7 +260,7 @@
 					<a href="#" class="btn btn-danger" data-bs-dismiss="modal">
 						<b>Cancel</b>
 					</a>
-					<button class="btn btn-success ms-auto" data-bs-dismiss="modal">
+					<button class="btn btn-success ms-auto">
 						<i class="ti ti-plus icon" />
 						{#if modal_action == 'create'}
 							<b>Crea Utente</b>
