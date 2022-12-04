@@ -27,7 +27,7 @@ function main(argv) {
         lines.forEach(function (line, i) {  // i è la linea
             if (line.includes("server {") && line[0] != "#") {    // Controlliamo che il primo carattere sia diverso da # perchè non vogliamo il server commentato, sarebbe inutile
                 config.header.forEach(header => {
-                    lines.splice(i + 1, 0, `\t ${header}`);   // i+1 equivale alla linea successiva dell'inizio del server
+                    lines.splice(i + 1, 0, `\t${header}`);   // i+1 equivale alla linea successiva dell'inizio del server, \t serve per rispettare la sintassi nginx
                     var text = lines.join("\n");    // Ricomponiamo il testo finale, ogni linea finisce con \n
                     fs.writeFile(file, text, function (err) {
                         if (err) return console.log(err);
