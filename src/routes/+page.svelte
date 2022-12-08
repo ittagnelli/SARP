@@ -4,6 +4,8 @@
 	$page_pre_title = 'Home';
 	$page_title = 'Page';
 	$page_action_modal = 'modal-name';
+
+    export let data;
 </script>
 
 <h1>Benvenuto sul sistema</h1>

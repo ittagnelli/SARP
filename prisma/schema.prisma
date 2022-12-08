@@ -1,4 +1,4 @@
-// v 0.1.0
+// v 0.2.0
 
 generator client {
     provider = "prisma-client-js"
@@ -29,11 +29,22 @@ model Utente {
     telefono   String?
     picture    String?
     bes        Boolean?
+    can_login  Boolean            @default(false)
     istituto   String?
     valuta     pcto_Valutazione[]
     presente   pcto_Presenza[]
     stabilisce pcto_Azienda[]
     iscritto   pcto_Pcto[]
+    Session    Session[]
+}
+
+model Session {
+    id         Int      @id @default(autoincrement())
+    createdAt  DateTime @default(now())
+    login      Utente   @relation(fields: [idUtente], references: [id])
+    idUtente   Int      @unique
+    session_id String   @unique
+    scadenza   DateTime @default(now())
 }
 
 model tipo_Utente {

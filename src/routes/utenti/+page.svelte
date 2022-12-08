@@ -3,7 +3,6 @@
 	import Table from '$lib/components/common/table.svelte';
     import * as helper from '../../js/helper';
     import * as yup from 'yup';
-
     import InputText from '$lib/components/modal/input_text.svelte';
 	
 	export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
