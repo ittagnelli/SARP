@@ -5,16 +5,19 @@ import fs from 'fs';
 import path from 'path';
 import { error, redirect } from '@sveltejs/kit';
 import { is_an_html_element } from '$lib/validator/sanitizer';
-
+import { route_protect } from '../../js/helper';
 
 // Istanzia il client per il SARP
 const SARP = new PrismaClient();
 
-export async function load({ params }) {
+
+export async function load({ locals }) {
+    route_protect(locals);
+
     // query SQL al DB per tutte le entry nella tabella todo
-    const companies = await SARP.pcto_Azienda.findMany({
-        orderBy: [{ id: 'desc' }]
-    });
+	const companies = await SARP.pcto_Azienda.findMany({
+		orderBy: [{ id: 'desc' }]
+	});
 
     // restituisco il risultato della query SQL
     return companies;

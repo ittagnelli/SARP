@@ -1,10 +1,13 @@
 import { PrismaClient } from '@prisma/client';
+import { route_protect } from '../../js/helper';
 
 // Istanzia il client per il SARP
 const SARP = new PrismaClient();
 
 
-export async function load({ params }) {
+export async function load({ locals }) {
+    route_protect(locals);
+
 	// query SQL al DB per tutte le entry nella tabella todo
 	const presenze = await SARP.pcto_Presenza.findMany({
 		orderBy: [{ id: 'desc' }],
