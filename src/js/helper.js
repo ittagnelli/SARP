@@ -1,3 +1,5 @@
+import { redirect } from '@sveltejs/kit';
+
 const ELLIPSES_LENGTH = 50;
 
 export const convert_date = (d) => {
@@ -23,3 +25,8 @@ export const data2arr = (data) => {
     return collect;
 }
 
+export const route_protect = (locals) => {
+	if (!locals.session) {
+		throw redirect(302, '/login');
+	}
+}

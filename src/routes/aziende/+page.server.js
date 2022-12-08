@@ -4,12 +4,16 @@ import Docxtemplater from 'docxtemplater';
 import fs from 'fs';
 import path from 'path';
 import { redirect } from '@sveltejs/kit';
+import { route_protect } from '../../js/helper';
 
 // Istanzia il client per il SARP
 const SARP = new PrismaClient();
 
-export async function load({ params }) {
-	// query SQL al DB per tutte le entry nella tabella todo
+
+export async function load({ locals }) {
+    route_protect(locals);
+
+    // query SQL al DB per tutte le entry nella tabella todo
 	const companies = await SARP.pcto_Azienda.findMany({
 		orderBy: [{ id: 'desc' }]
 	});
