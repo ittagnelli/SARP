@@ -43,7 +43,8 @@ export const actions = {
                 tipo: form_data.get('tipo'),
                 ruolo: form_data.get('ruolo'),
                 istituto: form_data.get('istituto'),
-                bes: form_data.get('bes') == "SI" ? true : false
+                bes: form_data.get('bes') == "SI" ? true : false,
+				can_login: form_data.get('can_login') == "SI" ? true : false
 			}
 		});
 	},
@@ -62,7 +63,8 @@ export const actions = {
                 tipo: form_data.get('tipo'),
                 ruolo: form_data.get('ruolo'),
                 istituto: form_data.get('istituto'),
-                bes: form_data.get('bes') == "SI" ? true : false
+                bes: form_data.get('bes') == "SI" ? true : false,
+				can_login: form_data.get('can_login') == "SI" ? true : false
 			}
 		});
 	},

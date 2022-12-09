@@ -16,10 +16,11 @@
 	$page_action_title = 'Aggiungi Utente';
 	$page_action_modal = 'modal-add-utente';
 
-	let user_id, nome, cognome, idUtente, istituto, email, telefono, bes;
+	let user_id, nome, cognome, idUtente, istituto, email, telefono, bes, can_login;
 	
 	let istituto_select = 'ITT';
     let bes_select = 'NO';
+	let can_login_select = 'SI';
     let tipo = "studente";
     let ruolo = "admin";
 
@@ -40,6 +41,7 @@
         email: '',
         telefono: '',
         bes_select: 'NO',
+		can_login_select: 'SI',
         istituto_select: ''
 	};
 
@@ -67,6 +69,7 @@
         form_values.ruolo = utente.ruolo;
         form_values.istituto_select = utente.istituto;
         form_values.bes_select = utente.bes ? "SI" : "NO";
+        form_values.can_login_select = utente.can_login ? "SI" : "NO";
 	}
 
     async function handleSubmit() {
@@ -97,6 +100,7 @@
         { name: 'telefono', type: 'string', display: 'telefono' },
         { name: 'bes', type: 'boolean', display: 'bes' }, 
         { name: 'istituto', type: 'string', display: 'istituto' },
+        { name: 'can_login', type: 'boolean', display: 'can_login' }, 
 	]}
 	rows={utenti}
 	page_size={10}
@@ -249,6 +253,33 @@
 											bind:group={istituto_select}
 										/>
 										<span class="form-selectgroup-label">LICEO</span>
+									</label>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-4">
+							<div class="mb-3">
+								<label class="form-label">Può Accedere</label>
+								<div class="form-selectgroup">
+									<label class="form-selectgroup-item">
+										<input
+											type="radio"
+											name="can_login"
+											value="SI"
+											class="form-selectgroup-input"
+											bind:group={can_login_select}
+										/>
+										<span class="form-selectgroup-label">SI</span>
+									</label>
+									<label class="form-selectgroup-item">
+										<input
+											type="radio"
+											name="can_login"
+											value="NO"
+											class="form-selectgroup-input"
+											bind:group={can_login_select}
+										/>
+										<span class="form-selectgroup-label">NO</span>
 									</label>
 								</div>
 							</div>
