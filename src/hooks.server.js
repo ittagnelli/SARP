@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { error, redirect } from '@sveltejs/kit';
 
 const SARP = new PrismaClient();
 
@@ -27,3 +28,9 @@ export const handle = async ({ event, resolve }) => {
 	}
 	return await resolve(event);
 };
+
+
+export const handleError = async ({ error, event }) => {
+    console.log("ERRORE INASPETATTO:", error);
+    //aggiungere loggin to sentry o simile
+  }
