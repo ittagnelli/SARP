@@ -6,6 +6,7 @@ import path from 'path';
 import { error, redirect } from '@sveltejs/kit';
 import { is_an_html_element } from '$lib/validator/sanitizer';
 import { route_protect } from '../../js/helper';
+import yup from 'yup';
 
 // Istanzia il client per il SARP
 const SARP = new PrismaClient();
@@ -52,35 +53,45 @@ export const actions = {
         if (process.env.NODE_ENV != 'production')
             console.log("CREATE AZIENDA:", form_data);
 
-        if (is_an_html_element(id_convenzione) || is_an_html_element(indirizzo)     // Anti XSS attack
-            || is_an_html_element(piva) || is_an_html_element(direttore_name) 
-            || is_an_html_element(direttore_luogo) || is_an_html_element(istituto)
-            || is_an_html_element(telefono) || is_an_html_element(data_direttore)
-            || is_an_html_element(direttore_cf) || is_an_html_element(data_convenzione)
-            || is_an_html_element(data_protocollo) || is_an_html_element(nome)){
+    const form_values = {
+        nome: nome
+    }
+            // schema di validazione del form
+    const form_schema = yup.object().shape({
+        // @ts-ignore
+        nome: yup.string().test("xss", "XSS rilevato", val => !is_an_html_element(val))
+    });
+    await form_schema.validate(form_values, { abortEarly: false }); 
 
-            throw error(400, "Attacco XSS rilevato, sei stato registrato in un log :-) ");   // Non possiamo visualizzare solo l'alert, dobbiamo mandare in errore il server
-            // Potremmo aggiungere nel db o in un file di log l'utente che ha fatto questo attacco.
-        }
+        // if (is_an_html_element(id_convenzione) || is_an_html_element(indirizzo)     // Anti XSS attack
+        //     || is_an_html_element(piva) || is_an_html_element(direttore_name) 
+        //     || is_an_html_element(direttore_luogo) || is_an_html_element(istituto)
+        //     || is_an_html_element(telefono) || is_an_html_element(data_direttore)
+        //     || is_an_html_element(direttore_cf) || is_an_html_element(data_convenzione)
+        //     || is_an_html_element(data_protocollo) || is_an_html_element(nome)){
+
+        //     throw error(400, "Attacco XSS rilevato, sei stato registrato in un log :-) ");   // Non possiamo visualizzare solo l'alert, dobbiamo mandare in errore il server
+        //     // Potremmo aggiungere nel db o in un file di log l'utente che ha fatto questo attacco.
+        // }
 
         try{
-            await SARP.pcto_Azienda.create({
-                data: {
-                    idUtente: 3,
-                    idConvenzione: id_convenzione,
-                    nome: nome,
-                    indirizzo: indirizzo,
-                    piva: piva,
-                    telefono: telefono,
-                    direttore_nome: direttore_name,
-                    direttore_natoA: direttore_luogo,
-                    direttore_natoIl: new Date(data_direttore),
-                    direttore_codiceF: direttore_cf,
-                    dataConvenzione: new Date(data_convenzione),
-                    dataProtocollo: new Date(data_protocollo),
-                    istituto: istituto
-                }
-            });
+            // await SARP.pcto_Azienda.create({
+            //     data: {
+            //         idUtente: 3,
+            //         idConvenzione: id_convenzione,
+            //         nome: nome,
+            //         indirizzo: indirizzo,
+            //         piva: piva,
+            //         telefono: telefono,
+            //         direttore_nome: direttore_name,
+            //         direttore_natoA: direttore_luogo,
+            //         direttore_natoIl: new Date(data_direttore),
+            //         direttore_codiceF: direttore_cf,
+            //         dataConvenzione: new Date(data_convenzione),
+            //         dataProtocollo: new Date(data_protocollo),
+            //         istituto: istituto
+            //     }
+            // });
             return { success: true, message: "" };  // Message avoid an error
         }catch(err){
             console.error(err);

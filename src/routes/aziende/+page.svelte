@@ -6,8 +6,8 @@
     import { onMount } from 'svelte';
     import InputText from '$lib/components/modal/input_text.svelte';
     import InputDate from '$lib/components/modal/input_date.svelte';
-	import * as CodiceFiscaleUtils from '@marketto/codice-fiscale-utils';
-    const { Validator } = CodiceFiscaleUtils;
+	// import * as CodiceFiscaleUtils from '@marketto/codice-fiscale-utils';
+    // const { Validator } = CodiceFiscaleUtils;
 
 	export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
 
@@ -61,16 +61,16 @@
         direttore_natoIl: yup.date().max(new Date(2004,1,1), "Data Invalida"),
         dataConvenzione: yup.date().min(new Date(2022, 1, 1), "Data antecedente al 01/01/2022"),
         dataProtocollo: yup.date().min(new Date(2022, 1, 1), "Data antecedente al 01/01/2022"),
-        telefono: yup.string().matches(/^[+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/, "Numero di telefono invalido"),
-        piva: yup.string().matches(/^[0-9]{11}$/, "Partita IVA non valida"),    // PIVA must be 11 digits
-        direttore_codiceF: yup.string().test("valid_cf", "Codice fiscale invalido", function(value){    // Validate CF
-            const { path, createError } = this;
-            // @ts-ignore
-            if(Validator.codiceFiscale(value).invalid)
-                return createError({ path, message: "Codice fiscale invalido" });
-            else 
-                return true;
-        })
+        // telefono: yup.string().matches(/^[+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/, "Numero di telefono invalido"),
+        // piva: yup.string().matches(/^[0-9]{11}$/, "Partita IVA non valida"),    // PIVA must be 11 digits
+        // direttore_codiceF: yup.string().test("valid_cf", "Codice fiscale invalido", function(value){    // Validate CF
+        //     const { path, createError } = this;
+        //     // @ts-ignore
+        //     if(Validator.codiceFiscale(value).invalid)
+        //         return createError({ path, message: "Codice fiscale invalido" });
+        //     else 
+        //         return true;
+        // })
     });
     async function start_update(e) {
 		modal_action = 'update';
