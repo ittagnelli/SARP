@@ -15,17 +15,8 @@
 	$page_title = 'Utenti';
 	$page_action_title = 'Aggiungi Utente';
 	$page_action_modal = 'modal-add-utente';
-
-	let user_id, nome, cognome, idUtente, istituto, email, telefono, bes, can_login;
 	
-	let istituto_select = 'ITT';
-    let bes_select = 'NO';
-	let can_login_select = 'SI';
-    let tipo = "studente";
-    let ruolo = "admin";
-
-	let modal_action = 'create';
-
+    let modal_action = 'create';
     let modal_form; // entry point del form nel modale
 	let errors = {}; //traccia gli errori di validazione del form
 
@@ -42,7 +33,7 @@
         telefono: '',
         bes_select: 'NO',
 		can_login_select: 'SI',
-        istituto_select: ''
+        istituto_select: 'ITT'
 	};
 
 	// schema di validazione del form
@@ -201,7 +192,7 @@
 						</div>
 					</div>
 					<div class="row">
-                        {#if tipo == "STUDENTE"}
+                        {#if form_values.tipo == "STUDENTE"}
                         <div class="col-lg-4">
 							<div class="mb-3">
 								<label class="form-label">BES</label>
@@ -212,7 +203,7 @@
 											name="bes"
 											value="SI"
 											class="form-selectgroup-input"
-											bind:group={bes_select}
+											bind:group={form_values.bes_select}
 										/>
 										<span class="form-selectgroup-label">SI</span>
 									</label>
@@ -222,7 +213,7 @@
 											name="bes"
 											value="NO"
 											class="form-selectgroup-input"
-											bind:group={bes_select}
+											bind:group={form_values.bes_select}
 										/>
 										<span class="form-selectgroup-label">NO</span>
 									</label>
@@ -240,7 +231,7 @@
 											name="istituto"
 											value="ITT"
 											class="form-selectgroup-input"
-											bind:group={istituto_select}
+											bind:group={form_values.istituto_select}
 										/>
 										<span class="form-selectgroup-label">ITI</span>
 									</label>
@@ -250,7 +241,7 @@
 											name="istituto"
 											value="LICEO"
 											class="form-selectgroup-input"
-											bind:group={istituto_select}
+											bind:group={form_values.istituto_select}
 										/>
 										<span class="form-selectgroup-label">LICEO</span>
 									</label>
@@ -267,7 +258,7 @@
 											name="can_login"
 											value="SI"
 											class="form-selectgroup-input"
-											bind:group={can_login_select}
+											bind:group={form_values.can_login_select}
 										/>
 										<span class="form-selectgroup-label">SI</span>
 									</label>
@@ -277,7 +268,7 @@
 											name="can_login"
 											value="NO"
 											class="form-selectgroup-input"
-											bind:group={can_login_select}
+											bind:group={form_values.can_login_select}
 										/>
 										<span class="form-selectgroup-label">NO</span>
 									</label>
