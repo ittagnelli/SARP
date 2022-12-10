@@ -37,61 +37,62 @@ export const actions = {
     create: async ({ cookies, request }) => {
 
         const form_data = await request.formData();
-        const data_convenzione = form_data.get('dataConvenzione');
-        const data_protocollo = form_data.get('dataProtocollo');
-        const telefono = form_data.get('telefono');
-        const nome = form_data.get('nome');
-        const id_convenzione = form_data.get('idConvenzione');
-        const indirizzo = form_data.get('indirizzo');
-        const piva = form_data.get('piva');
-        const direttore_name = form_data.get('direttore_nome');
-        const direttore_cf = form_data.get('direttore_codiceF');
-        const direttore_luogo = form_data.get('direttore_natoA');
-        const data_direttore = form_data.get('direttore_natoIl');
-        const istituto = form_data.get('istituto');
 
         if (process.env.NODE_ENV != 'production')
             console.log("CREATE AZIENDA:", form_data);
 
-    const form_values = {
-        nome: nome
-    }
-            // schema di validazione del form
-    const form_schema = yup.object().shape({
-        // @ts-ignore
-        nome: yup.string().test("xss", "XSS rilevato", val => !is_an_html_element(val))
+    let form_json = {};
+    let form_validate = {};
+
+    form_data.forEach((value, key) => {
+        form_json[key] = value;
+        form_validate[key] = yup.string().test("xss", "XSS rilevato", val => !is_an_html_element(val));
     });
-    await form_schema.validate(form_values, { abortEarly: false }); 
+    
+            // schema di validazione del form
+    const form_schema = yup.object().shape(form_validate);
+    try {
+        await form_schema.validate(form_json, { abortEarly: false }); 
+    } catch (err) {
+        console.error(err);
+        console.log("Attacco XSS rilevato dall'utente con ID sessione: ", session_id);
+        throw error(400, "Attacco XSS rilevato");
+    }
+    
+    // Queste variabili le ho spostate qua perchè se, nel caso la richiesta sia un attacco XSS, le variabili non servirebbero a nulla, quando siamo sicuri che
+    // non ci sia un attacco in corso prendiamo i valori
 
-        // if (is_an_html_element(id_convenzione) || is_an_html_element(indirizzo)     // Anti XSS attack
-        //     || is_an_html_element(piva) || is_an_html_element(direttore_name) 
-        //     || is_an_html_element(direttore_luogo) || is_an_html_element(istituto)
-        //     || is_an_html_element(telefono) || is_an_html_element(data_direttore)
-        //     || is_an_html_element(direttore_cf) || is_an_html_element(data_convenzione)
-        //     || is_an_html_element(data_protocollo) || is_an_html_element(nome)){
-
-        //     throw error(400, "Attacco XSS rilevato, sei stato registrato in un log :-) ");   // Non possiamo visualizzare solo l'alert, dobbiamo mandare in errore il server
-        //     // Potremmo aggiungere nel db o in un file di log l'utente che ha fatto questo attacco.
-        // }
-
+    const data_convenzione = form_data.get('dataConvenzione');
+    const data_protocollo = form_data.get('dataProtocollo');
+    const telefono = form_data.get('telefono');
+    const nome = form_data.get('nome');
+    const id_convenzione = form_data.get('idConvenzione');
+    const indirizzo = form_data.get('indirizzo');
+    const piva = form_data.get('piva');
+    const direttore_name = form_data.get('direttore_nome');
+    const direttore_cf = form_data.get('direttore_codiceF');
+    const direttore_luogo = form_data.get('direttore_natoA');
+    const data_direttore = form_data.get('direttore_natoIl');
+    const istituto = form_data.get('istituto');
+    const session_id = cookies.get('session');
         try{
-            // await SARP.pcto_Azienda.create({
-            //     data: {
-            //         idUtente: 3,
-            //         idConvenzione: id_convenzione,
-            //         nome: nome,
-            //         indirizzo: indirizzo,
-            //         piva: piva,
-            //         telefono: telefono,
-            //         direttore_nome: direttore_name,
-            //         direttore_natoA: direttore_luogo,
-            //         direttore_natoIl: new Date(data_direttore),
-            //         direttore_codiceF: direttore_cf,
-            //         dataConvenzione: new Date(data_convenzione),
-            //         dataProtocollo: new Date(data_protocollo),
-            //         istituto: istituto
-            //     }
-            // });
+            await SARP.pcto_Azienda.create({
+                data: {
+                    idUtente: 3,
+                    idConvenzione: id_convenzione,
+                    nome: nome,
+                    indirizzo: indirizzo,
+                    piva: piva,
+                    telefono: telefono,
+                    direttore_nome: direttore_name,
+                    direttore_natoA: direttore_luogo,
+                    direttore_natoIl: new Date(data_direttore),
+                    direttore_codiceF: direttore_cf,
+                    dataConvenzione: new Date(data_convenzione),
+                    dataProtocollo: new Date(data_protocollo),
+                    istituto: istituto
+                }
+            });
             return { success: true, message: "" };  // Message avoid an error
         }catch(err){
             console.error(err);
