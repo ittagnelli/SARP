@@ -24,7 +24,7 @@
 						<a href="./docs/index.html" class="link-secondary">Documentazione</a>
 					</li>
 					<li class="list-inline-item">
-						<a href="./docs/index.html" class="link-secondary">FAQ</a>
+						<a href="/faq" class="link-secondary">FAQ</a>
 					</li>
 					<li class="list-inline-item">
 						<a href="./license.html" class="link-secondary">Segnalazioni</a>

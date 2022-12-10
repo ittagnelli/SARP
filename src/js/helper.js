@@ -1,4 +1,5 @@
 import { redirect } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
 
 const ELLIPSES_LENGTH = 50;
 
@@ -25,8 +26,17 @@ export const data2arr = (data) => {
     return collect;
 }
 
+// redirige un utente non autenticato alla pagina di login
 export const route_protect = (locals) => {
 	if (!locals.session) {
 		throw redirect(302, '/login');
 	}
+}
+
+// genera un errore per l'utrente
+export const raise_error = (http_code, code, mex) => {
+    throw error(http_code, {
+        code: code,
+        message: mex
+      });
 }
