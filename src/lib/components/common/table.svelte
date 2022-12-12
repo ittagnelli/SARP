@@ -153,7 +153,7 @@
 
 	<!-- pager -->
 	<div class="card-footer d-flex align-items-center">
-		<p class="m-0 text-muted">Ci sono <span>{rows.length}</span> {type} attive</p>
+		<p class="m-0 text-muted">Ci sono <span>{rows.length}</span> {type} attivi</p>
 		{#if rows.length > page_size}
 			<ul class="pagination m-0 ms-auto">
 				<li class="page-item" class:disabled={current_page == 1}>
