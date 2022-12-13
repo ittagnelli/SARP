@@ -11,6 +11,7 @@
 	export let page_size;
 	export let modal_name;
 	export let type;	// Cosa visualizza la tabella?
+    export let type_genre;
     export let print;
 
 	const dispatch = createEventDispatcher();
@@ -153,7 +154,7 @@
 
 	<!-- pager -->
 	<div class="card-footer d-flex align-items-center">
-		<p class="m-0 text-muted">Ci sono <span>{rows.length}</span> {type} attivi</p>
+		<p class="m-0 text-muted">Ci sono <span>{rows.length}</span> {type} attiv{type_genre == 'm' ? 'i' : 'e'}</p>
 		{#if rows.length > page_size}
 			<ul class="pagination m-0 ms-auto">
 				<li class="page-item" class:disabled={current_page == 1}>

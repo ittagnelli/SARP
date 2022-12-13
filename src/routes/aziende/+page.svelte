@@ -113,6 +113,7 @@
 	modal_name={$page_action_modal}
 	on:update_start={start_update}
 	type="aziende"
+    type_genre="f"
     print={true}
 />
 
