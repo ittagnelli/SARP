@@ -123,6 +123,7 @@
 	modal_name={$page_action_modal}
 	on:update_start={start_update}
 	type="stage"
+    type_genre="m"
 />
 
 <!-- Modal from Page action -->

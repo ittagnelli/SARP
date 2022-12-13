@@ -58,6 +58,7 @@
 	]}
 	rows={aziende}
 	type="valutazioni"
+    type_genre="f"
 	page_size={5}
 	modal_name="modal-add-azienda"
 	on:update_start={start_update}
