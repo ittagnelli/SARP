@@ -25,7 +25,7 @@ async function create_utenti() {
     let cognome = capital(random_item(cognomi));
 
     console.log(`Creazione utente ${nome} ${cognome}`);
-    await SARP.Utente.create({
+    await SARP.utente.create({
         data: {
             nome: nome,
             cognome: cognome,
