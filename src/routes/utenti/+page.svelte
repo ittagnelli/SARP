@@ -39,9 +39,17 @@
 	// schema di validazione del form
 	const form_schema = yup.object().shape({
 		tipo: yup.string().required('Tipo utente necessatrio'),
-        ruolo: yup.string().required('Ruolo utente necessario'),
-        nome: yup.string().required('Nome utente necessario'),
-        cognome: yup.string().required('Cognome utente necessario'),
+		ruolo: yup.string().required('Ruolo utente necessario'),
+
+        nome: yup
+		.string()
+		.required('Nome utente necessario')
+		.matches(/^.((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/, "Nome utente non valido"),
+
+        cognome: yup
+		.string()
+		.required('Cognome utente necessario')
+		.matches(/^.((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/, "Nome utente non valido"),
 	});
 
 	async function start_update(e) {
