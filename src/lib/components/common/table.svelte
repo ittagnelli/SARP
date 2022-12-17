@@ -67,6 +67,16 @@
 		dispatch('update_start', { id: id });
 	}
 
+	function show_users(length, type_genre) {
+  		if(length === 0) {
+    		return "Non ci sono utenti attivi";
+  		} else if (length === 1) {
+    		return "C'è un utente " + (type_genre === 'm' ? "attivo" : "attiva");
+  		} else {
+    		return "Ci sono " + length + " utenti attiv" + (type_genre === 'm' ? "i" : "e");
+  		}
+	}
+
 </script>
 
 <div class="card">
@@ -154,7 +164,9 @@
 
 	<!-- pager -->
 	<div class="card-footer d-flex align-items-center">
-		<p class="m-0 text-muted">Ci sono <span>{rows.length}</span> {type} attiv{type_genre == 'm' ? 'i' : 'e'}</p>
+		<p class="m-0 text-muted" id="users-count">
+			{ show_users(rows.length, type_genre) }
+		</p>
 		{#if rows.length > page_size}
 			<ul class="pagination m-0 ms-auto">
 				<li class="page-item" class:disabled={current_page == 1}>
