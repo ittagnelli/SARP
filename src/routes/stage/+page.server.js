@@ -1,6 +1,8 @@
 import { PrismaClient } from '@prisma/client';
 import { route_protect } from '../../js/helper';
+import { Logger } from '../../js/logger';
 
+let logger = new Logger("server");
 // Istanzia il client per il SARP
 const SARP = new PrismaClient();
 
@@ -37,10 +39,7 @@ export const actions = {
 	create: async ({ cookies, request }) => {
 		const form_data = await request.formData();
 
-        console.log(form_data);
-        console.log(form_data.get('studenti'))
         let studenti = form_data.get('studenti').split(',')
-        console.log("STUDENTI", studenti)
         let ids = [];
         
         if(studenti != '') {
@@ -48,10 +47,8 @@ export const actions = {
                 ids.push({id: +element})
             });
         }
-        console.log("IDS:", ids)
-        
 
-		await SARP.pcto_Pcto.create({
+        await SARP.pcto_Pcto.create({
 			data: {
                 titolo: form_data.get('titolo'),
                 descrizione: form_data.get('descrizione'),
@@ -69,22 +66,13 @@ export const actions = {
 	update: async ({ cookies, request }) => {
 		const form_data = await request.formData();
 		let id = form_data.get('id');
-
-        console.log(form_data);
-        console.log(form_data.get('studenti'))
-        let studenti = form_data.get('studenti').split(',')
-        console.log("STUDENTI:", studenti)
+        let studenti = form_data.get('studenti').split(',');
         let ids = [];
+
         studenti.forEach(element => {
             if(+element > 0) ids.push({id: +element})
         });
-        console.log("IDS:", ids)
-
-        console.log(form_data)
-
-        console.log("DATAINIZIO:", form_data.get('dataInizio'))
-        console.log("DATAFINE:", form_data.get('dataFine'))
-
+        
 		await SARP.pcto_Pcto.update({
 			where: { id: +id },
 			data: {

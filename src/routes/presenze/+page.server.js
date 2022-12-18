@@ -1,6 +1,8 @@
 import { PrismaClient } from '@prisma/client';
 import { route_protect } from '../../js/helper';
+import { Logger } from '../../js/logger';
 
+let logger = new Logger("server");
 // Istanzia il client per il SARP
 const SARP = new PrismaClient();
 
@@ -16,8 +18,6 @@ export async function load({ locals }) {
             lavoraPer: true
 		}
 	});
-
-    console.log(presenze)
 
     const stages = await SARP.pcto_Pcto.findMany({
 		orderBy: [{ id: 'desc' }],
@@ -38,9 +38,6 @@ export async function load({ locals }) {
 export const actions = {
 	create: async ({ cookies, request }) => {
 		const form_data = await request.formData();
-
-        console.log(form_data)
-
         let hh_inizio = form_data.get('oraInizio').split(':')[0];
         let mm_inizio = form_data.get('oraInizio').split(':')[1];
         let hh_fine = form_data.get('oraFine').split(':')[0];
@@ -61,9 +58,6 @@ export const actions = {
 	update: async ({ cookies, request }) => {
 		const form_data = await request.formData();
 		let id = form_data.get('id');
-
-        console.log(form_data)
-
         let hh_inizio = form_data.get('oraInizio').split(':')[0];
         let mm_inizio = form_data.get('oraInizio').split(':')[1];
         let hh_fine = form_data.get('oraFine').split(':')[0];

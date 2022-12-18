@@ -1,15 +1,16 @@
 <script>
 	import { page_pre_title, page_title, page_action_title, page_action_modal } from '../../js/store';
 	import Table from '$lib/components/common/table.svelte';
-	import * as helper from '../../js/helper';
-	import Select from 'svelte-select';
-	import * as yup from 'yup';
-
 	import InputText from '$lib/components/modal/input_text.svelte';
 	import InputDate from '$lib/components/modal/input_date.svelte';
     import InputSelect from '$lib/components/modal/input_select.svelte';
     import InputArea from '$lib/components/modal/input_area.svelte';
+    import * as helper from '../../js/helper';
+	import Select from 'svelte-select';
+	import * as yup from 'yup';
+    import { Logger } from '../../js/logger';
 
+    let logger = new Logger("client");
 	export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
 	let stages = helper.data2arr(data.stages);
     let aziende = helper.data2arr(data.companies);
@@ -63,8 +64,6 @@
 		form_values.pcto_id = e.detail.id;
 		//cerca l'azienda da fare update
 		let stage = stages.filter((item) => item.id == form_values.pcto_id)[0];
-		console.log('UPDATE STAGE:', stage);
-		console.log('STAGE SVOLTO DA:', stage.svoltoDa);
 		form_values.azienda = stage.offertoDa.id;
 		stage.svoltoDa.forEach((utente) => {
 			utente['label'] = utente.cognome.concat(' ', utente.nome);
@@ -81,18 +80,15 @@
 	function handleSelect(event) {
 		let user_selected = event.detail;
 
-        console.log("USER SELECTED:", user_selected)
-		svolto = [];
+       svolto = [];
         if(user_selected) {
             user_selected.forEach((item) => {
                 svolto = [...svolto, item.value];
             });
         }
-		console.log(svolto);
 	}
 
 	async function handleSubmit() {
-		console.log('VALIDAZIONE FORM');
 		try {
 			// valida il form prima del submit
 			await form_schema.validate(form_values, { abortEarly: false });
@@ -102,7 +98,7 @@
 			errors = err.inner.reduce((acc, err) => {
 				return { ...acc, [err.path]: err.message };
 			}, {});
-			console.log('CI SONO ERORRI:', errors);
+			logger.error(`Errori nella validazione del form stage. Oggetto: ${JSON.stringify(form_values)} -- Errore: ${JSON.stringify(errors)}`);
 		}
 	}
 </script>

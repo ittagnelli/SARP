@@ -1,6 +1,8 @@
 import { PrismaClient } from '@prisma/client';
 import { route_protect } from '../../js/helper';
+import { Logger } from '../../js/logger';
 
+let logger = new Logger("server");
 // Istanzia il client per il SARP
 const SARP = new PrismaClient();
 

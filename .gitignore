@@ -9,3 +9,4 @@ prisma/SARP.db-journal
 prisma/SARP_ERD.png
 prisma/migrations/*
 static/pcto_output/*
+log/*
