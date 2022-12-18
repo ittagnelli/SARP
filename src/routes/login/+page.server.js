@@ -70,8 +70,6 @@ export const actions = {
 			}
 		});
 
-
-        console.log(db_query)
         // se utente non è nel DB errore di autenticazione
         if(db_query.length > 0)
             utente = db_query[0];
