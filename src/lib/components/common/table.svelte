@@ -63,7 +63,6 @@
 	}
 
 	function update_row(id) {
-		console.log('UPDATING ID:', id);
 		dispatch('update_start', { id: id });
 	}
 

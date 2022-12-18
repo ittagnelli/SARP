@@ -3,7 +3,9 @@ import { SESSION_TIMEOUT } from '$env/static/private';
 import { PUBLIC_GOOGLE_CLIENT_ID } from '$env/static/public';
 import { redirect, error } from '@sveltejs/kit';
 import { PrismaClient } from '@prisma/client';
+import { Logger } from '../../js/logger';
 
+let logger = new Logger("server");
 const SARP = new PrismaClient();
 
 export const load = async ({ locals }) => {

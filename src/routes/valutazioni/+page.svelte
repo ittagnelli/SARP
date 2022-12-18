@@ -2,7 +2,9 @@
 	import Modal from '$lib/components/common/modal.svelte';
 	import { page_pre_title, page_title, page_action_title, page_action_modal } from '../../js/store';
 	import Table from '$lib/components/common/table.svelte';
+    import { Logger } from '../../js/logger';
 
+    let logger = new Logger("client");
 	export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
 	let aziende = []; // alias per maggior leggibilità
 
@@ -10,7 +12,7 @@
 	Object.keys(data.vals).forEach((key) => {
 		aziende = [...aziende, data.vals[key]];
 	});
-	console.log(data);
+
 	//configura la pagina pre-titolo, titolo e nome del modale
 	$page_pre_title = 'PCTO';
 	$page_title = 'Valutazioni';

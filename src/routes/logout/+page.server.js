@@ -1,6 +1,8 @@
 import { error } from '@sveltejs/kit';
 import { PrismaClient } from '@prisma/client';
+import { Logger } from '../../js/logger';
 
+let logger = new Logger("server");
 const SARP = new PrismaClient();
 
 export const actions = {

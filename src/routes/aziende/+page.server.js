@@ -5,6 +5,9 @@ import fs from 'fs';
 import path from 'path';
 import { redirect } from '@sveltejs/kit';
 import { route_protect } from '../../js/helper';
+import { Logger } from '../../js/logger';
+
+let logger = new Logger("server");
 
 // Istanzia il client per il SARP
 const SARP = new PrismaClient();
@@ -25,8 +28,6 @@ export async function load({ locals }) {
 export const actions = {
 	create: async ({ cookies, request }) => {
 		const form_data = await request.formData();
-
-        console.log("CREATE AZIENDA:", form_data);
 
 		await SARP.pcto_Azienda.create({
 			data: {
@@ -50,8 +51,6 @@ export const actions = {
 	update: async ({ cookies, request }) => {
 		const form_data = await request.formData();
 		let id = form_data.get('id');
-
-        console.log("UPDATE AZIENDA:", form_data);
 
 		await SARP.pcto_Azienda.update({
 			where: { id: +id },
@@ -83,8 +82,6 @@ export const actions = {
 	},
 
     pdf: async ({ cookies, request }) => {
-        console.log("GENERA PDF")
-
         const form_data = await request.formData();
         const id = form_data.get('id');
         
