@@ -2,11 +2,14 @@ import { OAuth2Client } from 'google-auth-library';
 import { SESSION_TIMEOUT } from '$env/static/private';
 import { PUBLIC_GOOGLE_CLIENT_ID } from '$env/static/public';
 import { redirect, error } from '@sveltejs/kit';
-import { PrismaClient } from '@prisma/client';
+import { PrismaDB } from '../../js/prisma_db';
 import { Logger } from '../../js/logger';
+import { Auditor, audit_mex } from '../../js/audit';
 
-let logger = new Logger("server");
-const SARP = new PrismaClient();
+
+let logger = new Logger("seerver"); //instanzia il logger
+let auditor = new Auditor();
+const SARP = new PrismaDB(); //Istanzia il client SARP DB;
 
 export const load = async ({ locals }) => {
 	if (locals.session) throw redirect(302, '/');
@@ -45,9 +48,20 @@ export const actions = {
 
         // se utente non è verificato e non appartiene ad istituto agnelli errore
         if (info_utente.hd != 'istitutoagnelli.it' || 
-            !info_utente.email_verified)
-            throw error(401, "Impossibile autenticare utente");
-        
+            !info_utente.email_verified) {
+                let invalid_mex = new audit_mex(
+                                                0,
+                                                info_utente.email,
+                                                'session',
+                                                'create',
+                                                null,
+                                                null,
+                                                `Tentativo di login ABUSIVO`
+                );
+                auditor.audit(invalid_mex);
+                throw error(401, "Impossibile autenticare utente");
+        }
+
         // verifico se utente è nel DB e può fare il login
 		const db_query = await SARP.Utente.findMany({
 			where: {
@@ -56,11 +70,24 @@ export const actions = {
 			}
 		});
 
+
+        console.log(db_query)
         // se utente non è nel DB errore di autenticazione
-        if(db_query)
+        if(db_query.length > 0)
             utente = db_query[0];
-        else
+        else {
+            let invalid_mex = new audit_mex(
+                                            0,
+                                            info_utente.email,
+                                            'session',
+                                            'create',
+                                            null,
+                                            null,
+                                            `Login ERRORE: utente non presente nel DB o can_login false`
+            );
+            auditor.audit(invalid_mex);
             throw error(401, "Impossibile autenticare utente");
+        }
 
         // rimuovo eventuali vecchie sessioni
         await SARP.Session.deleteMany({
@@ -87,6 +114,17 @@ export const actions = {
 			secure: true,
 			maxAge: SESSION_TIMEOUT / 1000
 		});
+
+        let valid_mex = new audit_mex(
+            utente.id,
+            `${utente.cognome}-${utente.nome}`,
+            'session',
+            'create',
+            null,
+            null,
+            `Login OK ${session_id}`
+        );
+        auditor.audit(valid_mex);
 
 		return { success: true };
 	}

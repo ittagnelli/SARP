@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client';
-import { error, redirect } from '@sveltejs/kit';
 import { Logger } from './js/logger';
 
 
@@ -30,5 +29,5 @@ export const handle = async ({ event, resolve }) => {
 
 
 export const handleError = async ({ error, event }) => {
-    logger.erro(`ERRORE INASPETATTO: ${JSON.stringify(error)}`);
+    logger.error(`ERRORE INASPETTATO: ${error}`);
   }
