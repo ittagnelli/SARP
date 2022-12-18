@@ -1,11 +1,9 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaDB } from '../../js/prisma_db';
 import { route_protect } from '../../js/helper';
 import { Logger } from '../../js/logger';
 
-let logger = new Logger("server");
-// Istanzia il client per il SARP
-const SARP = new PrismaClient();
-
+let logger = new Logger("seerver"); //instanzia il logger
+const SARP = new PrismaDB(); //Istanzia il client SARP DB
 
 export async function load({ locals }) {
     route_protect(locals);
@@ -36,14 +34,14 @@ export async function load({ locals }) {
 }
 
 export const actions = {
-	create: async ({ cookies, request }) => {
+	create: async ({ cookies, request, locals }) => {
 		const form_data = await request.formData();
         let hh_inizio = form_data.get('oraInizio').split(':')[0];
         let mm_inizio = form_data.get('oraInizio').split(':')[1];
         let hh_fine = form_data.get('oraFine').split(':')[0];
         let mm_fine = form_data.get('oraFine').split(':')[1];
         
-          
+        SARP.set_session(locals); // passa la sessione all'audit
 		await SARP.pcto_Presenza.create({
 			data: {
                 dataPresenza: new Date(form_data.get('dataPresenza')),
@@ -55,7 +53,7 @@ export const actions = {
 		});
 	},
 
-	update: async ({ cookies, request }) => {
+	update: async ({ cookies, request, locals }) => {
 		const form_data = await request.formData();
 		let id = form_data.get('id');
         let hh_inizio = form_data.get('oraInizio').split(':')[0];
@@ -63,6 +61,7 @@ export const actions = {
         let hh_fine = form_data.get('oraFine').split(':')[0];
         let mm_fine = form_data.get('oraFine').split(':')[1];
         
+        SARP.set_session(locals); // passa la sessione all'audit
 		await SARP.pcto_Presenza.update({
 			where: { id: +id },
 			data: {
@@ -75,10 +74,11 @@ export const actions = {
 		});
 	},
 
-	delete: async ({ cookies, request }) => {
+	delete: async ({ cookies, request, locals }) => {
 		const form_data = await request.formData();
 		const id = form_data.get('id');
 
+        SARP.set_session(locals); // passa la sessione all'audit
 		await SARP.pcto_Presenza.delete({
 			where: { id: +id }
 		});

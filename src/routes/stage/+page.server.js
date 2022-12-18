@@ -1,11 +1,9 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaDB } from '../../js/prisma_db';
 import { route_protect } from '../../js/helper';
 import { Logger } from '../../js/logger';
 
-let logger = new Logger("server");
-// Istanzia il client per il SARP
-const SARP = new PrismaClient();
-
+let logger = new Logger("seerver"); //instanzia il logger
+const SARP = new PrismaDB(); //Istanzia il client SARP DB
 
 export async function load({ locals }) {
     route_protect(locals);
@@ -36,7 +34,7 @@ export async function load({ locals }) {
 }
 
 export const actions = {
-	create: async ({ cookies, request }) => {
+	create: async ({ cookies, request, locals }) => {
 		const form_data = await request.formData();
 
         let studenti = form_data.get('studenti').split(',')
@@ -48,6 +46,7 @@ export const actions = {
             });
         }
 
+        SARP.set_session(locals); // passa la sessione all'audit
         await SARP.pcto_Pcto.create({
 			data: {
                 titolo: form_data.get('titolo'),
@@ -63,7 +62,7 @@ export const actions = {
 		});
 	},
 
-	update: async ({ cookies, request }) => {
+	update: async ({ cookies, request, locals }) => {
 		const form_data = await request.formData();
 		let id = form_data.get('id');
         let studenti = form_data.get('studenti').split(',');
@@ -73,6 +72,7 @@ export const actions = {
             if(+element > 0) ids.push({id: +element})
         });
         
+        SARP.set_session(locals); // passa la sessione all'audit
 		await SARP.pcto_Pcto.update({
 			where: { id: +id },
 			data: {
@@ -89,10 +89,11 @@ export const actions = {
 		});
 	},
 
-	delete: async ({ cookies, request }) => {
+	delete: async ({ cookies, request, locals }) => {
 		const form_data = await request.formData();
 		const id = form_data.get('id');
 
+        SARP.set_session(locals); // passa la sessione all'audit
 		await SARP.pcto_Pcto.delete({
 			where: { id: +id }
 		});
