@@ -75,14 +75,14 @@ model pcto_Presenza {
 }
 
 model pcto_Valutazione {
-    utente     Utente    @relation(fields: [idUtente], references: [id])
-    idUtente   Int
-    pcto       pcto_Pcto @relation(fields: [idPcto], references: [id])
-    idPcto     Int
-    valutatore String
-    voto       Int
-
-    @@id([idUtente, idPcto, valutatore])
+    id        Int       @id @default(autoincrement())
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+    utente    Utente    @relation(fields: [idUtente], references: [id])
+    idUtente  Int
+    pcto      pcto_Pcto @relation(fields: [idPcto], references: [id])
+    idPcto    Int
+    risposte  String
 }
 
 model pcto_Azienda {
@@ -117,7 +117,7 @@ model pcto_Pcto {
     dataFine      DateTime
     offertoDa     pcto_Azienda       @relation(fields: [idAzienda], references: [id])
     idAzienda     Int
-    valuta        pcto_Valutazione[]
+    valutatoDa    pcto_Valutazione[]
     presenziatoDa pcto_Presenza[]
     svoltoDa      Utente[]
 }

@@ -124,7 +124,8 @@
 	columns={[
 		{ name: 'utente', type: 'object', display: 'Autore', key: 'nome' },
         { name: 'pcto', type: 'object', display: 'Stage', key: 'titolo'},
-		{ name: 'id', type: 'hidden', display: 'id'}
+		{ name: 'createdAt', type: 'date', display:'data creazione'},
+        { name: 'id', type: 'hidden', display: 'id'}
 	]}
 	rows={stages}
 	page_size={5}
@@ -162,7 +163,7 @@
                             <div class="form-label select_text">PCTO</div>
                             <select class="form-select" name="id_pcto" bind:value={id_valutazione}>
                                 {#each data.stages as stage}
-                                    <option value={stage.id}>{stage.titolo}{stage.id}</option>
+                                    <option value={stage.id}>{stage.titolo}</option>
                                 {/each}
 					        </select>	
                         </div>
