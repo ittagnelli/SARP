@@ -55,6 +55,7 @@
         let stage = stages.filter((item) => item.id == form_values.id_valutazione)[0];
         form_values.idPcto = stage.id_pcto;
         form_values.idUtente = stage.idUtente
+
 	}
 
     async function handleSubmit() {
@@ -114,6 +115,9 @@
             let inputs = document.getElementsByName("form-payment");
             for(const input of inputs)
                 input.checked = false;
+        } else if(modal_action == "update"){
+            let input = document.getElementById(selected_answers[question]);
+            input.checked = true;
         }
     }
 
