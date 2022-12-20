@@ -18,18 +18,18 @@ export async function load({ locals }) {
     const pcto = await SARP.pcto_Pcto.findMany();
 	// const companies = await SARP.pcto_Azienda.findMany();
 
-	valutations.forEach(val => {
-    //     const company = pcto.filter(company => company.id == val.pcto.idAzienda)[0];
-	// 	// @ts-ignore
-    //     val["company"] = company.nome;
-	});
+	// valutations.forEach(val => {
+    // //     const company = pcto.filter(company => company.id == val.pcto.idAzienda)[0];
+	// // 	// @ts-ignore
+    // //     val["company"] = company.nome;
+	// });
 
     return { vals: valutations, stages: pcto };
 
 }
 
 export const actions = {
-	create: async ({ cookies, request }) => {
+    create: async ({ cookies, request, locals }) => {
         const form_data = await request.formData();
 		const id_pcto = form_data.get('id_pcto');
         const answers = form_data.get('answers');
@@ -38,7 +38,7 @@ export const actions = {
 		await SARP.pcto_Valutazione.create({
             data: {
 				idPcto: parseInt(id_pcto),
-                idUtente: 1,	// Default user, we need to change this
+                idUtente: locals.session.login.id,	// Default user, we need to change this
                 risposte: answers
 			}
 		});
@@ -55,7 +55,7 @@ export const actions = {
             where: { id: +id },
             data: {
                 idPcto: parseInt(id_pcto),
-                idUtente: 1,	// Default user, we need to change this
+                idUtente: locals.session.login.id,	// Default user, we need to change this
                 risposte: answers
 			}
 		});
