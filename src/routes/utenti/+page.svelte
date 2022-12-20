@@ -40,18 +40,32 @@
 
 	// schema di validazione del form
 	const form_schema = yup.object().shape({
-		tipo: yup.string().required('Tipo utente necessatrio'),
-		ruolo: yup.string().required('Ruolo utente necessario'),
+		tipo: yup
+		.string()
+		.required('Tipo utente necessatrio'),
+
+		ruolo: yup
+		.string()
+		.required('Ruolo utente necessario'),
 
         nome: yup
 		.string()
 		.required('Nome utente necessario')
-		.matches(/^.((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/, "Nome utente non valido"),
+		.matches(/^[a-zA-Z]+$/, "Nome utente non valido"),
 
         cognome: yup
 		.string()
 		.required('Cognome utente necessario')
-		.matches(/^.((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/, "Nome utente non valido"),
+		.matches(/^[a-zA-Z]+$/, "Cognome utente non valido"),
+
+		email: yup
+		.string()
+		.required('Email necessaria')
+		.matches(/^[a-z]+\.[a-z]+@istitutoagnelli.it$/, "Email non valida [nome.cognome@istitutoagnelli.it]"),
+
+		telefono: yup
+		.string()
+		.matches(/^[0-9]{3}\.[0-9]{3}\.[0-9]{2}\.[0-9]{2}$/, "Numero non valido [333.123.45.67]")
 	});
 
 	async function start_update(e) {
@@ -172,7 +186,7 @@
                             <InputText
                                 label="Email"
                                 name="email"
-                                placeholder="email Utente"
+                                placeholder="nome.cognome@istitutoagnelli.it"
                                 bind:val={form_values.email}
                                 {errors}
                             />
@@ -181,7 +195,7 @@
                             <InputText
                                 label="Telefono"
                                 name="telefono"
-                                placeholder="Telefono Utente"
+                                placeholder="333.123.45.67"
                                 bind:val={form_values.telefono}
                                 {errors}
                             />
