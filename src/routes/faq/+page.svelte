@@ -2,6 +2,9 @@
 	import { page_pre_title, page_title, page_action_title } from '../../js/store';
 	import Faq from '$lib/components/faq/faq.svelte';
 	import FaqSection from '$lib/components/faq/faq_section.svelte';
+    import { Logger } from '../../js/logger';
+
+    let logger = new Logger("client");
 
 	//configura la pagina pre-titolo, titolo e nome del modale
 	$page_pre_title = 'Documentation';

@@ -4,10 +4,10 @@
     import RadioQuestions from '$lib/components/valutazioni/radioQuestions.svelte';
     import * as helper from '../../js/helper';
     import * as yup from 'yup';
-
     import InputText from '$lib/components/modal/input_text.svelte';
-	
-
+    import { Logger } from '../../js/logger';
+    
+    let logger = new Logger("client");
 	export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
     //let valutazioni = helper.data2arr(data);
 	let stages = []; // alias per maggior leggibilità

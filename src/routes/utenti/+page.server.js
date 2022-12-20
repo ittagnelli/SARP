@@ -1,9 +1,9 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaDB } from '../../js/prisma_db';
 import { route_protect, raise_error } from '../../js/helper';
+import { Logger } from '../../js/logger';
 
-// Istanzia il client per il SARP
-const SARP = new PrismaClient();
-
+let logger = new Logger("seerver"); //instanzia il logger
+const SARP = new PrismaDB(); //Istanzia il client SARP DB
 
 export async function load({ locals }) {
     route_protect(locals);
@@ -21,8 +21,7 @@ export async function load({ locals }) {
         orderBy: [{ id: 'desc' }]
     });
 
-    console.log("LOAD UTENTI SERVER")
-	// restituisco il risultato della query SQL
+    // restituisco il risultato della query SQL
 	return {
         utenti: utenti,
         tipi_utente: tipi_utente,
@@ -31,9 +30,10 @@ export async function load({ locals }) {
 }
 
 export const actions = {
-	create: async ({ cookies, request }) => {
+	create: async ({ cookies, request, locals }) => {
 		const form_data = await request.formData();
 
+        SARP.set_session(locals); // passa la sessione all'audit
 		await SARP.Utente.create({
 			data: {
 				nome: form_data.get('nome'),
@@ -49,10 +49,11 @@ export const actions = {
 		});
 	},
 
-	update: async ({ cookies, request }) => {
+	update: async ({ cookies, request, locals }) => {
 		const form_data = await request.formData();
 		let id = form_data.get('id');
         
+        SARP.set_session(locals); // passa la sessione all'audit
 		await SARP.Utente.update({
 			where: { id: +id },
 			data: {
@@ -69,10 +70,11 @@ export const actions = {
 		});
 	},
 
-	delete: async ({ cookies, request }) => {
+	delete: async ({ cookies, request, locals }) => {
 		const form_data = await request.formData();
 		const id = form_data.get('id');
 
+        SARP.set_session(locals); // passa la sessione all'audit
 		await SARP.Utente.delete({
 			where: { id: +id }
 		});

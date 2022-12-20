@@ -1,13 +1,14 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaDB } from '../../js/prisma_db';
 import PizZip from 'pizzip';
 import Docxtemplater from 'docxtemplater';
 import fs from 'fs';
 import path from 'path';
 import { redirect } from '@sveltejs/kit';
 import { route_protect } from '../../js/helper';
+import { Logger } from '../../js/logger';
 
-// Istanzia il client per il SARP
-const SARP = new PrismaClient();
+let logger = new Logger("seerver"); //instanzia il logger
+const SARP = new PrismaDB(); //Istanzia il client SARP DB
 
 
 export async function load({ locals }) {
@@ -23,11 +24,10 @@ export async function load({ locals }) {
 }
 
 export const actions = {
-	create: async ({ cookies, request }) => {
+	create: async ({ cookies, request, locals }) => {
 		const form_data = await request.formData();
 
-        console.log("CREATE AZIENDA:", form_data);
-
+        SARP.set_session(locals); // passa la sessione all'audit
 		await SARP.pcto_Azienda.create({
 			data: {
                 idUtente: 3,
@@ -47,12 +47,11 @@ export const actions = {
 		});
 	},
 
-	update: async ({ cookies, request }) => {
+	update: async ({ cookies, request, locals }) => {
 		const form_data = await request.formData();
 		let id = form_data.get('id');
 
-        console.log("UPDATE AZIENDA:", form_data);
-
+        SARP.set_session(locals); // passa la sessione all'audit
 		await SARP.pcto_Azienda.update({
 			where: { id: +id },
 			data: {
@@ -73,18 +72,17 @@ export const actions = {
 		});
 	},
 
-	delete: async ({ cookies, request }) => {
+	delete: async ({ cookies, request, locals }) => {
 		const form_data = await request.formData();
 		const id = form_data.get('id');
 
+        SARP.set_session(locals); // passa la sessione all'audit
 		await SARP.pcto_Azienda.delete({
 			where: { id: +id }
 		});
 	},
 
     pdf: async ({ cookies, request }) => {
-        console.log("GENERA PDF")
-
         const form_data = await request.formData();
         const id = form_data.get('id');
         

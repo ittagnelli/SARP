@@ -1,12 +1,13 @@
 <script>
 	import { page_pre_title, page_title, page_action_title, page_action_modal } from '../../js/store';
 	import Table from '$lib/components/common/table.svelte';
+    import InputDate from '$lib/components/modal/input_date.svelte';
+    import InputTime from '$lib/components/modal/input_time.svelte';
     import * as helper from '../../js/helper';
     import * as yup from 'yup';
+    import { Logger } from '../../js/logger';
 
-	import InputDate from '$lib/components/modal/input_date.svelte';
-    import InputTime from '$lib/components/modal/input_time.svelte';
-    
+    let logger = new Logger("client");
 	export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
 	let presenze = helper.data2arr(data.presenze);
     let pcto = helper.data2arr(data.stages);
@@ -15,10 +16,8 @@
     $: {
         // pcto_studenti = [];
         let selected_stage = pcto.filter((item) => item.id == form_values.stage);
-        console.log("STAGE SELEZIONATO", form_values.stage, selected_stage);
         if(selected_stage[0])
             pcto_studenti = selected_stage[0].svoltoDa;
-        console.log("PCTO STUDENTI:", pcto_studenti);
     }
 
 	//configura la pagina pre-titolo, titolo e nome del modale
@@ -54,12 +53,10 @@
 	async function start_update(e) {
 		modal_action = 'update';
 		
-        console.log("UPDATE:", e.detail)
         form_values.presenza_id = e.detail.id;
 		//cerca l'azienda da fare update
 		let presenza = presenze.filter((item) => item.id == form_values.presenza_id)[0];
 		
-        console.log("PRESENZA:", presenza)
         form_values.stage =  presenza.idPcto;
         form_values.studente = presenza.idUtente;
         form_values.dataPresenza = helper.convert_date(presenza.dataPresenza);
@@ -68,7 +65,6 @@
 	}
 
     async function handleSubmit() {
-		console.log('VALIDAZIONE FORM');
 		try {
 			// valida il form prima del submit
 			await form_schema.validate(form_values, { abortEarly: false });
@@ -78,10 +74,9 @@
 			errors = err.inner.reduce((acc, err) => {
 				return { ...acc, [err.path]: err.message };
 			}, {});
-			console.log('CI SONO ERORRI:', errors);
+			logger.error(`Errori nella validazione del form presenze. Oggetto: ${JSON.stringify(form_values)} -- Errore: ${JSON.stringify(errors)}`);
 		}
 	}
-
 </script>
 
 <Table
