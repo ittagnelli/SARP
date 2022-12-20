@@ -1,12 +1,13 @@
 <script>
 	import { page_pre_title, page_title, page_action_title, page_action_modal } from '../../js/store';
-	import Table from '$lib/components/common/table.svelte';
+	import InputText from '$lib/components/modal/input_text.svelte';
+    import InputDate from '$lib/components/modal/input_date.svelte';
+    import Table from '$lib/components/common/table.svelte';
     import * as helper from '../../js/helper';
     import * as yup from 'yup';
+    import { Logger } from '../../js/logger';
 
-    import InputText from '$lib/components/modal/input_text.svelte';
-    import InputDate from '$lib/components/modal/input_date.svelte';
-	
+    let logger = new Logger("client");
 	export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
     // inizializzo la lista delle aziende con il risultato della query SQL
     let aziende = helper.data2arr(data); // alias per maggior leggibilità
@@ -61,25 +62,22 @@
 		//cerca l'azienda da fare update
 		let azienda = aziende.filter((item) => item.id == form_values.company_id)[0];
 
-        console.log("UPDATE AZIENDA:", azienda);
-		
         form_values.nome = azienda.nome;
 		form_values.indirizzo = azienda.indirizzo;
         form_values.piva = azienda.piva;
         form_values.telefono = azienda.telefono;
         form_values.direttore_nome = azienda.direttore_nome;
         form_values.direttore_natoA = azienda.direttore_natoA;
-        form_values.direttore_natoIl = convert_date(azienda.direttore_natoIl);
+        form_values.direttore_natoIl = helper.convert_date(azienda.direttore_natoIl);
         form_values.direttore_codiceF = azienda.direttore_codiceF;
         form_values.idConvenzione = azienda.idConvenzione;
         form_values.idUtente = azienda.idUtente;
-		form_values.dataConvenzione = convert_date(azienda.dataConvenzione);
-		form_values.dataProtocollo = convert_date(azienda.dataProtocollo);
+		form_values.dataConvenzione = helper.convert_date(azienda.dataConvenzione);
+		form_values.dataProtocollo = helper.convert_date(azienda.dataProtocollo);
         form_values.istituto = azienda.istituto;
 	}
 
     async function handleSubmit() {
-        console.log("VALIDAZIONE FORM")
         try {
             // valida il form prima del submit
             await form_schema.validate(form_values, { abortEarly: false });
@@ -89,7 +87,7 @@
             errors = err.inner.reduce((acc, err) => {
                 return { ...acc, [err.path]: err.message };
             }, {});
-            console.log("CI SONO ERORRI:", errors)
+            logger.error(`Errori nella validazione del form aziende. Oggetto: ${JSON.stringify(form_values)} -- Errore: ${JSON.stringify(errors)}`);
         }
     }
 </script>
@@ -113,6 +111,7 @@
 	modal_name={$page_action_modal}
 	on:update_start={start_update}
 	type="aziende"
+    type_genre="f"
     print={true}
 />
 

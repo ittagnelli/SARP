@@ -1,9 +1,9 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaDB } from '../../js/prisma_db';
 import { route_protect } from '../../js/helper';
+import { Logger } from '../../js/logger';
 
-// Istanzia il client per il SARP
-const SARP = new PrismaClient();
-
+let logger = new Logger("seerver"); //instanzia il logger
+const SARP = new PrismaDB(); //Istanzia il client SARP DB
 
 export async function load({ locals }) {
     route_protect(locals);
@@ -29,11 +29,12 @@ export async function load({ locals }) {
 }
 
 export const actions = {
-	create: async ({ cookies, request }) => {
+	create: async ({ cookies, request, locals }) => {
 		const form_data = await request.formData();
 		const voto = form_data.get('voto');	// We need to cast it to a number, so declare as variable and then cast it 
 		const id_pcto = form_data.get('id_pcto');
 
+        SARP.set_session(locals); // passa la sessione all'audit
 		await SARP.pcto_Valutazione.create({
 			data: {
 				voto: parseInt(voto),
@@ -44,13 +45,14 @@ export const actions = {
 		});
 	},
 
-	update: async ({ cookies, request }) => {
+	update: async ({ cookies, request, locals }) => {
 		const form_data = await request.formData();
 		const ids_raw = form_data.get('ids').split(',');
 		const old_ids_raw = form_data.get('old_ids').split(',');
 
 		const voto = form_data.get('voto');	// We need to cast it to a number, so declare as variable and then cast it 
 
+        SARP.set_session(locals); // passa la sessione all'audit
 		await SARP.pcto_Valutazione.update({
 			where: { 
 				idUtente_idPcto_valutatore: {
@@ -68,12 +70,14 @@ export const actions = {
 		});
 	},
 
-	delete: async ({ cookies, request }) => {
+	delete: async ({ cookies, request, locals }) => {
 		const form_data = await request.formData();
 
-		const raw_data = form_data.get('id').split(',');	// array from form data is a string without brackets so we parse it 
-												// index 0 = id_utente, 1 = id_pcto, 2 = valutatore
-		
+        // array from form data is a string without brackets so we parse it
+        // index 0 = id_utente, 1 = id_pcto, 2 = valutatore
+		const raw_data = form_data.get('id').split(',');	 
+												
+        SARP.set_session(locals); // passa la sessione all'audit
 		await SARP.pcto_Valutazione.delete({
 			where: { 
 				idUtente_idPcto_valutatore: {

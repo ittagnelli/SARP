@@ -11,6 +11,7 @@
 	export let page_size;
 	export let modal_name;
 	export let type;	// Cosa visualizza la tabella?
+    export let type_genre;
     export let print;
 
 	const dispatch = createEventDispatcher();
@@ -62,8 +63,17 @@
 	}
 
 	function update_row(id) {
-		console.log('UPDATING ID:', id);
 		dispatch('update_start', { id: id });
+	}
+
+	function show_users(length, type_genre) {
+  		if(length === 0) {
+    		return "Non ci sono utenti attivi";
+  		} else if (length === 1) {
+    		return "C'è un utente " + (type_genre === 'm' ? "attivo" : "attiva");
+  		} else {
+    		return "Ci sono " + length + " utenti attiv" + (type_genre === 'm' ? "i" : "e");
+  		}
 	}
 
 </script>
@@ -153,7 +163,9 @@
 
 	<!-- pager -->
 	<div class="card-footer d-flex align-items-center">
-		<p class="m-0 text-muted">Ci sono <span>{rows.length}</span> {type} attive</p>
+		<p class="m-0 text-muted" id="users-count">
+			{ show_users(rows.length, type_genre) }
+		</p>
 		{#if rows.length > page_size}
 			<ul class="pagination m-0 ms-auto">
 				<li class="page-item" class:disabled={current_page == 1}>

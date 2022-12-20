@@ -4,12 +4,14 @@
     import * as helper from '../../js/helper';
     import * as yup from 'yup';
     import InputText from '$lib/components/modal/input_text.svelte';
-	
+    import { Logger } from '../../js/logger';
+
+    let logger = new Logger("client");
 	export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
 	let utenti = helper.data2arr(data.utenti);
     let tipi_utente = helper.data2arr(data.tipi_utente);
 	let ruoli_utente = helper.data2arr(data.ruoli_utente);
-
+    
 	//configura la pagina pre-titolo, titolo e nome del modale
 	$page_pre_title = 'ADMIN';
 	$page_title = 'Utenti';
@@ -54,12 +56,10 @@
 
 	async function start_update(e) {
 		modal_action = 'update';
-        console.log("UPDATE:", e.detail)
-		form_values.user_id = e.detail.id;
+        form_values.user_id = e.detail.id;
 		//cerca l'utente da fare update
 		let utente = utenti.filter((item) => item.id == form_values.user_id)[0];
 
-        console.log("UTENTE UPDATE:", utente);
         form_values.nome = utente.nome;
         form_values.cognome = utente.cognome;
         form_values.email = utente.email;
@@ -72,7 +72,7 @@
 	}
 
     async function handleSubmit() {
-		console.log('VALIDAZIONE FORM');
+
 		try {
 			// valida il form prima del submit
 			await form_schema.validate(form_values, { abortEarly: false });
@@ -82,7 +82,7 @@
 			errors = err.inner.reduce((acc, err) => {
 				return { ...acc, [err.path]: err.message };
 			}, {});
-			console.log('CI SONO ERORRI:', errors);
+			logger.error(`Errori nella validazione del form utenti. Oggetto: ${JSON.stringify(form_values)} -- Errore: ${JSON.stringify(errors)}`);
 		}
 	}
 </script>
@@ -106,6 +106,7 @@
 	modal_name={$page_action_modal}
 	on:update_start={start_update}
 	type="utenti"
+    type_genre="m"
 />
 
 <!-- Modal from Page action -->

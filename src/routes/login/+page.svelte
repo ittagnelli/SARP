@@ -2,6 +2,9 @@
 	import { onMount } from 'svelte';
 	import { PUBLIC_GOOGLE_CLIENT_ID } from '$env/static/public';
 	import { invalidateAll } from '$app/navigation';
+    import { Logger } from '../../js/logger';
+
+    let logger = new Logger("client");
 
 	let login_error = false; // signal error to user
 	let google_button; // google login button
@@ -27,11 +30,9 @@
 			});
 
 			if (res.ok) {
-				console.log('USER LOGIN CORRECT');
 				login_error = false;
 				invalidateAll();
 			} else {
-				console.log('USER LOGIN ERROR!!!');
 				login_error = true;
 			}
 		}

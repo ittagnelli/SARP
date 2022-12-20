@@ -1,9 +1,9 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaDB } from '../../js/prisma_db';
 import { route_protect } from '../../js/helper';
+import { Logger } from '../../js/logger';
 
-// Istanzia il client per il SARP
-const SARP = new PrismaClient();
-
+let logger = new Logger("seerver"); //instanzia il logger
+const SARP = new PrismaDB(); //Istanzia il client SARP DB
 
 export async function load({ locals }) {
     route_protect(locals);
@@ -34,13 +34,10 @@ export async function load({ locals }) {
 }
 
 export const actions = {
-	create: async ({ cookies, request }) => {
+	create: async ({ cookies, request, locals }) => {
 		const form_data = await request.formData();
 
-        console.log(form_data);
-        console.log(form_data.get('studenti'))
         let studenti = form_data.get('studenti').split(',')
-        console.log("STUDENTI", studenti)
         let ids = [];
         
         if(studenti != '') {
@@ -48,10 +45,9 @@ export const actions = {
                 ids.push({id: +element})
             });
         }
-        console.log("IDS:", ids)
-        
 
-		await SARP.pcto_Pcto.create({
+        SARP.set_session(locals); // passa la sessione all'audit
+        await SARP.pcto_Pcto.create({
 			data: {
                 titolo: form_data.get('titolo'),
                 descrizione: form_data.get('descrizione'),
@@ -66,25 +62,17 @@ export const actions = {
 		});
 	},
 
-	update: async ({ cookies, request }) => {
+	update: async ({ cookies, request, locals }) => {
 		const form_data = await request.formData();
 		let id = form_data.get('id');
-
-        console.log(form_data);
-        console.log(form_data.get('studenti'))
-        let studenti = form_data.get('studenti').split(',')
-        console.log("STUDENTI:", studenti)
+        let studenti = form_data.get('studenti').split(',');
         let ids = [];
+
         studenti.forEach(element => {
             if(+element > 0) ids.push({id: +element})
         });
-        console.log("IDS:", ids)
-
-        console.log(form_data)
-
-        console.log("DATAINIZIO:", form_data.get('dataInizio'))
-        console.log("DATAFINE:", form_data.get('dataFine'))
-
+        
+        SARP.set_session(locals); // passa la sessione all'audit
 		await SARP.pcto_Pcto.update({
 			where: { id: +id },
 			data: {
@@ -101,10 +89,11 @@ export const actions = {
 		});
 	},
 
-	delete: async ({ cookies, request }) => {
+	delete: async ({ cookies, request, locals }) => {
 		const form_data = await request.formData();
 		const id = form_data.get('id');
 
+        SARP.set_session(locals); // passa la sessione all'audit
 		await SARP.pcto_Pcto.delete({
 			where: { id: +id }
 		});

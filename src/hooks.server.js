@@ -1,17 +1,15 @@
 import { PrismaClient } from '@prisma/client';
-import { error, redirect } from '@sveltejs/kit';
+import { Logger } from './js/logger';
 
+
+let logger = new Logger("server");
 const SARP = new PrismaClient();
 
 export const handle = async ({ event, resolve }) => {
-	console.log('SERVER HOOK FOR REQUEST:', event.routeId);
-
 	const session_id = event.cookies.get('session');
-	console.log('SERVER HOOKS COOKIE:', session_id);
-
+	
     // se facciamo logout oppure il cookie è scaduto chiudiamo la sessione
-	if (event.routeId == 'logout' || !session_id) {
-        console.log("HOOK LOGOUT OPPURE SCADUTO");
+	if (event.routeId == 'logout' || !session_id) { 
 		event.locals.session = undefined;
 		return await resolve(event);
 	}
@@ -31,6 +29,5 @@ export const handle = async ({ event, resolve }) => {
 
 
 export const handleError = async ({ error, event }) => {
-    console.log("ERRORE INASPETATTO:", error);
-    //aggiungere loggin to sentry o simile
+    logger.error(`ERRORE INASPETTATO: ${error}`);
   }
