@@ -29,7 +29,10 @@
 					<li class="list-inline-item">
 						<a href="./license.html" class="link-secondary">Segnalazioni</a>
 					</li>
-					<li class="list-inline-item" on:click={() => logout()}>
+                    <li class="list-inline-item">
+						<a href="/changelog" class="link-secondary">Changelog</a>
+					</li>
+                    <li class="list-inline-item" on:click={() => logout()}>
 						<a href="#" class="link-secondary">Log Out</a>
 					</li>
 				</ul>
