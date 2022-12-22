@@ -13,11 +13,10 @@
 		<h1 class="navbar-brand navbar-brand-autodark">
 			<a href=".">
 				<img
-					src="/img/logo_agnelli.png"
-					width="130"
-					height="48"
-					alt="Agnelli"
-					style="position: relative; left: -1.5rem;"
+					src="/img/logo_sarp.png"
+					width="100"
+					alt="SARP"
+					style="position: relative; top: 0.5rem; left: -0.3rem;"
 				/>
 			</a>
 		</h1>
