@@ -44,10 +44,21 @@
 
 	// schema di validazione del form
 	const form_schema = yup.object().shape({
-        stage: yup.number().min(1, 'PCTO necessario'),
-        studente: yup.number().min(1, 'Studente necessario'),
-        dataPresenza: yup.string().length(10, "Data necessaria"),
-        oraInizio: yup.string().length(5, "Orario necessario")
+        stage: yup
+		.number()
+		.min(1, 'PCTO necessario'),
+
+        studente: yup
+		.number()
+		.min(1, 'Studente necessario'),
+
+        dataPresenza: yup
+		.string()
+		.length(10, "Data necessaria"),
+
+        oraInizio: yup
+		.string()
+		.length(5, "Orario necessario")
 	});
 
 	async function start_update(e) {
