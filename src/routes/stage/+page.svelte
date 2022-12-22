@@ -54,8 +54,23 @@
 
 	// schema di validazione del form
 	const form_schema = yup.object().shape({
-		titolo: yup.string().required('Titolo PCTO necessatrio'),
-        azienda: yup.number().min(1, 'Azienda necessaria')
+		tutor: yup
+		.string()
+		.required("Nome e Cognome tutor necessario")
+		.matches(/^[a-zA-Z ']{3,40}$/, "Nome e Cognome tutor non valido"),
+		
+		titolo: yup
+		.string()
+		.required('Titolo PCTO necessatrio')
+		.matches(/^[a-zA-Z0-9\. -']{3,40}$/, "Titolo PCTO non valido"),
+
+		descrizione: yup
+		.string()
+		.max(500, "Descrizione troppo lunga. Max 500 caratteri"),
+
+        azienda: yup
+		.number()
+		.min(1, 'Azienda necessaria')
 	});
 
 	async function start_update(e) {
@@ -204,7 +219,7 @@
 						<div class="col-lg-12">
                             <InputArea
                                 label="Descrizione"
-                                val={form_values.descrizione}
+                                bind:val={form_values.descrizione}
                                 name="descrizione"
                                 placeholder="Descrizione PCTO..."
                                 {errors}
