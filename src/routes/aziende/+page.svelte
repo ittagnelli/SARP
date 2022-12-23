@@ -47,12 +47,59 @@
 
     // schema di validazione del form
     const form_schema = yup.object().shape({
-        nome: yup.string().required("Nome Azienda necessario"),
-        idConvenzione: yup.string().required("Numero Convenzione necessario"),
-        idUtente: yup.number().positive(),
-        direttore_natoIl: yup.date().max(new Date(2004,1,1), "Data Invalida"),
-        dataConvenzione: yup.date().min(new Date(2022, 1, 1), "Data antecedente al 01/01/2022"),
-        dataProtocollo: yup.date().min(new Date(2022, 1, 1), "Data antecedente al 01/01/2022"),
+        nome: yup
+        .string()
+        .required("Nome Azienda necessario")
+        .matches(/^[a-zA-Z0-9.@\- 'à-è-ì-ò-ù]{3,40}$/, "Nome azienda non valida"),
+        
+        indirizzo: yup
+        .string()
+        .required("Indirizzo dell'azienda necessario")
+        .matches(/^[a-zA-Z0-9 /]{3,40}$/, "Indirizzo azienda non valido"),
+
+        piva: yup
+        .string("Partita Iva necessaria")
+        .required()
+        .matches(/^[0-9]{11}$/, "Partita Iva non valida"),
+
+        telefono: yup
+		.string()
+		.matches(/^[0-9]{3}\.[0-9]{3}\.[0-9]{2}\.[0-9]{2}$/, "Numero non valido [333.123.45.67]"),
+
+        direttore_nome: yup
+        .string()
+        .required("Nome del direttore necessario")
+        .matches(/^[a-zA-Z ']{3,30}$/, "Nome Direttore non valido [Nome Cognome]"),
+
+        direttore_natoA: yup
+        .string()
+        .required("Luogo di nascita del Direttore necessario")
+        .matches(/^[a-zA-Z à-è-ì-ò-ù]{3,30}$/, "Luogo di nascita non valido"),
+
+        direttore_codiceF: yup
+        .string()
+        .required("Codice Fiscale del Direttore necessario")
+        .matches(/^[0-9A-Z]{16}$/, "Codice fiscale non valido [LNSTVL69T28L219K]"),
+
+        idConvenzione: yup
+        .string()
+        .required("Numero Convenzione necessario"),
+        
+        idUtente: yup
+        .number()
+        .positive(),
+        
+        direttore_natoIl: yup
+        .date()
+        .max(new Date(2004,1,1), "Data Invalida"),
+        
+        dataConvenzione: yup
+        .date()
+        .min(new Date(2022, 1, 1), "Data antecedente al 01/01/2022"),
+        
+        dataProtocollo: yup
+        .date()
+        .min(new Date(2022, 1, 1), "Data antecedente al 01/01/2022")
     });
 
     async function start_update(e) {
@@ -184,7 +231,7 @@
                                 label="Telefono"
                                 name="telefono"
                                 {errors}
-                                placeholder="3331234567"
+                                placeholder="333.123.45.67"
                                 bind:val={form_values.telefono}
                             />
 						</div>
@@ -221,7 +268,7 @@
                             <InputText
                                 label="Codice Fiscale"
                                 name="direttore_codiceF"
-                                placeholder="RSSMRA85T10A562S"
+                                placeholder="LNSTVL69T28L219K"
                                 {errors}
                                 bind:val={form_values.direttore_codiceF}
                             />

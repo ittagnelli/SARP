@@ -29,5 +29,5 @@ export const handle = async ({ event, resolve }) => {
 
 
 export const handleError = async ({ error, event }) => {
-    logger.error(`ERRORE INASPETTATO: ${error}`);
+    logger.error(`ERRORE INASPETTATO: ${JSON.stringify(error)}`);
   }

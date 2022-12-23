@@ -51,12 +51,12 @@
         nome: yup
 		.string()
 		.required('Nome utente necessario')
-		.matches(/^[a-zA-Z]+$/, "Nome utente non valido"),
+		.matches(/^[a-zA-Z]{3,20}$/, "Nome utente non valido"),
 
         cognome: yup
 		.string()
 		.required('Cognome utente necessario')
-		.matches(/^[a-zA-Z]+$/, "Cognome utente non valido"),
+		.matches(/^[a-zA-Z]{3,20}$/, "Cognome utente non valido"),
 
 		email: yup
 		.string()

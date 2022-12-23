@@ -58,13 +58,13 @@
 	});
 </script>
 
-<div class="row g-0 flex-fill">
+<div class="login-page row g-0 flex-fill">
 	<div
-		class="col-12 col-lg-6 col-xl-4 border-top-wide border-primary d-flex flex-column justify-content-center"
+		class="col-12 col-lg-6 col-xl-4 d-flex flex-column justify-content-center"
 	>
 		<div class="text-center mb-5">
 			<a href="." class="navbar-brand navbar-brand-autodark"
-				><img src="img/logo_sarp.png" height="72" alt="" /></a
+				><img class="logo" src="img/logo_sarp.png" alt="" /></a
 			>
 		</div>
 		<h2 class="h3 text-center mb-3 text-muted">Fai il Log In con account istituzionale Agnelli</h2>
@@ -82,6 +82,14 @@
 </div>
 
 <style>
+    .login-page {
+        /* background-color: red; */
+    }
+
+    .logo {
+        width: 300px;
+    }
+
 	.login {
 		background-color: white;
 	}
