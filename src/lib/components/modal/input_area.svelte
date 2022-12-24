@@ -3,7 +3,8 @@
     export let label;
     export let name;
     export let placeholder;
-    export let errors; 
+    export let errors;
+    export let rows; 
 </script>
 
 
@@ -13,7 +14,7 @@
         class="form-control"
         class:is-invalid="{errors[name]}"
         {name}
-        rows="3"
+        rows={rows || 3}
         {placeholder}
         bind:value={val}
     />

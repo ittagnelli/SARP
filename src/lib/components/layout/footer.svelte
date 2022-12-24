@@ -20,14 +20,14 @@
 		<div class="row text-center align-items-center flex-row-reverse">
 			<div class="col-lg-auto ms-lg-auto">
 				<ul class="list-inline list-inline-dots mb-0">
-					<li class="list-inline-item">
+					<!-- <li class="list-inline-item">
 						<a href="./docs/index.html" class="link-secondary">Documentazione</a>
-					</li>
+					</li> -->
 					<li class="list-inline-item">
 						<a href="/faq" class="link-secondary">FAQ</a>
 					</li>
 					<li class="list-inline-item">
-						<a href="./license.html" class="link-secondary">Segnalazioni</a>
+						<a href="/ticket" class="link-secondary">Segnala un problema</a>
 					</li>
                     <li class="list-inline-item">
 						<a href="/changelog" class="link-secondary">Changelog</a>
