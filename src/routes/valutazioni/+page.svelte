@@ -101,6 +101,7 @@
 	type_genre="f"
 	type="valutazioni"
 	print={false}
+    actions={true}
 />
 
 <div

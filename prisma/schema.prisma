@@ -1,4 +1,4 @@
-// v 0.2.1
+// v 0.3.0
 
 generator client {
     provider = "prisma-client-js"
@@ -16,6 +16,8 @@ datasource db {
     provider = "sqlite"
     url      = env("DATABASE_URL")
 }
+
+// Tabelle comuni a tutte le applicazioni e dizionari
 
 model Utente {
     id         Int                @id @default(autoincrement())
@@ -36,6 +38,7 @@ model Utente {
     stabilisce pcto_Azienda[]
     iscritto   pcto_Pcto[]
     Session    Session[]
+    Ticket     Ticket[]
 }
 
 model Session {
@@ -61,6 +64,20 @@ model ruolo_Utente {
     ruolo     String
 }
 
+model Ticket {
+    id           Int      @id @default(autoincrement())
+    createdAt    DateTime @default(now())
+    updatedAt    DateTime @updatedAt
+    segnalatore  Utente   @relation(fields: [idUtente], references: [id])
+    idUtente     Int
+    applicazione String
+    titolo       String
+    descrizione  String
+    risolto      Boolean  @default(false)
+}
+
+// Tabelle specifiche per l'applicazione PCTO
+
 model pcto_Presenza {
     id           Int       @id @default(autoincrement())
     createdAt    DateTime  @default(now())
@@ -82,7 +99,7 @@ model pcto_Valutazione {
     idUtente  Int
     pcto      pcto_Pcto @relation(fields: [idPcto], references: [id])
     idPcto    Int
-    qna  String
+    qna       String
 }
 
 model pcto_Azienda {

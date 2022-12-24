@@ -11,7 +11,7 @@
 	export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
     // inizializzo la lista delle aziende con il risultato della query SQL
     let aziende = helper.data2arr(data); // alias per maggior leggibilità
-
+    
 	//configura la pagina pre-titolo, titolo e nome del modale
 	$page_pre_title = 'PCTO';
 	$page_title = 'Aziende';
@@ -160,6 +160,7 @@
 	type="aziende"
     type_genre="f"
     print={true}
+    actions={true}
 />
 
 <!-- Modal from Page action -->

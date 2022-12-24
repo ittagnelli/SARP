@@ -104,6 +104,7 @@
 	modal_name={$page_action_modal}
 	on:update_start={start_update}
 	type="presenze"
+    actions={true}
 />
 
 <!-- Modal from Page action -->

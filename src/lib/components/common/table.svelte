@@ -13,6 +13,7 @@
 	export let type;	// Cosa visualizza la tabella?
     export let type_genre;
     export let print;
+    export let actions;
 
 	const dispatch = createEventDispatcher();
 
@@ -86,20 +87,24 @@
 					<thead>
 						<tr>
 							{#each columns as col}
-								{#if col.name != 'id'}
+								<!-- {#if col.name != 'id'} -->
+                                {#if col.type != 'hidden'}
 									<th>
 										<button class="table-sort" data-sort="sort-{col.name}">{col.display}</button>
 									</th>
 								{/if}
 							{/each}
+                            {#if actions == true}
 							<th>Azioni</th>
+                            {/if}
 						</tr>
 					</thead>
 					<tbody class="table-tbody">
 						{#each rows_paged as row}
 							<tr>
 								{#each Object.keys(row) as col, i}
-									{#if col_names.includes(col) && col != 'id'}
+									<!-- {#if col_names.includes(col) && col != 'id'} -->
+                                    {#if col_names.includes(col)}
 										{#if columns[i].type == 'date'}
 											<td class="sort-{col}" valign="middle">{row[col] ? row[col].toLocaleDateString() : "--"}</td>
                                         {:else if columns[i].type == 'time'}
@@ -125,11 +130,12 @@
                                                     {/each}
                                                 </td>
                                             {/if}
-										{:else}
+										{:else if columns[i].type != 'hidden'}
 											<td class="sort-{col}" valign="middle">{ellipses(row[col])}</td>
 										{/if}
 									{/if}
 								{/each}
+                                {#if actions == true}
 								<td valign="middle">
                                     {#if print == true}
                                     <form id="form-pdf" method="POST" action={`/${type}?/pdf`}>
@@ -153,6 +159,7 @@
 										</button>
 									</form>
 								</td>
+                                {/if}
 							</tr>
 						{/each}
 					</tbody>

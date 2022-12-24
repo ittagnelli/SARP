@@ -135,6 +135,7 @@
 	on:update_start={start_update}
 	type="stage"
     type_genre="m"
+    actions={true}
 />
 
 <!-- Modal from Page action -->

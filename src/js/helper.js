@@ -22,7 +22,8 @@ export const data2arr = (data) => {
 	let collect = [];
 
 	Object.keys(data).forEach((key) => {
-		collect = [...collect, data[key]];
+        if(key != 'session')
+		    collect = [...collect, data[key]];
 	});
 
 	return collect;
@@ -42,3 +43,23 @@ export const raise_error = (http_code, code, mex) => {
 		message: mex
 	});
 };
+
+// estrapola l'oggetto login dalla sessione utente
+export const user_login = (data) => {
+    return data?.session?.login;
+};
+
+// restituisce il ruolo dell'utente  
+export const user_ruolo = (data) => {
+    return data?.session?.login?.ruolo;
+}
+
+// restituisce il tipo dell'utente  
+export const user_tipo = (data) => {
+    return data?.session?.login?.tipo;
+}
+
+// restituisce user id  
+export const user_id = (data) => {
+    return data?.session?.login?.id;
+}

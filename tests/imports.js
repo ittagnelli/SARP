@@ -1,4 +1,4 @@
-export const ruoli_utente = ["ADMIN", "READER", "WRITER"];
+export const ruoli_utente = ["ADMIN", "READER", "WRITER", "DEVELOPER"];
 export const tipi_utente = ["STUDENTE", "DOCENTE", "PRESIDE"];
 export const istituti = [ "ITT", "LICEO" ];
 
