@@ -1,4 +1,4 @@
-// v 0.2.0
+// v 0.2.1
 
 generator client {
     provider = "prisma-client-js"
@@ -82,7 +82,7 @@ model pcto_Valutazione {
     idUtente  Int
     pcto      pcto_Pcto @relation(fields: [idPcto], references: [id])
     idPcto    Int
-    risposte  String
+    qna  String
 }
 
 model pcto_Azienda {

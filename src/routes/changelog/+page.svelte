@@ -19,6 +19,10 @@
 			<div class="card card-lg">
 				<div class="card-body">
 					<div class="markdown">
+                        <ChangeVersion version="v0.6.0" date="24 Dicembre 2022">
+							<Fix issue="31" text="refactoring view valutazioni " />
+							<Change text="Aggiunta vista PCTO valutazioni" />
+						</ChangeVersion>
 						<ChangeVersion version="v0.5.4" date="22 Dicembre 2022">
 							<Fix issue="68" text="aggiungere changelog" />
 							<Fix issue="92" text="inserimento logo SARP" />
