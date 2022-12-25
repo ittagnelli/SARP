@@ -60,7 +60,7 @@
 								show={true}
 								number="0-1"
 								parent_number="0"
-								tiquestiontle="Posso contribuire al progetto?"
+								question="Posso contribuire al progetto?"
 								answer={faq('faq0_1')}
 							/>
 							<Faq
