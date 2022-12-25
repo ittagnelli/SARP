@@ -1,14 +1,15 @@
 <script>
-	export let title;
+	export let question;
 	export let number;
 	export let parent_number;
     export let show;
+    export let answer;
 </script>
 
 <div class="accordion-item">
 	<div class="accordion-header" role="tab">
 		<button class="accordion-button" data-bs-toggle="collapse" data-bs-target="#faq-{number}">
-			{title}
+			{question}
 		</button>
 	</div>
 	<div
@@ -19,7 +20,7 @@
 	>
 		<div class="accordion-body pt-0">
 			<div>
-				<slot />
+				{@html answer}
 			</div>
 		</div>
 	</div>
