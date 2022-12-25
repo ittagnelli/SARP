@@ -1,8 +1,24 @@
 import { route_protect, raise_error } from '../../js/helper';
 import { Logger } from '../../js/logger';
+import { compile } from 'mdsvex';
+import * as fs from 'fs';
+import { PUBLIC_CHANGELOG_FILE } from '$env/static/public';
 
-    let logger = new Logger("server");
+let logger = new Logger('server');
+
+async function changelog2html() {
+	try {
+		let md_changelog = fs.readFileSync(PUBLIC_CHANGELOG_FILE, { encoding: 'utf8', flag: 'r' });
+		let html_changelog = (await compile(md_changelog)).code;
+        
+		return html_changelog;
+	} catch (error) {
+		logger.error(JSON.stringify(error));
+	}
+}
 
 export async function load({ locals }) {
-    route_protect(locals);
+	route_protect(locals);
+
+	return { changelog: changelog2html() };
 }
