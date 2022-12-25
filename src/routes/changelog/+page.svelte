@@ -19,8 +19,19 @@
 			<div class="card card-lg">
 				<div class="card-body">
 					<div class="markdown">
+                        <ChangeVersion version="v0.7.1" date="25 Dicembre 2022">
+							<Fix issue="100" text="FAQ in markdown" />
+                            <Change text="aggiunta la possibilità di scrivere le FAQ in markdown" />
+                            <Change text="aggiornato Wiki per i dettagli della sezione FAQ" />
+                            <Fix issue="99" text="Aggiornare sezione FAQ" />
+							<Change text="aggiornata la sezione FAQ" />
+						</ChangeVersion>
+                        <ChangeVersion version="v0.7.0" date="24 Dicembre 2022">
+							<Fix issue="48" text="Aggiungere pagina segnalazioni" />
+							<Change text="aggiunta pagina segnalazioni per utenti NON developer" />
+						</ChangeVersion>
                         <ChangeVersion version="v0.6.0" date="24 Dicembre 2022">
-							<Fix issue="31" text="refactoring view valutazioni " />
+							<Fix issue="31" text="refactoring view valutazioni" />
 							<Change text="Aggiunta vista PCTO valutazioni" />
 						</ChangeVersion>
 						<ChangeVersion version="v0.5.4" date="22 Dicembre 2022">
