@@ -1,10 +1,10 @@
-import adapter from '@sveltejs/adapter-auto';
+import adapter from '@sveltejs/adapter-node';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
     extensions: ['.svelte'], 
 	kit: {
-		adapter: adapter(),
+		adapter: adapter({ out: 'SARP_build' }),
 		csp: {
 			directives: {
 				'frame-ancestors': ['none'],	// Non usiamo iframe nel sito per il momento
