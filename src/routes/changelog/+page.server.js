@@ -4,6 +4,11 @@ import { compile } from 'mdsvex';
 import * as fs from 'fs';
 import { PUBLIC_CHANGELOG_FILE } from '$env/static/public';
 
+// dirty trick per usare il modulo compile
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+global.require = require;
+
 let logger = new Logger('server');
 
 async function changelog2html() {

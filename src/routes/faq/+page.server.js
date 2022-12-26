@@ -4,6 +4,11 @@ import { compile } from 'mdsvex';
 import * as fs from 'fs';
 import { PUBLIC_FAQ_DIR } from '$env/static/public';
 
+// dirty trick per usare il modulo compile
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+global.require = require;
+
 let logger = new Logger('server');
 
 async function md2html() {
@@ -20,10 +25,10 @@ async function md2html() {
 		}
 		faq_dir.closeSync();
 	} catch (error) {
-		logger.error(JSON.stringify(error));
+        logger.error(JSON.stringify(error));
 	}
 
-	return faqs;
+    return faqs;
 }
 
 export async function load({ locals }) {
