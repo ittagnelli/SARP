@@ -83,7 +83,26 @@
 
         idConvenzione: yup
         .string()
-        .required("Numero Convenzione necessario"),
+        .test('validator-custom-name', function (value, { createError, path }) {
+            let formData = new FormData();
+            formData.append('id', value);   // Passo l'id convenzione
+
+            const response =  fetch("/aziende/?check",
+                {
+                    body: formData,
+                    method: "post"
+                });
+            if(( response.json()).data){
+                console.log("ONK")
+
+                return true;
+            }
+            else{
+                console.log("OK")
+                return createError({ message: `ID Esistente`, path: path });
+
+            }
+        }),
         
         idUtente: yup
         .number()

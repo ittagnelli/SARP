@@ -24,27 +24,47 @@ export async function load({ locals }) {
 }
 
 export const actions = {
+    check: async ({ cookies, request, locals }) => {
+        const form_data = await request.formData();
+        try {
+            const record = await SARP.pcto_Azienda.findFirst({
+                where: {
+                    idConvenzione: form_data.get("id")
+                }
+            });
+            if(record == null)  return true;    // Se non è presente nessun record con questo id diamo l'ok per il form
+            else return false;
+        } catch (error) {
+            logger.error(error);
+        }
+    },
+
 	create: async ({ cookies, request, locals }) => {
 		const form_data = await request.formData();
 
         SARP.set_session(locals); // passa la sessione all'audit
-		await SARP.pcto_Azienda.create({
-			data: {
-                idUtente: 3,
-                idConvenzione: form_data.get('idConvenzione'),
-                nome: form_data.get('nome'),
-                indirizzo: form_data.get('indirizzo'),
-                piva: form_data.get('piva'),
-                telefono: form_data.get('telefono'),
-                direttore_nome: form_data.get('direttore_nome'),
-                direttore_natoA: form_data.get('direttore_natoA'),
-                direttore_natoIl: new Date(form_data.get('direttore_natoIl')),
-                direttore_codiceF: form_data.get('direttore_codiceF'),
-                dataConvenzione: new Date(form_data.get('dataConvenzione')),
-				dataProtocollo: new Date(form_data.get('dataProtocollo')),
-                istituto: form_data.get('istituto')
-			}
-		});
+        try {   // I nostri dati qui sono già stati controllati
+            await SARP.pcto_Azienda.create({
+                data: {
+                    idUtente: 3,
+                    idConvenzione: form_data.get('idConvenzione'),
+                    nome: form_data.get('nome'),
+                    indirizzo: form_data.get('indirizzo'),
+                    piva: form_data.get('piva'),
+                    telefono: form_data.get('telefono'),
+                    direttore_nome: form_data.get('direttore_nome'),
+                    direttore_natoA: form_data.get('direttore_natoA'),
+                    direttore_natoIl: new Date(form_data.get('direttore_natoIl')),
+                    direttore_codiceF: form_data.get('direttore_codiceF'),
+                    dataConvenzione: new Date(form_data.get('dataConvenzione')),
+                    dataProtocollo: new Date(form_data.get('dataProtocollo')),
+                    istituto: form_data.get('istituto')
+                }
+            });  
+        } catch (error) {
+            logger.error(error);    // Errore fatale sul server
+        }
+
 	},
 
 	update: async ({ cookies, request, locals }) => {

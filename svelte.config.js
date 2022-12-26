@@ -26,7 +26,7 @@ const config = {
 			}
 		},
 		csrf: {
-			checkOrigin: true
+			checkOrigin: false
 		}
 	}
 };
