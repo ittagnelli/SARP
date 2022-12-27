@@ -51,7 +51,7 @@
 
     onMount(() => { // Controlliamo che l'inserimento sia andato a buon fine, usiamo on mount per richiamare le funzioni del DOM
         if(form?.unique_violation){
-            alert("ID già esistente");
+            // alert("ID già esistente"); PROF: rimuovere
             form_values = JSON.parse(localStorage.getItem("form")); // Riempiamo il modale
             //PROF: mostruoso ma per il momento va bene ma lo spostiamo in un helper così è DRY (vedi helper.js)
             // const btn = document.getElementById("btn_action_modal");    
