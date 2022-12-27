@@ -59,6 +59,8 @@
             //     btn.click();
             helper.show_modal();
             console.log(form)
+        } else {
+            localStorage.removeItem("form"); //PROF: rimuoviamo il form dal localstorage
         }
     });
 
