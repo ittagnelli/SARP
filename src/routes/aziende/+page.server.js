@@ -4,10 +4,10 @@ import Docxtemplater from 'docxtemplater';
 import fs from 'fs';
 import path from 'path';
 import { redirect, fail, error } from '@sveltejs/kit';
-import { route_protect } from '../../js/helper';
+import { route_protect, raise_error } from '../../js/helper'; //PROF: usa l'helper raise_erorr che ho cretao qualche settimana fa
 import { Logger } from '../../js/logger';
 
-let logger = new Logger("seerver"); //instanzia il logger
+let logger = new Logger("server"); //instanzia il logger PROF: qui deve essere server
 const SARP = new PrismaDB(); //Istanzia il client SARP DB
 
 
@@ -48,10 +48,12 @@ export const actions = {
             });  
         } catch (exception) {
             if(exception.code != "P2002"){  // Errore diverso dalla violazione dell'unique
-                logger.error(error);
-                return error(500);  // Redirect alla pagina 500
+                logger.error(JSON.stringify(exception)); //PROF: error è un oggetto ma serve qualcosa di più complicato. per il momento lascialo così. ho gia risolto in hooks nella versione 9.0
+                raise_error(500, 100, 'tuo codice e tuo mex'); //PROF: 500 errore http, 100 codice SARP univoco, messaggio: un messaggio chiaro. in questo modo nella pagina 500 gli utenti vedono codice e messaggio. ce lo dicono e noi becchiamo il punto esatoo dell'errore
+                // return error(500);  // Redirect alla pagina 500 //PROF: da rimuovere
             }else
-                return fail(400, { unique_violation: true });   // La richiesta fallisce
+                //PROF: restituiamo anche messaggio di errore che viene aggiunto all'oggetto form
+                return fail(400, { unique_violation: true, error_mex: "Numero convenzione non univoco" });   // La richiesta fallisce
         }
 
 	},

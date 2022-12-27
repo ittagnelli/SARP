@@ -63,3 +63,10 @@ export const user_tipo = (data) => {
 export const user_id = (data) => {
     return data?.session?.login?.id;
 }
+
+// auto button click for modal PROF:
+export const show_modal = () => {
+    const btn = document.getElementById("btn_action_modal");    
+    if(btn instanceof HTMLAnchorElement)    // Apriamo il modale
+        btn.click();
+}        

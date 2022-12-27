@@ -53,13 +53,14 @@
         if(form?.unique_violation){
             alert("ID già esistente");
             form_values = JSON.parse(localStorage.getItem("form")); // Riempiamo il modale
-            const btn = document.getElementById("btn_action_modal");    
-            if(btn instanceof HTMLAnchorElement)    // Apriamo il modale
-                btn.click();
+            //PROF: mostruoso ma per il momento va bene ma lo spostiamo in un helper così è DRY (vedi helper.js)
+            // const btn = document.getElementById("btn_action_modal");    
+            // if(btn instanceof HTMLAnchorElement)    // Apriamo il modale
+            //     btn.click();
+            helper.show_modal();
+            console.log(form)
         }
     });
-
-    
 
     // schema di validazione del form
     const form_schema = yup.object().shape({
@@ -203,6 +204,17 @@
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" />
 				</div>
 				<div class="modal-body">
+
+                    <!-- PROF: magari crea un componente chiamato modal_error <ModalError> -->
+                    {#if form}
+                    <div class="row error-mex">
+                        <div class="col-12">                                  
+                            {form.error_mex}                            
+                        </div>    
+                    </div>
+                    {/if}
+
+
 					<div class="row">
 						<div class="col-lg-4">
                             <InputText
@@ -355,3 +367,14 @@
 		</div>
 	</form>
 </div>
+
+<!-- PROF:  -->
+<style>
+    .error-mex {
+        border: 1px solid #d63939;
+        border-radius: 4px;
+        margin-bottom: 1rem;
+        text-align: center;
+        padding: 4px;
+    }
+</style>
