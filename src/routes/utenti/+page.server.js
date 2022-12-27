@@ -1,5 +1,5 @@
 import { PrismaDB } from '../../js/prisma_db';
-import { route_protect, raise_error } from '../../js/helper';
+import { route_protect, raise_error, multi_user_where, user_id } from '../../js/helper';
 import { Logger } from '../../js/logger';
 
 let logger = new Logger("seerver"); //instanzia il logger
@@ -10,7 +10,8 @@ export async function load({ locals }) {
 
 	// query SQL al DB per tutte le entry nella tabella todo
 	const utenti = await SARP.Utente.findMany({
-		orderBy: [{ id: 'desc' }]
+		orderBy: [{ id: 'desc' }],
+        where: multi_user_where(locals) 
 	});
 
     const tipi_utente = await SARP.tipo_Utente.findMany({
@@ -36,6 +37,7 @@ export const actions = {
         SARP.set_session(locals); // passa la sessione all'audit
 		await SARP.Utente.create({
 			data: {
+                creatoDa: user_id(locals),
 				nome: form_data.get('nome'),
                 cognome: form_data.get('cognome'),
                 email: form_data.get('email'),

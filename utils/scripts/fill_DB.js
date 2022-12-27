@@ -27,9 +27,10 @@ async function create_utenti() {
     console.log(`Creazione utente ${nome} ${cognome}`);
     await SARP.utente.create({
         data: {
+            creatoDa: 1,
             nome: nome,
             cognome: cognome,
-            email: nome.concat(".", cognome, ".", Math.floor(Math.random() * 100), "@istitutoagnelli.it"),
+            email: nome.concat(".", cognome, "@istitutoagnelli.it"),
             telefono: random_telefono(),
             tipo: random_item(tipi_utente),
             ruolo: random_item(ruoli_utente),
@@ -61,6 +62,6 @@ function random_item(list) {
 (async function () {
     create_ruoli();
     create_tipi();
-    for(let i = 0; i < 20; i++) 
+    for(let i = 0; i < 10; i++) 
         create_utenti();
 })();

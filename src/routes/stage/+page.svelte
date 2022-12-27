@@ -43,13 +43,12 @@
 	// le operazione di create e update
 	let form_values = {
 		pcto_id: 0,
-		azienda: 1,
+		azienda: 0,
 		titolo: '',
 		descrizione: '',
 		tutor: '',
 		dataInizio: helper.convert_date(new Date()),
 		dataFine: helper.convert_date(new Date()),
-		idAzienda: 0
 	};
 
 	// schema di validazione del form
@@ -169,15 +168,19 @@
 				<div class="modal-body">
 					<div class="row">
 						<div class="col-lg-4">
-                            <InputSelect
-                                label="Azienda"
-                                name="azienda"
-                                {errors}
-                                val={form_values.azienda}
-                                list={aziende}
-                                k="id"
-                                v="nome"
-                                />
+                            <!-- InputSelect component ha dei problemi (two way binding) non ancora risolti
+                            che non permettono di usarlo qui -->
+							<div class="mb-3">
+								<div class="form-label select_text">Azienda</div>
+                                <select class="form-select" class:is-invalid="{errors.azienda}" name="azienda" bind:value={form_values.azienda}>
+                                    {#each aziende as azienda}
+                                        <option value={azienda.id}>{azienda.nome}</option>
+                                    {/each}
+                                </select>
+                                {#if errors.tipo}
+                                    <span class="invalid-feedback">{errors.azienda}</span>
+                                {/if}	
+							</div>
 						</div>
 						<div class="col-lg-4">
 							<InputDate

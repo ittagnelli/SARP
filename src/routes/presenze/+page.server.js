@@ -1,5 +1,5 @@
 import { PrismaDB } from '../../js/prisma_db';
-import { route_protect } from '../../js/helper';
+import { route_protect, user_id, multi_user_where } from '../../js/helper';
 import { Logger } from '../../js/logger';
 
 let logger = new Logger("seerver"); //instanzia il logger
@@ -11,6 +11,7 @@ export async function load({ locals }) {
 	// query SQL al DB per tutte le entry nella tabella todo
 	const presenze = await SARP.pcto_Presenza.findMany({
 		orderBy: [{ id: 'desc' }],
+        where: multi_user_where(locals), 
         include: {
 			presenza: true,
             lavoraPer: true
@@ -44,10 +45,10 @@ export const actions = {
         SARP.set_session(locals); // passa la sessione all'audit
 		await SARP.pcto_Presenza.create({
 			data: {
+                creatoDa: user_id(locals),
                 dataPresenza: new Date(form_data.get('dataPresenza')),
                 oraInizio: new Date(1970, 1, 1, hh_inizio, mm_inizio),
                 oraFine: new Date(1970,1 ,1, hh_fine, mm_fine),
-                idUtente: +form_data.get('studente'),
                 idPcto: +form_data.get('stage')
 			}
 		});
@@ -68,7 +69,6 @@ export const actions = {
                 dataPresenza: new Date(form_data.get('dataPresenza')),
                 oraInizio: new Date(1970, 1, 1, hh_inizio, mm_inizio),
                 oraFine: new Date(1970,1 ,1, hh_fine, mm_fine),
-                idUtente: +form_data.get('studente'),
                 idPcto: +form_data.get('stage')
 			}
 		});
