@@ -6,9 +6,13 @@
     import * as helper from '../../js/helper';
     import * as yup from 'yup';
     import { Logger } from '../../js/logger';
+	import { onMount } from 'svelte';
 
     let logger = new Logger("client");
+
 	export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
+    export let form; // Risposta del form dal server
+
     // inizializzo la lista delle aziende con il risultato della query SQL
     let aziende = helper.data2arr(data.aziende); // alias per maggior leggibilità
     
@@ -44,6 +48,18 @@
         dataProtocollo: helper.convert_date(new Date()),
         istituto: "ITT"
     };
+
+    onMount(() => { // Controlliamo che l'inserimento sia andato a buon fine, usiamo on mount per richiamare le funzioni del DOM
+        if(form?.unique_violation){
+            alert("ID già esistente");
+            form_values = JSON.parse(localStorage.getItem("form")); // Riempiamo il modale
+            const btn = document.getElementById("btn_action_modal");    
+            if(btn instanceof HTMLAnchorElement)    // Apriamo il modale
+                btn.click();
+        }
+    });
+
+    
 
     // schema di validazione del form
     const form_schema = yup.object().shape({
@@ -129,6 +145,7 @@
             // valida il form prima del submit
             await form_schema.validate(form_values, { abortEarly: false });
             errors = {};
+            localStorage.setItem("form", JSON.stringify(form_values));
             modal_form.submit();
         } catch (err) {
             errors = err.inner.reduce((acc, err) => {

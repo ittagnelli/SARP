@@ -3,7 +3,7 @@ import PizZip from 'pizzip';
 import Docxtemplater from 'docxtemplater';
 import fs from 'fs';
 import path from 'path';
-import { redirect } from '@sveltejs/kit';
+import { redirect, fail, error } from '@sveltejs/kit';
 import { route_protect } from '../../js/helper';
 import { Logger } from '../../js/logger';
 
@@ -28,23 +28,32 @@ export const actions = {
 		const form_data = await request.formData();
 
         SARP.set_session(locals); // passa la sessione all'audit
-		await SARP.pcto_Azienda.create({
-			data: {
-                idUtente: 3,
-                idConvenzione: form_data.get('idConvenzione'),
-                nome: form_data.get('nome'),
-                indirizzo: form_data.get('indirizzo'),
-                piva: form_data.get('piva'),
-                telefono: form_data.get('telefono'),
-                direttore_nome: form_data.get('direttore_nome'),
-                direttore_natoA: form_data.get('direttore_natoA'),
-                direttore_natoIl: new Date(form_data.get('direttore_natoIl')),
-                direttore_codiceF: form_data.get('direttore_codiceF'),
-                dataConvenzione: new Date(form_data.get('dataConvenzione')),
-				dataProtocollo: new Date(form_data.get('dataProtocollo')),
-                istituto: form_data.get('istituto')
-			}
-		});
+        try {
+            await SARP.pcto_Azienda.create({
+                data: {
+                    idUtente: 3,
+                    idConvenzione: form_data.get('idConvenzione'),
+                    nome: form_data.get('nome'),
+                    indirizzo: form_data.get('indirizzo'),
+                    piva: form_data.get('piva'),
+                    telefono: form_data.get('telefono'),
+                    direttore_nome: form_data.get('direttore_nome'),
+                    direttore_natoA: form_data.get('direttore_natoA'),
+                    direttore_natoIl: new Date(form_data.get('direttore_natoIl')),
+                    direttore_codiceF: form_data.get('direttore_codiceF'),
+                    dataConvenzione: new Date(form_data.get('dataConvenzione')),
+                    dataProtocollo: new Date(form_data.get('dataProtocollo')),
+                    istituto: form_data.get('istituto')
+                }
+            });  
+        } catch (exception) {
+            if(exception.code != "P2002"){  // Errore diverso dalla violazione dell'unique
+                logger.error(error);
+                return error(500);  // Redirect alla pagina 500
+            }else
+                return fail(400, { unique_violation: true });   // La richiesta fallisce
+        }
+
 	},
 
 	update: async ({ cookies, request, locals }) => {
