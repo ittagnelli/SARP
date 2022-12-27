@@ -10,7 +10,7 @@
 	let logger = new Logger('client');
 	export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
     // inizializzo la lista dei ticketcon il risultato della query SQL
-    let tickets = helper.data2arr(data); // alias per maggior leggibilità
+    let tickets = helper.data2arr(data.tickets); // alias per maggior leggibilità
 
 	//configura la pagina pre-titolo, titolo e nome del modale
 	$page_pre_title = 'SARP';

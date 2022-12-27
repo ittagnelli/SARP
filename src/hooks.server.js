@@ -29,5 +29,11 @@ export const handle = async ({ event, resolve }) => {
 
 
 export const handleError = async ({ error, event }) => {
-    logger.error(`ERRORE INASPETTATO: ${JSON.stringify(error)}`);
+    let error_mex;
+
+    if(Object.entries(error).length == 0)
+        error_mex = error;
+    else
+        error_mex = JSON.stringify(error);
+    logger.error(`ERRORE INASPETTATO: ${error_mex}`);
   }

@@ -20,7 +20,7 @@ export async function load({ locals }) {
 	});
 
 	// restituisco il risultato della query SQL
-    return companies;
+    return {aziende: companies};
 }
 
 export const actions = {
