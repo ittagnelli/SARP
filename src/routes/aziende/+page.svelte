@@ -83,26 +83,21 @@
 
         idConvenzione: yup
         .string()
-        .test('validator-custom-name', function (value, { createError, path }) {
-            let formData = new FormData();
-            formData.append('id', value);   // Passo l'id convenzione
-
-            const response =  fetch("/aziende/?check",
-                {
-                    body: formData,
-                    method: "post"
-                });
-            if(( response.json()).data){
-                console.log("ONK")
-
-                return true;
+        .test(
+            "Record unico in DB",
+            "L'id è già esistente",
+            async (value) => {
+                let formData = new FormData();
+                formData.append('id', value);   // Passo l'id convenzione
+                const response = await fetch("/aziende?/check",
+                    {
+                        body: formData,
+                        method: "post"
+                    });
+                const response_parsed = await response.json();
+                return response_parsed.data;
             }
-            else{
-                console.log("OK")
-                return createError({ message: `ID Esistente`, path: path });
-
-            }
-        }),
+        ),
         
         idUtente: yup
         .number()
