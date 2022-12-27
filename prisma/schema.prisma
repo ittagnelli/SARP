@@ -1,4 +1,4 @@
-// v 0.3.0
+// v 0.4.0
 
 generator client {
     provider = "prisma-client-js"
@@ -23,6 +23,7 @@ model Utente {
     id         Int                @id @default(autoincrement())
     createdAt  DateTime           @default(now())
     updatedAt  DateTime           @updatedAt
+    creatoDa   Int
     tipo       String             @default("STUDENTE")
     ruolo      String?
     nome       String
@@ -82,11 +83,11 @@ model pcto_Presenza {
     id           Int       @id @default(autoincrement())
     createdAt    DateTime  @default(now())
     updatedAt    DateTime  @updatedAt
+    presenza     Utente    @relation(fields: [creatoDa], references: [id])
+    creatoDa     Int
     dataPresenza DateTime  @default(now())
     oraInizio    DateTime?
     oraFine      DateTime?
-    presenza     Utente    @relation(fields: [idUtente], references: [id])
-    idUtente     Int
     lavoraPer    pcto_Pcto @relation(fields: [idPcto], references: [id])
     idPcto       Int
 }
@@ -95,8 +96,8 @@ model pcto_Valutazione {
     id        Int       @id @default(autoincrement())
     createdAt DateTime  @default(now())
     updatedAt DateTime  @updatedAt
-    utente    Utente    @relation(fields: [idUtente], references: [id])
-    idUtente  Int
+    utente    Utente    @relation(fields: [creatoDa], references: [id])
+    creatoDa  Int
     pcto      pcto_Pcto @relation(fields: [idPcto], references: [id])
     idPcto    Int
     qna       String
@@ -106,6 +107,8 @@ model pcto_Azienda {
     id                Int         @id @default(autoincrement())
     createdAt         DateTime    @default(now())
     updatedAt         DateTime    @updatedAt
+    creatore          Utente      @relation(fields: [creatoDa], references: [id])
+    creatoDa          Int
     nome              String
     indirizzo         String?
     piva              String?
@@ -115,8 +118,6 @@ model pcto_Azienda {
     direttore_natoIl  DateTime?
     direttore_codiceF String?
     idConvenzione     String      @unique
-    creatoDa          Utente      @relation(fields: [idUtente], references: [id])
-    idUtente          Int
     dataConvenzione   DateTime    @default(now())
     dataProtocollo    DateTime    @default(now())
     istituto          String      @default("ITT")
@@ -127,6 +128,7 @@ model pcto_Pcto {
     id            Int                @id @default(autoincrement())
     createdAt     DateTime           @default(now())
     updatedAt     DateTime           @updatedAt
+    creatoDa      Int
     titolo        String
     descrizione   String?
     tutor         String?

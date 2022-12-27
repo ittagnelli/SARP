@@ -32,8 +32,10 @@ export const handleError = async ({ error, event }) => {
     let error_mex;
 
     if(Object.entries(error).length == 0)
+         error_mex = error;
+    else if(Object.hasOwn(error, 'clientVersion'))
         error_mex = error;
     else
-        error_mex = JSON.stringify(error);
+         error_mex = JSON.stringify(error);
     logger.error(`ERRORE INASPETTATO: ${error_mex}`);
-  }
+}

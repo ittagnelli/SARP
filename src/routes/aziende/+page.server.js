@@ -4,7 +4,7 @@ import Docxtemplater from 'docxtemplater';
 import fs from 'fs';
 import path from 'path';
 import { redirect } from '@sveltejs/kit';
-import { route_protect } from '../../js/helper';
+import { route_protect, multi_user_where, user_id } from '../../js/helper';
 import { Logger } from '../../js/logger';
 
 let logger = new Logger("seerver"); //instanzia il logger
@@ -16,7 +16,8 @@ export async function load({ locals }) {
 
     // query SQL al DB per tutte le entry nella tabella todo
 	const companies = await SARP.pcto_Azienda.findMany({
-		orderBy: [{ id: 'desc' }]
+		orderBy: [{ id: 'desc' }],
+        where: multi_user_where(locals) 
 	});
 
 	// restituisco il risultato della query SQL
@@ -30,7 +31,7 @@ export const actions = {
         SARP.set_session(locals); // passa la sessione all'audit
 		await SARP.pcto_Azienda.create({
 			data: {
-                idUtente: 3,
+                creatoDa: user_id(locals),
                 idConvenzione: form_data.get('idConvenzione'),
                 nome: form_data.get('nome'),
                 indirizzo: form_data.get('indirizzo'),
@@ -55,7 +56,6 @@ export const actions = {
 		await SARP.pcto_Azienda.update({
 			where: { id: +id },
 			data: {
-				idUtente: 3,
                 idConvenzione: form_data.get('idConvenzione'),
                 nome: form_data.get('nome'),
                 indirizzo: form_data.get('indirizzo'),
