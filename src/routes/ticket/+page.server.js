@@ -19,7 +19,7 @@ export async function load({ locals }) {
 	});
 
 	//restituisco il risultato della query SQL
-    return tickets;
+    return {tickets: tickets};
 }
 
 export const actions = {
