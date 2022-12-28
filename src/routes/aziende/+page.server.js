@@ -13,7 +13,7 @@ const SARP = new PrismaDB(); //Istanzia il client SARP DB
 // @ts-ignore
 function catch_error(exception, type) {
     logger.error(JSON.stringify(exception)); //PROF: error è un oggetto ma serve qualcosa di più complicato. per il momento lascialo così. ho gia risolto in hooks nella versione 9.0
-    raise_error(500, 100, `Errore irreversibile durante ${type} dell'azienda. TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`);
+    raise_error(500, 100, `Errore irreversibile durante ${type} dell'azienda. TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`);    // TIMESTAMP ci serve per capire l'errore all'interno del log
 }
 
 // @ts-ignore

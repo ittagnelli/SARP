@@ -1,9 +1,15 @@
 import { PrismaDB } from '../../js/prisma_db';
-import { route_protect } from '../../js/helper';
+import { route_protect, raise_error } from '../../js/helper';
 import { Logger } from '../../js/logger';
 
 let logger = new Logger("server"); //instanzia il logger
 const SARP = new PrismaDB(); //Istanzia il client SARP DB
+
+// @ts-ignore
+function catch_error(exception, type) {
+    logger.error(JSON.stringify(exception)); //PROF: error è un oggetto ma serve qualcosa di più complicato. per il momento lascialo così. ho gia risolto in hooks nella versione 9.0
+    raise_error(500, 100, `Errore irreversibile durante ${type} dello stage. TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`); // TIMESTAMP ci serve per capire l'errore all'interno del log
+}
 
 
 export async function load({ locals }) {
@@ -48,19 +54,24 @@ export const actions = {
         }
 
         SARP.set_session(locals); // passa la sessione all'audit
-        await SARP.pcto_Pcto.create({
-			data: {
-                titolo: form_data.get('titolo'),
-                descrizione: form_data.get('descrizione'),
-				tutor: form_data.get('tutor'),
-                dataInizio: new Date(form_data.get('dataInizio')),
-				dataFine: new Date(form_data.get('dataFine')),
-                idAzienda: +form_data.get('azienda'),
-                svoltoDa: {
-                    connect: ids
+        try {
+            await SARP.pcto_Pcto.create({
+                data: {
+                    titolo: form_data.get('titolo'),
+                    descrizione: form_data.get('descrizione'),
+                    tutor: form_data.get('tutor'),
+                    dataInizio: new Date(form_data.get('dataInizio')),
+                    dataFine: new Date(form_data.get('dataFine')),
+                    idAzienda: +form_data.get('azienda'),
+                    svoltoDa: {
+                        connect: ids
+                    }
                 }
-			}
-		});
+            });
+        } catch (error) {
+            catch_error(error, "l'inserimento")
+        }
+
 	},
 
 	update: async ({ cookies, request, locals }) => {
@@ -74,20 +85,25 @@ export const actions = {
         });
         
         SARP.set_session(locals); // passa la sessione all'audit
-		await SARP.pcto_Pcto.update({
-			where: { id: +id },
-			data: {
-                titolo: form_data.get('titolo'),
-                descrizione: form_data.get('descrizione'),
-                tutor: form_data.get('tutor'),
-				dataInizio: new Date(form_data.get('dataInizio')),
-				dataFine: new Date(form_data.get('dataFine')),
-                idAzienda: +form_data.get('azienda'),
-                svoltoDa: {
-                    set: ids
+        try {
+            await SARP.pcto_Pcto.update({
+                where: { id: +id },
+                data: {
+                    titolo: form_data.get('titolo'),
+                    descrizione: form_data.get('descrizione'),
+                    tutor: form_data.get('tutor'),
+                    dataInizio: new Date(form_data.get('dataInizio')),
+                    dataFine: new Date(form_data.get('dataFine')),
+                    idAzienda: +form_data.get('azienda'),
+                    svoltoDa: {
+                        set: ids
+                    }
                 }
-			}
-		});
+            });
+        } catch (error) {
+            catch_error(error, "l'aggiornamento");
+        }
+
 	},
 
 	delete: async ({ cookies, request, locals }) => {
@@ -95,8 +111,13 @@ export const actions = {
 		const id = form_data.get('id');
 
         SARP.set_session(locals); // passa la sessione all'audit
-		await SARP.pcto_Pcto.delete({
-			where: { id: +id }
-		});
+        try {
+            await SARP.pcto_Pcto.delete({
+                where: { id: +id }
+            });       
+        } catch (error) {
+            catch_error(error, "l'eliminazione");
+        }
+
 	}
 };
