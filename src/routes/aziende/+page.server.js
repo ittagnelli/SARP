@@ -69,7 +69,7 @@ export const actions = {
             if(exception.code != "P2002")
                 catch_error(exception, "l'inserimento");
             else
-                return fail(400, { unique_violation: true, error_mex: "Numero convenzione non univoco" });   // La richiesta fallisce
+                return fail(400, { error_mex: "Numero convenzione non univoco" });   // La richiesta fallisce
         }
 	},
 

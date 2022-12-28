@@ -65,7 +65,7 @@ export const actions = {
             if(error.code != "P2002")
                 catch_error(error, "l'inserimento");
             else
-                return fail(400, { unique_violation: true, error_mex: "Email non univoca" });   // La richiesta fallisce
+                return fail(400, { error_mex: "Email non univoca" });   // La richiesta fallisce
 		}
 
 	},
@@ -95,7 +95,7 @@ export const actions = {
             if(error.code != "P2002")
                 catch_error(error, "l'aggiornamento");
             else
-                return fail(400, { unique_violation: true, error_mex: "Email non univoca" });   // La richiesta fallisce
+                return fail(400, { error_mex: "Email non univoca" });   // La richiesta fallisce
 		}
 
 	},

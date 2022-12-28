@@ -73,7 +73,7 @@
 	});
 
 	onMount(() => { // Controlliamo che l'inserimento sia andato a buon fine, usiamo on mount per richiamare le funzioni del DOM
-        if(form?.unique_violation){
+        if(form != null){
             form_values = JSON.parse(localStorage.getItem("form")); // Riempiamo il modale
             helper.show_modal();
         } else {
