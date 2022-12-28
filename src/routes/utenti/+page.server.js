@@ -1,5 +1,5 @@
 import { PrismaDB } from '../../js/prisma_db';
-import { route_protect, raise_error } from '../../js/helper';
+import { route_protect, raise_error, multi_user_where, user_id } from '../../js/helper';
 import { Logger } from '../../js/logger';
 import { fail } from '@sveltejs/kit';
 
@@ -17,9 +17,10 @@ export async function load({ locals }) {
 	try {
 		// query SQL al DB per tutte le entry nella tabella todo
 		const utenti = await SARP.Utente.findMany({
-			orderBy: [{ id: 'desc' }]
+			orderBy: [{ id: 'desc' }],
+			where: multi_user_where(locals) 
 		});
-	
+
 		const tipi_utente = await SARP.tipo_Utente.findMany({
 			orderBy: [{ id: 'desc' }]
 		});
@@ -27,13 +28,13 @@ export async function load({ locals }) {
 		const ruoli_utente = await SARP.ruolo_Utente.findMany({
 			orderBy: [{ id: 'desc' }]
 		});
-	
+
 		// restituisco il risultato della query SQL
 		return {
 			utenti: utenti,
 			tipi_utente: tipi_utente,
 			ruoli_utente: ruoli_utente
-		}	
+		}
 	} catch (error) {
 		logger.error(JSON.stringify(exception)); //PROF: error è un oggetto ma serve qualcosa di più complicato. per il momento lascialo così. ho gia risolto in hooks nella versione 9.0
 		raise_error(500, 100, `Errore durante la ricerca degli utenti. TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`);    // TIMESTAMP ci serve per capire l'errore all'interno del log
@@ -49,6 +50,7 @@ export const actions = {
 		try {
 			await SARP.Utente.create({
 				data: {
+					creatoDa: user_id(locals),
 					nome: form_data.get('nome'),
 					cognome: form_data.get('cognome'),
 					email: form_data.get('email'),
@@ -59,7 +61,7 @@ export const actions = {
 					bes: form_data.get('bes') == "SI" ? true : false,
 					can_login: form_data.get('can_login') == "SI" ? true : false
 				}
-			});			
+			});
 		} catch (error) {
             // @ts-ignore
             if(error.code != "P2002")
@@ -67,7 +69,6 @@ export const actions = {
             else
                 return fail(400, { error_mex: "Email non univoca" });   // La richiesta fallisce
 		}
-
 	},
 
 	update: async ({ cookies, request, locals }) => {

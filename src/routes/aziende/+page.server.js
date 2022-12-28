@@ -4,7 +4,7 @@ import Docxtemplater from 'docxtemplater';
 import fs from 'fs';
 import path from 'path';
 import { redirect, fail, error } from '@sveltejs/kit';
-import { route_protect, raise_error } from '../../js/helper'; //PROF: usa l'helper raise_erorr che ho cretao qualche settimana fa
+import { route_protect, multi_user_where, user_id, raise_error } from '../../js/helper'; //PROF: usa l'helper raise_erorr che ho cretao qualche settimana fa
 import { Logger } from '../../js/logger';
 
 let logger = new Logger("server"); //instanzia il logger PROF: qui deve essere server
@@ -29,7 +29,8 @@ export async function load({ locals }) {
     try {
         // query SQL al DB per tutte le entry nella tabella todo
         const companies = await SARP.pcto_Azienda.findMany({
-            orderBy: [{ id: 'desc' }]
+            orderBy: [{ id: 'desc' }],
+        where: multi_user_where(locals) 
         });
 
         // restituisco il risultato della query SQL
@@ -49,7 +50,7 @@ export const actions = {
         try {
             await SARP.pcto_Azienda.create({
                 data: {
-                    idUtente: 3,
+                    creatoDa: user_id(locals),
                     idConvenzione: form_data.get('idConvenzione'),
                     nome: form_data.get('nome'),
                     indirizzo: form_data.get('indirizzo'),
@@ -79,29 +80,23 @@ export const actions = {
 		let id = form_data.get('id');
 
         SARP.set_session(locals); // passa la sessione all'audit
-        try {
-            await SARP.pcto_Azienda.update({
-                where: { id: +id },
-                data: {
-                    idUtente: 3,
-                    idConvenzione: form_data.get('idConvenzione'),
-                    nome: form_data.get('nome'),
-                    indirizzo: form_data.get('indirizzo'),
-                    piva: form_data.get('piva'),
-                    telefono: form_data.get('telefono'),
-                    direttore_nome: form_data.get('direttore_nome'),
-                    direttore_natoA: form_data.get('direttore_natoA'),
-                    direttore_natoIl: new Date(form_data.get('direttore_natoIl')),
-                    direttore_codiceF: form_data.get('direttore_codiceF'),
-                    dataConvenzione: new Date(form_data.get('dataConvenzione')),
-                    dataProtocollo: new Date(form_data.get('dataProtocollo')),
-                    istituto: form_data.get('istituto'),
-                }
-            });           
-        } catch (exception) {
-            catch_error(error, "la modifica");
-        }
-
+		await SARP.pcto_Azienda.update({
+			where: { id: +id },
+			data: {
+                idConvenzione: form_data.get('idConvenzione'),
+                nome: form_data.get('nome'),
+                indirizzo: form_data.get('indirizzo'),
+                piva: form_data.get('piva'),
+                telefono: form_data.get('telefono'),
+                direttore_nome: form_data.get('direttore_nome'),
+                direttore_natoA: form_data.get('direttore_natoA'),
+                direttore_natoIl: new Date(form_data.get('direttore_natoIl')),
+                direttore_codiceF: form_data.get('direttore_codiceF'),
+                dataConvenzione: new Date(form_data.get('dataConvenzione')),
+				dataProtocollo: new Date(form_data.get('dataProtocollo')),
+                istituto: form_data.get('istituto'),
+			}
+		});
 	},
 
 	// @ts-ignore

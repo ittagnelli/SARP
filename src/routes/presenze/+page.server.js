@@ -1,5 +1,6 @@
 import { PrismaDB } from '../../js/prisma_db';
 import { raise_error, route_protect } from '../../js/helper';
+import { route_protect, user_id, multi_user_where } from '../../js/helper';
 import { Logger } from '../../js/logger';
 
 let logger = new Logger("server"); //instanzia il logger
@@ -17,6 +18,7 @@ export async function load({ locals }) {
 		// query SQL al DB per tutte le entry nella tabella todo
 		const presenze = await SARP.pcto_Presenza.findMany({
 			orderBy: [{ id: 'desc' }],
+			where: multi_user_where(locals), 
 			include: {
 				presenza: true,
 				lavoraPer: true
@@ -36,7 +38,7 @@ export async function load({ locals }) {
 		return {
 			presenze: presenze,
 			stages: stages
-		}	
+		}
 	} catch (error) {
 		logger.error(JSON.stringify(exception)); //PROF: error è un oggetto ma serve qualcosa di più complicato. per il momento lascialo così. ho gia risolto in hooks nella versione 9.0
 		raise_error(500, 100, `Errore durante la ricerca delle presenze. TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`);    // TIMESTAMP ci serve per capire l'errore all'interno del log
@@ -56,17 +58,16 @@ export const actions = {
 		try {
 			await SARP.pcto_Presenza.create({
 				data: {
+					creatoDa: user_id(locals),
 					dataPresenza: new Date(form_data.get('dataPresenza')),
 					oraInizio: new Date(1970, 1, 1, hh_inizio, mm_inizio),
 					oraFine: new Date(1970,1 ,1, hh_fine, mm_fine),
-					idUtente: +form_data.get('studente'),
 					idPcto: +form_data.get('stage')
 				}
-			});			
+			});	
 		} catch (error) {
 			catch_error(error, "l'inserimento");
 		}
-
 	},
 
 	update: async ({ cookies, request, locals }) => {
@@ -85,10 +86,9 @@ export const actions = {
 					dataPresenza: new Date(form_data.get('dataPresenza')),
 					oraInizio: new Date(1970, 1, 1, hh_inizio, mm_inizio),
 					oraFine: new Date(1970,1 ,1, hh_fine, mm_fine),
-					idUtente: +form_data.get('studente'),
 					idPcto: +form_data.get('stage')
 				}
-			});	
+			});
 		} catch (error) {
 			catch_error(error, "l'aggiornamento")
 		}

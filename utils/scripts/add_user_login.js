@@ -23,6 +23,7 @@ async function main(argv){
     console.log("Aggiungo l'utente richiesto al DB");
     await SARP.utente.create({
         data: {
+            creatoDa: 1,
             nome: argv[3],
             cognome: argv[4],
             email: argv[2],

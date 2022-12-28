@@ -1,5 +1,6 @@
 import { PrismaDB } from '../../js/prisma_db';
 import { raise_error, route_protect } from '../../js/helper';
+import { route_protect,user_id, multi_user_where } from '../../js/helper';
 import { Logger } from '../../js/logger';
 
 let logger = new Logger("server"); //instanzia il logger
@@ -16,6 +17,8 @@ export async function load({ locals }) {
     try {
         // query SQL al DB per tutte le entry nella tabella valutazioni
         const evaluations = await SARP.pcto_Valutazione.findMany({
+            orderBy: [{ id: 'desc' }],
+            where: multi_user_where(locals),
             include: {
                 utente: true,
                 pcto: true
@@ -41,15 +44,14 @@ export const actions = {
         try {
             await SARP.pcto_Valutazione.create({
                 data: {
+                    creatoDa: user_id(locals),
                     idPcto: +id_pcto,
-                    idUtente: locals.session.login.id,
                     qna: qna
                 }
             });
         } catch (error) {
             catch_error(error, "l'inserimento");
         }
-
 	},
 
 	update: async ({ cookies, request, locals }) => {
@@ -64,14 +66,12 @@ export const actions = {
                 where: { id: +id },
                 data: {
                     idPcto: +id_pcto,
-                    idUtente: locals.session.login.id,	// Default user, we need to change this
                     qna: qna
                 }
-            });          
+            });        
         } catch (error) {
             catch_error(error, "la modifica");
         }
-
 	},
 
 	delete: async ({ cookies, request, locals }) => {

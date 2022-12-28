@@ -2,6 +2,7 @@ const ELLIPSES_LENGTH = 50;
 
 import { redirect } from '@sveltejs/kit';
 import { error } from '@sveltejs/kit';
+import { PUBLIC_ADMIN_ROLE } from '$env/static/public';
 
 export const convert_date = (d) => {
 	let data = d
@@ -62,6 +63,18 @@ export const user_tipo = (data) => {
 // restituisce user id  
 export const user_id = (data) => {
     return data?.session?.login?.id;
+}
+
+// restituisce una clausola di ricerca per utente ADMIN e non
+export const multi_user_where = (data) => {
+    let clausola_where;
+
+    if(user_ruolo(data) != PUBLIC_ADMIN_ROLE)
+        clausola_where = {creatoDa: user_id(data)};
+    else
+        clausola_where = {id: {gt: 0}};
+    
+    return clausola_where;
 }
 
 // auto button click for modal PROF:
