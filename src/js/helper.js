@@ -76,3 +76,10 @@ export const multi_user_where = (data) => {
     
     return clausola_where;
 }
+
+// auto button click for modal PROF:
+export const show_modal = () => {
+    const btn = document.getElementById("btn_action_modal");    
+    if(btn instanceof HTMLAnchorElement)    // Apriamo il modale
+        btn.click();
+}        
