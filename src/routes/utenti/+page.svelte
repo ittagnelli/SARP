@@ -161,6 +161,9 @@
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" />
 				</div>
 				<div class="modal-body">
+                    {#if form}
+						<ModalError msg={form.error_mex}></ModalError>
+					{/if}
 					<div class="row">
                         <div class="col-lg-4">
                             <!-- InputSelect component ha dei problemi (two way binding) non ancora risolti
@@ -196,9 +199,6 @@
                             />
 						</div>
 					</div>
-					{#if form}
-						<ModalError msg={form.error_mex}></ModalError>
-					{/if}
                     <div class="row">
                         <div class="col-lg-4">
                             <InputText
