@@ -1,7 +1,7 @@
 <script>
 	// @ts-nocheck
 	import { createEventDispatcher } from 'svelte';
-    import { ellipses } from '../../../js/helper';
+    import { ellipses, user_id } from '../../../js/helper';
 
 	// dichiara le colonne della tabella
 	// il nome di ogni colonna deve coincidere esattamente con il nome
@@ -14,6 +14,7 @@
     export let type_genre;
     export let print;
     export let actions;
+    export let current_user;
 
 	const dispatch = createEventDispatcher();
 
@@ -153,11 +154,13 @@
 									>
 										<icon class="ti ti-edit icon" />
 									</a>
-									<form id="form-delete" method="POST" action={`/${type}?/delete`}>
-										<button class="icon-button" name="id" value={row.id}>
-											<icon class="ti ti-trash icon" />
-										</button>
-									</form>
+									{#if current_user != row.id}
+                                        <form id="form-delete" method="POST" action={`/${type}?/delete`}>
+                                            <button class="icon-button" name="id" value={row.id}>
+                                                <icon class="ti ti-trash icon" />
+                                            </button>
+                                        </form>
+                                    {/if}
 								</td>
                                 {/if}
 							</tr>
