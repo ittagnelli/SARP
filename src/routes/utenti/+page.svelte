@@ -4,10 +4,14 @@
     import * as helper from '../../js/helper';
     import * as yup from 'yup';
     import InputText from '$lib/components/modal/input_text.svelte';
+	import ModalError from '$lib/components/common/modal_error.svelte';
     import { Logger } from '../../js/logger';
+	import { onMount } from 'svelte';
+
+	export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
+	export let form; // Risposta del form dal server
 
     let logger = new Logger("client");
-	export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
 	let utenti = helper.data2arr(data.utenti);
     let tipi_utente = helper.data2arr(data.tipi_utente);
 	let ruoli_utente = helper.data2arr(data.ruoli_utente);
@@ -68,6 +72,15 @@
 		.matches(/^[0-9]{3}\.[0-9]{3}\.[0-9]{2}\.[0-9]{2}$/, "Numero non valido [333.123.45.67]")
 	});
 
+	onMount(() => { // Controlliamo che l'inserimento sia andato a buon fine, usiamo on mount per richiamare le funzioni del DOM
+        if(form != null){
+            form_values = JSON.parse(localStorage.getItem("form")); // Riempiamo il modale
+            helper.show_modal();
+        } else {
+            localStorage.removeItem("form"); //PROF: rimuoviamo il form dal localstorage
+        }
+    });
+	
 	async function start_update(e) {
 		modal_action = 'update';
         form_values.user_id = e.detail.id;
@@ -91,6 +104,7 @@
 			// valida il form prima del submit
 			await form_schema.validate(form_values, { abortEarly: false });
 			errors = {};
+			localStorage.setItem("form", JSON.stringify(form_values));	// Nel caso l'inserimento fallisse abbiamo il "backup" nel localstorage
 			modal_form.submit();
 		} catch (err) {
 			errors = err.inner.reduce((acc, err) => {
@@ -147,6 +161,9 @@
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" />
 				</div>
 				<div class="modal-body">
+                    {#if form}
+						<ModalError msg={form.error_mex}></ModalError>
+					{/if}
 					<div class="row">
                         <div class="col-lg-4">
                             <!-- InputSelect component ha dei problemi (two way binding) non ancora risolti

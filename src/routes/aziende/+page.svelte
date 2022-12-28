@@ -6,9 +6,14 @@
     import * as helper from '../../js/helper';
     import * as yup from 'yup';
     import { Logger } from '../../js/logger';
+	import { onMount } from 'svelte';
+	import ModalError from '$lib/components/common/modal_error.svelte';
 
     let logger = new Logger("client");
+
 	export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
+    export let form; // Risposta del form dal server
+
     // inizializzo la lista delle aziende con il risultato della query SQL
     let aziende = helper.data2arr(data.aziende); // alias per maggior leggibilità
     
@@ -45,6 +50,15 @@
         istituto: "ITT"
     };
 
+    onMount(() => { // Controlliamo che l'inserimento sia andato a buon fine, usiamo on mount per richiamare le funzioni del DOM
+        if(form != null){
+            form_values = JSON.parse(localStorage.getItem("form")); // Riempiamo il modale
+            helper.show_modal();
+        } else {
+            localStorage.removeItem("form"); //PROF: rimuoviamo il form dal localstorage
+        }
+    });
+
     // schema di validazione del form
     const form_schema = yup.object().shape({
         nome: yup
@@ -58,8 +72,8 @@
         .matches(/^[a-zA-Z0-9 /]{3,40}$/, "Indirizzo azienda non valido"),
 
         piva: yup
-        .string("Partita Iva necessaria")
-        .required()
+        .string()
+        .required("Partita Iva necessaria")
         .matches(/^[0-9]{11}$/, "Partita Iva non valida"),
 
         telefono: yup
@@ -129,6 +143,7 @@
             // valida il form prima del submit
             await form_schema.validate(form_values, { abortEarly: false });
             errors = {};
+            localStorage.setItem("form", JSON.stringify(form_values));
             modal_form.submit();
         } catch (err) {
             errors = err.inner.reduce((acc, err) => {
@@ -186,6 +201,9 @@
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" />
 				</div>
 				<div class="modal-body">
+                    {#if form}
+                        <ModalError msg={form.error_mex}></ModalError>
+                    {/if}
 					<div class="row">
 						<div class="col-lg-4">
                             <InputText
