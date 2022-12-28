@@ -319,24 +319,3 @@
 		</div>
 	</form>
 </div>
-
-<!-- self delete error modal -->
-<div
-    class="modal modal-blur fade"
-	id="self_delete_modal"
-	aria-hidden="true"
->
-    <div class="modal-content">
-        <div class="modal-header">
-            <h5>Qualcosa è andato storto</h5>
-        </div>
-        <div class="modal-body">
-            <div>Hai provato a cancellare il tuo stesso utente</div>
-        </div>
-    </div>
-    <div class="modal-footer">
-        <a href="#" class="btn btn-danger" data-bs-dismiss="modal">
-            <b>Cancel</b>
-        </a>
-    </div>
-</div>
