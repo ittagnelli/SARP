@@ -14,30 +14,35 @@ function catch_error(exception, type) {
 
 export async function load({ locals }) {
     route_protect(locals);
-    
-	// query SQL al DB per tutte le entry nella tabella todo
-	const stages = await SARP.pcto_Pcto.findMany({
-		orderBy: [{ id: 'desc' }],
-        include: {
-			offertoDa: true,
-            svoltoDa: true
-		}
-	});
+    try {
+        // query SQL al DB per tutte le entry nella tabella todo
+        const stages = await SARP.pcto_Pcto.findMany({
+            orderBy: [{ id: 'desc' }],
+            include: {
+                offertoDa: true,
+                svoltoDa: true
+            }
+        });
 
-    const companies = await SARP.pcto_Azienda.findMany({
-		orderBy: [{ id: 'desc' }]
-	});
+        const companies = await SARP.pcto_Azienda.findMany({
+            orderBy: [{ id: 'desc' }]
+        });
 
-    const utenti = await SARP.Utente.findMany({
-        orderBy: [{ id: 'desc' }]
-    });
+        const utenti = await SARP.Utente.findMany({
+            orderBy: [{ id: 'desc' }]
+        });
 
-	// restituisco il risultato della query SQL
-	return {
-        stages: stages,
-        companies: companies,
-        utenti: utenti
+        // restituisco il risultato della query SQL
+        return {
+            stages: stages,
+            companies: companies,
+            utenti: utenti
+        }
+    } catch (error) {
+        logger.error(JSON.stringify(error)); //PROF: error è un oggetto ma serve qualcosa di più complicato. per il momento lascialo così. ho gia risolto in hooks nella versione 9.0
+		raise_error(500, 100, `Errore durante la ricerca degli stage. TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`);    // TIMESTAMP ci serve per capire l'errore all'interno del log
     }
+
 }
 
 export const actions = {
