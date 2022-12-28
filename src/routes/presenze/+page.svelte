@@ -6,7 +6,6 @@
     import * as helper from '../../js/helper';
     import * as yup from 'yup';
     import { Logger } from '../../js/logger';
-	import { text } from 'svelte/internal';
 
     let logger = new Logger("client");
 	export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
@@ -62,14 +61,14 @@
 		.length(5, "Orario necessario")
 		.test("minore", "L'orario d'entrata deve essere minore di quello d'uscita", (value, textContext) => {
 			console.log(helper.diff_time(textContext.parent.oraFine, value).hour );
-			return helper.diff_time(textContext.parent.oraFine, value).hour > 0;
+			return helper.diff_time(textContext.parent.oraFine, value) > 0;
 		}),
 
 		oraFine: yup
 		.string()
 		.length(5, "Orario necessario")
 		.test("maggiore", "L'orario d'uscita deve essere maggiore di quello d'entrata", (value, textContext) => {
-			return helper.diff_time(textContext.parent.oraInizio, value).hour < 0;
+			return helper.diff_time(textContext.parent.oraInizio, value) < 0;
 		}),
 	});
 
