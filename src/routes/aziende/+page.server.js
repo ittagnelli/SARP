@@ -42,6 +42,15 @@ export async function load({ locals }) {
     }
 }
 
+function toArrayBuffer(buf) {
+    const ab = new ArrayBuffer(buf.length);
+    const view = new Uint8Array(ab);
+    for (let i = 0; i < buf.length; ++i) {
+        view[i] = buf[i];
+    }
+    return ab;
+}
+
 export const actions = {
 	// @ts-ignore
 	create: async ({ cookies, request, locals }) => {
@@ -147,14 +156,13 @@ export const actions = {
 				type: 'nodebuffer',
 				compression: 'DEFLATE'
 			});
+			return{
+				file: JSON.stringify(buf),	// Convertiamo il buffer in stringa sennò sveltekit va in errore
+				nome_convenzione: `01-Convenzione-generale-${company.idConvenzione}.docx`
+			}
 		} catch (exception) {
+			console.log(exception)
 			raise_error(500, 101, 'Impossibile generare il file a partire dal template');
 		}
-		fs.writeFileSync(
-			path.resolve('static/pcto_output/', `01-Convenzione-generale-${company.idConvenzione}.docx`),
-			buf
-		);
-		throw redirect(303, `pcto_output/01-Convenzione-generale-${company.idConvenzione}.docx`);
 	}       
-
 };
