@@ -26,8 +26,7 @@ export async function load({ locals }) {
 	return {
         utenti: utenti,
         tipi_utente: tipi_utente,
-        ruoli_utente: ruoli_utente,
-        current_user: user_id(locals)
+        ruoli_utente: ruoli_utente
     }
 }
 

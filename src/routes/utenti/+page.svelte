@@ -122,7 +122,7 @@
 	type="utenti"
     type_genre="m"
     actions={true}
-    current_user={data.current_user}
+    current_user={data.session.idUtente}
 />
 
 <!-- Modal from Page action -->
