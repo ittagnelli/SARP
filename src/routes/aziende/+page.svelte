@@ -7,6 +7,7 @@
     import * as yup from 'yup';
     import { Logger } from '../../js/logger';
 	import { onMount } from 'svelte';
+	import ModalError from '$lib/components/common/modal_error.svelte';
 
     let logger = new Logger("client");
 
@@ -51,14 +52,8 @@
 
     onMount(() => { // Controlliamo che l'inserimento sia andato a buon fine, usiamo on mount per richiamare le funzioni del DOM
         if(form?.unique_violation){
-            // alert("ID già esistente"); PROF: rimuovere
             form_values = JSON.parse(localStorage.getItem("form")); // Riempiamo il modale
-            //PROF: mostruoso ma per il momento va bene ma lo spostiamo in un helper così è DRY (vedi helper.js)
-            // const btn = document.getElementById("btn_action_modal");    
-            // if(btn instanceof HTMLAnchorElement)    // Apriamo il modale
-            //     btn.click();
             helper.show_modal();
-            console.log(form)
         } else {
             localStorage.removeItem("form"); //PROF: rimuoviamo il form dal localstorage
         }
@@ -77,8 +72,8 @@
         .matches(/^[a-zA-Z0-9 /]{3,40}$/, "Indirizzo azienda non valido"),
 
         piva: yup
-        .string("Partita Iva necessaria")
-        .required()
+        .string()
+        .required("Partita Iva necessaria")
         .matches(/^[0-9]{11}$/, "Partita Iva non valida"),
 
         telefono: yup
@@ -209,11 +204,7 @@
 
                     <!-- PROF: magari crea un componente chiamato modal_error <ModalError> -->
                     {#if form}
-                    <div class="row error-mex">
-                        <div class="col-12">                                  
-                            {form.error_mex}                            
-                        </div>    
-                    </div>
+                        <ModalError msg={form.error_mex}></ModalError>
                     {/if}
 
 

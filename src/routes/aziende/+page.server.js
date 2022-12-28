@@ -10,7 +10,19 @@ import { Logger } from '../../js/logger';
 let logger = new Logger("server"); //instanzia il logger PROF: qui deve essere server
 const SARP = new PrismaDB(); //Istanzia il client SARP DB
 
+// @ts-ignore
+function catch_error(exception, type) {
+    logger.error(JSON.stringify(exception)); //PROF: error è un oggetto ma serve qualcosa di più complicato. per il momento lascialo così. ho gia risolto in hooks nella versione 9.0
+    raise_error(500, 100, `Errore irreversibile durante ${type} dell'azienda. TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`);
+}
 
+// @ts-ignore
+function catch_error_pdf(exception, type) {
+    logger.error(JSON.stringify(exception)); //PROF: error è un oggetto ma serve qualcosa di più complicato. per il momento lascialo così. ho gia risolto in hooks nella versione 9.0
+    raise_error(500, 100, `${type} TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`);
+}
+
+// @ts-ignore
 export async function load({ locals }) {
     route_protect(locals);
 
@@ -24,6 +36,7 @@ export async function load({ locals }) {
 }
 
 export const actions = {
+	// @ts-ignore
 	create: async ({ cookies, request, locals }) => {
 		const form_data = await request.formData();
 
@@ -47,81 +60,105 @@ export const actions = {
                 }
             });  
         } catch (exception) {
-            if(exception.code != "P2002"){  // Errore diverso dalla violazione dell'unique
-                logger.error(JSON.stringify(exception)); //PROF: error è un oggetto ma serve qualcosa di più complicato. per il momento lascialo così. ho gia risolto in hooks nella versione 9.0
-                raise_error(500, 100, 'tuo codice e tuo mex'); //PROF: 500 errore http, 100 codice SARP univoco, messaggio: un messaggio chiaro. in questo modo nella pagina 500 gli utenti vedono codice e messaggio. ce lo dicono e noi becchiamo il punto esatoo dell'errore
-                // return error(500);  // Redirect alla pagina 500 //PROF: da rimuovere
-            }else
-                //PROF: restituiamo anche messaggio di errore che viene aggiunto all'oggetto form
+            // @ts-ignore
+            if(exception.code != "P2002")
+                catch_error(exception, "l'inserimento");
+            else
                 return fail(400, { unique_violation: true, error_mex: "Numero convenzione non univoco" });   // La richiesta fallisce
         }
-
 	},
 
+	// @ts-ignore
 	update: async ({ cookies, request, locals }) => {
 		const form_data = await request.formData();
 		let id = form_data.get('id');
 
         SARP.set_session(locals); // passa la sessione all'audit
-		await SARP.pcto_Azienda.update({
-			where: { id: +id },
-			data: {
-				idUtente: 3,
-                idConvenzione: form_data.get('idConvenzione'),
-                nome: form_data.get('nome'),
-                indirizzo: form_data.get('indirizzo'),
-                piva: form_data.get('piva'),
-                telefono: form_data.get('telefono'),
-                direttore_nome: form_data.get('direttore_nome'),
-                direttore_natoA: form_data.get('direttore_natoA'),
-                direttore_natoIl: new Date(form_data.get('direttore_natoIl')),
-                direttore_codiceF: form_data.get('direttore_codiceF'),
-                dataConvenzione: new Date(form_data.get('dataConvenzione')),
-				dataProtocollo: new Date(form_data.get('dataProtocollo')),
-                istituto: form_data.get('istituto'),
-			}
-		});
+        try {
+            await SARP.pcto_Azienda.update({
+                where: { id: +id },
+                data: {
+                    idUtente: 3,
+                    idConvenzione: form_data.get('idConvenzione'),
+                    nome: form_data.get('nome'),
+                    indirizzo: form_data.get('indirizzo'),
+                    piva: form_data.get('piva'),
+                    telefono: form_data.get('telefono'),
+                    direttore_nome: form_data.get('direttore_nome'),
+                    direttore_natoA: form_data.get('direttore_natoA'),
+                    direttore_natoIl: new Date(form_data.get('direttore_natoIl')),
+                    direttore_codiceF: form_data.get('direttore_codiceF'),
+                    dataConvenzione: new Date(form_data.get('dataConvenzione')),
+                    dataProtocollo: new Date(form_data.get('dataProtocollo')),
+                    istituto: form_data.get('istituto'),
+                }
+            });           
+        } catch (exception) {
+            catch_error(error, "la modifica");
+        }
+
 	},
 
+	// @ts-ignore
 	delete: async ({ cookies, request, locals }) => {
 		const form_data = await request.formData();
 		const id = form_data.get('id');
 
         SARP.set_session(locals); // passa la sessione all'audit
-		await SARP.pcto_Azienda.delete({
-			where: { id: +id }
-		});
+        try {
+            await SARP.pcto_Azienda.delete({
+                where: { id: +id }
+            });   
+        } catch (error) {
+            catch_error(error, "l'aggiornamento");
+        }
+
 	},
 
+    // @ts-ignore
     pdf: async ({ cookies, request }) => {
         const form_data = await request.formData();
         const id = form_data.get('id');
-        
-        // preleva l'azienda dal DB
-        const company = await SARP.pcto_Azienda.findUnique({
-            where: { id: +id }
-        });
-        //arricchisce l'oggetto
-        company['today'] =  new Date().toLocaleDateString();
-        company['direttore_natoIl'] = company['direttore_natoIl'].toLocaleDateString();
+        let company;
+        try {
+            // preleva l'azienda dal DB
+            company = await SARP.pcto_Azienda.findUnique({
+                where: { id: +id }
+            });
+            //arricchisce l'oggetto
+            // @ts-ignore
+            company['today'] =  new Date().toLocaleDateString();
+            // @ts-ignore
+            company['direttore_natoIl'] = company['direttore_natoIl'].toLocaleDateString(); 
+        } catch (error) {
+            catch_error_pdf(error, "Azienda non trovata nel database.");
+        }
 
-        const content = fs.readFileSync(
-            path.resolve("static/pcto_templates/", "01-Convenzione-generale.docx"), "binary");
-        
-        const zip = new PizZip(content);
-        
-        const doc = new Docxtemplater(zip, {
-            paragraphLoop: true,
-            linebreaks: true,
-        });
-        
-        doc.render(company);
-        
-        const buf = doc.getZip().generate({
-            type: "nodebuffer",
-            compression: "DEFLATE",
-        });
-        fs.writeFileSync(path.resolve("static/pcto_output/", `01-Convenzione-generale-${company.idConvenzione}.docx`), buf);
-        throw redirect(303, `pcto_output/01-Convenzione-generale-${company.idConvenzione}.docx`);   
+        try {
+            const content = fs.readFileSync(
+                path.resolve("static/pcto_templates/", "01-Convenzione-generale.docx"), "binary");
+            
+            const zip = new PizZip(content);
+            
+            const doc = new Docxtemplater(zip, {
+                paragraphLoop: true,
+                linebreaks: true,
+            });
+            
+            doc.render(company);
+            
+            const buf = doc.getZip().generate({
+                type: "nodebuffer",
+                compression: "DEFLATE",
+            });
+            // @ts-ignore
+            fs.writeFileSync(path.resolve("static/pcto_output/", `01-Convenzione-generale-${company.idConvenzione}.docx`), buf);
+        } catch (error) {
+            console.error(error);
+            catch_error_pdf(error, "Errore durante la generazione del PDF");
+        }
+
+        // @ts-ignore
+        throw redirect(303, `pcto_output/01-Convenzione-generale-${company.idConvenzione}.docx`);   // Se non viene rilevata nessuna eccezione possiamo scaricare il file
     }   
 };
