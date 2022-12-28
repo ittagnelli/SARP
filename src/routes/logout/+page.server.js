@@ -3,7 +3,7 @@ import { PrismaDB } from '../../js/prisma_db';
 import { Logger } from '../../js/logger';
 import { Auditor, audit_mex } from '../../js/audit';
 
-let logger = new Logger("seerver"); //instanzia il logger
+let logger = new Logger("server"); //instanzia il logger
 let auditor = new Auditor();
 const SARP = new PrismaDB(); //Istanzia il client SARP DB
 

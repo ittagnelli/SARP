@@ -47,6 +47,7 @@
 										class="btn btn-primary d-none d-sm-inline-block"
 										data-bs-toggle="modal"
 										data-bs-target="#{$page_action_modal}"
+										id="btn_action_modal"
 									>
 										<i class="ti ti-plus icon" />
 										{$page_action_title}
