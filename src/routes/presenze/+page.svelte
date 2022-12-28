@@ -6,6 +6,7 @@
     import * as helper from '../../js/helper';
     import * as yup from 'yup';
     import { Logger } from '../../js/logger';
+	import { text } from 'svelte/internal';
 
     let logger = new Logger("client");
 	export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
@@ -59,6 +60,17 @@
         oraInizio: yup
 		.string()
 		.length(5, "Orario necessario")
+		.test("minore", "L'orario d'entrata deve essere minore di quello d'uscita", (value, textContext) => {
+			console.log(helper.diff_time(textContext.parent.oraFine, value).hour );
+			return helper.diff_time(textContext.parent.oraFine, value).hour > 0;
+		}),
+
+		oraFine: yup
+		.string()
+		.length(5, "Orario necessario")
+		.test("maggiore", "L'orario d'uscita deve essere maggiore di quello d'entrata", (value, textContext) => {
+			return helper.diff_time(textContext.parent.oraInizio, value).hour < 0;
+		}),
 	});
 
 	async function start_update(e) {
@@ -165,7 +177,7 @@
                     <div class="row">
                         <div class="col-lg-4">
                             <InputDate
-								label="Data Inizio"
+								label="Data presenza"
 								name="dataPresenza"
 								{errors}
 								bind:val={form_values.dataPresenza}

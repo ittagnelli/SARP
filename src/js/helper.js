@@ -83,3 +83,13 @@ export const show_modal = () => {
     if(btn instanceof HTMLAnchorElement)    // Apriamo il modale
         btn.click();
 }        
+
+export const diff_time = (h1, h2) => {
+	const h1_split = h1.split(":");	// 00:01	[00,01]
+	const h2_split = h2.split(":");
+
+	return {
+		hour: h1_split[0] - h2_split[0],
+		minutes: h1_split[1] - h2_split[2]
+	}
+}
