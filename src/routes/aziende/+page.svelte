@@ -201,13 +201,9 @@
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" />
 				</div>
 				<div class="modal-body">
-
-                    <!-- PROF: magari crea un componente chiamato modal_error <ModalError> -->
                     {#if form}
                         <ModalError msg={form.error_mex}></ModalError>
                     {/if}
-
-
 					<div class="row">
 						<div class="col-lg-4">
                             <InputText
@@ -360,14 +356,3 @@
 		</div>
 	</form>
 </div>
-
-<!-- PROF:  -->
-<style>
-    .error-mex {
-        border: 1px solid #d63939;
-        border-radius: 4px;
-        margin-bottom: 1rem;
-        text-align: center;
-        padding: 4px;
-    }
-</style>
