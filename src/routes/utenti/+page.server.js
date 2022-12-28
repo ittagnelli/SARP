@@ -2,7 +2,7 @@ import { PrismaDB } from '../../js/prisma_db';
 import { route_protect, raise_error } from '../../js/helper';
 import { Logger } from '../../js/logger';
 
-let logger = new Logger("seerver"); //instanzia il logger
+let logger = new Logger("server"); //instanzia il logger
 const SARP = new PrismaDB(); //Istanzia il client SARP DB
 
 export async function load({ locals }) {

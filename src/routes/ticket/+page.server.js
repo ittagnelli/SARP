@@ -3,7 +3,7 @@ import { redirect } from '@sveltejs/kit';
 import { route_protect } from '../../js/helper';
 import { Logger } from '../../js/logger';
 
-let logger = new Logger("seerver"); //instanzia il logger
+let logger = new Logger("server"); //instanzia il logger
 const SARP = new PrismaDB(); //Istanzia il client SARP DB
 
 
