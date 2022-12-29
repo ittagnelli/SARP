@@ -59,6 +59,16 @@
         oraInizio: yup
 		.string()
 		.length(5, "Orario necessario")
+		.test("minore", "L'orario d'entrata deve essere precedente a quello d'uscita", (value, textContext) => {
+			return helper.diff_time(value, textContext.parent.oraFine);
+		}),
+
+		oraFine: yup
+		.string()
+		.length(5, "Orario necessario")
+		.test("maggiore", "L'orario d'uscita deve essere successivo a quello d'entrata", (value, textContext) => {
+			return helper.diff_time(textContext.parent.oraInizio, value);
+		}),
 	});
 
 	async function start_update(e) {
@@ -165,7 +175,7 @@
                     <div class="row">
                         <div class="col-lg-4">
                             <InputDate
-								label="Data Inizio"
+								label="Data presenza"
 								name="dataPresenza"
 								{errors}
 								bind:val={form_values.dataPresenza}
