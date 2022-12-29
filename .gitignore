@@ -1,5 +1,6 @@
 .DS_Store
 node_modules
+package-lock.json
 /build
 /.svelte-kit
 /package
@@ -12,3 +13,4 @@ log/*
 audit/*
 SARP_build/*
 SARP_runtime/*
+src/js/policy.js

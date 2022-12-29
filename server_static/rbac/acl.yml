@@ -1,0 +1,26 @@
+---
+menu_utenti:
+  view:
+    - ADMIN
+  create:
+  update:
+  delete:
+menu_PCTO:
+  view:
+    - ADMIN
+    - TUTOR-AZIENDALE
+    - TUTOR-SCOLASTICO
+  create:
+    - '*'
+  update:
+  delete:
+    - ADMIN
+menu_aziende:
+  view:
+    - ADMIN
+  create:
+    - ADMIN
+  update:
+    - ADMIN
+  delete:
+    - ADMIN
