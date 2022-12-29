@@ -60,15 +60,14 @@
 		.string()
 		.length(5, "Orario necessario")
 		.test("minore", "L'orario d'entrata deve essere minore di quello d'uscita", (value, textContext) => {
-			console.log(helper.diff_time(textContext.parent.oraFine, value).hour );
-			return helper.diff_time(textContext.parent.oraFine, value) > 0;
+			return helper.diff_time(value, textContext.parent.oraFine);
 		}),
 
 		oraFine: yup
 		.string()
 		.length(5, "Orario necessario")
 		.test("maggiore", "L'orario d'uscita deve essere maggiore di quello d'entrata", (value, textContext) => {
-			return helper.diff_time(textContext.parent.oraInizio, value) < 0;
+			return helper.diff_time(textContext.parent.oraInizio, value);
 		}),
 	});
 

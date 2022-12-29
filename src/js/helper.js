@@ -87,6 +87,7 @@ export const show_modal = () => {
 export const diff_time = (h1, h2) => {
 	const h1_split = h1.split(":");	// 00:01	[00,01]
 	const h2_split = h2.split(":");
-
-	return h1_split[0] - h2_split[0];
+	const h1_date = new Date().setHours(h1_split[0], h1_split[1]);
+	const h2_date = new Date().setHours(h2_split[0], h2_split[1]);
+	return h1_date < h2_date;
 }
