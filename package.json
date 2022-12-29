@@ -16,6 +16,7 @@
 		"@mermaid-js/mermaid-cli": "^9.1.7",
 		"@playwright/test": "^1.25.0",
 		"@sveltejs/adapter-auto": "next",
+		"@sveltejs/adapter-node": "^1.0.0-next.106",
 		"@sveltejs/kit": "next",
 		"eslint": "^8.16.0",
 		"eslint-config-prettier": "^8.3.0",
@@ -31,8 +32,7 @@
 		"svelte": "^3.44.0",
 		"svelte-check": "^2.7.1",
 		"typescript": "^4.7.4",
-		"vite": "next",
-        "@sveltejs/adapter-node": "next"
+		"vite": "next"
 	},
 	"type": "module",
 	"husky": {
@@ -43,6 +43,7 @@
 	"dependencies": {
 		"@prisma/client": "^4.4.0",
 		"docxtemplater": "^3.32.4",
+		"file-saver": "^2.0.5",
 		"pino": "^8.7.0",
 		"pino-pretty": "^9.1.1",
 		"pizzip": "^3.1.3",
