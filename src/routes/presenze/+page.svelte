@@ -59,14 +59,14 @@
         oraInizio: yup
 		.string()
 		.length(5, "Orario necessario")
-		.test("minore", "L'orario d'entrata deve essere minore di quello d'uscita", (value, textContext) => {
+		.test("minore", "L'orario d'entrata deve essere precedente a quello d'uscita", (value, textContext) => {
 			return helper.diff_time(value, textContext.parent.oraFine);
 		}),
 
 		oraFine: yup
 		.string()
 		.length(5, "Orario necessario")
-		.test("maggiore", "L'orario d'uscita deve essere maggiore di quello d'entrata", (value, textContext) => {
+		.test("maggiore", "L'orario d'uscita deve essere successivo a quello d'entrata", (value, textContext) => {
 			return helper.diff_time(textContext.parent.oraInizio, value);
 		}),
 	});
