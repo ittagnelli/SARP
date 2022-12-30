@@ -1,8 +1,9 @@
-import { route_protect, raise_error } from '../../js/helper';
+import { route_protect, access_protect } from '../../js/helper';
 import { Logger } from '../../js/logger';
 import { compile } from 'mdsvex';
 import * as fs from 'fs';
 import { PUBLIC_FAQ_DIR } from '$env/static/public';
+let resource = "faq"; // definisco il nome della risorsa di questo endpoint
 
 // dirty trick per usare il modulo compile
 import { createRequire } from "module";
@@ -32,7 +33,10 @@ async function md2html() {
 }
 
 export async function load({ locals }) {
-	route_protect(locals);
+	let action = 'read';
+
+    route_protect(locals);
+    access_protect(300, locals, action, resource);
 
 	return { faq: md2html() };
 }

@@ -1,10 +1,11 @@
 import { PrismaDB } from '../../js/prisma_db';
 import { redirect } from '@sveltejs/kit';
-import { raise_error, route_protect } from '../../js/helper';
+import { raise_error, route_protect, access_protect } from '../../js/helper';
 import { Logger } from '../../js/logger';
 
 let logger = new Logger("server"); //instanzia il logger
 const SARP = new PrismaDB(); //Istanzia il client SARP DB
+let resource = "ticket"; // definisco il nome della risorsa di questo endpoint
 
 // @ts-ignore
 function catch_error(exception, type) {
@@ -13,7 +14,11 @@ function catch_error(exception, type) {
 }
 
 export async function load({ locals }) {
+    let action = 'read';
+
     route_protect(locals);
+    access_protect(600, locals, action, resource);
+
 	try {
 		//query SQL al DB per tutte le entry nella tabella tocket
 		const tickets = await SARP.Ticket.findMany({
@@ -33,6 +38,11 @@ export async function load({ locals }) {
 
 export const actions = {
 	create: async ({ cookies, request, locals }) => {
+        let action = 'create';
+
+        route_protect(locals);
+        access_protect(601, locals, action, resource);
+
 		const form_data = await request.formData();
         const applicazione = form_data.get('applicazione');
         const titolo = form_data.get('titolo');

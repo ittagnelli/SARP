@@ -3,6 +3,13 @@ const ELLIPSES_LENGTH = 50;
 import { redirect } from '@sveltejs/kit';
 import { error } from '@sveltejs/kit';
 import { PUBLIC_ADMIN_ROLE } from '$env/static/public';
+import { RBAC } from './rbac';
+import { Logger } from './logger';
+import { browser } from '$app/environment';
+
+// Istanzia il logger in funzione di dove viene chiamato
+let logger = browser ? new Logger("client") : new Logger("server");
+let firewall = new RBAC(); // Istanzia il firewall per access control
 
 export const convert_date = (d) => {
 	let data = d
@@ -37,6 +44,11 @@ export const route_protect = (locals) => {
 	}
 };
 
+// verifica role, action e resource sulle ACL
+export const has_grant = (role, action, resource) => {
+    return firewall.grant(role, action, resource);
+} 
+
 // genera un errore per l'utrente
 export const raise_error = (http_code, code, mex) => {
 	throw error(http_code, {
@@ -44,6 +56,14 @@ export const raise_error = (http_code, code, mex) => {
 		message: mex
 	});
 };
+
+// shorthands for access protection in server endpoints
+export const access_protect = (code, user, action, resource) => {
+    if(!has_grant(user_ruolo(user), action, resource)) {
+        logger.warn(`Utente[${user_id(user)}][${user_ruolo(user)}] - Azione[${action}] - Risorsa[${resource}]: non hai i permessi per accedere a questa risorsa!`);
+        raise_error(403, code, "Non hai i permessi per accedere a questa risorsa!");
+    }
+}
 
 // estrapola l'oggetto login dalla sessione utente
 export const user_login = (data) => {

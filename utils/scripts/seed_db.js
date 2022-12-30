@@ -74,7 +74,8 @@ async function crea_account_dev() {
 					tipo: u.tipo,
 					ruolo: 'ADMIN',
 					istituto: 'ITT',
-					bes: false
+					bes: false,
+                    can_login: true
 				}
 			});
 		} catch (ex) {
@@ -83,6 +84,20 @@ async function crea_account_dev() {
 		}
         console.log(`Creazione UTENTE -> ${u.nome} ${u.cognome}`);
 	});
+    await SARP.utente.create({
+        data: {
+            creatoDa: 1,
+            nome: 'ats',
+            cognome: 'asts',
+            email: 'ats@istitutoagnelli.it',
+            telefono: random_telefono(),
+            tipo: 'STUDENTE',
+            ruolo: 'ADMIN',
+            istituto: 'ITT',
+            bes: false,
+            can_login: true
+        }
+    });
 }
 
 async function create_utenti() {

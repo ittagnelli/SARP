@@ -1,14 +1,14 @@
 <script>
+	import { user_ruolo, has_grant } from '../../../js/helper';
+	import { page } from '$app/stores';
+
+	let ruolo = user_ruolo($page.data);
+
 	export let text;
 	export let link;
+	export let resource;
 </script>
 
-<!-- <div class="dropdown-menu">
-	<div class="dropdown-menu-columns">
-		<div class="dropdown-menu-column"> -->
-<a class="dropdown-item" href={link}>{text}</a>
-<!-- <slot name="submenu" /> -->
-<!-- <slot />
-		</div>
-	</div>
-</div> -->
+{#if resource && has_grant(ruolo, 'view', resource)}
+	<a class="dropdown-item" href={link}>{text}</a>
+{/if}

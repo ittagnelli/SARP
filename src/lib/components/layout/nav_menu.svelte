@@ -1,8 +1,15 @@
 <script>
+    import { user_ruolo, has_grant } from '../../../js/helper';
+	import { page } from '$app/stores';
+
+	let ruolo = user_ruolo($page.data);
+
 	export let text;
 	export let icon;
+    export let resource;
 </script>
 
+{#if resource && has_grant(ruolo, 'view', resource)}
 <li class="nav-item dropdown">
 	<a
 		class="nav-link dropdown-toggle"
@@ -25,3 +32,4 @@
 		</div>
 	</div>
 </li>
+{/if}

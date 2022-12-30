@@ -1,9 +1,10 @@
 import { PrismaDB } from '../../js/prisma_db';
-import { route_protect, user_id, multi_user_where, raise_error } from '../../js/helper';
+import { route_protect, user_id, multi_user_where, raise_error, access_protect } from '../../js/helper';
 import { Logger } from '../../js/logger';
 
 let logger = new Logger("server"); //instanzia il logger
 const SARP = new PrismaDB(); //Istanzia il client SARP DB
+let resource = "pcto_presenze"; // definisco il nome della risorsa di questo endpoint
 
 // @ts-ignore
 function catch_error(exception, type) {
@@ -12,8 +13,12 @@ function catch_error(exception, type) {
 }
 
 export async function load({ locals }) {
+    let action = 'read';
+
     route_protect(locals);
-	try {
+    access_protect(400, locals, action, resource);
+   
+    try {
 		// query SQL al DB per tutte le entry nella tabella todo
 		const presenze = await SARP.pcto_Presenza.findMany({
 			orderBy: [{ id: 'desc' }],
@@ -47,6 +52,11 @@ export async function load({ locals }) {
 
 export const actions = {
 	create: async ({ cookies, request, locals }) => {
+        let action = 'create';
+
+        route_protect(locals);
+        access_protect(401, locals, action, resource);
+
 		const form_data = await request.formData();
         let hh_inizio = form_data.get('oraInizio').split(':')[0];
         let mm_inizio = form_data.get('oraInizio').split(':')[1];
@@ -70,6 +80,11 @@ export const actions = {
 	},
 
 	update: async ({ cookies, request, locals }) => {
+        let action = 'update';
+
+        route_protect(locals);
+        access_protect(402, locals, action, resource);
+
 		const form_data = await request.formData();
 		let id = form_data.get('id');
         let hh_inizio = form_data.get('oraInizio').split(':')[0];
@@ -94,6 +109,12 @@ export const actions = {
 	},
 
 	delete: async ({ cookies, request, locals }) => {
+        let action = 'delete';
+
+        route_protect(locals);
+        access_protect(403, locals, action, resource);
+
+
 		const form_data = await request.formData();
 		const id = form_data.get('id');
 
