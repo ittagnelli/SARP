@@ -1,5 +1,13 @@
 import { PrismaClient } from '@prisma/client';
-import { nomi, cognomi, pictures, ruoli_utente, tipi_utente, istituti } from './seed_helper.js';
+import {
+	nomi,
+	cognomi,
+	pictures,
+	ruoli_utente,
+	tipi_utente,
+	istituti,
+	developers
+} from './seed_helper.js';
 
 // Istanzia il client per il SARP
 const SARP = new PrismaClient();
@@ -10,13 +18,13 @@ function capital(str) {
 
 function random_telefono() {
 	let tel = '';
-    let atel;
+	let atel;
 
 	for (let i = 0; i < 10; i++) tel += Math.floor(Math.random() * 10);
-    atel = tel.split('');
-    atel.splice(3,0,'.');
-    atel.splice(7,0,'.')
-    atel.splice(10,0,'.')
+	atel = tel.split('');
+	atel.splice(3, 0, '.');
+	atel.splice(7, 0, '.');
+	atel.splice(10, 0, '.');
 	return atel.join('');
 }
 
@@ -31,7 +39,7 @@ async function create_ruoli() {
 			await SARP.ruolo_Utente.create({
 				data: { ruolo: role }
 			});
-            console.log(`Creazione RUOLO utente -> ${role}`);
+			console.log(`Creazione RUOLO utente -> ${role}`);
 		} catch (ex) {
 			if (ex.code == 'P2002') console.log(`RUOLO[${role}] già esistente...skipping`);
 			else console.log(ex);
@@ -45,11 +53,35 @@ async function create_tipi() {
 			await SARP.tipo_Utente.create({
 				data: { tipo: type }
 			});
-            console.log(`Creazione TIPO utente -> ${type}`);
+			console.log(`Creazione TIPO utente -> ${type}`);
 		} catch (ex) {
 			if (ex.code == 'P2002') console.log(`TIPO[${type}] già esistente...skipping`);
 			else console.log(ex);
 		}
+	});
+}
+
+async function crea_account_dev() {
+	developers.forEach(async (u) => {
+		try {
+			await SARP.utente.create({
+				data: {
+					creatoDa: 1,
+					nome: u.nome,
+					cognome: u.cognome,
+					email: u.nome.concat('.', u.cognome, '@istitutoagnelli.it'),
+					telefono: random_telefono(),
+					tipo: u.tipo,
+					ruolo: 'ADMIN',
+					istituto: 'ITT',
+					bes: false
+				}
+			});
+		} catch (ex) {
+			if (ex.code == 'P2002') console.log(`UTENTE[${u.nome} ${u.cognome}] già esistente...skipping`);
+			else console.log(ex);
+		}
+        console.log(`Creazione UTENTE -> ${u.nome} ${u.cognome}`);
 	});
 }
 
@@ -83,5 +115,6 @@ async function create_utenti() {
 (async function () {
 	create_ruoli();
 	create_tipi();
+	crea_account_dev();
 	for (let i = 0; i < 10; i++) create_utenti();
 })();
