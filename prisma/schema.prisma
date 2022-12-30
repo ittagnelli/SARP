@@ -1,4 +1,4 @@
-// v 0.4.0
+// v 0.4.1
 
 generator client {
     provider = "prisma-client-js"
@@ -55,14 +55,14 @@ model tipo_Utente {
     id        Int      @id @default(autoincrement())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-    tipo      String
+    tipo      String   @unique
 }
 
 model ruolo_Utente {
     id        Int      @id @default(autoincrement())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-    ruolo     String
+    ruolo     String   @unique
 }
 
 model Ticket {
