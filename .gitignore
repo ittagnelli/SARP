@@ -12,3 +12,4 @@ log/*
 audit/*
 SARP_build/*
 SARP_runtime/*
+src/js/policy.js

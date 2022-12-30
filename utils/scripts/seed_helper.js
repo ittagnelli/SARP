@@ -2,6 +2,74 @@ export const ruoli_utente = ["ADMIN", "READER", "WRITER", "DEVELOPER"];
 export const tipi_utente = ["STUDENTE", "DOCENTE", "PRESIDE"];
 export const istituti = [ "ITT", "LICEO" ];
 
+export const developers = [
+    {
+        nome: 'espedito',
+        cognome: 'mancuso',
+        tipo: 'DOCENTE',
+    },
+    {
+        nome: 'marco',
+        cognome: 'garabello',
+        tipo: 'STUDENTE',
+    },
+    {
+        nome: 'paolo',
+        cognome: 'garabello',
+        tipo: 'STUDENTE',
+    },
+    {
+        nome: 'marco',
+        cognome: 'cellini',
+        tipo: 'STUDENTE',
+    },
+    {
+        nome: 'andrea',
+        cognome: 'canale',
+        tipo: 'STUDENTE',
+    },
+    {
+        nome: 'sebastiano',
+        cognome: 'racca',
+        tipo: 'STUDENTE',
+    },
+    {
+        nome: 'sebastiano',
+        cognome: 'peluso',
+        tipo: 'STUDENTE',
+    },
+    {
+        nome: 'emanuele',
+        cognome: 'furina',
+        tipo: 'STUDENTE',
+    },
+    {
+        nome: 'lorenzo',
+        cognome: 'rizzolo',
+        tipo: 'STUDENTE',
+    },
+    {
+        nome: 'matteo',
+        cognome: 'licciardino',
+        tipo: 'STUDENTE',
+    },
+    {
+        nome: 'philippe',
+        cognome: 'smal',
+        tipo: 'STUDENTE',
+    },
+    {
+        nome: 'tommaso',
+        cognome: 'bramoso',
+        tipo: 'STUDENTE',
+    },
+    {
+        nome: 'carlo',
+        cognome: 'follo',
+        tipo: 'STUDENTE',
+    },
+];
+
 export const cognomi = [
     "abbondanza",
     "abu",

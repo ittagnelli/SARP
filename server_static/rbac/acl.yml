@@ -1,0 +1,67 @@
+---
+# menu reources don't have CRUD acl but just view
+menu_home:
+  view:
+    - '*'
+
+menu_utenti:
+  view:
+    - ADMIN
+
+menu_pcto:
+  view:
+    - ADMIN
+    - TUTOR-AZIENDALE
+    - TUTOR-SCOLASTICO
+    - READER
+
+menu_aziende:
+  view:
+    - ADMIN
+    - READER
+
+menu_stage:
+  view:
+    - ADMIN
+
+menu_presenze:
+  view:
+    - ADMIN
+    - READER
+
+menu_valutazioni:
+  view:
+    - ADMIN
+
+pcto_presenze:
+  create:
+    - ADMIN
+    - READER
+  read:
+    - ADMIN
+    - READER
+  update:
+    - ADMIN
+    - READER
+  delete:
+    - ADMIN
+
+pcto_aziende:
+  create:
+    - ADMIN
+  read:
+    - ADMIN
+    - READER
+  update:
+    - ADMIN
+    - READER
+  delete:
+    - ADMIN
+
+changelog:
+  read:
+    - '*'
+
+faq:
+  read:
+    - '*'

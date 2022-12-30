@@ -4,12 +4,13 @@ import Docxtemplater from 'docxtemplater';
 import fs from 'fs';
 import path from 'path';
 import { redirect, fail, error } from '@sveltejs/kit';
-import { route_protect, multi_user_where, user_id, raise_error } from '../../js/helper'; //PROF: usa l'helper raise_erorr che ho cretao qualche settimana fa
+import { route_protect, multi_user_where, user_id, raise_error, access_protect } from '../../js/helper'; //PROF: usa l'helper raise_erorr che ho cretao qualche settimana fa
 import { Logger } from '../../js/logger';
 import { PUBLIC_PCTO_TEMPLATES_DIR, PUBLIC_PCTO_TEMPLATE_AZIENDE } from '$env/static/public';
 
 let logger = new Logger('seerver'); //instanzia il logger
 const SARP = new PrismaDB(); //Istanzia il client SARP DB
+let resource = "pcto_aziende"; // definisco il nome della risorsa di questo endpoint
 
 // @ts-ignore
 function catch_error(exception, type) {
@@ -25,7 +26,10 @@ function catch_error_pdf(exception, type) {
 
 // @ts-ignore
 export async function load({ locals }) {
-	route_protect(locals);
+	let action = 'read';
+
+    route_protect(locals);
+    access_protect(100, locals, action, resource);
 
     try {
         // query SQL al DB per tutte le entry nella tabella todo
@@ -45,6 +49,11 @@ export async function load({ locals }) {
 export const actions = {
 	// @ts-ignore
 	create: async ({ cookies, request, locals }) => {
+        let action = 'create';
+
+        route_protect(locals);
+        access_protect(101, locals, action, resource);
+
 		const form_data = await request.formData();
 
         SARP.set_session(locals); // passa la sessione all'audit
@@ -77,6 +86,11 @@ export const actions = {
 
 	// @ts-ignore
 	update: async ({ cookies, request, locals }) => {
+        let action = 'update';
+
+        route_protect(locals);
+        access_protect(102, locals, action, resource);
+
 		const form_data = await request.formData();
 		let id = form_data.get('id');
 
@@ -102,6 +116,11 @@ export const actions = {
 
 	// @ts-ignore
 	delete: async ({ cookies, request, locals }) => {
+        let action = 'delete';
+
+        route_protect(locals);
+        access_protect(103, locals, action, resource);
+
 		const form_data = await request.formData();
 		const id = form_data.get('id');
 

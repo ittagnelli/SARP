@@ -1,9 +1,10 @@
 import { PrismaDB } from '../../js/prisma_db';
-import { route_protect, user_id, multi_user_where, raise_error  } from '../../js/helper';
+import { route_protect, user_id, multi_user_where, raise_error, access_protect  } from '../../js/helper';
 import { Logger } from '../../js/logger';
 
 let logger = new Logger("server"); //instanzia il logger
 const SARP = new PrismaDB(); //Istanzia il client SARP DB
+let resource = "pcto_stage"; // definisco il nome della risorsa di questo endpoint
 
 // @ts-ignore
 function catch_error(exception, type) {
@@ -13,7 +14,11 @@ function catch_error(exception, type) {
 
 
 export async function load({ locals }) {
+    let action = 'read';
+
     route_protect(locals);
+    access_protect(500, locals, action, resource);
+
     try {
         // query SQL al DB per tutte le entry nella tabella todo
         const stages = await SARP.pcto_Pcto.findMany({
@@ -47,6 +52,11 @@ export async function load({ locals }) {
 
 export const actions = {
 	create: async ({ cookies, request, locals }) => {
+        let action = 'create';
+
+        route_protect(locals);
+        access_protect(501, locals, action, resource);
+
 		const form_data = await request.formData();
 
         let studenti = form_data.get('studenti').split(',')
@@ -81,6 +91,11 @@ export const actions = {
 	},
 
 	update: async ({ cookies, request, locals }) => {
+        let action = 'update';
+
+        route_protect(locals);
+        access_protect(502, locals, action, resource);
+
 		const form_data = await request.formData();
 		let id = form_data.get('id');
         let studenti = form_data.get('studenti').split(',');
@@ -113,6 +128,11 @@ export const actions = {
 	},
 
 	delete: async ({ cookies, request, locals }) => {
+        let action = 'delete';
+
+        route_protect(locals);
+        access_protect(503, locals, action, resource);
+
 		const form_data = await request.formData();
 		const id = form_data.get('id');
 

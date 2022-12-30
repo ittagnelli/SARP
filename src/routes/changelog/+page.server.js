@@ -1,8 +1,9 @@
-import { route_protect, raise_error } from '../../js/helper';
+import { route_protect, access_protect } from '../../js/helper';
 import { Logger } from '../../js/logger';
 import { compile } from 'mdsvex';
 import * as fs from 'fs';
 import { PUBLIC_CHANGELOG_FILE } from '$env/static/public';
+let resource = "changelog"; // definisco il nome della risorsa di questo endpoint
 
 // dirty trick per usare il modulo compile
 import { createRequire } from "module";
@@ -23,7 +24,10 @@ async function changelog2html() {
 }
 
 export async function load({ locals }) {
-	route_protect(locals);
+	let action = 'read';
+
+    route_protect(locals);
+    access_protect(200, locals, action, resource);
 
 	return { changelog: changelog2html() };
 }
