@@ -1,3 +1,46 @@
+## v0.10.0 – 31 Dicembre 2022
+- `fix #51`:Aggiungere sistema RBAC 
+- implementato sistema RBAC basato su ACL sia lato client che lato server
+- protegge la vista dei menu
+- protegge gli endpoints
+- la granularità è per il singolo ruolo sulla singola risorsa per la singola azione
+- aggiunto il target policy in package.json per generare le policy RBAC
+- le policy sono definite nel file server_static/rbac/acl.yml
+- vengono convertite automaticamente in JSON dutante dev o build
+- creato il SEED del DB prisma
+- aggiunto comando npx prisma db seed
+- aggiunto creazione utenti developers
+- `fix #114`: Typo tabella presenze
+- `fix #115`: Tabella presenze non controlla gli orari  
+- presenze: Fix typo e aggiunto controllo orario
+- orario di uscita deve essere successivo a quello di entrata
+- `fix #112`: Vulnerabilità sul download dei file
+- Refactoring generazione DOCX  
+- spostato i file rilevanti da static a server_static
+- aggiunto gestione eccezione in caso il file non possa essere generato
+- aggiunti diretory e nome template in .env
+- generazione del file lato client così da evitare il salvataggio lato server
+- `fix #86`: eliminazione del proprio stesso profilo
+- rimosso tasto delete per il proprio utente
+- `fix #60`: Aggiungere gestione delle eccezioni 
+- aggiunto gestione eccezioni per tutte le viste (lato server)
+- aggiunti messagig di errore nei form delle viste in caso di fallimento lato server
+- aggiunta di pagine 500 con codice e messaggio di errore per l'utente finale
+
+## v0.9.0 – 27 Dicembre 2022
+- `fix #50`: multiuser
+- aggiunto il supproto multiuser lato server
+- gli utenti con ruolo ADMIN (specificato in .env) possono evdere tutto
+- gli altri utenti vedono solo i loro dati (multitenancy)
+- `fix #109`: vista aziende e segnalazioni non funzionante
+
+## v0.8.0 – 26 Dicembre 2022
+- preparato l'ambiente per il deploy in produzione
+- create config di NGINX
+- modeifiche a SARP per girare in produzione
+- aggiornato wiki con la sezione deployment
+- fix problema estetico in FAQ
+
 ## v0.7.2 – 25 Dicembre 2022
 - `fix #104`: Changelog in Markdown 
 - aggiunta feature per editing changelog in Markdown

@@ -38,6 +38,13 @@
 								question="Posso effettuare il login con la mia email privata?"
 								answer={faq('faq1_2')}
 							/>
+                            <Faq
+								show={false}
+								number="1-3"
+								parent_number="1"
+								question="Perchè non posso accedere a tutte le pagine?"
+								answer={faq('faq1_3')}
+							/>
 						</FaqSection>
 						<FaqSection title="2. PCTO" number="2">
 							<Faq
