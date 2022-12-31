@@ -5,6 +5,7 @@ import { redirect, error } from '@sveltejs/kit';
 import { PrismaDB } from '../../js/prisma_db';
 import { Logger } from '../../js/logger';
 import { Auditor, audit_mex } from '../../js/audit';
+import { dev } from '$app/environment';
 
 
 let logger = new Logger("server"); //instanzia il logger
@@ -41,10 +42,21 @@ export const actions = {
 	default: async ({ cookies, request }) => {	
         let session_id = crypto.randomUUID(); // id sessione
 		let utente = undefined; // utente da autenticare nel DB
+        let info_utente;
 
 		const form_data = await request.formData();
 		let jwt_token = form_data.get('token'); // google token da autenticare
-		let info_utente = await decode_JWT(jwt_token);
+
+        // se in produzione autentico il token con goole
+        // altrimenti salto questo passo
+        if (!dev)
+		    info_utente = await decode_JWT(jwt_token);
+        else
+            info_utente = {
+                hd: 'istitutoagnelli.it', 
+                email_verified: true,
+                email: jwt_token
+            }
 
         // se utente non è verificato e non appartiene ad istituto agnelli errore
         if (info_utente.hd != 'istitutoagnelli.it' || 

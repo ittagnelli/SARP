@@ -13,3 +13,6 @@ audit/*
 SARP_build/*
 SARP_runtime/*
 src/js/policy.js
+cypress/examples
+cypress/screenshots
+cypress/videos

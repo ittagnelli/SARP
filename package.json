@@ -11,14 +11,14 @@
 		"test": "playwright test",
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
 		"format": "prettier --plugin-search-dir . --write .",
-        "policy": "node utils/scripts/policy_generate.js"
+		"policy": "node utils/scripts/policy_generate.js"
 	},
 	"devDependencies": {
 		"@mermaid-js/mermaid-cli": "^9.1.7",
-		"@playwright/test": "^1.25.0",
 		"@sveltejs/adapter-auto": "next",
 		"@sveltejs/adapter-node": "^1.0.0-next.106",
 		"@sveltejs/kit": "next",
+		"cypress": "^12.2.0",
 		"eslint": "^8.16.0",
 		"eslint-config-prettier": "^8.3.0",
 		"eslint-plugin-svelte3": "^4.0.0",
@@ -33,7 +33,6 @@
 		"prisma-erd-generator": "^1.2.4",
 		"svelte": "^3.44.0",
 		"svelte-check": "^2.7.1",
-		"typescript": "^4.7.4",
 		"vite": "next"
 	},
 	"type": "module",
@@ -52,7 +51,7 @@
 		"svelte-select": "^4.4.7",
 		"yup": "^0.32.11"
 	},
-    "prisma": {
-        "seed": "node utils/scripts/seed_db.js"
-    }
+	"prisma": {
+		"seed": "node utils/scripts/seed_db.js"
+	}
 }
