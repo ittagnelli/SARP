@@ -46,7 +46,7 @@ export const route_protect = (locals) => {
 
 // verifica role, action e resource sulle ACL
 export const has_grant = (role, action, resource) => {
-    return firewall.grant(role, action, resource);
+    return role.some(ruolo => firewall.grant(ruolo, action, resource));
 } 
 
 // genera un errore per l'utrente
@@ -72,7 +72,7 @@ export const user_login = (data) => {
 
 // restituisce il ruolo dell'utente  
 export const user_ruolo = (data) => {
-    return data?.session?.login?.ruolo;
+    return data?.session?.login?.ruoli.map(ruolo => ruolo.ruolo);
 }
 
 // restituisce il tipo dell'utente  
