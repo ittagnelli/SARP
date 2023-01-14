@@ -1,9 +1,10 @@
 <script>
-	import { page_pre_title, page_title, page_action_modal } from '../js/store';
+	import { page_pre_title, page_title, page_action_modal, page_action_title } from '../js/store';
 
 	$page_pre_title = 'Home';
 	$page_title = 'Page';
-	$page_action_modal = 'modal-name';
+	$page_action_modal = null;
+	$page_action_title = null;
 
     export let data;
 </script>
