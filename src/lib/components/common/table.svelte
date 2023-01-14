@@ -26,7 +26,7 @@
 	let rows_paged = []; //pagina attuale di rows
 	let rows_filtered = []; // contiene le righe di rows con le chiavi ordinate come la tabella
 
-	// filtra da rows le chiavi non presenti nelle colonne della tabella
+  	// filtra da rows le chiavi non presenti nelle colonne della tabella
 	//in questo modo viene rispettato l'ordine di visualizzazione
 	//come definito in columns
 	rows.forEach((row) => {
@@ -125,11 +125,20 @@
                                         {:else if columns[i].type == 'array'}
                                             {#if columns[i].subtype == 'picture'}
                                                 <td class="sort-{col}" valign="middle">
-                                                    
                                                     {#each row[col] as item }
-                                                    <img class="picture" src={item[columns.filter((item) => item.name == col)[0].key]}>
+                                                        <img class="picture" src={item[columns.filter((item) => item.name == col)[0].key]}>
                                                     {/each}
                                                 </td>
+                                            {:else if columns[i].subtype == 'object'}
+                                            <td class="sort-{col}" valign="middle">
+                                                <div class="badges-list">
+                                                    {#each row[col] as item }
+                                                        <span class="badge bg-green">
+                                                            <b>{item[columns.filter((item) => item.name == col)[0].key]}</b>
+                                                        </span>
+                                                    {/each}
+                                                </div>
+                                            </td>
                                             {/if}
 										{:else if columns[i].type != 'hidden'}
 											<td class="sort-{col}" valign="middle">{ellipses(row[col])}</td>

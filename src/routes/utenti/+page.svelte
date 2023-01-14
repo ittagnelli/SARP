@@ -68,7 +68,7 @@
 
 		telefono: yup
 			.string()
-			.matches(/^[0-9]{3}\.[0-9]{3}\.[0-9]{2}\.[0-9]{2}$/, 'Numero non valido [333.123.45.67]')
+			.matches(/^$|^[0-9]{3}\.[0-9]{3}\.[0-9]{2}\.[0-9]{2}$/, 'Numero non valido [333.123.45.67]')
 	});
 
 	onMount(() => {
@@ -92,7 +92,7 @@
 		form_values.email = utente.email;
 		form_values.telefono = utente.telefono;
 		form_values.tipo = utente.tipo;
-		form_values.ruolo = utente.ruolo.map((role) => role.id);
+		form_values.ruolo = utente.ruoli.map((role) => String(role.id));
 		form_values.istituto_select = utente.istituto;
 		form_values.bes_select = utente.bes ? 'SI' : 'NO';
 		form_values.can_login_select = utente.can_login ? 'SI' : 'NO';
@@ -125,7 +125,7 @@
 		{ name: 'cognome', type: 'string', display: 'Cognome' },
 		{ name: 'nome', type: 'string', display: 'Nome' },
 		{ name: 'tipo', type: 'string', display: 'Tipo' },
-		{ name: 'ruolo', type: 'string', display: 'Ruolo' },
+        { name: 'ruoli', type: 'array', subtype: 'object', key: 'ruolo', display: 'Ruolo' },
 		{ name: 'email', type: 'string', display: 'email' },
 		{ name: 'telefono', type: 'string', display: 'telefono' },
 		{ name: 'bes', type: 'boolean', display: 'bes' },
@@ -174,10 +174,10 @@
 					{/if}
 					<div class="row">
 						<div class="col-lg-2">
-							<InputText label="Nome" name="nome" bind:val={form_values.nome} {errors} />
+							<InputText label="Nome" name="nome" placeholder="Nome" bind:val={form_values.nome} {errors} />
 						</div>
 						<div class="col-lg-2">
-							<InputText label="Cognome" name="cognome" bind:val={form_values.cognome} {errors} />
+							<InputText label="Cognome" name="cognome" placeholder="Cognome" bind:val={form_values.cognome} {errors} />
 						</div>
 						<div class="col-lg-5">
 							<InputText
@@ -229,7 +229,6 @@
 										value="1"
 										class="form-selectgroup-input"
 										bind:group={form_values.ruolo}
-										checked
 									/>
 									<span class="form-selectgroup-label">ADMIN</span>
 								</label>
@@ -249,7 +248,7 @@
 										name="ruolo"
 										value="3"
 										class="form-selectgroup-input"
-										bind:group={form_values.ruolo}
+                                        bind:group={form_values.ruolo}
 									/>
 									<span class="form-selectgroup-label">WRITER</span>
 								</label>
