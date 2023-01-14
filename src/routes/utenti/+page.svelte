@@ -158,7 +158,7 @@
 		{#if modal_action == 'update'}
 			<input type="hidden" name="id" bind:value={form_values.user_id} />
 		{/if}
-		<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-dialog modal-xl" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
 					{#if modal_action == 'create'}
@@ -222,46 +222,18 @@
 						<div class="col-lg-8">
 							<label class="form-label">Ruolo</label>
 							<div class="form-selectgroup">
-								<label class="form-selectgroup-item">
-									<input
-										type="checkbox"
-										name="ruolo"
-										value="1"
-										class="form-selectgroup-input"
-										bind:group={form_values.ruolo}
-									/>
-									<span class="form-selectgroup-label">ADMIN</span>
-								</label>
-								<label class="form-selectgroup-item">
-									<input
-										type="checkbox"
-										name="ruolo"
-										value="2"
-										class="form-selectgroup-input"
-										bind:group={form_values.ruolo}
-									/>
-									<span class="form-selectgroup-label">READER</span>
-								</label>
-								<label class="form-selectgroup-item">
-									<input
-										type="checkbox"
-										name="ruolo"
-										value="3"
-										class="form-selectgroup-input"
-                                        bind:group={form_values.ruolo}
-									/>
-									<span class="form-selectgroup-label">WRITER</span>
-								</label>
-								<label class="form-selectgroup-item">
-									<input
-										type="checkbox"
-										name="ruolo"
-										value="4"
-										class="form-selectgroup-input"
-										bind:group={form_values.ruolo}
-									/>
-									<span class="form-selectgroup-label">DEVELOPER</span>
-								</label>
+                                {#each ruoli_utente as ruolo}
+                                    <label class="form-selectgroup-item">
+                                        <input
+                                            type="checkbox"
+                                            name="ruolo"
+                                            value="{String(ruolo.id)}"
+                                            class="form-selectgroup-input"
+                                            bind:group={form_values.ruolo}
+                                        />
+                                        <span class="form-selectgroup-label">{ruolo.ruolo}</span>
+                                    </label>
+                                {/each}
 							</div>
 							<br />
 							{#if errors.ruolo}
