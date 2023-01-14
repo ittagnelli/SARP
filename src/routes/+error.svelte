@@ -13,7 +13,7 @@
 			<div class="notfound-404" />
                 <h1>{$page.status}</h1>
                 <h2>Oops! Si è verificato un errore</h2>
-                {#if $page.status == 500}
+                {#if $page.status == 500 || $page.status == 403 }
                     <p>
                         CODICE ERRORE: <b>{$page.error.code}</b><br>
                         MESSAGGIO: <b>{$page.error?.message}</b>
