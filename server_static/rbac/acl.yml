@@ -33,19 +33,6 @@ menu_valutazioni:
   view:
     - ADMIN
 
-utenti:
-  create:
-    - ADMIN
-    - READER
-  read:
-    - ADMIN
-    - READER
-  update:
-    - ADMIN
-    - READER
-  delete:
-    - ADMIN
-
 pcto_presenze:
   create:
     - ADMIN
