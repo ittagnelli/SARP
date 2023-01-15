@@ -64,7 +64,7 @@
 	>
 		<div class="text-center mb-5">
 			<a href="." class="navbar-brand navbar-brand-autodark"
-				><img class="logo" src="img/logo_sarp.png" alt="" /></a
+				><img class="logo" src="img/logo_quadrato_nero_small.png" alt="" /></a
 			>
 		</div>
 		<h2 class="h3 text-center mb-3 text-muted">Fai il Log In con account istituzionale Agnelli</h2>
@@ -87,7 +87,7 @@
     }
 
     .logo {
-        width: 300px;
+        width: 400px;
     }
 
 	.login {
