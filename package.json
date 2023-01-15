@@ -11,7 +11,7 @@
 		"test": "playwright test",
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
 		"format": "prettier --plugin-search-dir . --write .",
-        "policy": "node utils/scripts/policy_generate.js"
+		"policy": "node utils/scripts/policy_generate.js"
 	},
 	"devDependencies": {
 		"@mermaid-js/mermaid-cli": "^9.1.7",
@@ -49,10 +49,11 @@
 		"pino": "^8.7.0",
 		"pino-pretty": "^9.1.1",
 		"pizzip": "^3.1.3",
+		"svelte-file-dropzone": "^1.0.0",
 		"svelte-select": "^4.4.7",
 		"yup": "^0.32.11"
 	},
-    "prisma": {
-        "seed": "node utils/scripts/seed_db.js"
-    }
+	"prisma": {
+		"seed": "node utils/scripts/seed_db.js"
+	}
 }

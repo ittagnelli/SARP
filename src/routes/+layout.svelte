@@ -22,6 +22,7 @@
 				<NavSubItem resource="menu_presenze" text="Presenze" link="presenze" />
 				<NavSubItem resource="menu_valutazioni" text="Valutazioni" link="valutazioni" />
 			</NavMenu>
+			<NavItem resource="menu_tools" text="Tools" icon="tools" link="/tools" />
 		</Navbar>
 
 		<!-- Page Header -->
