@@ -1,0 +1,1 @@
+python3 xss.py -u http://localhost:5173/logger -c 86575ef6-9d6b-4649-875f-ce65448e56d4 -p payloads/logger.json

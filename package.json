@@ -4,7 +4,7 @@
 	"private": true,
 	"scripts": {
 		"dev": "npm run policy && vite dev",
-		"build": "npm run policy && vite build",
+		"build": "npm run policy && vite build && mkdir SARP_build/log && mkdir SARP_build/audit",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json --watch",
