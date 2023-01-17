@@ -44,6 +44,7 @@
 	},
 	"dependencies": {
 		"@prisma/client": "^4.4.0",
+		"ascii-text-generator": "^1.0.5",
 		"axios": "^1.2.2",
 		"docxtemplater": "^3.32.4",
 		"file-saver": "^2.0.5",
