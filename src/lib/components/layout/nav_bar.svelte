@@ -13,10 +13,9 @@
 		<h1 class="navbar-brand navbar-brand-autodark">
 			<a href=".">
 				<img
-					src="/img/logo_sarp.png"
-					width="100"
+					src="/img/logo_rettangolare_bianco_small.png"
+					width="175"
 					alt="SARP"
-					style="position: relative; top: 0.5rem; left: -0.3rem;"
 				/>
 			</a>
 		</h1>
