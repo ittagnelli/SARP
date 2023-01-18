@@ -1,0 +1,10 @@
+{
+    "nome": "<button>Test</button>",
+    "cognome": "<script>alert(‘XSS’)</script>",
+    "email": "<button>Test</button>",
+    "telefono": "<button>Test</button>",
+    "tipo": "<button>Test</button>",
+    "istituto": "<button>Test</button>",
+    "BES": "SI",
+    "can_login": "SI"
+}
