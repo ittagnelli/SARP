@@ -1,4 +1,6 @@
 ---
+# v1.0 2023-01-17
+
 # menu reources don't have CRUD acl but just view
 menu_home:
   view:
@@ -6,57 +8,40 @@ menu_home:
 
 menu_utenti:
   view:
+    - DEVELOPER
     - ADMIN
 
 menu_pcto:
   view:
+    - DEVELOPER
     - ADMIN
     - TUTOR-AZIENDALE
     - TUTOR-SCOLASTICO
-    - READER
 
 menu_aziende:
   view:
+    - DEVELOPER
     - ADMIN
-    - READER
 
 menu_stage:
   view:
+    - DEVELOPER
     - ADMIN
+    - TUTOR-SCOLASTICO
 
 menu_presenze:
   view:
+    - DEVELOPER
     - ADMIN
-    - READER
+    - TUTOR-AZIENDALE
+    - TUTOR-SCOLASTICO
 
 menu_valutazioni:
   view:
+    - DEVELOPER
     - ADMIN
-
-pcto_presenze:
-  create:
-    - ADMIN
-    - READER
-  read:
-    - ADMIN
-    - READER
-  update:
-    - ADMIN
-    - READER
-  delete:
-    - ADMIN
-
-pcto_aziende:
-  create:
-    - ADMIN
-  read:
-    - ADMIN
-    - READER
-  update:
-    - ADMIN
-    - READER
-  delete:
-    - ADMIN
+    - TUTOR-AZIENDALE
+    - TUTOR-SCOLASTICO
 
 changelog:
   read:
@@ -65,3 +50,98 @@ changelog:
 faq:
   read:
     - '*'
+
+ticket:
+  read:
+    - '*'
+  create:
+    - '*'
+
+utenti:
+  create:
+    - DEVELOPER
+    - ADMIN
+  read:
+    - DEVELOPER
+    - ADMIN
+  update:
+    - DEVELOPER
+    - ADMIN
+  delete:
+    - DEVELOPER
+    - ADMIN
+
+pcto_aziende:
+  create:
+    - DEVELOPER
+    - ADMIN
+  read:
+    - DEVELOPER
+    - ADMIN
+  update:
+    - DEVELOPER
+    - ADMIN
+  delete:
+    - DEVELOPER
+    - ADMIN
+
+pcto_stage:
+  create:
+    - DEVELOPER
+    - ADMIN
+    - TUTOR-SCOLASTICO
+  read:
+    - DEVELOPER
+    - ADMIN
+    - TUTOR-SCOLASTICO
+  update:
+    - DEVELOPER
+    - ADMIN
+    - TUTOR-SCOLASTICO
+  delete:
+    - DEVELOPER
+    - ADMIN
+    - TUTOR-SCOLASTICO
+
+pcto_presenze:
+  create:
+    - DEVELOPER
+    - ADMIN
+    - TUTOR-AZIENDALE
+  read:
+    - DEVELOPER
+    - ADMIN
+    - TUTOR-AZIENDALE
+    - TUTOR-SCOLASTICO
+  update:
+    - DEVELOPER
+    - ADMIN
+    - TUTOR-SCOLASTICO
+  delete:
+    - DEVELOPER
+    - ADMIN
+    - TUTOR-SCOLASTICO
+
+pcto_valutazioni:
+  create:
+    - DEVELOPER
+    - ADMIN
+    - TUTOR-AZIENDALE
+    - STAGISTA
+  read:
+    - DEVELOPER
+    - ADMIN
+    - TUTOR-AZIENDALE
+    - TUTOR-SCOLASTICO
+    - STAGISTA
+  update:
+    - DEVELOPER
+    - ADMIN
+    - TUTOR-AZIENDALE
+    - STAGISTA
+  delete:
+    - DEVELOPER
+    - ADMIN
+    - TUTOR-AZIENDALE
+    - STAGISTA
+

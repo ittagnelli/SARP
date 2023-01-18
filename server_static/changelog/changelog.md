@@ -1,4 +1,20 @@
-## v0.10.0 – 31 Dicembre 2022
+## v0.11.0 – 18 Gennaio 2023 - INIZIO PRODUZIONE
+- update homepage
+- update RBAC acl per inizio produzione
+- update lista iniziali ruoli utente
+- nuovo logo (grazie a Nicolo' Scena)
+- refactor per aggiungere supporto multi ruolo per utenti
+- modificato tabella per supportare una lista di ruoli visualizzati come badge
+- rilassato il vincolo sul telefono per la tabella utenti, ora può essere opzionale
+- crea ruoli leggendo il db
+- `fix#123`: Ruoli multipli per un utente
+- risolto problema in error.svelte
+- `fix#127`: 404 genera un crash
+- `fix#126`: Endpoint logger vulnerabile
+- `fix#125`: Pagina manutenzione va nascosta
+- `fix #65`: Bottone fantasma   
+
+## v0.10.0 – 31 Dicembre 2022   
 - `fix #51`:Aggiungere sistema RBAC 
 - implementato sistema RBAC basato su ACL sia lato client che lato server
 - protegge la vista dei menu
