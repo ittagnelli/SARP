@@ -8,7 +8,7 @@
 	import { fade } from 'svelte/transition';
     
 	export let data;
-    let version = '0.10.0';
+    let version = '0.11.0';
 </script>
 
 {#if data.session}

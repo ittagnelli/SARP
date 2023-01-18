@@ -4,12 +4,12 @@ import adapter from '@sveltejs/adapter-node';
 const config = {
     extensions: ['.svelte'], 
 	kit: {
-		adapter: adapter({ out: 'SARP_build' }),
+		adapter: adapter({ out: 'SARP_BUILD' }),
 		csp: {
 			directives: {
-				'frame-ancestors': ['none'],	// Non usiamo iframe nel sito per il momento
+				'frame-ancestors': ['none'], // Non usiamo iframe nel sito per il momento
 				'base-uri': ['self'],
-				'connect-src': ['self', 'localhost'],	// Quando sapremo il dominio potrebbe essere utile cambiarlo
+				'connect-src': ['self', 'localhost', 'https://sarp.agnelli.it'],	// Quando sapremo il dominio potrebbe essere utile cambiarlo
 				'default-src': ['self', 'https://accounts.google.com/'],
 				'font-src': ['self'],
 				'form-action': ['self'],

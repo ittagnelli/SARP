@@ -1,6 +1,6 @@
 {
 	"name": "sarp",
-	"version": "0.9.0",
+	"version": "0.11.0",
 	"private": true,
 	"scripts": {
 		"dev": "npm run policy && vite dev",

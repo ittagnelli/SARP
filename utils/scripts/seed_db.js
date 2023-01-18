@@ -70,7 +70,6 @@ async function crea_account_dev() {
 					nome: u.nome,
 					cognome: u.cognome,
 					email: u.nome.concat('.', u.cognome, '@istitutoagnelli.it'),
-					telefono: random_telefono(),
 					tipo: u.tipo,
 					istituto: 'ITT',
 					bes: false,
@@ -86,22 +85,6 @@ async function crea_account_dev() {
 		}
         console.log(`Creazione UTENTE -> ${u.nome} ${u.cognome}`);
 	}
-    await SARP.utente.create({
-        data: {
-            creatoDa: 1,
-            nome: 'ats',
-            cognome: 'asts',
-            email: 'ats@istitutoagnelli.it',
-            telefono: random_telefono(),
-            tipo: 'STUDENTE',
-            istituto: 'ITT',
-            bes: false,
-            can_login: true,
-            ruoli: {
-                connect: [{id: 1}, {id:3}]
-            } 
-        }
-    });
 }
 
 async function create_utenti() {
@@ -140,5 +123,5 @@ async function create_utenti() {
 	await create_tipi();
     console.log("CREO DEVELOPERS..........");
 	await crea_account_dev();
-	for (let i = 0; i < 10; i++) await create_utenti();
+	//for (let i = 0; i < 10; i++) await create_utenti();
 })();
