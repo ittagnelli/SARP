@@ -37,6 +37,10 @@ menu_tools:
   view:
     - '*'
 
+menu_convert-to-print:
+  view:
+    - '*'
+
 pcto_presenze:
   create:
     - ADMIN
