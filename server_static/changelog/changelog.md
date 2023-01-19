@@ -1,3 +1,6 @@
+## v0.13.0 – 19 Gennaio 2023
+- `fix#135`: Inibire accesso da piattaforma mobile
+  
 ## v0.12.0 – 19 Gennaio 2023
 - Aggiunto service worker per caching file
 - Script di sicurezza (#131)    
