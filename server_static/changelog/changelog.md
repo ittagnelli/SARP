@@ -1,3 +1,10 @@
+## v0.12.0 – 19 Gennaio 2023
+- Aggiunto service worker per caching file
+- Script di sicurezza (#131)    
+- security:initial exploit
+- security: add working xss script and payload
+- security: add some endpoints in script
+
 ## v0.11.0 – 18 Gennaio 2023 - INIZIO PRODUZIONE
 - update homepage
 - update RBAC acl per inizio produzione
