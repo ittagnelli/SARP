@@ -88,6 +88,10 @@ export const user_id = (data) => {
 	return data?.session?.login?.id;
 };
 
+export const is_admin = (data) => {
+    return user_ruolo(data).includes(PUBLIC_ADMIN_ROLE);
+}
+
 // restituisce una clausola di ricerca per utente ADMIN e non
 export const multi_user_where = (data) => {
 	let clausola_where;

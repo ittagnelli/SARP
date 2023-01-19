@@ -1,7 +1,7 @@
 <script>
 	// @ts-nocheck
 	import { createEventDispatcher } from 'svelte';
-    import { ellipses, user_id } from '../../../js/helper';
+    import { ellipses, user_id, is_admin } from '../../../js/helper';
     import { page } from '$app/stores';
 
 	// dichiara le colonne della tabella
@@ -163,7 +163,7 @@
 									>
 										<icon class="ti ti-edit icon" />
 									</a>
-                                    {#if user_id($page.data) != row.id}
+                                    {#if user_id($page.data) == row.id || is_admin($page.data)}
                                         <form id="form-delete" method="POST" action={`/${type}?/delete`}>
                                             <button class="icon-button" name="id" value={row.id}>
                                                 <icon class="ti ti-trash icon" />
