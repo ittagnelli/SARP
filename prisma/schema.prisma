@@ -1,4 +1,4 @@
-// v 0.4.1
+// v 0.6.0 2023-01-17
 
 generator client {
     provider = "prisma-client-js"
@@ -19,13 +19,18 @@ datasource db {
 
 // Tabelle comuni a tutte le applicazioni e dizionari
 
+model Versione {
+    versione  String   //deve coincidere con la versione di questo file
+    createdAt DateTime @default(now())
+    @@id([versione, createdAt])
+}
+
 model Utente {
     id         Int                @id @default(autoincrement())
     createdAt  DateTime           @default(now())
     updatedAt  DateTime           @updatedAt
     creatoDa   Int
     tipo       String             @default("STUDENTE")
-    ruolo      String?
     nome       String
     cognome    String
     email      String             @unique
@@ -40,6 +45,7 @@ model Utente {
     iscritto   pcto_Pcto[]
     Session    Session[]
     Ticket     Ticket[]
+    ruoli      ruolo_Utente[]
 }
 
 model Session {
@@ -63,6 +69,7 @@ model ruolo_Utente {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
     ruolo     String   @unique
+    utenti    Utente[]
 }
 
 model Ticket {

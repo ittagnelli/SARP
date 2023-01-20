@@ -19,7 +19,7 @@ export const handle = async ({ event, resolve }) => {
 		let db_session = await SARP.Session.findUnique({
 			where: { session_id: session_id },
 			include: {
-				login: true
+				login: {include: {ruoli: true}}
 			}
 		});
         event.locals.session = db_session;

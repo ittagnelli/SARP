@@ -34,7 +34,7 @@ function random_item(list) {
 }
 
 async function create_ruoli() {
-	ruoli_utente.forEach(async (role) => {
+    for (const role of ruoli_utente) {
 		try {
 			await SARP.ruolo_Utente.create({
 				data: { ruolo: role }
@@ -44,11 +44,11 @@ async function create_ruoli() {
 			if (ex.code == 'P2002') console.log(`RUOLO[${role}] già esistente...skipping`);
 			else console.log(ex);
 		}
-	});
+	}
 }
 
 async function create_tipi() {
-	tipi_utente.forEach(async (type) => {
+    for (const type of tipi_utente) {
 		try {
 			await SARP.tipo_Utente.create({
 				data: { tipo: type }
@@ -58,11 +58,11 @@ async function create_tipi() {
 			if (ex.code == 'P2002') console.log(`TIPO[${type}] già esistente...skipping`);
 			else console.log(ex);
 		}
-	});
+	}
 }
 
 async function crea_account_dev() {
-	developers.forEach(async (u) => {
+    for (const u of developers) {
 		try {
 			await SARP.utente.create({
 				data: {
@@ -70,12 +70,13 @@ async function crea_account_dev() {
 					nome: u.nome,
 					cognome: u.cognome,
 					email: u.nome.concat('.', u.cognome, '@istitutoagnelli.it'),
-					telefono: random_telefono(),
 					tipo: u.tipo,
-					ruolo: 'ADMIN',
 					istituto: 'ITT',
 					bes: false,
-                    can_login: true
+                    can_login: true,
+                    ruoli: {
+                        connect: [{id: 1}, {id:3}]
+                    }
 				}
 			});
 		} catch (ex) {
@@ -83,21 +84,7 @@ async function crea_account_dev() {
 			else console.log(ex);
 		}
         console.log(`Creazione UTENTE -> ${u.nome} ${u.cognome}`);
-	});
-    await SARP.utente.create({
-        data: {
-            creatoDa: 1,
-            nome: 'ats',
-            cognome: 'asts',
-            email: 'ats@istitutoagnelli.it',
-            telefono: random_telefono(),
-            tipo: 'STUDENTE',
-            ruolo: 'ADMIN',
-            istituto: 'ITT',
-            bes: false,
-            can_login: true
-        }
-    });
+	}
 }
 
 async function create_utenti() {
@@ -114,10 +101,12 @@ async function create_utenti() {
 				email: nome.concat('.', cognome, '@istitutoagnelli.it'),
 				telefono: random_telefono(),
 				tipo: random_item(tipi_utente),
-				ruolo: random_item(ruoli_utente),
 				istituto: random_item(istituti),
 				bes: false,
-				picture: random_item(pictures)
+				picture: random_item(pictures),
+                ruoli: {
+                    connect: [{id: 2}]
+                } 
 			}
 		});
 	} catch (ex) {
@@ -128,8 +117,11 @@ async function create_utenti() {
 
 // MAIN
 (async function () {
-	create_ruoli();
-	create_tipi();
-	crea_account_dev();
-	for (let i = 0; i < 10; i++) create_utenti();
+    console.log("CREAO RUOLI.........");
+	await create_ruoli();
+    console.log("CREO TIPI.................");
+	await create_tipi();
+    console.log("CREO DEVELOPERS..........");
+	await crea_account_dev();
+	//for (let i = 0; i < 10; i++) await create_utenti();
 })();

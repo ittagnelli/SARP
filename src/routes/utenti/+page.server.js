@@ -23,7 +23,8 @@ export async function load({ locals }) {
 		// query SQL al DB per tutte le entry nella tabella todo
 		const utenti = await SARP.Utente.findMany({
 			orderBy: [{ id: 'desc' }],
-			where: multi_user_where(locals) 
+			where: multi_user_where(locals),
+            include: {ruoli: true} 
 		});
 
 		const tipi_utente = await SARP.tipo_Utente.findMany({
@@ -55,6 +56,14 @@ export const actions = {
         access_protect(701, locals, action, resource);
 
 		const form_data = await request.formData();
+        let ids = [];
+        const roles = form_data.getAll('ruolo');
+        
+        if(roles.length > 0) {
+            roles.forEach(element => {
+                ids.push({id: +element})
+            });
+        }
 
         SARP.set_session(locals); // passa la sessione all'audit
 		try {
@@ -66,11 +75,18 @@ export const actions = {
 					email: form_data.get('email'),
 					telefono: form_data.get('telefono'),
 					tipo: form_data.get('tipo'),
+<<<<<<< HEAD
 					ruolo: form_data.get('ruolo'),
 					picture: 'https://lh3.googleusercontent.com/a-/AOh14Gj-cdUSUVoEge7rD5a063tQkyTDT3mripEuDZ0v=s100',
+=======
+					// ruolo: form_data.get('ruolo'),
+>>>>>>> main
 					istituto: form_data.get('istituto'),
 					bes: form_data.get('bes') == "SI" ? true : false,
-					can_login: form_data.get('can_login') == "SI" ? true : false
+					can_login: form_data.get('can_login') == "SI" ? true : false,
+                    ruoli: {
+                        connect: ids
+                    }
 				}
 			});
 		} catch (error) {
@@ -90,6 +106,14 @@ export const actions = {
 
 		const form_data = await request.formData();
 		let id = form_data.get('id');
+        let ids = [];
+        const roles = form_data.getAll('ruolo');
+        
+        if(roles.length > 0) {
+            roles.forEach(element => {
+                ids.push({id: +element})
+            });
+        }
         
         SARP.set_session(locals); // passa la sessione all'audit
 		try {
@@ -101,10 +125,12 @@ export const actions = {
 					email: form_data.get('email'),
 					telefono: form_data.get('telefono'),
 					tipo: form_data.get('tipo'),
-					ruolo: form_data.get('ruolo'),
 					istituto: form_data.get('istituto'),
 					bes: form_data.get('bes') == "SI" ? true : false,
-					can_login: form_data.get('can_login') == "SI" ? true : false
+					can_login: form_data.get('can_login') == "SI" ? true : false,
+                    ruoli: {
+                        set: ids
+                    }
 				}
 			});		
 		} catch (error) {
