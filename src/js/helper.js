@@ -96,7 +96,7 @@ export const is_admin = (data) => {
 export const multi_user_where = (data) => {
 	let clausola_where;
 
-	if (!is_admin(data) clausola_where = { creatoDa: user_id(data) };
+	if (!is_admin(data)) clausola_where = { creatoDa: user_id(data) };
 	else clausola_where = { id: { gt: 0 } };
 
 	return clausola_where;
