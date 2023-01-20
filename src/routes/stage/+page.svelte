@@ -87,6 +87,7 @@
 
 		form_values.titolo = stage.titolo;
 		form_values.descrizione = stage.descrizione;
+		form_values.tutor = stage.tutor;
 		form_values.dataInizio = helper.convert_date(stage.dataInizio);
 		form_values.dataFine = helper.convert_date(stage.dataFine);
 	}

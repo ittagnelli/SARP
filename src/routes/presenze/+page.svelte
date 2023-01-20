@@ -163,7 +163,7 @@
 								<div class="form-label select_text">Studente</div>
                                 <select class="form-select" class:is-invalid="{errors.studente}" name="studente" bind:value={form_values.studente}>
                                     {#each pcto_studenti as studente}
-                                        <option value={studente.id}>{studente.nome}</option>
+                                        <option value={studente.id}>{studente.cognome} {studente.nome}</option>
                                     {/each}
                                 </select>
                                 {#if errors.studente}
