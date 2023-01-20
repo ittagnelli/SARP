@@ -32,7 +32,7 @@ async function main(argv){
             ruolo: "PRESIDE",   // Nello sviluppo servono tutti i permessi
             istituto: "ITT",
             bes: false,
-            picture: "",
+            picture: "https://lh3.googleusercontent.com/a-/AOh14Gj-cdUSUVoEge7rD5a063tQkyTDT3mripEuDZ0v=s100",
             can_login: true
         }
     });
