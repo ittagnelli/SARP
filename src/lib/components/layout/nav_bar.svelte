@@ -13,6 +13,7 @@
 		<h1 class="navbar-brand navbar-brand-autodark">
 			<a href=".">
 				<img
+                    class="logo"
 					src="/img/logo_rettangolare_bianco_small.png"
 					width="175"
 					alt="SARP"
@@ -27,3 +28,10 @@
 		</div>
 	</div>
 </aside>
+
+<style>
+    .logo {
+        margin-top: 1rem;
+        margin-right: 0.7rem;
+    }
+</style>

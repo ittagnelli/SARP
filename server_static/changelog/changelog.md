@@ -1,3 +1,16 @@
+## v0.14.0 – 20 Gennaio 2023
+- fix piccoli problemi
+- fix issue con pulsante delete
+- fix errore nella query multi user
+- aggiunto cognome a presenze, forzatura lettera maiuscola per nome e cognome
+- `fix#138`: PCTO Presenze nome studente incompleto
+- `fix#137`: Stage manca tutor in update 
+- `fix#45`: Aggiungere upload foto utente 
+- Aggiunto sistema immagine profilo
+- Immagine di default
+- Update dell'immagine al login se necessario o se è il primo accesso
+- Aggiunta policy per immagini da google
+
 ## v0.13.0 – 19 Gennaio 2023
 - `fix#135`: Inibire accesso da piattaforma mobile
   

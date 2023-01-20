@@ -120,7 +120,7 @@
 											</td>
                                         {:else if columns[i].type == 'image'}
                                             <td class="sort-{col}" valign="middle">
-                                                <img src={row[col]} width="32"> 
+                                                <img class="picture" src={row[col]}> 
                                             </td>
                                         {:else if columns[i].type == 'array'}
                                             {#if columns[i].subtype == 'picture'}
@@ -237,9 +237,9 @@
 	}
 
     .picture {
-        width: 32px;
+        width: 40px;
         margin-right: 10px;
         border: 0px solid black;
-        border-radius: 32px;
+        border-radius: 12px;
     }
 </style>
