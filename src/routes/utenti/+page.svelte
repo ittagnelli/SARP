@@ -121,7 +121,7 @@
 <Table
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
-		// { name: 'picture', type: 'image', display: 'Utente' },
+		{ name: 'picture', type: 'image', display: 'Utente' },
 		{ name: 'cognome', type: 'string', display: 'Cognome' },
 		{ name: 'nome', type: 'string', display: 'Nome' },
 		{ name: 'tipo', type: 'string', display: 'Tipo' },
