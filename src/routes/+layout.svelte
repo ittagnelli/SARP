@@ -23,7 +23,7 @@
 				<NavSubItem resource="menu_valutazioni" text="Valutazioni" link="valutazioni" />
 			</NavMenu>
 			<NavMenu resource="menu_tools" text="Tools" icon="tools">
-				<NavSubItem resource="menu_convert-to-print" text="Convert to Print" link="convert-to-print" />
+				<NavSubItem resource="menu_convert_to_print" text="Convert to Print" link="convert-to-print" />
 			</NavMenu>
 		</Navbar>
 

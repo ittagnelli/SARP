@@ -18,6 +18,14 @@ menu_pcto:
     - TUTOR-AZIENDALE
     - TUTOR-SCOLASTICO
 
+menu_tools:
+  view:
+    - '*'
+
+menu_convert_to_print:
+  view:
+    - '*'
+
 menu_aziende:
   view:
     - DEVELOPER
@@ -40,44 +48,8 @@ menu_valutazioni:
   view:
     - DEVELOPER
     - ADMIN
-<<<<<<< HEAD
-
-menu_tools:
-  view:
-    - '*'
-
-menu_convert-to-print:
-  view:
-    - '*'
-
-pcto_presenze:
-  create:
-    - ADMIN
-    - READER
-  read:
-    - ADMIN
-    - READER
-  update:
-    - ADMIN
-    - READER
-  delete:
-    - ADMIN
-
-pcto_aziende:
-  create:
-    - ADMIN
-  read:
-    - ADMIN
-    - READER
-  update:
-    - ADMIN
-    - READER
-  delete:
-    - ADMIN
-=======
     - TUTOR-AZIENDALE
     - TUTOR-SCOLASTICO
->>>>>>> main
 
 changelog:
   read:
@@ -180,4 +152,3 @@ pcto_valutazioni:
     - ADMIN
     - TUTOR-AZIENDALE
     - STAGISTA
-
