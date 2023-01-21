@@ -51,12 +51,12 @@
 		nome: yup
 			.string()
 			.required('Nome utente necessario')
-			.matches(/^[a-zA-Z]{3,20}$/, 'Nome utente non valido'),
+			.matches(/^[A-Z][a-zA-Z]{3,20}$/, 'Nome utente non valido'),
 
 		cognome: yup
 			.string()
 			.required('Cognome utente necessario')
-			.matches(/^[a-zA-Z]{3,20}$/, 'Cognome utente non valido'),
+			.matches(/^[A-Z][a-zA-Z]{3,20}$/, 'Cognome utente non valido'),
 
 		email: yup
 			.string()
@@ -104,7 +104,7 @@
 			await form_schema.validate(form_values, { abortEarly: false });
 			errors = {};
 			localStorage.setItem('form', JSON.stringify(form_values)); // Nel caso l'inserimento fallisse abbiamo il "backup" nel localstorage
-			modal_form.submit();
+            modal_form.submit();
 		} catch (err) {
 			errors = err.inner.reduce((acc, err) => {
 				return { ...acc, [err.path]: err.message };

@@ -1,7 +1,7 @@
 <script>
 	// @ts-nocheck
 	import { createEventDispatcher } from 'svelte';
-    import { ellipses, user_id } from '../../../js/helper';
+    import { ellipses, user_id, is_admin } from '../../../js/helper';
     import { page } from '$app/stores';
 
 	// dichiara le colonne della tabella
@@ -120,7 +120,7 @@
 											</td>
                                         {:else if columns[i].type == 'image'}
                                             <td class="sort-{col}" valign="middle">
-                                                <img src={row[col]} width="32"> 
+                                                <img class="picture" src={row[col]}> 
                                             </td>
                                         {:else if columns[i].type == 'array'}
                                             {#if columns[i].subtype == 'picture'}
@@ -163,7 +163,7 @@
 									>
 										<icon class="ti ti-edit icon" />
 									</a>
-                                    {#if user_id($page.data) != row.id}
+                                    {#if user_id($page.data) == row.id || is_admin($page.data)}
                                         <form id="form-delete" method="POST" action={`/${type}?/delete`}>
                                             <button class="icon-button" name="id" value={row.id}>
                                                 <icon class="ti ti-trash icon" />
@@ -237,9 +237,9 @@
 	}
 
     .picture {
-        width: 32px;
+        width: 40px;
         margin-right: 10px;
         border: 0px solid black;
-        border-radius: 32px;
+        border-radius: 12px;
     }
 </style>

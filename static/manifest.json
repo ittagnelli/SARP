@@ -1,0 +1,18 @@
+{
+    "short_name": "SARP",
+    "name": "Scuola Agnelli Resource Planning",
+    "icons": [
+        {
+            "src": "/img/logo_quadrato_bianco.png",
+            "type": "image/png",
+            "sizes": "2000x2000"
+        }
+    ],
+    "id": "/",
+    "start_url": "/",
+    "background_color": "white",
+    "display": "standalone",
+    "scope": "/",
+    "theme_color": "white",
+    "description": "Applicazione per gestire i documenti della Scuola Agnelli"
+}

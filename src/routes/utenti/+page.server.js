@@ -42,7 +42,7 @@ export async function load({ locals }) {
 			ruoli_utente: ruoli_utente
 		}
 	} catch (error) {
-		logger.error(JSON.stringify(exception)); //PROF: error è un oggetto ma serve qualcosa di più complicato. per il momento lascialo così. ho gia risolto in hooks nella versione 9.0
+		logger.error(JSON.stringify(error)); //PROF: error è un oggetto ma serve qualcosa di più complicato. per il momento lascialo così. ho gia risolto in hooks nella versione 9.0
 		raise_error(500, 100, `Errore durante la ricerca degli utenti. TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`);    // TIMESTAMP ci serve per capire l'errore all'interno del log
 	}
 
@@ -74,8 +74,8 @@ export const actions = {
 					cognome: form_data.get('cognome'),
 					email: form_data.get('email'),
 					telefono: form_data.get('telefono'),
-					tipo: form_data.get('tipo'),
-					// ruolo: form_data.get('ruolo'),
+                    tipo: form_data.get('tipo'),
+                    picture: 'img/avatar.png',
 					istituto: form_data.get('istituto'),
 					bes: form_data.get('bes') == "SI" ? true : false,
 					can_login: form_data.get('can_login') == "SI" ? true : false,

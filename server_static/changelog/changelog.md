@@ -1,4 +1,43 @@
-## v0.10.0 – 31 Dicembre 2022
+## v0.14.0 – 20 Gennaio 2023
+- fix piccoli problemi
+- fix issue con pulsante delete
+- fix errore nella query multi user
+- aggiunto cognome a presenze, forzatura lettera maiuscola per nome e cognome
+- `fix#138`: PCTO Presenze nome studente incompleto
+- `fix#137`: Stage manca tutor in update 
+- `fix#45`: Aggiungere upload foto utente 
+- Aggiunto sistema immagine profilo
+- Immagine di default
+- Update dell'immagine al login se necessario o se è il primo accesso
+- Aggiunta policy per immagini da google
+
+## v0.13.0 – 19 Gennaio 2023
+- `fix#135`: Inibire accesso da piattaforma mobile
+  
+## v0.12.0 – 19 Gennaio 2023
+- Aggiunto service worker per caching file
+- Script di sicurezza (#131)    
+- security:initial exploit
+- security: add working xss script and payload
+- security: add some endpoints in script
+
+## v0.11.0 – 18 Gennaio 2023 - INIZIO PRODUZIONE
+- update homepage
+- update RBAC acl per inizio produzione
+- update lista iniziali ruoli utente
+- nuovo logo (grazie a Nicolo' Scena)
+- refactor per aggiungere supporto multi ruolo per utenti
+- modificato tabella per supportare una lista di ruoli visualizzati come badge
+- rilassato il vincolo sul telefono per la tabella utenti, ora può essere opzionale
+- crea ruoli leggendo il db
+- `fix#123`: Ruoli multipli per un utente
+- risolto problema in error.svelte
+- `fix#127`: 404 genera un crash
+- `fix#126`: Endpoint logger vulnerabile
+- `fix#125`: Pagina manutenzione va nascosta
+- `fix #65`: Bottone fantasma   
+
+## v0.10.0 – 31 Dicembre 2022   
 - `fix #51`:Aggiungere sistema RBAC 
 - implementato sistema RBAC basato su ACL sia lato client che lato server
 - protegge la vista dei menu

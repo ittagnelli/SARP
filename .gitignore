@@ -7,9 +7,11 @@ node_modules
 prisma/SARP.db
 prisma/SARP.db-journal
 prisma/SARP_ERD.png
-prisma/migrations/*
 log/*
 audit/*
-SARP_build/*
-SARP_runtime/*
+SARP_BUILD/*
+SARP_DEPLOY/*
 src/js/policy.js
+utils/security/endpoints_good
+utils/security/endpoints_processed
+utils/security/endpoints.txt
