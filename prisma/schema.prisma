@@ -90,7 +90,8 @@ model pcto_Presenza {
     id           Int       @id @default(autoincrement())
     createdAt    DateTime  @default(now())
     updatedAt    DateTime  @updatedAt
-    presenza     Utente    @relation(fields: [creatoDa], references: [id])
+    presenza     Utente    @relation(fields: [svoltoDa], references: [id])
+    svoltoDa     Int
     creatoDa     Int
     dataPresenza DateTime  @default(now())
     oraInizio    DateTime?
