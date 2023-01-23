@@ -79,7 +79,7 @@
 		let presenza = presenze.filter((item) => item.id == form_values.presenza_id)[0];
 		
         form_values.stage =  presenza.idPcto;
-        form_values.studente = presenza.idUtente;
+        form_values.studente = presenza.svoltoDa;
         form_values.dataPresenza = helper.convert_date(presenza.dataPresenza);
         form_values.oraInizio = presenza.oraInizio.toTimeString().substring(0,5);
         form_values.oraFine = presenza.oraFine ? presenza.oraFine.toTimeString().substring(0,5) : '';
