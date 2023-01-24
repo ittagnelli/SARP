@@ -10,6 +10,11 @@
     let logger = new Logger("client");
 	export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
 	let presenze = helper.data2arr(data.presenze);
+    // aggiungo il full name per ogni presenza per poi stamparlo nella tabella
+    presenze.map(item => {
+        item.presenza['full_name'] = (item.presenza['cognome']).concat(" ", item.presenza['nome'])
+    });
+
     let pcto = helper.data2arr(data.stages);
     let pcto_studenti = [];
 
@@ -104,7 +109,7 @@
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
         { name: 'lavoraPer', type: 'object', key: 'titolo', display: 'pcto' },
-        { name: 'presenza', type: 'object', key: 'cognome', display: 'studente' },
+        { name: 'presenza', type: 'object', key: 'full_name', display: 'studente' },
         { name: 'dataPresenza', type: 'date', display: 'data' },
         { name: 'oraInizio', type: 'time', display: 'entrata' },
         { name: 'oraFine', type: 'time', display: 'uscita' },
