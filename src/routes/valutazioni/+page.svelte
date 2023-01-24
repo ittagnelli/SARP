@@ -95,7 +95,7 @@
 		{ name: 'id', type: 'hidden', display: 'id' }
 	]}
 	rows={valutazioni}
-	page_size={5}
+	page_size={10}
 	modal_name={$page_action_modal}
 	on:update_start={start_update}
 	type_genre="f"
