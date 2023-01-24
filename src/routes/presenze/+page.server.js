@@ -71,6 +71,7 @@ export const actions = {
 					dataPresenza: new Date(form_data.get('dataPresenza')),
 					oraInizio: new Date(1970, 1, 1, hh_inizio, mm_inizio),
 					oraFine: new Date(1970,1 ,1, hh_fine, mm_fine),
+					svoltoDa: +form_data.get('studente'),
 					idPcto: +form_data.get('stage')
 				}
 			});	
@@ -100,6 +101,7 @@ export const actions = {
 					dataPresenza: new Date(form_data.get('dataPresenza')),
 					oraInizio: new Date(1970, 1, 1, hh_inizio, mm_inizio),
 					oraFine: new Date(1970,1 ,1, hh_fine, mm_fine),
+					svoltoDa: +form_data.get('studente'),
 					idPcto: +form_data.get('stage')
 				}
 			});
