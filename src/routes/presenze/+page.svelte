@@ -9,12 +9,11 @@
 
     let logger = new Logger("client");
 	export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
+    
 	let presenze = helper.data2arr(data.presenze);
     // aggiungo il full name per ogni presenza per poi stamparlo nella tabella
-    presenze.map(item => {
-        item.presenza['full_name'] = (item.presenza['cognome']).concat(" ", item.presenza['nome'])
-    });
-
+    presenze.forEach((item, idx) => presenze[idx].presenza['full_name'] = (presenze[idx].presenza['cognome']).concat(" ", presenze[idx].presenza['nome']));
+    
     let pcto = helper.data2arr(data.stages);
     let pcto_studenti = [];
 
@@ -78,7 +77,7 @@
 
 	async function start_update(e) {
 		modal_action = 'update';
-		
+
         form_values.presenza_id = e.detail.id;
 		//cerca l'azienda da fare update
 		let presenza = presenze.filter((item) => item.id == form_values.presenza_id)[0];

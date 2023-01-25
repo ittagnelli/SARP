@@ -8,9 +8,9 @@ const SARP = new PrismaDB(); //Istanzia il client SARP DB
 let resource = "utenti"; // definisco il nome della risorsa di questo endpoint
 
 // @ts-ignore
-function catch_error(exception, type) {
+function catch_error(exception, type, code) {
     logger.error(JSON.stringify(exception)); //PROF: error è un oggetto ma serve qualcosa di più complicato. per il momento lascialo così. ho gia risolto in hooks nella versione 9.0
-    raise_error(500, 100, `Errore irreversibile durante ${type} dell'utente. TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`);    // TIMESTAMP ci serve per capire l'errore all'interno del log
+    raise_error(500, code, `Errore irreversibile durante ${type} dell'utente. TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`);    // TIMESTAMP ci serve per capire l'errore all'interno del log
 }
 
 export async function load({ locals }) {
@@ -42,8 +42,7 @@ export async function load({ locals }) {
 			ruoli_utente: ruoli_utente
 		}
 	} catch (error) {
-		logger.error(JSON.stringify(error)); //PROF: error è un oggetto ma serve qualcosa di più complicato. per il momento lascialo così. ho gia risolto in hooks nella versione 9.0
-		raise_error(500, 100, `Errore durante la ricerca degli utenti. TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`);    // TIMESTAMP ci serve per capire l'errore all'interno del log
+        catch_error(error, "la ricerca", 100);
 	}
 
 }
@@ -87,7 +86,7 @@ export const actions = {
 		} catch (error) {
             // @ts-ignore
             if(error.code != "P2002")
-                catch_error(error, "l'inserimento");
+                catch_error(error, "l'inserimento", 101);
             else
                 return fail(400, { error_mex: "Email non univoca" });   // La richiesta fallisce
 		}
@@ -131,11 +130,10 @@ export const actions = {
 		} catch (error) {
             // @ts-ignore
             if(error.code != "P2002")
-                catch_error(error, "l'aggiornamento");
+                catch_error(error, "l'aggiornamento", 102);
             else
                 return fail(400, { error_mex: "Email non univoca" });   // La richiesta fallisce
 		}
-
 	},
 
 	delete: async ({ cookies, request, locals }) => {
@@ -153,7 +151,7 @@ export const actions = {
 				where: { id: +id }
 			});		
 		} catch (error) {
-			catch_error(error, "l'eliminazione");
+			catch_error(error, "l'eliminazione", 103);
 		}
 
 	}
