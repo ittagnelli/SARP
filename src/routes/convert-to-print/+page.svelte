@@ -1,13 +1,25 @@
 <script>
+	import { onMount } from 'svelte';
 	import { page_pre_title, page_title, page_action_title } from '../../js/store';
-
+    import { saveAs } from 'file-saver';
+	
 	$page_pre_title = 'Convertitore da file pdf o docx ad un unico file pdf pronto per la stampa';
 	$page_title = 'Convertitore pdf per la stampa fronte e retro';
 	$page_action_title = '';
 
-	/* document.addEventListener("DOMContentLoaded", function() {
-      new Dropzone("#dropzone-custom")
-    }) */
+	export let form; // Risposta del form dal server
+
+	onMount(() => {
+		// Controlliamo che l'inserimento sia andato a buon fine, usiamo on mount per richiamare le funzioni del DOM
+		if (form != null) {
+			if (form.file != null) {
+				// è stato richiesto la generazione di un file
+				const buffer = new Uint8Array(JSON.parse(form.file).data); // Convertiamo la stringa in un oggetto che conterrà il nostro array di bytes che verrà poi convertito in Uint8Array, necessario all'oggetto Blob
+				var blob = new Blob([buffer], { type: 'application/msword' });
+				saveAs(blob, form.nome_file);
+			}
+		}
+	});
 </script>
 
 <div class="convert-to-print">
@@ -25,7 +37,7 @@
 	id="dropzone-custom"
 	action="/convert-to-print?/pdf"
 	method="POST"
-    enctype="multipart/form-data"
+	enctype="multipart/form-data"
 	autocomplete="off"
 	novalidate
 >
@@ -42,7 +54,7 @@
 	<br />
 
 	<div class="button">
-        <button>Submit</button>
+		<button>Submit</button>
 		<!-- <input type="submit" name="submit" id="submit" /> -->
 		<!-- <input type="reset" name="erase" id="erase" /> -->
 	</div>

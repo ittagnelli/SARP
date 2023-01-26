@@ -1,104 +1,67 @@
-
-
-import { PrismaDB } from '../../js/prisma_db';
-import PizZip from 'pizzip';
-import Docxtemplater from 'docxtemplater';
-import fs from 'fs';
-import path from 'path';
-import { redirect, fail, error } from '@sveltejs/kit';
-import { route_protect, multi_user_where, user_id, raise_error, access_protect } from '../../js/helper'; //PROF: usa l'helper raise_erorr che ho cretao qualche settimana fa
+import { raise_error, route_protect } from '../../js/helper'; //PROF: usa l'helper raise_erorr che ho cretao qualche settimana fa
 import { Logger } from '../../js/logger';
-import { PUBLIC_PCTO_TEMPLATES_DIR, PUBLIC_PCTO_TEMPLATE_AZIENDE } from '$env/static/public';
-import pdftk from 'node-pdftk';
+import { convert} from 'node-unoconv';
+import fs from 'fs';
+import PDFMerger from 'pdf-merger-js';
+import crypto from 'crypto';
 
-let logger = new Logger('seerver'); //instanzia il logger
-const SARP = new PrismaDB(); //Istanzia il client SARP DB
-let resource = "pcto_aziende"; // definisco il nome della risorsa di questo endpoint
+let logger = new Logger('server'); //instanzia il logger
 
-// @ts-ignore
-function catch_error(exception, type) {
-    logger.error(JSON.stringify(exception)); //PROF: error è un oggetto ma serve qualcosa di più complicato. per il momento lascialo così. ho gia risolto in hooks nella versione 9.0
-    raise_error(500, 100, `Errore irreversibile durante ${type} dell'azienda. TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`);    // TIMESTAMP ci serve per capire l'errore all'interno del log
+function cleanup(files){
+    files.forEach(file => {
+        fs.unlinkSync(`tmp/${file.name}`); // Rimuovo i files caricati in questo form, ormai non servono più
+    });
 }
 
-// @ts-ignore
-function catch_error_pdf(exception, type) {
-    logger.error(JSON.stringify(exception)); //PROF: error è un oggetto ma serve qualcosa di più complicato. per il momento lascialo così. ho gia risolto in hooks nella versione 9.0
-    raise_error(500, 100, `${type} TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`);
+async function docx2pdf(file_name){
+    await convert(`tmp/${file_name}`, {
+        output: file_name.split(".")[0] + ".pdf"
+    });
+    fs.rmSync(`temp/${file_name}`); // Rimuovo il file docx, non serve più
+    return file_name.split(".")[0] + ".pdf";   // Cambiamo il nome del file da docx -> pdf
 }
 
-// @ts-ignore
-export async function load({ locals }) {
-    let action = 'read';
+const random_name = () => crypto.randomBytes(20).toString('hex');   // Genera 20 bytes casuali e li converte in esadecimale
 
-    route_protect(locals);
-    access_protect(100, locals, action, resource);
-
-    try {
-        // query SQL al DB per tutte le entry nella tabella todo
-        const companies = await SARP.pcto_Azienda.findMany({
-            orderBy: [{ id: 'desc' }],
-            where: multi_user_where(locals)
-        });
-
-        // restituisco il risultato della query SQL
-        return { aziende: companies };
-    } catch (error) {
-        logger.error(JSON.stringify(error)); //PROF: error è un oggetto ma serve qualcosa di più complicato. per il momento lascialo così. ho gia risolto in hooks nella versione 9.0
-        raise_error(500, 100, `Errore durante la ricerca delle aziende. TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`);    // TIMESTAMP ci serve per capire l'errore all'interno del log
-    }
-}
+const merger = new PDFMerger();
 
 export const actions = {
-    pdf: async ({ request }) => {
+    pdf: async ({ request, locals }) => {
+        route_protect(locals);  // Controlla che l'utente sia autenticato
+
         const form_data = await request.formData();
 
-        console.log(form_data);
-
-        const file = form_data.getAll('file-to-convert');
-
-        let filename1, filename2;
+        const files = form_data.getAll('file-to-convert');
 
         try {
+            if (!fs.existsSync("tmp/")) fs.mkdirSync("tmp");    // Se non esiste la cartella temporanea creala
 
-            if (file) {
-                filename1 = (file[0].name);
-                filename2 = (file[1].name);
+            for (const file of files) {
 
-                //const ext = file.name.split('.').pop()
-                //filename = /* userName +  */'-' + Date.now().toString() + '.' + ext
+                let file_name = file.name;
 
-                //let ab = await file.arrayBuffer()
-                //console.log(Array.from(ab));
+                const extension = file_name.split(".")[1];  // L'estensione del file test.pdf sarà [test, pdf]
+
+                fs.writeFileSync(`tmp/${file_name}`, Buffer.from(await file.arrayBuffer()));    // Scrivo il file nella cartella temporanea
+
+                if(extension == "docx" || extension == "doc"){  // Se il file è Word dobbiamo convertirlo in PDF
+                    file_name = await docx2pdf(file);
+                }
+
+                await merger.add(`tmp/${file_name}`);   // Aggiungo il pd// Usiamo un for classico al posto di forEach per il corretto merge dei filef al nuovo file
             }
+            const file_name_of_merged_pdf = random_name() + ".pdf"; // Generiamo un nome casuale per evitare sovrascritture
+            
+            cleanup(files);   // Rimuovo i files caricati in questo form, ormai non servono più
 
-            console.log(file);
-            console.log(filename1);
-            console.log(filename2);
+			return {
+				file: JSON.stringify(await merger.saveAsBuffer()), // Convertiamo il buffer in stringa sennò sveltekit va in errore
+				nome_file: file_name_of_merged_pdf
+			};
 
-            pdftk
-                .input({
-                    filename1, filename2
-                })
-                .cat(filename1, filename2)
-                .output('./2pagefile.pdf')
-                .then(buffer => {
-                    // Do stuff with the output buffer
-                })
-                .catch(err => {
-
-                });
-
-            return { success: true }
-
-        } catch (e) {
-            console.log(e);
-            return { success: false };
-
+        } catch (exception) {
+            logger.error(JSON.stringify(exception)); 
+            raise_error(500, 100, `Errore irreversibile durante la generazione del PDF. TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`); 
         }
-
-
-
-
     }
 };
