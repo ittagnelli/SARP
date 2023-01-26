@@ -7,9 +7,9 @@ const SARP = new PrismaDB(); //Istanzia il client SARP DB
 let resource = "pcto_stage"; // definisco il nome della risorsa di questo endpoint
 
 // @ts-ignore
-function catch_error(exception, type) {
+function catch_error(exception, type, code) {
     logger.error(JSON.stringify(exception)); //PROF: error è un oggetto ma serve qualcosa di più complicato. per il momento lascialo così. ho gia risolto in hooks nella versione 9.0
-    raise_error(500, 100, `Errore irreversibile durante ${type} dello stage. TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`); // TIMESTAMP ci serve per capire l'errore all'interno del log
+    raise_error(500, code, `Errore irreversibile durante ${type} dello stage. TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`); // TIMESTAMP ci serve per capire l'errore all'interno del log
 }
 
 
@@ -45,8 +45,7 @@ export async function load({ locals }) {
             utenti: utenti
         }
     } catch (error) {
-        logger.error(JSON.stringify(error)); //PROF: error è un oggetto ma serve qualcosa di più complicato. per il momento lascialo così. ho gia risolto in hooks nella versione 9.0
-		raise_error(500, 100, `Errore durante la ricerca degli stage. TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`);    // TIMESTAMP ci serve per capire l'errore all'interno del log
+        catch_error(error, "la ricerca", 300);
     }
 }
 
@@ -85,7 +84,7 @@ export const actions = {
         }
     });
         } catch (error) {
-            catch_error(error, "l'inserimento")
+            catch_error(error, "l'inserimento", 301)
         }
 
 	},
@@ -122,7 +121,7 @@ export const actions = {
                 }
             });
         } catch (error) {
-            catch_error(error, "l'aggiornamento");
+            catch_error(error, "l'aggiornamento", 302);
         }
 
 	},
@@ -142,7 +141,7 @@ export const actions = {
                 where: { id: +id }
             });       
         } catch (error) {
-            catch_error(error, "l'eliminazione");
+            catch_error(error, "l'eliminazione", 303);
         }
 
 	}

@@ -1,3 +1,10 @@
+## v0.15.0 – 24 Gennaio 2023
+- `fix#140`: View PCTO
+- `fix#139`: PCTO presenze nome studente errato
+- fix student relation in Presenza
+- modificato la migration siccome resettava il DB
+- modificata il front-end di presenze la tabell in modo che stampa nome e cognome
+
 ## v0.14.0 – 20 Gennaio 2023
 - fix piccoli problemi
 - fix issue con pulsante delete
