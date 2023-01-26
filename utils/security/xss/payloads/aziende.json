@@ -1,0 +1,14 @@
+{
+    "idConvenzione": "<button>Test</button>",
+    "nome": "<button>Test</button>",
+    "indirizzo": "<button>Test</button>",
+    "piva": "<button>Test</button>",
+    "telefono": "<button>Test</button>",
+    "direttore_nome": "<button>Test</button>",
+    "direttore_natoA": "<button>Test</button>",
+    "direttore_natoIl": "<button>Test</button>",
+    "direttore_codiceF": "<button>Test</button>",
+    "dataConvenzione": "Tue Jan 17 2023 12:20:51 GMT+0100 (Ora standard dell’Europa centrale)",
+    "dataProtocollo": "Tue Jan 17 2023 12:20:51 GMT+0100 (Ora standard dell’Europa centrale)",
+    "istituto": "<button>test</test>"
+}

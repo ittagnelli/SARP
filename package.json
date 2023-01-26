@@ -1,6 +1,6 @@
 {
 	"name": "sarp",
-	"version": "0.9.0",
+    "version": "0.15.0a",
 	"private": true,
 	"scripts": {
 		"dev": "npm run policy && vite dev",
@@ -44,8 +44,11 @@
 	},
 	"dependencies": {
 		"@prisma/client": "^4.4.0",
+		"ascii-text-generator": "^1.0.5",
+		"axios": "^1.2.2",
 		"docxtemplater": "^3.32.4",
 		"file-saver": "^2.0.5",
+		"form-data": "^4.0.0",
 		"pino": "^8.7.0",
 		"pino-pretty": "^9.1.1",
 		"pizzip": "^3.1.3",

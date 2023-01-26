@@ -9,7 +9,11 @@
 
     let logger = new Logger("client");
 	export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
+    
 	let presenze = helper.data2arr(data.presenze);
+    // aggiungo il full name per ogni presenza per poi stamparlo nella tabella
+    presenze.forEach((item, idx) => presenze[idx].presenza['full_name'] = (presenze[idx].presenza['cognome']).concat(" ", presenze[idx].presenza['nome']));
+    
     let pcto = helper.data2arr(data.stages);
     let pcto_studenti = [];
 
@@ -73,13 +77,13 @@
 
 	async function start_update(e) {
 		modal_action = 'update';
-		
+
         form_values.presenza_id = e.detail.id;
 		//cerca l'azienda da fare update
 		let presenza = presenze.filter((item) => item.id == form_values.presenza_id)[0];
 		
         form_values.stage =  presenza.idPcto;
-        form_values.studente = presenza.idUtente;
+        form_values.studente = presenza.svoltoDa;
         form_values.dataPresenza = helper.convert_date(presenza.dataPresenza);
         form_values.oraInizio = presenza.oraInizio.toTimeString().substring(0,5);
         form_values.oraFine = presenza.oraFine ? presenza.oraFine.toTimeString().substring(0,5) : '';
@@ -104,13 +108,13 @@
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
         { name: 'lavoraPer', type: 'object', key: 'titolo', display: 'pcto' },
-        { name: 'presenza', type: 'object', key: 'cognome', display: 'studente' },
+        { name: 'presenza', type: 'object', key: 'full_name', display: 'studente' },
         { name: 'dataPresenza', type: 'date', display: 'data' },
         { name: 'oraInizio', type: 'time', display: 'entrata' },
         { name: 'oraFine', type: 'time', display: 'uscita' },
 	]}
 	rows={presenze}
-	page_size={5}
+	page_size={10}
 	modal_name={$page_action_modal}
 	on:update_start={start_update}
 	type="presenze"
@@ -163,7 +167,7 @@
 								<div class="form-label select_text">Studente</div>
                                 <select class="form-select" class:is-invalid="{errors.studente}" name="studente" bind:value={form_values.studente}>
                                     {#each pcto_studenti as studente}
-                                        <option value={studente.id}>{studente.nome}</option>
+                                        <option value={studente.id}>{studente.cognome} {studente.nome}</option>
                                     {/each}
                                 </select>
                                 {#if errors.studente}

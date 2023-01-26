@@ -5,17 +5,18 @@ import { redirect, error } from '@sveltejs/kit';
 import { PrismaDB } from '../../js/prisma_db';
 import { Logger } from '../../js/logger';
 import { Auditor, audit_mex } from '../../js/audit';
-
+import { is_mobile } from '../../js/helper';
 
 let logger = new Logger("server"); //instanzia il logger
 let auditor = new Auditor();
 const SARP = new PrismaDB(); //Istanzia il client SARP DB;
 
-export const load = async ({ locals }) => {
+export const load = async ({ request, locals }) => {
 	if (locals.session) throw redirect(302, '/');
 
 	return {
-		session: locals.session
+		session: locals.session,
+        mobile: is_mobile(request)
 	};
 };
 
@@ -92,6 +93,15 @@ export const actions = {
             where: { idUtente: utente.id }
         });
         
+        // esegue l'update dell'immmagine se necessario
+        if(db_query.picture != info_utente.picture){
+            await SARP.Utente.update({
+				where: { id: utente.id },
+				data: {
+					picture: info_utente.picture
+				}
+			});	
+        }
         // utente valido quindi crea la sessione con scadenza SESSION_TIMEOUT
 		await SARP.Session.create({
 			data: {
