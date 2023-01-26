@@ -126,7 +126,7 @@
                                             {#if columns[i].subtype == 'picture'}
                                                 <td class="sort-{col}" valign="middle">
                                                     {#each row[col] as item }
-                                                        <img class="picture" src={item[columns.filter((item) => item.name == col)[0].key]}>
+                                                        <img class="picture-array" src={item[columns.filter((item) => item.name == col)[0].key]}>
                                                     {/each}
                                                 </td>
                                             {:else if columns[i].subtype == 'object'}
@@ -236,10 +236,14 @@
 		color: black;
 	}
 
-    .picture {
+    .picture, .picture-array {
         width: 40px;
         margin-right: 10px;
         border: 0px solid black;
         border-radius: 12px;
     }
+
+	.picture-array {
+		margin: 10px;
+	}
 </style>
