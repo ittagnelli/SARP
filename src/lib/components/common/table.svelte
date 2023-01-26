@@ -12,7 +12,6 @@ export let rows;
 export let page_size;
 export let modal_name;
 export let type; // Cosa visualizza la tabella?
-export let type_genre;
 export let print;
 export let actions;
 
@@ -25,6 +24,7 @@ let page_start = 0; //inizio della pagine nell'array rows
 let page_end = page_size; //fine della pagina nell'array rows
 let rows_paged = []; //pagina attuale di rows
 let rows_filtered = []; // contiene le righe di rows con le chiavi ordinate come la tabella
+let footer_num = 0, footer_den = 0;
 
 // filtra da rows le chiavi non presenti nelle colonne della tabella
 //in questo modo viene rispettato l'ordine di visualizzazione
@@ -40,6 +40,11 @@ rows.forEach((row) => {
 $: {
     //al cambiamento dell'inizio e fine pagina aggiorno le righe della tabella
     rows_paged = [...rows_filtered.slice(page_start, page_end)];
+
+    //determina gli elementi del footer
+    let n_row = rows.length;
+    footer_num = footer_den = n_row;
+    if(n_row > page_size) footer_num = rows_paged.length;
 }
 
 function change_page(page) {
@@ -68,16 +73,6 @@ function update_row(id) {
     dispatch('update_start', {
         id: id
     });
-}
-
-function show_users(length, type_genre) {
-    if (length === 0) {
-        return "Non ci sono utenti attivi";
-    } else if (length === 1) {
-        return "C'è un utente " + (type_genre === 'm' ? "attivo" : "attiva");
-    } else {
-        return "Ci sono " + length + " utenti attiv" + (type_genre === 'm' ? "i" : "e");
-    }
 }
 </script>
 
@@ -186,7 +181,7 @@ function show_users(length, type_genre) {
     <!-- pager -->
     <div class="card-footer d-flex align-items-center">
         <p class="m-0 text-muted" id="users-count">
-            { show_users(rows.length, type_genre) }
+            {footer_num}/{footer_den} {type.charAt(0).toUpperCase() + type.slice(1) }
         </p>
         {#if rows.length > page_size}
         <ul class="pagination m-0 ms-auto">
