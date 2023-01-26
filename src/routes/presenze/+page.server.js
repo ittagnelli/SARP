@@ -1,5 +1,5 @@
 import { PrismaDB } from '../../js/prisma_db';
-import { route_protect, user_id, multi_user_where, raise_error, access_protect } from '../../js/helper';
+import { route_protect, user_id, pcto_presenze_where, raise_error, access_protect } from '../../js/helper';
 import { Logger } from '../../js/logger';
 
 let logger = new Logger("server"); //instanzia il logger
@@ -22,7 +22,7 @@ export async function load({ locals }) {
 		// query SQL al DB per tutte le entry nella tabella todo
 		const presenze = await SARP.pcto_Presenza.findMany({
 			orderBy: [{ id: 'desc' }],
-			where: multi_user_where(locals), 
+			where: pcto_presenze_where(locals), 
 			include: {
 				presenza: true,
 				lavoraPer: true

@@ -102,6 +102,16 @@ export const multi_user_where = (data) => {
 	return clausola_where;
 };
 
+export const pcto_presenze_where = (data) => {
+	let clausola_where;
+
+	if (!is_admin(data)) clausola_where = { svoltoDa: user_id(data) };
+	else clausola_where = { id: { gt: 0 } };
+
+	return clausola_where;
+};
+
+
 // auto button click for modal PROF:
 export const show_modal = () => {
 	const btn = document.getElementById('btn_action_modal');
