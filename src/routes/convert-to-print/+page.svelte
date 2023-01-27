@@ -1,8 +1,8 @@
 <script>
 	import { onMount } from 'svelte';
 	import { page_pre_title, page_title, page_action_title } from '../../js/store';
-    import { saveAs } from 'file-saver';
-	
+	import { saveAs } from 'file-saver';
+
 	$page_pre_title = 'Convertitore da file pdf o docx ad un unico file pdf pronto per la stampa';
 	$page_title = 'Convertitore pdf per la stampa fronte e retro';
 	$page_action_title = '';
@@ -19,8 +19,15 @@
 				saveAs(blob, form.nome_file);
 			}
 		}
+		// @ts-ignore
+		new Dropzone('#dropzone-multiple');
 	});
 </script>
+
+<svelte:head>
+	<script src="/dropzone/dist/dropzone-min.js"></script>
+	<link rel="stylesheet" href="/dropzone/dist/dropzone.css" />
+</svelte:head>
 
 <div class="convert-to-print">
 	Convertitore in pdf pronto per la stampa fronte e retro<br />
@@ -30,35 +37,26 @@
 	>
 </div>
 
-<br /><br /><br />
+<br />
 
-<form
-	class="dropzone"
-	id="dropzone-custom"
-	action="/convert-to-print?/pdf"
-	method="POST"
-	enctype="multipart/form-data"
-	autocomplete="off"
-	novalidate
->
-	<div class="fallback">
-		<input name="file-to-convert" id="file-to-convert" type="file" multiple />
+<div class="card">
+	<div class="card-body">
+		<h3 class="card-title text-center">Carica qui i tuoi files</h3>
+		<form
+			class="dropzone"
+			id="dropzone-multiple"
+			action="/convert-to-print?/pdf"
+			method="POST"
+			enctype="multipart/form-data"
+			autocomplete="off"
+			novalidate
+		>
+			<div class="fallback">
+				<input name="file" type="file" multiple accept=".docx .doc .pdf" />
+			</div>
+		</form>
 	</div>
-	<br />
-	<div class="dz-message">
-		<h3 class="dropzone-msg-title">Carica i file qui</h3>
-		<br />
-		<span class="dropzone-msg-desc">Carica file .pdf o .docx da convertire in un unico pdf</span>
-	</div>
-
-	<br />
-
-	<div class="button">
-		<button>Submit</button>
-		<!-- <input type="submit" name="submit" id="submit" /> -->
-		<!-- <input type="reset" name="erase" id="erase" /> -->
-	</div>
-</form>
+</div>
 
 <style>
 	.convert-to-print {
