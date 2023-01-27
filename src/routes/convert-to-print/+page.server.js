@@ -28,7 +28,7 @@ export const actions = {
 		const files = form_data.getAll('file-to-convert');
 
 		try {
-			if (!fs.existsSync('tmp/')) fs.mkdirSync('tmp'); // Se non esiste la cartella temporanea creala
+			if (!fs.existsSync(PUBLIC_PDF_TMP_FILE)) fs.mkdirSync(PUBLIC_PDF_TMP_FILE); // Se non esiste la cartella temporanea creala
 
 			for (const file of files) {
 
@@ -43,7 +43,7 @@ export const actions = {
 						`Hai caricato un file non consentito. Puoi caricare solo .pdf, .doc e .docx`
 					);
 				}
-				fs.writeFileSync(`tmp/${file_name}`, Buffer.from(await file.arrayBuffer())); // Scrivo il file nella cartella temporanea
+				fs.writeFileSync(`${PUBLIC_PDF_TMP_FILE}/${file_name}`, Buffer.from(await file.arrayBuffer())); // Scrivo il file nella cartella temporanea
 
 				if (extension == 'docx' || extension == 'doc') {
 					// Se il file è Word dobbiamo convertirlo in PDF
@@ -52,9 +52,9 @@ export const actions = {
 					file_name = file_name.split('.')[0] + '.pdf';
 				}
 
-				const our_pdf = fs.readFileSync(`tmp/${file_name}`);
+				const our_pdf = fs.readFileSync(`${PUBLIC_PDF_TMP_FILE}/${file_name}`);
 				const pages = await pdf_counter(our_pdf);
-				await merger.add(`tmp/${file_name}`); // Aggiungo il pd// Usiamo un for classico al posto di forEach per il corretto merge dei filef al nuovo file
+				await merger.add(`${PUBLIC_PDF_TMP_FILE}/${file_name}`); // Aggiungo il pd// Usiamo un for classico al posto di forEach per il corretto merge dei filef al nuovo file
 				if (pages.numpages % 2 != 0) {
 					// Aggingiamo una pagina se la verifica è dispari
 					await merger.add(PUBLIC_PDF_BLANK_FILE);
