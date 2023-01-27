@@ -26,7 +26,6 @@ export const actions = {
 		const form_data = await request.formData();
 
 		const files = form_data.getAll('file-to-convert');
-
 		try {
 			if (!fs.existsSync(PUBLIC_PDF_TMP_FILE)) fs.mkdirSync(PUBLIC_PDF_TMP_FILE); // Se non esiste la cartella temporanea creala
 
@@ -36,13 +35,14 @@ export const actions = {
 				file_name.replace(' ', '');
 
 				const extension = file_name.split('.')[1]; // L'estensione del file test.pdf sarà [test, pdf]
-				if(extension != "pdf" || extension != "doc" || extension!= "docx"){	// Il file è invalido
-					raise_error(
-						500,
-						100,
-						`Hai caricato un file non consentito. Puoi caricare solo .pdf, .doc e .docx`
-					);
-				}
+				// if(extension != "pdf" || extension != "doc" || extension!= "docx"){	// Il file è invalido
+				// 	raise_error(
+				// 		500,
+				// 		100,
+				// 		`Hai caricato un file non consentito. Puoi caricare solo .pdf, .doc e .docx`
+				// 	);
+				// }
+
 				fs.writeFileSync(`${PUBLIC_PDF_TMP_FILE}/${file_name}`, Buffer.from(await file.arrayBuffer())); // Scrivo il file nella cartella temporanea
 
 				if (extension == 'docx' || extension == 'doc') {
