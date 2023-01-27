@@ -19,15 +19,8 @@
 				saveAs(blob, form.nome_file);
 			}
 		}
-		// @ts-ignore
-		new Dropzone('#dropzone-multiple');
 	});
 </script>
-
-<svelte:head>
-	<script src="/dropzone/dist/dropzone-min.js"></script>
-	<link rel="stylesheet" href="/dropzone/dist/dropzone.css" />
-</svelte:head>
 
 <div class="convert-to-print">
 	Convertitore in pdf pronto per la stampa fronte e retro<br />
@@ -49,11 +42,12 @@
 			method="POST"
 			enctype="multipart/form-data"
 			autocomplete="off"
-			novalidate
-		>
+			>
 			<div class="fallback">
 				<input name="file" type="file" multiple accept=".docx .doc .pdf" />
 			</div>
+			<br>
+			<input type="submit" />
 		</form>
 	</div>
 </div>

@@ -31,11 +31,18 @@ export const actions = {
 			if (!fs.existsSync('tmp/')) fs.mkdirSync('tmp'); // Se non esiste la cartella temporanea creala
 
 			for (const file of files) {
+
 				let file_name = file.name;
 				file_name.replace(' ', '');
 
 				const extension = file_name.split('.')[1]; // L'estensione del file test.pdf sarà [test, pdf]
-
+				if(extension != "pdf" || extension != "doc" || extension!= "docx"){	// Il file è invalido
+					raise_error(
+						500,
+						100,
+						`Hai caricato un file non consentito. Puoi caricare solo .pdf, .doc e .docx`
+					);
+				}
 				fs.writeFileSync(`tmp/${file_name}`, Buffer.from(await file.arrayBuffer())); // Scrivo il file nella cartella temporanea
 
 				if (extension == 'docx' || extension == 'doc') {
