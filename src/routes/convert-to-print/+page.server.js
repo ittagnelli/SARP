@@ -11,7 +11,7 @@ let logger = new Logger('server'); //instanzia il logger
 
 function cleanup(files) {
 	files.forEach((file) => {
-		fs.unlinkSync(`tmp/${file.name}`); // Rimuovo i files caricati in questo form, ormai non servono più
+		fs.unlinkSync(`${PUBLIC_PDF_TMP_FILE}/${file.name}`); // Rimuovo i files caricati in questo form, ormai non servono più
 	});
 }
 
