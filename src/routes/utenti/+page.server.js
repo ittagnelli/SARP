@@ -2,6 +2,7 @@ import { PrismaDB } from '../../js/prisma_db';
 import { route_protect, raise_error, multi_user_where, user_id, access_protect } from '../../js/helper';
 import { Logger } from '../../js/logger';
 import { fail } from '@sveltejs/kit';
+import { PrismaClientValidationError } from '@prisma/client/runtime';
 
 let logger = new Logger("server"); //instanzia il logger
 const SARP = new PrismaDB(); //Istanzia il client SARP DB
@@ -9,7 +10,13 @@ let resource = "utenti"; // definisco il nome della risorsa di questo endpoint
 
 // @ts-ignore
 function catch_error(exception, type, code) {
-    logger.error(JSON.stringify(exception)); //PROF: error è un oggetto ma serve qualcosa di più complicato. per il momento lascialo così. ho gia risolto in hooks nella versione 9.0
+    if(exception instanceof PrismaClientValidationError)
+        logger.error(exception.message);
+    else {  
+        logger.error(JSON.stringify(exception));
+        logger.error(exception.message);
+        logger.error(exception.stack);
+    }
     raise_error(500, code, `Errore irreversibile durante ${type} dell'utente. TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`);    // TIMESTAMP ci serve per capire l'errore all'interno del log
 }
 
@@ -41,8 +48,8 @@ export async function load({ locals }) {
 			tipi_utente: tipi_utente,
 			ruoli_utente: ruoli_utente
 		}
-	} catch (error) {
-        catch_error(error, "la ricerca", 100);
+	} catch (exception) {
+        catch_error(exception, "la ricerca", 100);
 	}
 
 }
@@ -83,10 +90,10 @@ export const actions = {
                     }
 				}
 			});
-		} catch (error) {
+		} catch (exception) {
             // @ts-ignore
-            if(error.code != "P2002")
-                catch_error(error, "l'inserimento", 101);
+            if(exception.code != "P2002")
+                catch_error(exception, "l'inserimento", 101);
             else
                 return fail(400, { error_mex: "Email non univoca" });   // La richiesta fallisce
 		}
@@ -127,10 +134,10 @@ export const actions = {
                     }
 				}
 			});		
-		} catch (error) {
+		} catch (exception) {
             // @ts-ignore
-            if(error.code != "P2002")
-                catch_error(error, "l'aggiornamento", 102);
+            if(exception.code != "P2002")
+                catch_error(exception, "l'aggiornamento", 102);
             else
                 return fail(400, { error_mex: "Email non univoca" });   // La richiesta fallisce
 		}
@@ -150,8 +157,8 @@ export const actions = {
 			await SARP.Utente.delete({
 				where: { id: +id }
 			});		
-		} catch (error) {
-			catch_error(error, "l'eliminazione", 103);
+		} catch (exception) {
+			catch_error(exception, "l'eliminazione", 103);
 		}
 
 	}

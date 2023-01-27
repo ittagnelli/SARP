@@ -2,6 +2,8 @@ import { PrismaDB } from '../../js/prisma_db';
 import { redirect } from '@sveltejs/kit';
 import { raise_error, route_protect, access_protect } from '../../js/helper';
 import { Logger } from '../../js/logger';
+import { PrismaClientValidationError } from '@prisma/client/runtime';
+
 
 let logger = new Logger("server"); //instanzia il logger
 const SARP = new PrismaDB(); //Istanzia il client SARP DB
@@ -9,7 +11,13 @@ let resource = "ticket"; // definisco il nome della risorsa di questo endpoint
 
 // @ts-ignore
 function catch_error(exception, type, code) {
-    logger.error(JSON.stringify(exception)); //PROF: error è un oggetto ma serve qualcosa di più complicato. per il momento lascialo così. ho gia risolto in hooks nella versione 9.0
+    if(exception instanceof PrismaClientValidationError)
+        logger.error(exception.message);
+    else {  
+        logger.error(JSON.stringify(exception));
+        logger.error(exception.message);
+        logger.error(exception.stack);
+    }
     raise_error(500, code, `Errore irreversibile durante ${type} del ticket. TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`); // TIMESTAMP ci serve per capire l'errore all'interno del log
 }
 
@@ -29,8 +37,8 @@ export async function load({ locals }) {
 		});
 		//restituisco il risultato della query SQL
 		return {tickets: tickets};
-	} catch (error) {
-        catch_error(error, "la ricerca", 600);
+	} catch (exception) {
+        catch_error(exception, "la ricerca", 600);
     }
 
 }
@@ -57,8 +65,8 @@ export const actions = {
 					descrizione: descrizione
 				}
 			});		
-		} catch (error) {
-			catch_error(error, "l'aggiunta", 601);
+		} catch (erexceptionor) {
+			catch_error(exception, "l'aggiunta", 601);
 		}
 
 	}

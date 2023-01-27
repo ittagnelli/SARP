@@ -1,6 +1,7 @@
 import { PrismaDB } from '../../js/prisma_db';
 import { route_protect, user_id, multi_user_where, raise_error, access_protect  } from '../../js/helper';
 import { Logger } from '../../js/logger';
+import { PrismaClientValidationError } from '@prisma/client/runtime';
 
 let logger = new Logger("server"); //instanzia il logger
 const SARP = new PrismaDB(); //Istanzia il client SARP DB
@@ -8,7 +9,13 @@ let resource = "pcto_stage"; // definisco il nome della risorsa di questo endpoi
 
 // @ts-ignore
 function catch_error(exception, type, code) {
-    logger.error(JSON.stringify(exception)); //PROF: error è un oggetto ma serve qualcosa di più complicato. per il momento lascialo così. ho gia risolto in hooks nella versione 9.0
+    if(exception instanceof PrismaClientValidationError)
+        logger.error(exception.message);
+    else {  
+        logger.error(JSON.stringify(exception));
+        logger.error(exception.message);
+        logger.error(exception.stack);
+    }
     raise_error(500, code, `Errore irreversibile durante ${type} dello stage. TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`); // TIMESTAMP ci serve per capire l'errore all'interno del log
 }
 
@@ -44,8 +51,8 @@ export async function load({ locals }) {
             companies: companies,
             utenti: utenti
         }
-    } catch (error) {
-        catch_error(error, "la ricerca", 300);
+    } catch (exception) {
+        catch_error(exception, "la ricerca", 300);
     }
 }
 
@@ -83,8 +90,8 @@ export const actions = {
                 }
         }
     });
-        } catch (error) {
-            catch_error(error, "l'inserimento", 301)
+        } catch (exception) {
+            catch_error(exception, "l'inserimento", 301)
         }
 
 	},
@@ -120,8 +127,8 @@ export const actions = {
                     }
                 }
             });
-        } catch (error) {
-            catch_error(error, "l'aggiornamento", 302);
+        } catch (exception) {
+            catch_error(exception, "l'aggiornamento", 302);
         }
 
 	},
@@ -140,8 +147,8 @@ export const actions = {
             await SARP.pcto_Pcto.delete({
                 where: { id: +id }
             });       
-        } catch (error) {
-            catch_error(error, "l'eliminazione", 303);
+        } catch (exception) {
+            catch_error(exception, "l'eliminazione", 303);
         }
 
 	}
