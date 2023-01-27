@@ -98,7 +98,6 @@
 	page_size={10}
 	modal_name={$page_action_modal}
 	on:update_start={start_update}
-	type_genre="f"
 	type="valutazioni"
 	print={false}
     actions={true}
