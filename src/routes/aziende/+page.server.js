@@ -13,15 +13,22 @@ import {
 } from '../../js/helper'; //PROF: usa l'helper raise_erorr che ho cretao qualche settimana fa
 import { Logger } from '../../js/logger';
 import { PUBLIC_PCTO_TEMPLATES_DIR, PUBLIC_PCTO_TEMPLATE_AZIENDE } from '$env/static/public';
+import { PrismaClientValidationError } from '@prisma/client/runtime';
 
-let logger = new Logger('seerver'); //instanzia il logger
+let logger = new Logger('server'); //instanzia il logger
 const SARP = new PrismaDB(); //Istanzia il client SARP DB
 let resource = 'pcto_aziende'; // definisco il nome della risorsa di questo endpoint
 
 // @ts-ignore
 function catch_error(exception, type, code) {
-	logger.error(JSON.stringify(exception)); //PROF: error è un oggetto ma serve qualcosa di più complicato. per il momento lascialo così. ho gia risolto in hooks nella versione 9.0
-	raise_error(
+    if(exception instanceof PrismaClientValidationError)
+        logger.error(exception.message);
+    else {  
+        logger.error(JSON.stringify(exception));
+        logger.error(exception.message);
+        logger.error(exception.stack);
+    }
+    raise_error(
 		500,
 		code,
 		`Errore irreversibile durante ${type} dell'azienda. TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`
@@ -54,8 +61,8 @@ export async function load({ locals }) {
 
 		// restituisco il risultato della query SQL
 		return { aziende: companies };
-	} catch (error) {
-		catch_error(error, 'la ricerca', 200);
+	} catch (exception) {
+		catch_error(exception, 'la ricerca', 200);
 	}
 }
 
@@ -110,7 +117,7 @@ export const actions = {
 			await SARP.pcto_Azienda.update({
 				where: { id: +id },
 				data: {
-					idConvenzione: form_data.get('idConvenzione'),
+					xidConvenzione: form_data.get('idConvenzione'),
 					nome: form_data.get('nome'),
 					indirizzo: form_data.get('indirizzo'),
 					piva: form_data.get('piva'),
@@ -124,9 +131,9 @@ export const actions = {
 					istituto: form_data.get('istituto')
 				}
 			});
-		} catch (error) {
+		} catch (exception) {
 			// @ts-ignore
-			if (error.code != 'P2002') catch_error(error, "l'aggiornamento", 202);
+			if (exception.code != 'P2002') catch_error(exception, "l'aggiornamento", 202);
 			else return fail(400, { error_mex: 'Azienda non univoca' }); // La richiesta fallisce
 		}
 	},
@@ -146,8 +153,8 @@ export const actions = {
 			await SARP.pcto_Azienda.delete({
 				where: { id: +id }
 			});
-		} catch (error) {
-			catch_error(error, "l'aggiornamento", 203);
+		} catch (exception) {
+			catch_error(exception, "l'aggiornamento", 203);
 		}
 	},
 

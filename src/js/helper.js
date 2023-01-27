@@ -50,7 +50,7 @@ export const has_grant = (role, action, resource) => {
 
 // genera un errore per l'utrente
 export const raise_error = (http_code, code, mex) => {
-	throw error(http_code, {
+    throw error(http_code, {
 		code: code,
 		message: mex
 	});

@@ -1,6 +1,7 @@
 import { PrismaDB } from '../../js/prisma_db';
 import { route_protect, user_id, pcto_presenze_where, raise_error, access_protect } from '../../js/helper';
 import { Logger } from '../../js/logger';
+import { PrismaClientValidationError } from '@prisma/client/runtime';
 
 let logger = new Logger("server"); //instanzia il logger
 const SARP = new PrismaDB(); //Istanzia il client SARP DB
@@ -8,7 +9,13 @@ let resource = "pcto_presenze"; // definisco il nome della risorsa di questo end
 
 // @ts-ignore
 function catch_error(exception, type, code) {
-    logger.error(JSON.stringify(exception)); //PROF: error è un oggetto ma serve qualcosa di più complicato. per il momento lascialo così. ho gia risolto in hooks nella versione 9.0
+    if(exception instanceof PrismaClientValidationError)
+        logger.error(exception.message);
+    else {  
+        logger.error(JSON.stringify(exception));
+        logger.error(exception.message);
+        logger.error(exception.stack);
+    }
     raise_error(500, code, `Errore irreversibile durante ${type} della presenza. TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`);    // TIMESTAMP ci serve per capire l'errore all'interno del log
 }
 
@@ -42,8 +49,8 @@ export async function load({ locals }) {
 			presenze: presenze,
 			stages: stages
 		}
-	} catch (error) {
-        catch_error(error, "load", 400) ;
+	} catch (exception) {
+        catch_error(exception, "load", 400) ;
 	}
 }
 
@@ -73,8 +80,8 @@ export const actions = {
 					idPcto: +form_data.get('stage')
 				}
 			});	
-		} catch (error) {
-			catch_error(error, "l'inserimento", 401);
+		} catch (exception) {
+			catch_error(exception, "l'inserimento", 401);
 		}
 	},
 
@@ -103,8 +110,8 @@ export const actions = {
 					idPcto: +form_data.get('stage')
 				}
 			});
-		} catch (error) {
-			catch_error(error, "l'aggiornamento", 402)
+		} catch (exception) {
+			catch_error(exception, "l'aggiornamento", 402)
 		}
 	},
 
@@ -123,8 +130,8 @@ export const actions = {
 			await SARP.pcto_Presenza.delete({
 				where: { id: +id }
 			});
-		} catch (error) {
-			catch_error(error, "l'eliminazione", 403);
+		} catch (exception) {
+			catch_error(exception, "l'eliminazione", 403);
 		}
 	}
 };
