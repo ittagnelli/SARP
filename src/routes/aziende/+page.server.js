@@ -133,7 +133,8 @@ export const actions = {
 
 	// @ts-ignore
 	delete: async ({ cookies, request, locals }) => {
-		let action = 'delete';
+		let action = '		let action = 'delete';
+		delete';
 
 		route_protect(locals);
 		access_protect(103, locals, action, resource);
