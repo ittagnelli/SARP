@@ -1,6 +1,6 @@
 {
 	"name": "sarp",
-    "version": "0.16.0",
+	"version": "0.17.0",
 	"private": true,
 	"scripts": {
 		"dev": "npm run policy && vite dev",
@@ -49,6 +49,8 @@
 		"docxtemplater": "^3.32.4",
 		"file-saver": "^2.0.5",
 		"form-data": "^4.0.0",
+		"pdf-merger-js": "^4.2.0",
+		"pdf-page-counter": "^1.0.3",
 		"pino": "^8.7.0",
 		"pino-pretty": "^9.1.1",
 		"pizzip": "^3.1.3",

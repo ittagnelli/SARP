@@ -18,6 +18,14 @@ menu_pcto:
     - TUTOR-AZIENDALE
     - TUTOR-SCOLASTICO
 
+menu_tools:
+  view:
+    - '*'
+
+menu_convert_to_print:
+  view:
+    - '*'
+
 menu_aziende:
   view:
     - DEVELOPER
@@ -144,4 +152,3 @@ pcto_valutazioni:
     - ADMIN
     - TUTOR-AZIENDALE
     - STAGISTA
-
