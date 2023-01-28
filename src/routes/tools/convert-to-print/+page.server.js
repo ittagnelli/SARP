@@ -46,12 +46,13 @@ function autit_conversion(locals, mex) {
 
 const random_name = () => crypto.randomBytes(20).toString('hex'); // Genera 20 bytes casuali e li converte in esadecimale
 
-const merger = new PDFMerger();
+
 
 export const actions = {
 	pdf: async ({ request, locals }) => {
 		route_protect(locals); // Controlla che l'utente sia autenticato
 
+        const merger = new PDFMerger();
 		const form_data = await request.formData();
 		const files = form_data.getAll('file-to-convert');
         autit_conversion(locals, `richeista conversione di ${files.length} file`);
