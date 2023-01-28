@@ -17,13 +17,13 @@
 			<NavItem resource="menu_home" text="Home" icon="home-2" link="/" />
 			<NavItem resource="menu_utenti" text="Utenti" icon="users" link="/utenti" />
 			<NavMenu resource="menu_pcto" text="PCTO" icon="building-factory-2">
-				<NavSubItem resource="menu_aziende" text="Aziende" link="aziende" />
-				<NavSubItem resource="menu_stage" text="Stage" link="stage" />
-				<NavSubItem resource="menu_presenze" text="Presenze" link="presenze" />
-				<NavSubItem resource="menu_valutazioni" text="Valutazioni" link="valutazioni" />
+				<NavSubItem resource="menu_aziende" text="Aziende" link="/aziende" />
+				<NavSubItem resource="menu_stage" text="Stage" link="/stage" />
+				<NavSubItem resource="menu_presenze" text="Presenze" link="/presenze" />
+				<NavSubItem resource="menu_valutazioni" text="Valutazioni" link="/valutazioni" />
 			</NavMenu>
 			<NavMenu resource="menu_tools" text="Tools" icon="tools">
-				<NavSubItem resource="menu_convert_to_print" text="Convert to Print" link="convert-to-print" />
+				<NavSubItem resource="menu_convert_to_print" text="Convert to Print" link="tools/convert-to-print" />
 			</NavMenu>
 		</Navbar>
 
