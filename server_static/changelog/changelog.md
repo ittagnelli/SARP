@@ -1,3 +1,12 @@
+## v0.16.0 – 28 Gennaio 2023
+- `fix#157`: Refactor front-end convert-to-print 
+- `fix#129`: aggiunta nuova applicazione convert-to-print
+- `fix#155`: Refactor del log eccezioni - refactor di catcherror per stampare correttamente le eccezioni di Prisma 
+- `fix#152`: Footer tabelle errato - modificato footer per visualizzare n/M <nome entità>
+- `fix#146`: container for badges
+- `fix#148`: fix studente non visualizza le proprie presenze in PCTO
+- `fix#147`: fix problem of picture-margin e add grid for pictures
+
 ## v0.15.0 – 24 Gennaio 2023
 - `fix#140`: View PCTO
 - `fix#139`: PCTO presenze nome studente errato
