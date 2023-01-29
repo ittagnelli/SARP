@@ -4,7 +4,7 @@ import fs from 'fs';
 import PDFMerger from 'pdf-merger-js';
 import crypto from 'crypto';
 import { execSync } from 'child_process';
-import { PUBLIC_PDF_TMP_FILE, PUBLIC_PDF_BLANK_FILE } from '$env/static/public';
+import { PUBLIC_CONVERT_DIR, PUBLIC_PDF_BLANK_FILE } from '$env/static/public';
 import pdf_counter from 'pdf-page-counter';
 import { Auditor, audit_mex } from '../../../js/audit';
 
@@ -22,9 +22,9 @@ function swap_extension(filename, ext) {
 
 function cleanup_uploaded(files) {
 	files.forEach((file) => {
-		fs.unlinkSync(`${PUBLIC_PDF_TMP_FILE}/${strip_spaces(file.name)}`); // Rimuovo i files caricati in questo form, ormai non servono più
+		fs.unlinkSync(`${PUBLIC_CONVERT_DIR}/${strip_spaces(file.name)}`); // Rimuovo i files caricati in questo form, ormai non servono più
 		if (['doc', 'docx'].includes(fextension(strip_spaces(file.name))))
-			fs.unlinkSync(swap_extension(`${PUBLIC_PDF_TMP_FILE}/${strip_spaces(file.name)}`, 'pdf'));
+			fs.unlinkSync(swap_extension(`${PUBLIC_CONVERT_DIR}/${strip_spaces(file.name)}`, 'pdf'));
 	});
 }
 
@@ -58,7 +58,7 @@ export const actions = {
         autit_conversion(locals, `richeista conversione di ${files.length} file`);
 
         try {
-			if (!fs.existsSync(PUBLIC_PDF_TMP_FILE)) fs.mkdirSync(PUBLIC_PDF_TMP_FILE); // Se non esiste la cartella temporanea creala
+			if (!fs.existsSync(PUBLIC_CONVERT_DIR)) fs.mkdirSync(PUBLIC_CONVERT_DIR); // Se non esiste la cartella temporanea creala
 
 			for (const file of files) {
 				let file_name = file.name;
@@ -75,20 +75,20 @@ export const actions = {
 				}
 
 				fs.writeFileSync(
-					`${PUBLIC_PDF_TMP_FILE}/${file_name}`,
+					`${PUBLIC_CONVERT_DIR}/${file_name}`,
 					Buffer.from(await file.arrayBuffer())
 				); // Scrivo il file nella cartella temporanea
     
 				if (extension == 'docx' || extension == 'doc') {
 					// Se il file è Word dobbiamo convertirlo in PDF
-                    const cmd = `libreoffice --headless --convert-to pdf --outdir ${PUBLIC_PDF_TMP_FILE} ${PUBLIC_PDF_TMP_FILE}/${file_name}`;
+                    const cmd = `libreoffice --headless --convert-to pdf --outdir ${PUBLIC_CONVERT_DIR} ${PUBLIC_CONVERT_DIR}/${file_name}`;
 					execSync(cmd);
 					file_name = file_name.split('.')[0] + '.pdf';
 				}
 	
-                const our_pdf = fs.readFileSync(`${PUBLIC_PDF_TMP_FILE}/${file_name}`);
+                const our_pdf = fs.readFileSync(`${PUBLIC_CONVERT_DIR}/${file_name}`);
 				const pages = await pdf_counter(our_pdf);
-				await merger.add(`${PUBLIC_PDF_TMP_FILE}/${file_name}`); // Aggiungo il pd// Usiamo un for classico al posto di forEach per il corretto merge dei filef al nuovo file
+				await merger.add(`${PUBLIC_CONVERT_DIR}/${file_name}`); // Aggiungo il pd// Usiamo un for classico al posto di forEach per il corretto merge dei filef al nuovo file
 	
                 if (pages.numpages % 2 != 0) {
 					// Aggingiamo una pagina se la verifica è dispari
