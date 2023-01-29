@@ -2,10 +2,12 @@
 	import { onMount } from 'svelte';
 	import { page_pre_title, page_title, page_action_title } from '../../../js/store';
 	import { saveAs } from 'file-saver';
+    import { PUBLIC_MAX_UPLOAD_FILES, PUBLIC_MAX_UPLOAD_SIZE } from '$env/static/public';
 
 	let can_upload = false;
 	let is_loading = false;
 	let file_list = [];
+    let error_files = false;
 
 	$page_pre_title = 'Tools';
 	$page_title = 'Convertitore multi file';
@@ -25,9 +27,24 @@
 		}
 	});
 
+    function num_files(files) {
+        return files.length <= PUBLIC_MAX_UPLOAD_FILES;
+    }
+
+    function size_files(files) {
+        let fsize = Array.from(files).reduce((acc, curr) => acc + curr.size, 0);
+        return fsize <= PUBLIC_MAX_UPLOAD_SIZE;    
+    }
+
 	function files_selected(f) {
-		can_upload = true;
-		for (const file of f.target.files) file_list.push(file.name);
+        if(!num_files(f.target.files) || !size_files(f.target.files)) {
+            error_files = true;
+            can_upload = false;
+        } else {
+            can_upload = true;
+            error_files = false;
+		    for (const file of f.target.files) file_list.push(file.name);
+        }
 	}
 </script>
 
@@ -57,8 +74,8 @@
 			</div>
 
 			<div class="row">
-				<div class="col-4" />
-				<div class="col-4 text-center">
+				<div class="col-3" />
+				<div class="col-6 text-center">
 					<form
 						id="dropzone-custom"
 						action="convert-to-print?/pdf"
@@ -92,6 +109,12 @@
 									</div>
 								{/if}
 
+                                {#if error_files}
+                                    <div class="error-file">
+                                        Hai selezionato troppi file (MAX {PUBLIC_MAX_UPLOAD_FILES})
+                                        oppure <br> I file sono troppo grandi (MAX {Math.round(PUBLIC_MAX_UPLOAD_SIZE / (1024*1024))}MB)
+                                    </div>
+                                {/if}
 								{#if can_upload == true && is_loading == false}
 									<div class="select-mex">Hai selezionato i seguenti file:</div>
 									{#each file_list as file, i}
@@ -106,7 +129,7 @@
 						</div>
 					</form>
 				</div>
-				<div class="col-4" />
+				<div class="col-3" />
 			</div>
 		</div>
 	</div>
@@ -189,4 +212,10 @@
 		font-weight: bold;
 		margin-bottom: 0.8rem;
 	}
+
+    .error-file {
+        border: 3px solid red;
+        padding: 1rem;
+        font-size: 1rem;
+    }
 </style>
