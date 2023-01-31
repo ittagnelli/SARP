@@ -180,7 +180,8 @@
 	page_size={10}
 	modal_name={$page_action_modal}
 	on:update_start={start_update}
-	type="aziende"
+	endpoint="aziende"
+    footer="Aziende"
     print={true}
     actions={true}
 />

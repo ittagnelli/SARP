@@ -1,4 +1,4 @@
-// v 0.7.0 2023-01-24
+// v 0.8.0 2023-01-31
 
 generator client {
     provider = "prisma-client-js"
@@ -20,32 +20,49 @@ datasource db {
 // Tabelle comuni a tutte le applicazioni e dizionari
 
 model Versione {
-    versione  String   //deve coincidere con la versione di questo file
+    versione  String //deve coincidere con la versione di questo file
     createdAt DateTime @default(now())
+
     @@id([versione, createdAt])
 }
 
 model Utente {
-    id         Int                @id @default(autoincrement())
-    createdAt  DateTime           @default(now())
-    updatedAt  DateTime           @updatedAt
-    creatoDa   Int
-    tipo       String             @default("STUDENTE")
-    nome       String
-    cognome    String
-    email      String             @unique
-    telefono   String?
-    picture    String?
-    bes        Boolean?
-    can_login  Boolean            @default(false)
-    istituto   String?
-    valuta     pcto_Valutazione[]
-    presente   pcto_Presenza[]
-    stabilisce pcto_Azienda[]
-    iscritto   pcto_Pcto[]
-    Session    Session[]
-    Ticket     Ticket[]
-    ruoli      ruolo_Utente[]
+    id                       Int                @id @default(autoincrement())
+    createdAt                DateTime           @default(now())
+    updatedAt                DateTime           @updatedAt
+    creatoDa                 Int
+    tipo                     String             @default("STUDENTE")
+    nome                     String
+    cognome                  String
+    natoA                    String?
+    natoIl                   DateTime?
+    codiceF                  String?
+    email                    String             @unique
+    telefono                 String?
+    picture                  String?
+    bes                      Boolean?
+    can_login                Boolean            @default(false)
+    istituto                 String?
+    valuta                   pcto_Valutazione[]
+    presente                 pcto_Presenza[]
+    stabilisce               pcto_Azienda[]
+    iscritto                 pcto_Pcto[]
+    Session                  Session[]
+    Ticket                   Ticket[]
+    ruoli                    ruolo_Utente[]
+    iscritto_corso_sicurezza sicurezza_Corso[]
+    classe                   Classe?            @relation(fields: [classeId], references: [id])
+    classeId                 Int?
+}
+
+model Classe {
+    id        Int      @id @default(autoincrement())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    classe    String
+    istituto  String
+    sezione   String
+    iscritti  Utente[]
 }
 
 model Session {
@@ -147,4 +164,16 @@ model pcto_Pcto {
     valutatoDa    pcto_Valutazione[]
     presenziatoDa pcto_Presenza[]
     svoltoDa      Utente[]
+}
+
+model sicurezza_Corso {
+    id         Int      @id @default(autoincrement())
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+    creatoDa   Int
+    titolo     String
+    dataInizio DateTime
+    dataFine   DateTime
+    tipo       String
+    seguitoDa  Utente[]
 }

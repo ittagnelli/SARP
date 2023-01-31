@@ -133,7 +133,8 @@
 	page_size={10}
 	modal_name={$page_action_modal}
 	on:update_start={start_update}
-	type="stage"
+	endpoint="stage"
+    footer="Stage"
     actions={true}
 />
 

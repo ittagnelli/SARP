@@ -11,7 +11,8 @@ export let columns;
 export let rows;
 export let page_size;
 export let modal_name;
-export let type; // Cosa visualizza la tabella?
+export let endpoint; // Cosa visualizza la tabella?
+export let footer;
 export let print;
 export let actions;
 
@@ -146,7 +147,7 @@ function update_row(id) {
                             {#if actions == true}
                             <td valign="middle">
                                 {#if print == true}
-                                <form id="form-pdf" method="POST" action={`/${type}?/pdf`}>
+                                <form id="form-pdf" method="POST" action={`/${endpoint}?/pdf`}>
                                     <button class="icon-button" name="id" value={row.id}>
                                         <icon class="ti ti-printer icon" />
                                     </button>
@@ -162,7 +163,7 @@ function update_row(id) {
                                     <icon class="ti ti-edit icon" />
                                 </a>
                                 {#if user_id($page.data) == row.id || is_admin($page.data)}
-                                <form id="form-delete" method="POST" action={`/${type}?/delete`}>
+                                <form id="form-delete" method="POST" action={`/${endpoint}?/delete`}>
                                     <button class="icon-button" name="id" value={row.id}>
                                         <icon class="ti ti-trash icon" />
                                     </button>
@@ -181,7 +182,7 @@ function update_row(id) {
     <!-- pager -->
     <div class="card-footer d-flex align-items-center">
         <p class="m-0 text-muted" id="users-count">
-            {footer_num}/{footer_den} {type.charAt(0).toUpperCase() + type.slice(1) }
+            {footer_num}/{footer_den} {footer}
         </p>
         {#if rows.length > page_size}
         <ul class="pagination m-0 ms-auto">

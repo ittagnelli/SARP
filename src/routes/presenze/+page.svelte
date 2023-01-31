@@ -117,7 +117,8 @@
 	page_size={10}
 	modal_name={$page_action_modal}
 	on:update_start={start_update}
-	type="presenze"
+	endpoint="presenze"
+    footer="Presenze"
     actions={true}
 />
 

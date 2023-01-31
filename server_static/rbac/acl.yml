@@ -21,10 +21,18 @@ menu_pcto:
 menu_tools:
   view:
     - '*'
-
 menu_convert_to_print:
   view:
     - '*'
+
+menu_sicurezza_lavoro:
+  view:
+    - '*'
+
+menu_sicurezza_corsi:
+  view:
+    - '*'
+
 
 menu_aziende:
   view:
@@ -152,3 +160,17 @@ pcto_valutazioni:
     - ADMIN
     - TUTOR-AZIENDALE
     - STAGISTA
+
+sicurezza_corso:
+  create:
+    - DEVELOPER
+    - ADMIN
+  read:
+    - DEVELOPER
+    - ADMIN
+  update:
+    - DEVELOPER
+    - ADMIN
+  delete:
+    - DEVELOPER
+    - ADMIN
