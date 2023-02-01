@@ -2,6 +2,13 @@ import { PrismaDB } from '../../../js/prisma_db';
 import { route_protect, user_id, multi_user_where, raise_error, access_protect  } from '../../../js/helper';
 import { Logger } from '../../../js/logger';
 import { PrismaClientValidationError } from '@prisma/client/runtime';
+import PizZip from 'pizzip';
+import Docxtemplater from 'docxtemplater';
+import fs from 'fs';
+import path from 'path';
+import { redirect, fail, error } from '@sveltejs/kit';
+import { PUBLIC_SICUREZZA_TEMPLATES_DIR, PUBLIC_SICUREZZA_CORSO_GENERICO, PUBLIC_SICUREZZA_CORSO_SPECIFICO } from '$env/static/public';
+
 
 let logger = new Logger("server"); //instanzia il logger
 const SARP = new PrismaDB(); //Istanzia il client SARP DB
@@ -19,6 +26,14 @@ function catch_error(exception, type, code) {
     raise_error(500, code, `Errore irreversibile durante ${type} dello stage. TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`); // TIMESTAMP ci serve per capire l'errore all'interno del log
 }
 
+function catch_error_pdf(exception, type, code) {
+	logger.error(JSON.stringify(exception)); //PROF: error è un oggetto ma serve qualcosa di più complicato. per il momento lascialo così. ho gia risolto in hooks nella versione 9.0
+	raise_error(
+		500,
+		code,
+		`${type} TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`
+	);
+}
 
 export async function load({ locals }) {
     let action = 'read';
@@ -35,11 +50,6 @@ export async function load({ locals }) {
                 seguitoDa: true
             }
         });
-
-        console.log("CORSI SERVER:", corsi)
-        // const companies = await SARP.pcto_Azienda.findMany({
-        //     orderBy: [{ id: 'desc' }]
-        // });
 
         const utenti = await SARP.Utente.findMany({
             orderBy: [{ id: 'desc' }]
@@ -63,9 +73,6 @@ export const actions = {
         access_protect(501, locals, action, resource);
 
 		const form_data = await request.formData();
-
-        console.log("FORM DATA:", form_data);
-
         let studenti = form_data.get('studenti').split(',')
         let ids = [];
         
@@ -151,43 +158,71 @@ export const actions = {
 	},
 
     pdf: async ({ cookies, request }) => {
-		let buf, company;
 		try {
 			const form_data = await request.formData();
 			const id = form_data.get('id');
+            let return_files = [];
 
-			// preleva l'azienda dal DB
-			company = await SARP.pcto_Azienda.findUnique({
-				where: { id: +id }
-			});
-			//arricchisce l'oggetto
-			company['today'] = new Date().toLocaleDateString();
-			company['direttore_natoIl'] = company['direttore_natoIl'].toLocaleDateString();
-
-			const content = fs.readFileSync(
-				path.resolve(PUBLIC_PCTO_TEMPLATES_DIR, PUBLIC_PCTO_TEMPLATE_AZIENDE),
-				'binary'
-			);
-
-			const zip = new PizZip(content);
-
-			const doc = new Docxtemplater(zip, {
-				paragraphLoop: true,
-				linebreaks: true
+			// preleva il corso dal DB
+			let corso = await SARP.sicurezza_Corso.findUnique({
+				where: { id: +id },
+                include: {
+                    seguitoDa: {
+                        include: {
+                            classe: true
+                        }
+                    } 
+                }
 			});
 
-			doc.render(company);
+            for(let studente of corso?.seguitoDa) {
+                let filler = {};
+                filler['nome'] = studente.nome;
+                filler['cognome'] = studente.cognome 
+                filler['natoA'] = studente.natoA;
+                filler['natoIl'] = studente.natoIl.toLocaleDateString();
+                filler['codiceF'] = studente.codiceF;
+                filler['classe'] = studente.classe.classe;
+                filler['istituto'] = studente.classe.istituto;
+                filler['sezione'] = studente.classe.sezione;
 
-			buf = doc.getZip().generate({
-				type: 'nodebuffer',
-				compression: 'DEFLATE'
-			});
-			return {
-				file: JSON.stringify(buf), // Convertiamo il buffer in stringa sennò sveltekit va in errore
-				nome_convenzione: `01-Convenzione-generale-${company.idConvenzione}.docx`
-			};
+                let TEMPLATE_FILE;
+                if(corso.tipo == 'SPECIFICO')
+                    TEMPLATE_FILE = PUBLIC_SICUREZZA_CORSO_SPECIFICO;
+                else
+                    TEMPLATE_FILE = PUBLIC_SICUREZZA_CORSO_GENERICO;
+
+                const template = fs.readFileSync(
+                    path.resolve(PUBLIC_SICUREZZA_TEMPLATES_DIR, TEMPLATE_FILE),
+                    'binary'
+                );
+
+                const zip = new PizZip(template);
+			    const doc = new Docxtemplater(zip, {
+                    paragraphLoop: true,
+                    linebreaks: true
+			    });
+
+			    doc.render(filler);
+                let buf = doc.getZip().generate({
+                    type: 'nodebuffer',
+                    compression: 'DEFLATE'
+                });
+
+                return_files.push({
+                    file: JSON.stringify(buf),
+                    name: `attestato_corso_${corso.tipo}_${studente.cognome}_${studente.nome}.docx`
+                });
+                logger.info(`Generato attestato corso sicurezza per ${studente.cognome}_${studente.nome}`);
+            }       
+
+            return {files: return_files};
+			// return {
+			// 	file: JSON.stringify(buf), // Convertiamo il buffer in stringa sennò sveltekit va in errore
+			// 	nome_convenzione: `01-Convenzione-generale-${company.idConvenzione}.docx`
+			// };
 		} catch (exception) {
-			catch_error_pdf(exception, 'la generazione', 204);
+			catch_error_pdf(exception, 'la generazione', 804);
 		}
 	}
 };

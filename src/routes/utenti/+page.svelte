@@ -16,6 +16,7 @@
 	let utenti = helper.data2arr(data.utenti);
 	let tipi_utente = helper.data2arr(data.tipi_utente);
 	let ruoli_utente = helper.data2arr(data.ruoli_utente);
+    let classi = helper.data2arr(data.classi);
 
 	//configura la pagina pre-titolo, titolo e nome del modale
 	$page_pre_title = 'ADMIN';
@@ -43,7 +44,8 @@
 		telefono: '',
 		bes_select: 'NO',
 		can_login_select: 'SI',
-		istituto_select: 'ITT'
+		istituto_select: 'ITT',
+        classe: 0
 	};
 
 	// schema di validazione del form
@@ -86,7 +88,12 @@
 
 		telefono: yup
 			.string()
-			.matches(/^$|^[0-9]{3}\.[0-9]{3}\.[0-9]{2}\.[0-9]{2}$/, 'Numero non valido [333.123.45.67]')
+			.matches(/^$|^[0-9]{3}\.[0-9]{3}\.[0-9]{2}\.[0-9]{2}$/, 'Numero non valido [333.123.45.67]'),
+
+        classe: yup
+            .number()
+            .min(1, 'Selezionare una classe')
+
 	});
 
 	onMount(() => {
@@ -117,6 +124,7 @@
 		form_values.istituto_select = utente.istituto;
 		form_values.bes_select = utente.bes ? 'SI' : 'NO';
 		form_values.can_login_select = utente.can_login ? 'SI' : 'NO';
+        form_values.classe = utente.classe.id;
 	}
 
 	async function handleSubmit() {
@@ -201,46 +209,6 @@
 						<div class="col-lg-2">
 							<InputText label="Cognome" name="cognome" placeholder="Cognome" bind:val={form_values.cognome} {errors} />
 						</div>
-						<div class="col-lg-5">
-							<InputText
-								label="Email"
-								name="email"
-								placeholder="nome.cognome@istitutoagnelli.it"
-								bind:val={form_values.email}
-								{errors}
-							/>
-						</div>
-						<div class="col-lg-3">
-							<InputText
-								label="Telefono"
-								name="telefono"
-								placeholder="333.123.45.67"
-								bind:val={form_values.telefono}
-								{errors}
-							/>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-lg-4">
-							<!-- InputSelect component ha dei problemi (two way binding) non ancora risolti
-                            che non permettono di usarlo qui -->
-							<div class="mb-3">
-								<div class="form-label select_text">Tipo</div>
-								<select
-									class="form-select"
-									class:is-invalid={errors.tipo}
-									name="tipo"
-									bind:value={form_values.tipo}
-								>
-									{#each tipi_utente as type}
-										<option value={type.tipo}>{type.tipo}</option>
-									{/each}
-								</select>
-								{#if errors.tipo}
-									<span class="invalid-feedback">{errors.tipo}</span>
-								{/if}
-							</div>
-						</div>
                         <div class="col-lg-3">
 							<InputText
 								label="Nato A"
@@ -268,31 +236,62 @@
                             />
                         </div>
 					</div>
-                    <div class="row">
-                        <div class="col-lg-12">
-							<label class="form-label">Ruolo</label>
-							<div class="form-selectgroup">
-                                {#each ruoli_utente as ruolo}
-                                    <label class="form-selectgroup-item">
-                                        <input
-                                            type="checkbox"
-                                            name="ruolo"
-                                            value="{String(ruolo.id)}"
-                                            class="form-selectgroup-input"
-                                            bind:group={form_values.ruolo}
-                                        />
-                                        <span class="form-selectgroup-label">{ruolo.ruolo}</span>
-                                    </label>
-                                {/each}
-							</div>
-							<br />
-							{#if errors.ruolo}
-								<span class="feedback-invalid">{errors.ruolo}</span>
-							{/if}
-						</div>
-                    </div>
 					<div class="row">
-						<div class="col-lg-4">
+                        <div class="col-lg-3">
+							<InputText
+								label="Email"
+								name="email"
+								placeholder="nome.cognome@istitutoagnelli.it"
+								bind:val={form_values.email}
+								{errors}
+							/>
+						</div>
+						<div class="col-lg-2">
+							<InputText
+								label="Telefono"
+								name="telefono"
+								placeholder="333.123.45.67"
+								bind:val={form_values.telefono}
+								{errors}
+							/>
+						</div>
+						<div class="col-lg-3">
+							<div class="mb-3">
+								<div class="form-label select_text">Tipo</div>
+								<select
+									class="form-select"
+									class:is-invalid={errors.tipo}
+									name="tipo"
+									bind:value={form_values.tipo}
+								>
+									{#each tipi_utente as type}
+										<option value={type.tipo}>{type.tipo}</option>
+									{/each}
+								</select>
+								{#if errors.tipo}
+									<span class="invalid-feedback">{errors.tipo}</span>
+								{/if}
+							</div>
+						</div>
+                        <div class="col-lg-2">
+							<div class="mb-3">
+								<div class="form-label select_text">Classe</div>
+								<select
+									class="form-select"
+									class:is-invalid={errors.classe}
+									name="classe"
+									bind:value={form_values.classe}
+								>
+									{#each classi as classe}
+										<option value={classe.id}>{classe.istituto} {classe.classe} {classe.sezione}</option>
+									{/each}
+								</select>
+								{#if errors.classe}
+									<span class="invalid-feedback">{errors.classe}</span>
+								{/if}
+							</div>
+						</div>
+                        <div class="col-lg-2">
 							<div class="mb-3">
 								<label class="form-label">Istituto</label>
 								<div class="form-selectgroup">
@@ -319,6 +318,31 @@
 								</div>
 							</div>
 						</div>
+					</div>
+                    <div class="row">
+                        <div class="col-lg-12">
+							<label class="form-label">Ruolo</label>
+							<div class="form-selectgroup">
+                                {#each ruoli_utente as ruolo}
+                                    <label class="form-selectgroup-item">
+                                        <input
+                                            type="checkbox"
+                                            name="ruolo"
+                                            value="{String(ruolo.id)}"
+                                            class="form-selectgroup-input"
+                                            bind:group={form_values.ruolo}
+                                        />
+                                        <span class="form-selectgroup-label">{ruolo.ruolo}</span>
+                                    </label>
+                                {/each}
+							</div>
+							<br />
+							{#if errors.ruolo}
+								<span class="feedback-invalid">{errors.ruolo}</span>
+							{/if}
+						</div>
+                    </div>
+					<div class="row">
 						<div class="col-lg-4">
 							<div class="mb-3">
 								<label class="form-label">Può Accedere</label>
