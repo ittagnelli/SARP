@@ -1,4 +1,5 @@
 ## v0.20.0 – 04 Febbraio 2023
+- aggiunte classi istituto ITT e LICEO
 - aggiornata policy per supportare TUTOR-SICUREZZA
 - aggiunto ruolo TUTOR-SICUREZZA
 - completato associazione classi utenti
