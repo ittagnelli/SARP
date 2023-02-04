@@ -4,6 +4,7 @@
 	import * as helper from '../../js/helper';
 	import * as yup from 'yup';
 	import InputText from '$lib/components/modal/input_text.svelte';
+    import InputDate from '$lib/components/modal/input_date.svelte';
 	import ModalError from '$lib/components/common/modal_error.svelte';
 	import { Logger } from '../../js/logger';
 	import { onMount } from 'svelte';
@@ -15,6 +16,7 @@
 	let utenti = helper.data2arr(data.utenti);
 	let tipi_utente = helper.data2arr(data.tipi_utente);
 	let ruoli_utente = helper.data2arr(data.ruoli_utente);
+    let classi = helper.data2arr(data.classi);
 
 	//configura la pagina pre-titolo, titolo e nome del modale
 	$page_pre_title = 'ADMIN';
@@ -35,11 +37,15 @@
 		ruolo: [],
 		nome: '',
 		cognome: '',
+        natoA: '',
+        natoIl: '',
+        codiceF: '',
 		email: '',
 		telefono: '',
 		bes_select: 'NO',
 		can_login_select: 'SI',
-		istituto_select: 'ITT'
+		istituto_select: 'ITT',
+        classe: 0
 	};
 
 	// schema di validazione del form
@@ -58,6 +64,20 @@
 			.required('Cognome utente necessario')
 			.matches(/^[A-Z][a-zA-Z]{3,20}$/, 'Cognome utente non valido'),
 
+        natoA: yup
+            .string()
+            .required("Luogo di nascita dell'utente necessario")
+            .matches(/^[a-zA-Z à-è-ì-ò-ù]{3,30}$/, "Luogo di nascita non valido"),
+
+        natoIl: yup
+            .date()
+            .min(new Date(1950,1,1), "Data Invalida"),
+
+        codiceF: yup
+            .string()
+            .required("Codice Fiscale dell'Utente necessario")
+            .matches(/^[0-9A-Z]{16}$/, "Codice fiscale non valido [LNSTVL69T28L219K]"),
+
 		email: yup
 			.string()
 			.required('Email necessaria')
@@ -68,7 +88,12 @@
 
 		telefono: yup
 			.string()
-			.matches(/^$|^[0-9]{3}\.[0-9]{3}\.[0-9]{2}\.[0-9]{2}$/, 'Numero non valido [333.123.45.67]')
+			.matches(/^$|^[0-9]{3}\.[0-9]{3}\.[0-9]{2}\.[0-9]{2}$/, 'Numero non valido [333.123.45.67]'),
+
+        classe: yup
+            .number()
+            .min(1, 'Selezionare una classe')
+
 	});
 
 	onMount(() => {
@@ -89,6 +114,9 @@
 
 		form_values.nome = utente.nome;
 		form_values.cognome = utente.cognome;
+        form_values.natoA = utente.natoA;
+        form_values.natoIl = helper.convert_date(utente.natoIl);
+        form_values.codiceF = utente.codiceF;
 		form_values.email = utente.email;
 		form_values.telefono = utente.telefono;
 		form_values.tipo = utente.tipo;
@@ -96,6 +124,7 @@
 		form_values.istituto_select = utente.istituto;
 		form_values.bes_select = utente.bes ? 'SI' : 'NO';
 		form_values.can_login_select = utente.can_login ? 'SI' : 'NO';
+        form_values.classe = utente.classe.id;
 	}
 
 	async function handleSubmit() {
@@ -124,7 +153,8 @@
 		{ name: 'picture', type: 'image', display: 'Utente' },
 		{ name: 'cognome', type: 'string', display: 'Cognome' },
 		{ name: 'nome', type: 'string', display: 'Nome' },
-		{ name: 'tipo', type: 'string', display: 'Tipo' },
+        { name: 'natoIl', type: 'date', display: 'Nato il' },
+        { name: 'tipo', type: 'string', display: 'Tipo' },
         { name: 'ruoli', type: 'array', subtype: 'object', key: 'ruolo', display: 'Ruolo' },
 		{ name: 'email', type: 'string', display: 'email' },
 		{ name: 'telefono', type: 'string', display: 'telefono' },
@@ -136,7 +166,8 @@
 	page_size={10}
 	modal_name={$page_action_modal}
 	on:update_start={start_update}
-	type="utenti"
+	footer="Utenti"
+    endpoint="utenti"
 	actions={true}
 />
 
@@ -178,7 +209,35 @@
 						<div class="col-lg-2">
 							<InputText label="Cognome" name="cognome" placeholder="Cognome" bind:val={form_values.cognome} {errors} />
 						</div>
-						<div class="col-lg-5">
+                        <div class="col-lg-3">
+							<InputText
+								label="Nato A"
+								name="natoA"
+								placeholder="Località"
+								bind:val={form_values.natoA}
+								{errors}
+							/>
+						</div>
+                        <div class="col-lg-2">
+                            <InputDate
+                                label="Nato Il"
+                                name="natoIl"
+                                {errors}
+                                bind:val={form_values.natoIl}
+                            />
+						</div>
+                        <div class="col-lg-3">
+                            <InputText
+                                label="Codice Fiscale"
+                                name="codiceF"
+                                placeholder="LNSTVL69T28L219K"
+                                {errors}
+                                bind:val={form_values.codiceF}
+                            />
+                        </div>
+					</div>
+					<div class="row">
+                        <div class="col-lg-3">
 							<InputText
 								label="Email"
 								name="email"
@@ -187,7 +246,7 @@
 								{errors}
 							/>
 						</div>
-						<div class="col-lg-3">
+						<div class="col-lg-2">
 							<InputText
 								label="Telefono"
 								name="telefono"
@@ -196,11 +255,7 @@
 								{errors}
 							/>
 						</div>
-					</div>
-					<div class="row">
-						<div class="col-lg-4">
-							<!-- InputSelect component ha dei problemi (two way binding) non ancora risolti
-                            che non permettono di usarlo qui -->
+						<div class="col-lg-3">
 							<div class="mb-3">
 								<div class="form-label select_text">Tipo</div>
 								<select
@@ -218,30 +273,25 @@
 								{/if}
 							</div>
 						</div>
-						<div class="col-lg-8">
-							<label class="form-label">Ruolo</label>
-							<div class="form-selectgroup">
-                                {#each ruoli_utente as ruolo}
-                                    <label class="form-selectgroup-item">
-                                        <input
-                                            type="checkbox"
-                                            name="ruolo"
-                                            value="{String(ruolo.id)}"
-                                            class="form-selectgroup-input"
-                                            bind:group={form_values.ruolo}
-                                        />
-                                        <span class="form-selectgroup-label">{ruolo.ruolo}</span>
-                                    </label>
-                                {/each}
+                        <div class="col-lg-2">
+							<div class="mb-3">
+								<div class="form-label select_text">Classe</div>
+								<select
+									class="form-select"
+									class:is-invalid={errors.classe}
+									name="classe"
+									bind:value={form_values.classe}
+								>
+									{#each classi as classe}
+										<option value={classe.id}>{classe.istituto} {classe.classe} {classe.sezione}</option>
+									{/each}
+								</select>
+								{#if errors.classe}
+									<span class="invalid-feedback">{errors.classe}</span>
+								{/if}
 							</div>
-							<br />
-							{#if errors.ruolo}
-								<span class="feedback-invalid">{errors.ruolo}</span>
-							{/if}
 						</div>
-					</div>
-					<div class="row">
-						<div class="col-lg-4">
+                        <div class="col-lg-2">
 							<div class="mb-3">
 								<label class="form-label">Istituto</label>
 								<div class="form-selectgroup">
@@ -268,6 +318,31 @@
 								</div>
 							</div>
 						</div>
+					</div>
+                    <div class="row">
+                        <div class="col-lg-12">
+							<label class="form-label">Ruolo</label>
+							<div class="form-selectgroup">
+                                {#each ruoli_utente as ruolo}
+                                    <label class="form-selectgroup-item">
+                                        <input
+                                            type="checkbox"
+                                            name="ruolo"
+                                            value="{String(ruolo.id)}"
+                                            class="form-selectgroup-input"
+                                            bind:group={form_values.ruolo}
+                                        />
+                                        <span class="form-selectgroup-label">{ruolo.ruolo}</span>
+                                    </label>
+                                {/each}
+							</div>
+							<br />
+							{#if errors.ruolo}
+								<span class="feedback-invalid">{errors.ruolo}</span>
+							{/if}
+						</div>
+                    </div>
+					<div class="row">
 						<div class="col-lg-4">
 							<div class="mb-3">
 								<label class="form-label">Può Accedere</label>

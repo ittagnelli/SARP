@@ -23,7 +23,10 @@
 				<NavSubItem resource="menu_valutazioni" text="Valutazioni" link="/valutazioni" />
 			</NavMenu>
 			<NavMenu resource="menu_tools" text="Tools" icon="tools">
-				<NavSubItem resource="menu_convert_to_print" text="Convert to Print" link="tools/convert-to-print" />
+				<NavSubItem resource="menu_convert_to_print" text="Convert to Print" link="/tools/convert-to-print" />
+			</NavMenu>
+            <NavMenu resource="menu_sicurezza_lavoro" text="Sicurezza sul Lavoro" icon="shield-half">
+				<NavSubItem resource="menu_sicurezza_corsi" text="Corsi Sicurezza" link="/sicurezza_sul_lavoro/corsi" />
 			</NavMenu>
 		</Navbar>
 

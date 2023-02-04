@@ -10,6 +10,7 @@ menu_utenti:
   view:
     - DEVELOPER
     - ADMIN
+    - TUTOR-SICUREZZA
 
 menu_pcto:
   view:
@@ -21,10 +22,19 @@ menu_pcto:
 menu_tools:
   view:
     - '*'
-
 menu_convert_to_print:
   view:
     - '*'
+
+menu_sicurezza_lavoro:
+  view:
+    - ADMIN
+    - TUTOR-SICUREZZA
+
+menu_sicurezza_corsi:
+  view:
+    - ADMIN
+    - TUTOR-SICUREZZA
 
 menu_aziende:
   view:
@@ -69,15 +79,19 @@ utenti:
   create:
     - DEVELOPER
     - ADMIN
+    - TUTOR-SICUREZZA
   read:
     - DEVELOPER
     - ADMIN
+    - TUTOR-SICUREZZA
   update:
     - DEVELOPER
     - ADMIN
+    - TUTOR-SICUREZZA
   delete:
     - DEVELOPER
     - ADMIN
+    - TUTOR-SICUREZZA
 
 pcto_aziende:
   create:
@@ -152,3 +166,17 @@ pcto_valutazioni:
     - ADMIN
     - TUTOR-AZIENDALE
     - STAGISTA
+
+sicurezza_corso:
+  create:
+    - ADMIN
+    - TUTOR-SICUREZZA
+  read:
+    - ADMIN
+    - TUTOR-SICUREZZA
+  update:
+    - ADMIN
+    - TUTOR-SICUREZZA
+  delete:
+    - ADMIN
+    - TUTOR-SICUREZZA

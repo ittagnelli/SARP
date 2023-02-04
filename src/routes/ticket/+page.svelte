@@ -87,8 +87,8 @@
 		page_size={10}
 		modal_name={$page_action_modal}
 		on:update_start={null}
-		type="ticket"
-		type_genre="f"
+		endpoint="ticket"
+        footer="Ticket"
 		print={false}
         actions={false}
 	/>

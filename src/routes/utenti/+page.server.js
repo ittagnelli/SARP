@@ -4,6 +4,7 @@ import { Logger } from '../../js/logger';
 import { fail } from '@sveltejs/kit';
 import { PrismaClientValidationError } from '@prisma/client/runtime';
 
+
 let logger = new Logger("server"); //instanzia il logger
 const SARP = new PrismaDB(); //Istanzia il client SARP DB
 let resource = "utenti"; // definisco il nome della risorsa di questo endpoint
@@ -31,7 +32,10 @@ export async function load({ locals }) {
 		const utenti = await SARP.Utente.findMany({
 			orderBy: [{ id: 'desc' }],
 			where: multi_user_where(locals),
-            include: {ruoli: true} 
+            include: {
+                ruoli: true,
+                classe: true
+            } 
 		});
 
 		const tipi_utente = await SARP.tipo_Utente.findMany({
@@ -42,11 +46,16 @@ export async function load({ locals }) {
 			orderBy: [{ id: 'desc' }]
 		});
 
+        const classi = await SARP.Classe.findMany({
+			orderBy: [{ id: 'desc' }]
+		});
+
 		// restituisco il risultato della query SQL
 		return {
 			utenti: utenti,
 			tipi_utente: tipi_utente,
-			ruoli_utente: ruoli_utente
+			ruoli_utente: ruoli_utente,
+            classi: classi
 		}
 	} catch (exception) {
         catch_error(exception, "la ricerca", 100);
@@ -78,6 +87,9 @@ export const actions = {
 					creatoDa: user_id(locals),
 					nome: form_data.get('nome'),
 					cognome: form_data.get('cognome'),
+                    natoA: form_data.get('natoA'),
+                    natoIl: new Date(form_data.get('natoIl')),
+					codiceF: form_data.get('codiceF'),
 					email: form_data.get('email'),
 					telefono: form_data.get('telefono'),
                     tipo: form_data.get('tipo'),
@@ -87,6 +99,9 @@ export const actions = {
 					can_login: form_data.get('can_login') == "SI" ? true : false,
                     ruoli: {
                         connect: ids
+                    },
+                    classe: {
+                        connect: {id: +form_data.get('classe')},
                     }
 				}
 			});
@@ -123,6 +138,9 @@ export const actions = {
 				data: {
 					nome: form_data.get('nome'),
 					cognome: form_data.get('cognome'),
+                    natoA: form_data.get('natoA'),
+                    natoIl: new Date(form_data.get('natoIl')),
+					codiceF: form_data.get('codiceF'),
 					email: form_data.get('email'),
 					telefono: form_data.get('telefono'),
 					tipo: form_data.get('tipo'),
@@ -131,6 +149,9 @@ export const actions = {
 					can_login: form_data.get('can_login') == "SI" ? true : false,
                     ruoli: {
                         set: ids
+                    },
+                    classe: {
+                        connect: {id: +form_data.get('classe')}
                     }
 				}
 			});		

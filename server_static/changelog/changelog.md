@@ -1,3 +1,18 @@
+## v0.20.0 – 04 Febbraio 2023
+- aggiornata policy per supportare TUTOR-SICUREZZA
+- aggiunto ruolo TUTOR-SICUREZZA
+- completato associazione classi utenti
+- completato sviluppo stampa attestati coraso di sicurezza generico e specifico
+- caricati template per attestati corso sicurezza
+- aggiunti campi natoA, natoIl e codiceF per Utente
+- aggiunta tabella Classe
+- aggiunta relazione tra Utente e Classe
+- aggiuinta stampa attestati corso sicurezza
+- aggiunta Applicazioni Corso di Sicurezza
+- aggiunta tabella corsi
+- aggiunta relazione tra Utente e Corsi di Sicurezza
+- `fix#159`: Limitare num file e size per convert to print 
+
 ## v0.16.0 – 28 Gennaio 2023
 - `fix#157`: Refactor front-end convert-to-print 
 - `fix#129`: aggiunta nuova applicazione convert-to-print
