@@ -30,3 +30,6 @@ utils/security/endpoints.txt
 # Temp files from upload
 tmp/
 
+# All studenti in Excel format
+*.xls
+*.xlsx
