@@ -19,7 +19,7 @@ const class_row = "Classe:";
 const index_of_type = 6;    // Linea dei dettagli -1, Excel ragiona come una segretaria :)
 
 const is_a_class = (record) => {
-    if (record != null) 
+    if (record != null)
         return record.includes(class_row);  // Se il record contiene la parola classe siamo sicuri identifichi una classe
 
     return false;
@@ -83,9 +83,9 @@ const excel_to_db = (sezione) => {  // Convertiamo l'excel per adattarlo ad alcu
 }
 const clean_useless_info = (record) => {
     if (record[0] != null)  // Se il record contiene una di queste parole va saltato perchè non contiene niente di utile
-        return record[0].includes("ISTITUTO") || record[0].includes("C.so") 
-        || record[0].includes("Anno") || record[0].includes("Stampato") 
-        || record[0].includes("-- TORINO --") || record[0].includes("Cognome");
+        return record[0].includes("ISTITUTO") || record[0].includes("C.so")
+            || record[0].includes("Anno") || record[0].includes("Stampato")
+            || record[0].includes("-- TORINO --") || record[0].includes("Cognome");
 
     return true;    // Nel caso sia null, non deve essere eseguito alcun codice quindi è come se la parola venisse saltata
 }
@@ -97,37 +97,46 @@ const mastercom_bool_to_real_bool = (fake_bool) => {    // Mastercom non conosce
         return false;
 }
 
-async function get_class_from_prisma(row){
-    const classe = filter_class(row).split(" ");    // Prendiamo la classe
-    const sezione = get_section(classe);    // Prendiamo la sezione in accordo all'istituto(Liceo o ITT)
-    const anno = classe[0].slice(0, 1); // Prendiamo l'anno(terza, quarta...)
-    const istituto = get_istituto(classe);  //  Prendiamo l'istituto
+function sleep(milliseconds) {
+    const date = Date.now();
+    let currentDate = null;
+    do {
+        currentDate = Date.now();
+    } while (currentDate - date < milliseconds);
+}
 
-    return await prisma.classe.findFirst({ // Con le informazioni ricavate prendiamo la classe dal DB
+function write_invalid_email(emails) {
+    var file = fs.createWriteStream('invalid_email.txt');
+    file.on('error', function (err) {
+        throw new Error("Errore di scrittura sul file")
+    });
+    emails.forEach(function (v) {
+        file.write(v + '\n');
+    });
+    file.end();
+}
+async function main(filename) {
+    const ruolo_studente = await prisma.ruolo_Utente.findFirst({
         where: {
-            classe: decimal_to_roman(+anno),
-            istituto: istituto,
-            sezione: excel_to_db(sezione)
+            ruolo: "STUDENTE"
         }
     });
-}
-function main(filename) {
     readXlsxFile(filename).then(async (rows) => {
         console.log("Elaborazione XLSX...");
-    /*
-
-        NOME    COGNOME     NASCITA     NATO A      CF      EMAIL                           BES 
-        Mario   Rossi       19/02/2005  Torino      xxx     mario.rossi@istitutoagnelli.it  NO
-        Pino   Rossi       19/02/2005  Torino      xxx     pino.rossi@istitutoagnelli.it  NO
-
-        La logica implementata prende l'indice di NOME ad esempio, tutti i record all'indice della prima colonna NOME
-        saranno sicuramente il nome della persona.
-        Quindi Mario ha indice 0
-        Idem Pino
-
-        Questo perchè il record studente è un array di colonne contenente NOME, COGNOME...
-
-    */
+        /*
+    
+            NOME    COGNOME     NASCITA     NATO A      CF      EMAIL                           BES 
+            Mario   Rossi       19/02/2005  Torino      xxx     mario.rossi@istitutoagnelli.it  NO
+            Pino   Rossi       19/02/2005  Torino      xxx     pino.rossi@istitutoagnelli.it  NO
+    
+            La logica implementata prende l'indice di NOME ad esempio, tutti i record all'indice della prima colonna NOME
+            saranno sicuramente il nome della persona.
+            Quindi Mario ha indice 0
+            Idem Pino
+    
+            Questo perchè il record studente è un array di colonne contenente NOME, COGNOME...
+    
+        */
 
         const nome_index = rows[index_of_type].indexOf(name_row);
         const cognome_index = rows[index_of_type].indexOf(cognome_row);
@@ -137,47 +146,81 @@ function main(filename) {
         const email_index = rows[index_of_type].indexOf(email_row);
         const bes_index = rows[index_of_type].indexOf(bes_row);
 
-        let classe_db = {}; // La classe che stiamo scrivendo nel DB
+        // let classe_db; // La classe che stiamo scrivendo nel DB
+        let studenti_invalid = [];
+        let sezione, anno, istituto;
+        rows.forEach(async (row) => {
 
-        rows.forEach(async row => {
+            sleep(100);
             if (clean_useless_info(row)) {  // Non facciamo nulla se il record non è uno studente o una classe
                 return;
             } else {
                 if (is_a_class(row[0])) {
-                    classe_db = await get_class_from_prisma(row);
-                    console.log("Classe trovata! ".concat(classe_db.classe, " ", classe_db.istituto, " ", classe_db.sezione));
+                    const classe = filter_class(row).split(" ");    // Prendiamo la classe
+                    sezione = get_section(classe);    // Prendiamo la sezione in accordo all'istituto(Liceo o ITT)
+                    anno = classe[0].slice(0, 1); // Prendiamo l'anno(terza, quarta...)
+                    istituto = get_istituto(classe);  //  Prendiamo l'istituto
+
+                    // Qui l'await non aspetta il risultato e la classe risulta vuota, per il momento facciamo tutte la query dopo
+
+                    //classe_db = await prisma.classe.findFirstOrThrow({ // Con le informazioni ricavate prendiamo la classe dal DB
+                    //     where: {
+                    //         classe: decimal_to_roman(+anno),
+                    //         istituto: istituto,
+                    //         sezione: excel_to_db(sezione)
+                    //     }
+                    // });
                 } else {
-                    console.log("Creo/Aggiorno l'utente: ".concat(row[nome_index], " ", row[cognome_index]));
-                    await prisma.utente.upsert({
-                        create: {   // Creaiamo un nuovo record secondo la regola di parsing spiegata sopra
-                            nome: row[nome_index],
-                            cognome: row[cognome_index],
-                            natoIl: row[nascita_index],
-                            natoA: row[nato_a_index],
-                            codiceF: row[cf_index],
-                            email: row[email_index],
-                            bes: mastercom_bool_to_real_bool(row[bes_index]),
-                            creatoDa: 1,
-                            classeId: classe_db.id,
-                            classe: classe_db
-                        },
-                        update: {   // Aggiorniamo il record se esiste, modificando solo i campi necessari
-                            classeId: classe_db.id,
-                            classe: classe_db,
-                            bes: mastercom_bool_to_real_bool(row[bes_index]),
-                            email: row[email_index]
-                        },
-                        where: {
-                            email: row[email_index]
-                        }
-                    });
+                    if (row[email_index].split("@").slice(-1) != "istitutoagnelli.it") {
+                        console.log("L'utente non ha una mail valida, non verrà aggiunto su SARP.");
+                        studenti_invalid.push("".concat(row[nome_index], " ", row[cognome_index], " ", row[email_index]))
+                    } else {
+                        console.log("Creo/Aggiorno l'utente: ".concat(row[nome_index], " ", row[cognome_index]));
+                        const classe = await prisma.classe.findFirst({ // Con le informazioni ricavate prendiamo la classe dal DB
+                            where: {
+                                classe: decimal_to_roman(+anno),
+                                istituto: istituto,
+                                sezione: excel_to_db(sezione)
+                            }
+                        });
+                        await prisma.utente.upsert({
+                            create: {   // Creaiamo un nuovo record secondo la regola di parsing spiegata sopra
+                                nome: row[nome_index],
+                                cognome: row[cognome_index],
+                                natoIl: row[nascita_index],
+                                natoA: row[nato_a_index],
+                                codiceF: row[cf_index],
+                                email: row[email_index],
+                                bes: mastercom_bool_to_real_bool(row[bes_index]),
+                                creatoDa: 1,
+                                classeId: classe.id,
+                                istituto: classe.istituto,
+                                ruoli: {
+                                    connect: {
+                                        id: ruolo_studente.id
+                                    }
+                                }
+                            },
+                            update: {   // Aggiorniamo il record se esiste, modificando solo i campi necessari
+                                classeId: classe.id,
+                                bes: mastercom_bool_to_real_bool(row[bes_index]),
+                                email: row[email_index]
+                            },
+                            where: {
+                                email: row[email_index]
+                            }
+                        });
+                    }
+
                 }
             }
         });
+
+        write_invalid_email(studenti_invalid);
     });
 }
 
-function xsl_to_xslx(filename){
+function xsl_to_xslx(filename) {
     console.log("Libreoffice deve essere installato affinchè il convertitore funzioni.");
     execSync("libreoffice --convert-to xlsx " + filename + " --headless");
     filename = filename.split(".");
@@ -185,19 +228,19 @@ function xsl_to_xslx(filename){
     return filename.join(".");
 }
 
-function handle_filename(){
-    if(process.argv[2] == null){
+function handle_filename() {
+    if (process.argv[2] == null) {
         console.log("Benvenuto in SARP Excel to Prisma Parser! Uso: node excel_to_prisma.js FILENAME")
         process.exit(255);
-    }else {
+    } else {
         const filename = process.argv[2];
-        if(fs.existsSync(filename))
-            if(filename.split(".").slice(-1) == "xlsx")
+        if (fs.existsSync(filename))
+            if (filename.split(".").slice(-1) == "xlsx")
                 return filename;
-            else{
-                if(filename.split(".").slice(-1) == "xls"){
+            else {
+                if (filename.split(".").slice(-1) == "xls") {
                     return xsl_to_xslx(filename)
-                }else{
+                } else {
                     console.log("Estensione file non riconosciuta");
                     process.exit(255);
                 }
