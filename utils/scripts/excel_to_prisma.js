@@ -185,8 +185,8 @@ async function main(filename) {
                         });
                         await prisma.utente.upsert({
                             create: {   // Creaiamo un nuovo record secondo la regola di parsing spiegata sopra
-                                nome: row[nome_index],
-                                cognome: row[cognome_index],
+                                nome: row[nome_index].replace("'", ""),
+                                cognome: row[cognome_index].replace("'", ""),
                                 natoIl: row[nascita_index],
                                 natoA: row[nato_a_index],
                                 codiceF: row[cf_index],
