@@ -193,7 +193,7 @@ async function main(filename) {
                                 nome: capitalize(row[nome_index].replace("'", "").toLowerCase()),
                                 cognome: row[cognome_index].replace("'", ""),
                                 natoIl: row[nascita_index],
-                                natoA: row[nato_a_index].split("(")[0], // Splittiamo la frase al primo (   TORINO(TO) [TORINO, TO)]
+                                natoA: row[nato_a_index].replace("'", "").split("(")[0], // Splittiamo la frase al primo (   TORINO(TO) [TORINO, TO)]
                                 codiceF: row[cf_index],
                                 email: row[email_index],
                                 bes: mastercom_bool_to_real_bool(row[bes_index]),
