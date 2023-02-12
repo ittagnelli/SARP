@@ -115,6 +115,11 @@ function write_invalid_email(emails) {
     });
     file.end();
 }
+
+function capitalize(phrase) {
+    return phrase.charAt(0).toUpperCase() + phrase.slice(1);
+}
+
 async function main(filename) {
     const ruolo_studente = await prisma.ruolo_Utente.findFirst({
         where: {
@@ -185,10 +190,10 @@ async function main(filename) {
                         });
                         await prisma.utente.upsert({
                             create: {   // Creaiamo un nuovo record secondo la regola di parsing spiegata sopra
-                                nome: row[nome_index].replace("'", ""),
+                                nome: capitalize(row[nome_index].replace("'", "").toLowerCase()),
                                 cognome: row[cognome_index].replace("'", ""),
                                 natoIl: row[nascita_index],
-                                natoA: row[nato_a_index],
+                                natoA: row[nato_a_index].split("(")[0], // Splittiamo la frase al primo (   TORINO(TO) [TORINO, TO)]
                                 codiceF: row[cf_index],
                                 email: row[email_index],
                                 bes: mastercom_bool_to_real_bool(row[bes_index]),
@@ -199,7 +204,8 @@ async function main(filename) {
                                     connect: {
                                         id: ruolo_studente.id
                                     }
-                                }
+                                },
+                                telefono: null
                             },
                             update: {   // Aggiorniamo il record se esiste, modificando solo i campi necessari
                                 classeId: classe.id,
