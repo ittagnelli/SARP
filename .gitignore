@@ -30,9 +30,5 @@ utils/security/endpoints.txt
 # Temp files from upload
 tmp/
 
-# All studenti in Excel format
-*.xls
-*.xlsx
-
 # Generated files from Excel to Prisma
 utils/scripts/*.txt
