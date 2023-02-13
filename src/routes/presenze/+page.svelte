@@ -20,8 +20,12 @@
     $: {
         // pcto_studenti = [];
         let selected_stage = pcto.filter((item) => item.id == form_values.stage);
-        if(selected_stage[0])
-            pcto_studenti = selected_stage[0].svoltoDa;
+        if(selected_stage[0]) {
+            if (helper.user_ruolo(data) != 'STUDENTE')
+                pcto_studenti = selected_stage[0].svoltoDa;
+            else
+                pcto_studenti = selected_stage[0].svoltoDa.filter(item => item.id == helper.user_id(data));
+        }
     }
 
 	//configura la pagina pre-titolo, titolo e nome del modale
@@ -40,7 +44,7 @@
 	let form_values = {
 		presenza_id: 0,
 		stage: 0,
-		studente: 0,
+		studente: -1,
         dataPresenza: helper.convert_date(new Date()),
         oraInizio: '',
         oraFine: '',
@@ -55,7 +59,7 @@
 
         studente: yup
 		.number()
-		.min(1, 'Studente necessario'),
+		.min(0, 'Studente necessario'),
 
         dataPresenza: yup
 		.string()
@@ -96,6 +100,8 @@
 			// valida il form prima del submit
 			await form_schema.validate(form_values, { abortEarly: false });
 			errors = {};
+            if (form_values.studente == 0 && modal_action == 'create') //TUTTI GLI STUDENTI
+                modal_form.action = "?/bulk_create"; //cambia action per fare insert bulk
 			modal_form.submit();
 		} catch (err) {
 			errors = err.inner.reduce((acc, err) => {
@@ -170,6 +176,9 @@
 							<div class="mb-3">
 								<div class="form-label select_text">Studente</div>
                                 <select class="form-select" class:is-invalid="{errors.studente}" name="studente" bind:value={form_values.studente}>
+                                    {#if modal_action == 'create' && helper.user_ruolo(data) != "STUDENTE"}
+                                        <option value=0>TUTTI GLI STUDENTI</option>
+                                    {/if}
                                     {#each pcto_studenti as studente}
                                         <option value={studente.id}>{studente.cognome} {studente.nome}</option>
                                     {/each}

@@ -113,7 +113,12 @@ function update_row(id) {
                             </td>
                             {:else if columns[i].type == 'boolean'}
                             <td class="sort-{col}" valign="middle">
-                                {row[col] ? "SI" : "NO"}
+                                <!-- {row[col] ? "SI" : "NO"} -->
+                                {#if row[col]}
+                                    <icon class="ti ti-check icon green" />
+                                {:else}
+                                    <icon class="ti ti-circle-x icon red" />
+                                {/if}
                             </td>
                             {:else if columns[i].type == 'image'}
                             <td class="sort-{col}" valign="middle">
@@ -213,6 +218,16 @@ function update_row(id) {
     background: none;
     padding: 0px;
     border: none;
+}
+
+.green {
+    color: green;
+    font-weight: bolder;
+}
+
+.red {
+    color: red;
+    font-weight: bolder;
 }
 
 form {

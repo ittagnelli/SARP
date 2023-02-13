@@ -69,7 +69,6 @@ export const actions = {
         
         SARP.set_session(locals); // passa la sessione all'audit
 		try {
-            logger.debug(+form_data.get('studente'));
 			await SARP.pcto_Presenza.create({
 				data: {
 					creatoDa: user_id(locals),
@@ -134,6 +133,48 @@ export const actions = {
 			});
 		} catch (exception) {
 			catch_error(exception, "l'eliminazione", 403);
+		}
+	},
+
+    bulk_create: async ({ cookies, request, locals }) => {
+        let action = 'create';
+
+        route_protect(locals);
+        access_protect(401, locals, action, resource);
+
+		const form_data = await request.formData();
+        let hh_inizio = form_data.get('oraInizio').split(':')[0];
+        let mm_inizio = form_data.get('oraInizio').split(':')[1];
+        let hh_fine = form_data.get('oraFine').split(':')[0];
+        let mm_fine = form_data.get('oraFine').split(':')[1];
+        
+        SARP.set_session(locals); // passa la sessione all'audit
+
+        let stage_id = +form_data.get('stage');
+        const stage = await SARP.pcto_Pcto.findUnique({
+			where: { id: stage_id },
+			include: {
+				svoltoDa: true
+			}
+		});
+        let studenti = stage?.svoltoDa;
+        
+		try {
+            studenti?.forEach(async (studente)  => {
+                await SARP.pcto_Presenza.create({
+                    data: {
+                        creatoDa: user_id(locals),
+                        dataPresenza: new Date(form_data.get('dataPresenza')),
+                        oraInizio: new Date(1970, 1, 1, hh_inizio, mm_inizio),
+                        oraFine: new Date(1970,1 ,1, hh_fine, mm_fine),
+                        svoltoDa: studente.id,
+                        idPcto: +form_data.get('stage'),
+                        approvato: form_data.get('approvato') == "SI" ? true : false
+                    }
+                });	
+            });
+		} catch (exception) {
+			catch_error(exception, "l'inserimento", 404);
 		}
 	}
 };
