@@ -25,9 +25,6 @@
                 pcto_studenti = selected_stage[0].svoltoDa;
             else
                 pcto_studenti = selected_stage[0].svoltoDa.filter(item => item.id == helper.user_id(data));
-
-            console.log("STUDENTI:", pcto_studenti)
-            console.log(helper.user_id(data))
         }
     }
 
@@ -103,7 +100,6 @@
 			// valida il form prima del submit
 			await form_schema.validate(form_values, { abortEarly: false });
 			errors = {};
-
             if (form_values.studente == 0 && modal_action == 'create') //TUTTI GLI STUDENTI
                 modal_form.action = "?/bulk_create"; //cambia action per fare insert bulk
 			modal_form.submit();
