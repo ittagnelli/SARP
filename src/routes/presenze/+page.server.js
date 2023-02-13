@@ -77,7 +77,8 @@ export const actions = {
 					oraInizio: new Date(1970, 1, 1, hh_inizio, mm_inizio),
 					oraFine: new Date(1970,1 ,1, hh_fine, mm_fine),
 					svoltoDa: +form_data.get('studente'),
-					idPcto: +form_data.get('stage')
+					idPcto: +form_data.get('stage'),
+                    approvato: form_data.get('approvato') == "SI" ? true : false
 				}
 			});	
 		} catch (exception) {
@@ -107,7 +108,8 @@ export const actions = {
 					oraInizio: new Date(1970, 1, 1, hh_inizio, mm_inizio),
 					oraFine: new Date(1970,1 ,1, hh_fine, mm_fine),
 					svoltoDa: +form_data.get('studente'),
-					idPcto: +form_data.get('stage')
+					idPcto: +form_data.get('stage'),
+                    approvato: form_data.get('approvato') == "SI" ? true : false
 				}
 			});
 		} catch (exception) {

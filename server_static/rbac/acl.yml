@@ -18,6 +18,7 @@ menu_pcto:
     - ADMIN
     - TUTOR-AZIENDALE
     - TUTOR-SCOLASTICO
+    - STUDENTE
 
 menu_tools:
   view:
@@ -53,6 +54,7 @@ menu_presenze:
     - ADMIN
     - TUTOR-AZIENDALE
     - TUTOR-SCOLASTICO
+    - STUDENTE
 
 menu_valutazioni:
   view:
@@ -130,19 +132,25 @@ pcto_presenze:
     - DEVELOPER
     - ADMIN
     - TUTOR-AZIENDALE
+    - TUTOR-SCOLASTICO
+    - STUDENTE
   read:
     - DEVELOPER
     - ADMIN
     - TUTOR-AZIENDALE
     - TUTOR-SCOLASTICO
+    - STUDENTE
   update:
     - DEVELOPER
     - ADMIN
+    - TUTOR-AZIENDALE
     - TUTOR-SCOLASTICO
   delete:
     - DEVELOPER
     - ADMIN
+    - TUTOR-AZIENDALE
     - TUTOR-SCOLASTICO
+    - STUDENTE
 
 pcto_valutazioni:
   create:
