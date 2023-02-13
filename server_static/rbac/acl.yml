@@ -1,0 +1,190 @@
+---
+# v1.0 2023-01-17
+
+# menu reources don't have CRUD acl but just view
+menu_home:
+  view:
+    - '*'
+
+menu_utenti:
+  view:
+    - DEVELOPER
+    - ADMIN
+    - TUTOR-SICUREZZA
+
+menu_pcto:
+  view:
+    - DEVELOPER
+    - ADMIN
+    - TUTOR-AZIENDALE
+    - TUTOR-SCOLASTICO
+    - STUDENTE
+
+menu_tools:
+  view:
+    - '*'
+menu_convert_to_print:
+  view:
+    - '*'
+
+menu_sicurezza_lavoro:
+  view:
+    - ADMIN
+    - TUTOR-SICUREZZA
+
+menu_sicurezza_corsi:
+  view:
+    - ADMIN
+    - TUTOR-SICUREZZA
+
+menu_aziende:
+  view:
+    - DEVELOPER
+    - ADMIN
+
+menu_stage:
+  view:
+    - DEVELOPER
+    - ADMIN
+    - TUTOR-SCOLASTICO
+
+menu_presenze:
+  view:
+    - DEVELOPER
+    - ADMIN
+    - TUTOR-AZIENDALE
+    - TUTOR-SCOLASTICO
+    - STUDENTE
+
+menu_valutazioni:
+  view:
+    - DEVELOPER
+    - ADMIN
+    - TUTOR-AZIENDALE
+    - TUTOR-SCOLASTICO
+
+changelog:
+  read:
+    - '*'
+
+faq:
+  read:
+    - '*'
+
+ticket:
+  read:
+    - '*'
+  create:
+    - '*'
+
+utenti:
+  create:
+    - DEVELOPER
+    - ADMIN
+    - TUTOR-SICUREZZA
+  read:
+    - DEVELOPER
+    - ADMIN
+    - TUTOR-SICUREZZA
+  update:
+    - DEVELOPER
+    - ADMIN
+    - TUTOR-SICUREZZA
+  delete:
+    - DEVELOPER
+    - ADMIN
+    - TUTOR-SICUREZZA
+
+pcto_aziende:
+  create:
+    - DEVELOPER
+    - ADMIN
+  read:
+    - DEVELOPER
+    - ADMIN
+  update:
+    - DEVELOPER
+    - ADMIN
+  delete:
+    - DEVELOPER
+    - ADMIN
+
+pcto_stage:
+  create:
+    - DEVELOPER
+    - ADMIN
+    - TUTOR-SCOLASTICO
+  read:
+    - DEVELOPER
+    - ADMIN
+    - TUTOR-SCOLASTICO
+  update:
+    - DEVELOPER
+    - ADMIN
+    - TUTOR-SCOLASTICO
+  delete:
+    - DEVELOPER
+    - ADMIN
+    - TUTOR-SCOLASTICO
+
+pcto_presenze:
+  create:
+    - DEVELOPER
+    - ADMIN
+    - TUTOR-AZIENDALE
+    - TUTOR-SCOLASTICO
+    - STUDENTE
+  read:
+    - DEVELOPER
+    - ADMIN
+    - TUTOR-AZIENDALE
+    - TUTOR-SCOLASTICO
+    - STUDENTE
+  update:
+    - DEVELOPER
+    - ADMIN
+    - TUTOR-AZIENDALE
+    - TUTOR-SCOLASTICO
+  delete:
+    - DEVELOPER
+    - ADMIN
+    - TUTOR-AZIENDALE
+    - TUTOR-SCOLASTICO
+    - STUDENTE
+
+pcto_valutazioni:
+  create:
+    - DEVELOPER
+    - ADMIN
+    - TUTOR-AZIENDALE
+    - STAGISTA
+  read:
+    - DEVELOPER
+    - ADMIN
+    - TUTOR-AZIENDALE
+    - TUTOR-SCOLASTICO
+    - STAGISTA
+  update:
+    - DEVELOPER
+    - ADMIN
+    - TUTOR-AZIENDALE
+    - STAGISTA
+  delete:
+    - DEVELOPER
+    - ADMIN
+    - TUTOR-AZIENDALE
+    - STAGISTA
+
+sicurezza_corso:
+  create:
+    - ADMIN
+    - TUTOR-SICUREZZA
+  read:
+    - ADMIN
+    - TUTOR-SICUREZZA
+  update:
+    - ADMIN
+    - TUTOR-SICUREZZA
+  delete:
+    - ADMIN
+    - TUTOR-SICUREZZA

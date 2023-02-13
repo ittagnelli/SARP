@@ -1,8 +1,14 @@
-import { route_protect, raise_error } from '../../js/helper';
+import { route_protect, access_protect } from '../../js/helper';
 import { Logger } from '../../js/logger';
 import { compile } from 'mdsvex';
 import * as fs from 'fs';
 import { PUBLIC_FAQ_DIR } from '$env/static/public';
+let resource = "faq"; // definisco il nome della risorsa di questo endpoint
+
+// dirty trick per usare il modulo compile
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+global.require = require;
 
 let logger = new Logger('server');
 
@@ -20,14 +26,17 @@ async function md2html() {
 		}
 		faq_dir.closeSync();
 	} catch (error) {
-		logger.error(JSON.stringify(error));
+        logger.error(JSON.stringify(error));
 	}
 
-	return faqs;
+    return faqs;
 }
 
 export async function load({ locals }) {
-	route_protect(locals);
+	let action = 'read';
+
+    route_protect(locals);
+    access_protect(300, locals, action, resource);
 
 	return { faq: md2html() };
 }

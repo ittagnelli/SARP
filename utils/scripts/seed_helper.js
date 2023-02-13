@@ -1,6 +1,64 @@
-export const ruoli_utente = ["ADMIN", "READER", "WRITER", "DEVELOPER"];
-export const tipi_utente = ["STUDENTE", "DOCENTE", "PRESIDE"];
-export const istituti = [ "ITT", "LICEO" ];
+export const ruoli_utente = ["DEVELOPER", "ADMIN", "STUDENTE", "DOCENTE", "UTENTE", "TUTOR-AZIENDALE", "TUTOR-SCOLASTICO", "STAGISTA"];
+export const tipi_utente = ["STUDENTE", "DOCENTE", "AMMINISTRATIVO", "OSPITE"];
+export const istituti = [ "ITT", "LICEO", "CFP" ];
+
+export const developers = [
+    {
+        nome: 'espedito',
+        cognome: 'mancuso',
+        tipo: 'DOCENTE',
+    },
+    {
+        nome: 'marco',
+        cognome: 'garabello',
+        tipo: 'STUDENTE',
+    },
+    {
+        nome: 'paolo',
+        cognome: 'garabello',
+        tipo: 'STUDENTE',
+    },
+    {
+        nome: 'marco',
+        cognome: 'cellini',
+        tipo: 'STUDENTE',
+    },
+    {
+        nome: 'andrea',
+        cognome: 'canale',
+        tipo: 'STUDENTE',
+    },
+    {
+        nome: 'sebastiano',
+        cognome: 'racca',
+        tipo: 'STUDENTE',
+    },
+    {
+        nome: 'sebastiano',
+        cognome: 'peluso',
+        tipo: 'STUDENTE',
+    },
+    {
+        nome: 'emanuele',
+        cognome: 'furina',
+        tipo: 'STUDENTE',
+    },
+    {
+        nome: 'lorenzo',
+        cognome: 'rizzolo',
+        tipo: 'STUDENTE',
+    },
+    {
+        nome: 'philippe',
+        cognome: 'smal',
+        tipo: 'STUDENTE',
+    },
+    {
+        nome: 'tommaso',
+        cognome: 'bramoso',
+        tipo: 'STUDENTE',
+    }
+];
 
 export const cognomi = [
     "abbondanza",

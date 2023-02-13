@@ -23,15 +23,18 @@ async function main(argv){
     console.log("Aggiungo l'utente richiesto al DB");
     await SARP.utente.create({
         data: {
+            creatoDa: 1,
             nome: argv[3],
             cognome: argv[4],
             email: argv[2],
             telefono: "",   // Numero pseudocausuale da 11 cifre
             tipo: "ADMIN",  // Gli utenti di test sono sempre admin
-            ruolo: "PRESIDE",   // Nello sviluppo servono tutti i permessi
+            ruoli: {
+                connect: [{id: 1}, {id: 3}]
+            },
             istituto: "ITT",
             bes: false,
-            picture: "",
+            picture: "https://lh3.googleusercontent.com/a-/AOh14Gj-cdUSUVoEge7rD5a063tQkyTDT3mripEuDZ0v=s100",
             can_login: true
         }
     });

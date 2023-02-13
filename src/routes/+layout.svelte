@@ -6,24 +6,28 @@
 	import NavMenu from '$lib/components/layout/nav_menu.svelte';
 	import NavSubItem from '$lib/components/layout/nav_sub_item.svelte';
 	import { fade } from 'svelte/transition';
-
+    
 	export let data;
-	let version = '0.7.2';
+    let version = data.version;
 </script>
 
 {#if data.session}
 	<div class="page" in:fade={{ delay: 200, duration: 1500 }}>
 		<Navbar>
-			<NavItem text="Home" icon="home-2" link="/" />
-			<NavItem text="Utenti" icon="users" link="/utenti" />
-			<NavMenu text="PCTO" icon="building-factory-2">
-				<NavSubItem text="Aziende" link="aziende" />
-				<NavSubItem text="Stage" link="stage" />
-				<NavSubItem text="Presenze" link="presenze" />
-				<NavSubItem text="Valutazioni" link="valutazioni" />
+			<NavItem resource="menu_home" text="Home" icon="home-2" link="/" />
+			<NavItem resource="menu_utenti" text="Utenti" icon="users" link="/utenti" />
+			<NavMenu resource="menu_pcto" text="PCTO" icon="building-factory-2">
+				<NavSubItem resource="menu_aziende" text="Aziende" link="/aziende" />
+				<NavSubItem resource="menu_stage" text="Stage" link="/stage" />
+				<NavSubItem resource="menu_presenze" text="Presenze" link="/presenze" />
+				<NavSubItem resource="menu_valutazioni" text="Valutazioni" link="/valutazioni" />
 			</NavMenu>
-			<NavItem text="Submenu2" icon="home-2" link="/" />
-			<NavItem text="Submenu3" icon="home-2" link="/" />
+			<NavMenu resource="menu_tools" text="Tools" icon="tools">
+				<NavSubItem resource="menu_convert_to_print" text="Convert to Print" link="/tools/convert-to-print" />
+			</NavMenu>
+            <NavMenu resource="menu_sicurezza_lavoro" text="Sicurezza sul Lavoro" icon="shield-half">
+				<NavSubItem resource="menu_sicurezza_corsi" text="Corsi Sicurezza" link="/sicurezza_sul_lavoro/corsi" />
+			</NavMenu>
 		</Navbar>
 
 		<!-- Page Header -->
@@ -47,6 +51,7 @@
 										class="btn btn-primary d-none d-sm-inline-block"
 										data-bs-toggle="modal"
 										data-bs-target="#{$page_action_modal}"
+										id="btn_action_modal"
 									>
 										<i class="ti ti-plus icon" />
 										{$page_action_title}
@@ -61,7 +66,7 @@
 			<!-- page body -->
 			<div class="page-body">
 				<div class="container-xl">
-					<slot />
+                    <slot />
 				</div>
 			</div>
 

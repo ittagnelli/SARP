@@ -13,13 +13,13 @@
 			<div class="notfound-404" />
                 <h1>{$page.status}</h1>
                 <h2>Oops! Si è verificato un errore</h2>
-                {#if $page.error.code && $page.error.message}
+                {#if $page.status == 500 || $page.status == 403 }
                     <p>
                         CODICE ERRORE: <b>{$page.error.code}</b><br>
                         MESSAGGIO: <b>{$page.error?.message}</b>
                         <br><br>Per cortesia riporta questo errore agli sviluppatori del sito
                     </p>
-                {:else if $page.status != 500}
+                {:else if $page.status >= 400 && $page.status < 500}
                     <p>
                         Mi dispiace ma la pagina richiesta non esiste, è stata rimossa o al momento non disponibile.
                     </p>

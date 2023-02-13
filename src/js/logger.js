@@ -1,4 +1,3 @@
-import { browser } from '$app/environment';
 import { pino } from 'pino';
 import { PUBLIC_BASE_URL, PUBLIC_LOG_FILE } from '$env/static/public';
 

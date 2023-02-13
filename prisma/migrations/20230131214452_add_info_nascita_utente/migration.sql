@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "Utente" ADD COLUMN "codiceF" TEXT;
+ALTER TABLE "Utente" ADD COLUMN "natoA" TEXT;
+ALTER TABLE "Utente" ADD COLUMN "natoIl" DATETIME;

@@ -9,15 +9,23 @@
 
     let logger = new Logger("client");
 	export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
+    
 	let presenze = helper.data2arr(data.presenze);
+    // aggiungo il full name per ogni presenza per poi stamparlo nella tabella
+    presenze.forEach((item, idx) => presenze[idx].presenza['full_name'] = (presenze[idx].presenza['cognome']).concat(" ", presenze[idx].presenza['nome']));
+    
     let pcto = helper.data2arr(data.stages);
     let pcto_studenti = [];
 
     $: {
         // pcto_studenti = [];
         let selected_stage = pcto.filter((item) => item.id == form_values.stage);
-        if(selected_stage[0])
-            pcto_studenti = selected_stage[0].svoltoDa;
+        if(selected_stage[0]) {
+            if (helper.user_ruolo(data) != 'STUDENTE')
+                pcto_studenti = selected_stage[0].svoltoDa;
+            else
+                pcto_studenti = selected_stage[0].svoltoDa.filter(item => item.id == helper.user_id(data));
+        }
     }
 
 	//configura la pagina pre-titolo, titolo e nome del modale
@@ -36,10 +44,11 @@
 	let form_values = {
 		presenza_id: 0,
 		stage: 0,
-		studente: 0,
+		studente: -1,
         dataPresenza: helper.convert_date(new Date()),
         oraInizio: '',
-        oraFine: ''
+        oraFine: '',
+        approvato_select: 'NO',
 	};
 
 	// schema di validazione del form
@@ -50,7 +59,7 @@
 
         studente: yup
 		.number()
-		.min(1, 'Studente necessario'),
+		.min(0, 'Studente necessario'),
 
         dataPresenza: yup
 		.string()
@@ -59,20 +68,31 @@
         oraInizio: yup
 		.string()
 		.length(5, "Orario necessario")
+		.test("minore", "L'orario d'entrata deve essere precedente a quello d'uscita", (value, textContext) => {
+			return helper.diff_time(value, textContext.parent.oraFine);
+		}),
+
+		oraFine: yup
+		.string()
+		.length(5, "Orario necessario")
+		.test("maggiore", "L'orario d'uscita deve essere successivo a quello d'entrata", (value, textContext) => {
+			return helper.diff_time(textContext.parent.oraInizio, value);
+		}),
 	});
 
 	async function start_update(e) {
 		modal_action = 'update';
-		
+
         form_values.presenza_id = e.detail.id;
 		//cerca l'azienda da fare update
 		let presenza = presenze.filter((item) => item.id == form_values.presenza_id)[0];
 		
         form_values.stage =  presenza.idPcto;
-        form_values.studente = presenza.idUtente;
+        form_values.studente = presenza.svoltoDa;
         form_values.dataPresenza = helper.convert_date(presenza.dataPresenza);
         form_values.oraInizio = presenza.oraInizio.toTimeString().substring(0,5);
         form_values.oraFine = presenza.oraFine ? presenza.oraFine.toTimeString().substring(0,5) : '';
+        form_values.approvato_select = presenza.approvato ? 'SI' : 'NO';
 	}
 
     async function handleSubmit() {
@@ -80,6 +100,8 @@
 			// valida il form prima del submit
 			await form_schema.validate(form_values, { abortEarly: false });
 			errors = {};
+            if (form_values.studente == 0 && modal_action == 'create') //TUTTI GLI STUDENTI
+                modal_form.action = "?/bulk_create"; //cambia action per fare insert bulk
 			modal_form.submit();
 		} catch (err) {
 			errors = err.inner.reduce((acc, err) => {
@@ -94,16 +116,18 @@
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
         { name: 'lavoraPer', type: 'object', key: 'titolo', display: 'pcto' },
-        { name: 'presenza', type: 'object', key: 'cognome', display: 'studente' },
+        { name: 'presenza', type: 'object', key: 'full_name', display: 'studente' },
         { name: 'dataPresenza', type: 'date', display: 'data' },
         { name: 'oraInizio', type: 'time', display: 'entrata' },
         { name: 'oraFine', type: 'time', display: 'uscita' },
+        { name: 'approvato', type: 'boolean', display: 'approvato'}
 	]}
 	rows={presenze}
-	page_size={5}
+	page_size={10}
 	modal_name={$page_action_modal}
 	on:update_start={start_update}
-	type="presenze"
+	endpoint="presenze"
+    footer="Presenze"
     actions={true}
 />
 
@@ -152,8 +176,11 @@
 							<div class="mb-3">
 								<div class="form-label select_text">Studente</div>
                                 <select class="form-select" class:is-invalid="{errors.studente}" name="studente" bind:value={form_values.studente}>
+                                    {#if modal_action == 'create' && helper.user_ruolo(data) != "STUDENTE"}
+                                        <option value=0>TUTTI GLI STUDENTI</option>
+                                    {/if}
                                     {#each pcto_studenti as studente}
-                                        <option value={studente.id}>{studente.nome}</option>
+                                        <option value={studente.id}>{studente.cognome} {studente.nome}</option>
                                     {/each}
                                 </select>
                                 {#if errors.studente}
@@ -163,15 +190,15 @@
 						</div>
 					</div>
                     <div class="row">
-                        <div class="col-lg-4">
+                        <div class="col-lg-3">
                             <InputDate
-								label="Data Inizio"
+								label="Data presenza"
 								name="dataPresenza"
 								{errors}
 								bind:val={form_values.dataPresenza}
 							/>
 						</div>
-						<div class="col-lg-4">
+						<div class="col-lg-3">
                             <InputTime
 								label="Ingresso"
 								name="oraInizio"
@@ -179,7 +206,7 @@
 								bind:val={form_values.oraInizio}
 							/>
 						</div>
-                        <div class="col-lg-4">
+                        <div class="col-lg-3">
                             <InputTime
 								label="Uscita"
 								name="oraFine"
@@ -187,6 +214,35 @@
 								bind:val={form_values.oraFine}
 							/>
 						</div>
+                        {#if helper.user_ruolo(data) != "STUDENTE"}
+                        <div class="col-lg-3">
+							<div class="mb-3">
+								<label class="form-label">Presenza Approvata</label>
+								<div class="form-selectgroup">
+									<label class="form-selectgroup-item">
+										<input
+											type="radio"
+											name="approvato"
+											value="SI"
+											class="form-selectgroup-input"
+											bind:group={form_values.approvato_select}
+										/>
+										<span class="form-selectgroup-label">SI</span>
+									</label>
+									<label class="form-selectgroup-item">
+										<input
+											type="radio"
+											name="approvato"
+											value="NO"
+											class="form-selectgroup-input"
+											bind:group={form_values.approvato_select}
+										/>
+										<span class="form-selectgroup-label">NO</span>
+									</label>
+								</div>
+							</div>
+						</div>
+                        {/if}
                     </div>
 				</div>
 				<div class="modal-footer">

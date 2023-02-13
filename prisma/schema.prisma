@@ -1,4 +1,4 @@
-// v 0.3.0
+// v 0.9.0 2023-02-13
 
 generator client {
     provider = "prisma-client-js"
@@ -19,26 +19,50 @@ datasource db {
 
 // Tabelle comuni a tutte le applicazioni e dizionari
 
+model Versione {
+    versione  String //deve coincidere con la versione di questo file
+    createdAt DateTime @default(now())
+
+    @@id([versione, createdAt])
+}
+
 model Utente {
-    id         Int                @id @default(autoincrement())
-    createdAt  DateTime           @default(now())
-    updatedAt  DateTime           @updatedAt
-    tipo       String             @default("STUDENTE")
-    ruolo      String?
-    nome       String
-    cognome    String
-    email      String             @unique
-    telefono   String?
-    picture    String?
-    bes        Boolean?
-    can_login  Boolean            @default(false)
-    istituto   String?
-    valuta     pcto_Valutazione[]
-    presente   pcto_Presenza[]
-    stabilisce pcto_Azienda[]
-    iscritto   pcto_Pcto[]
-    Session    Session[]
-    Ticket     Ticket[]
+    id                       Int                @id @default(autoincrement())
+    createdAt                DateTime           @default(now())
+    updatedAt                DateTime           @updatedAt
+    creatoDa                 Int
+    tipo                     String             @default("STUDENTE")
+    nome                     String
+    cognome                  String
+    natoA                    String?
+    natoIl                   DateTime?
+    codiceF                  String?
+    email                    String             @unique
+    telefono                 String?
+    picture                  String?
+    bes                      Boolean?
+    can_login                Boolean            @default(false)
+    istituto                 String?
+    valuta                   pcto_Valutazione[]
+    presente                 pcto_Presenza[]
+    stabilisce               pcto_Azienda[]
+    iscritto                 pcto_Pcto[]
+    Session                  Session[]
+    Ticket                   Ticket[]
+    ruoli                    ruolo_Utente[]
+    iscritto_corso_sicurezza sicurezza_Corso[]
+    classe                   Classe?            @relation(fields: [classeId], references: [id])
+    classeId                 Int?
+}
+
+model Classe {
+    id        Int      @id @default(autoincrement())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    classe    String
+    istituto  String
+    sezione   String
+    iscritti  Utente[]
 }
 
 model Session {
@@ -54,14 +78,15 @@ model tipo_Utente {
     id        Int      @id @default(autoincrement())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-    tipo      String
+    tipo      String   @unique
 }
 
 model ruolo_Utente {
     id        Int      @id @default(autoincrement())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-    ruolo     String
+    ruolo     String   @unique
+    utenti    Utente[]
 }
 
 model Ticket {
@@ -82,11 +107,13 @@ model pcto_Presenza {
     id           Int       @id @default(autoincrement())
     createdAt    DateTime  @default(now())
     updatedAt    DateTime  @updatedAt
+    presenza     Utente    @relation(fields: [svoltoDa], references: [id])
+    svoltoDa     Int       @default(1)
+    creatoDa     Int
     dataPresenza DateTime  @default(now())
     oraInizio    DateTime?
     oraFine      DateTime?
-    presenza     Utente    @relation(fields: [idUtente], references: [id])
-    idUtente     Int
+    approvato    Boolean   @default(false)
     lavoraPer    pcto_Pcto @relation(fields: [idPcto], references: [id])
     idPcto       Int
 }
@@ -95,8 +122,8 @@ model pcto_Valutazione {
     id        Int       @id @default(autoincrement())
     createdAt DateTime  @default(now())
     updatedAt DateTime  @updatedAt
-    utente    Utente    @relation(fields: [idUtente], references: [id])
-    idUtente  Int
+    utente    Utente    @relation(fields: [creatoDa], references: [id])
+    creatoDa  Int
     pcto      pcto_Pcto @relation(fields: [idPcto], references: [id])
     idPcto    Int
     qna       String
@@ -106,6 +133,8 @@ model pcto_Azienda {
     id                Int         @id @default(autoincrement())
     createdAt         DateTime    @default(now())
     updatedAt         DateTime    @updatedAt
+    creatore          Utente      @relation(fields: [creatoDa], references: [id])
+    creatoDa          Int
     nome              String
     indirizzo         String?
     piva              String?
@@ -115,8 +144,6 @@ model pcto_Azienda {
     direttore_natoIl  DateTime?
     direttore_codiceF String?
     idConvenzione     String      @unique
-    creatoDa          Utente      @relation(fields: [idUtente], references: [id])
-    idUtente          Int
     dataConvenzione   DateTime    @default(now())
     dataProtocollo    DateTime    @default(now())
     istituto          String      @default("ITT")
@@ -127,6 +154,7 @@ model pcto_Pcto {
     id            Int                @id @default(autoincrement())
     createdAt     DateTime           @default(now())
     updatedAt     DateTime           @updatedAt
+    creatoDa      Int
     titolo        String
     descrizione   String?
     tutor         String?
@@ -137,4 +165,16 @@ model pcto_Pcto {
     valutatoDa    pcto_Valutazione[]
     presenziatoDa pcto_Presenza[]
     svoltoDa      Utente[]
+}
+
+model sicurezza_Corso {
+    id         Int      @id @default(autoincrement())
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+    creatoDa   Int
+    titolo     String
+    dataInizio DateTime
+    dataFine   DateTime
+    tipo       String
+    seguitoDa  Utente[]
 }
