@@ -43,7 +43,8 @@
 		studente: 0,
         dataPresenza: helper.convert_date(new Date()),
         oraInizio: '',
-        oraFine: ''
+        oraFine: '',
+        approvato_select: 'NO',
 	};
 
 	// schema di validazione del form
@@ -87,6 +88,7 @@
         form_values.dataPresenza = helper.convert_date(presenza.dataPresenza);
         form_values.oraInizio = presenza.oraInizio.toTimeString().substring(0,5);
         form_values.oraFine = presenza.oraFine ? presenza.oraFine.toTimeString().substring(0,5) : '';
+        form_values.approvato_select = presenza.approvato ? 'SI' : 'NO';
 	}
 
     async function handleSubmit() {
@@ -112,6 +114,7 @@
         { name: 'dataPresenza', type: 'date', display: 'data' },
         { name: 'oraInizio', type: 'time', display: 'entrata' },
         { name: 'oraFine', type: 'time', display: 'uscita' },
+        { name: 'approvato', type: 'boolean', display: 'approvato'}
 	]}
 	rows={presenze}
 	page_size={10}
@@ -178,7 +181,7 @@
 						</div>
 					</div>
                     <div class="row">
-                        <div class="col-lg-4">
+                        <div class="col-lg-3">
                             <InputDate
 								label="Data presenza"
 								name="dataPresenza"
@@ -186,7 +189,7 @@
 								bind:val={form_values.dataPresenza}
 							/>
 						</div>
-						<div class="col-lg-4">
+						<div class="col-lg-3">
                             <InputTime
 								label="Ingresso"
 								name="oraInizio"
@@ -194,7 +197,7 @@
 								bind:val={form_values.oraInizio}
 							/>
 						</div>
-                        <div class="col-lg-4">
+                        <div class="col-lg-3">
                             <InputTime
 								label="Uscita"
 								name="oraFine"
@@ -202,6 +205,35 @@
 								bind:val={form_values.oraFine}
 							/>
 						</div>
+                        {#if helper.user_ruolo(data) != "STUDENTE"}
+                        <div class="col-lg-3">
+							<div class="mb-3">
+								<label class="form-label">Presenza Approvata</label>
+								<div class="form-selectgroup">
+									<label class="form-selectgroup-item">
+										<input
+											type="radio"
+											name="approvato"
+											value="SI"
+											class="form-selectgroup-input"
+											bind:group={form_values.approvato_select}
+										/>
+										<span class="form-selectgroup-label">SI</span>
+									</label>
+									<label class="form-selectgroup-item">
+										<input
+											type="radio"
+											name="approvato"
+											value="NO"
+											class="form-selectgroup-input"
+											bind:group={form_values.approvato_select}
+										/>
+										<span class="form-selectgroup-label">NO</span>
+									</label>
+								</div>
+							</div>
+						</div>
+                        {/if}
                     </div>
 				</div>
 				<div class="modal-footer">

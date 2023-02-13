@@ -88,6 +88,7 @@
 
 		telefono: yup
 			.string()
+            .nullable()
 			.matches(/^$|^[0-9]{3}\.[0-9]{3}\.[0-9]{2}\.[0-9]{2}$/, 'Numero non valido [333.123.45.67]'),
 
         classe: yup
