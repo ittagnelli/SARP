@@ -57,17 +57,17 @@
 		nome: yup
 			.string()
 			.required('Nome utente necessario')
-			.matches(/^[A-Z][a-zA-Z]{3,20}$/, 'Nome utente non valido'),
+			.matches(/^[A-Z][a-zA-Z]{2,20}$/, 'Nome utente non valido'),
 
 		cognome: yup
 			.string()
 			.required('Cognome utente necessario')
-			.matches(/^[A-Z][a-zA-Z]{3,20}$/, 'Cognome utente non valido'),
+			.matches(/^[A-Z][a-zA-Z]{2,20}$/, 'Cognome utente non valido'),
 
         natoA: yup
             .string()
-            .required("Luogo di nascita dell'utente necessario")
-            .matches(/^[a-zA-Z à-è-ì-ò-ù]{3,30}$/, "Luogo di nascita non valido"),
+            .nullable()
+            .matches(/^$|^[a-zA-Z à-è-ì-ò-ù]{3,30}$/, "Luogo di nascita non valido"),
 
         natoIl: yup
             .date()
@@ -75,8 +75,8 @@
 
         codiceF: yup
             .string()
-            .required("Codice Fiscale dell'Utente necessario")
-            .matches(/^[0-9A-Z]{16}$/, "Codice fiscale non valido [LNSTVL69T28L219K]"),
+            .nullable()
+            .matches(/^$|^[0-9A-Z]{16}$/, "Codice fiscale non valido [LNSTVL69T28L219K]"),
 
 		email: yup
 			.string()
