@@ -1,3 +1,13 @@
+## v0.21.0 – 14 Febbraio 2023
+- update logo a rosso Agnelli
+- aggiunto supporto per PCTO Stellantis
+- `fix#166`: PCTO creazione presenze di gruppo
+- aggiunto possibilità di creare pcto presenze per tutti gli studenti di uno stage
+- modificato icona per i boolen nella tabella
+- `fix#164`: PCTO presenze validazione    
+- aggiunto possibilità da parte degli studenti di creare le presenze PCTO
+- aggiunto flag approvato per le presenze PCTO
+
 ## v0.20.0 – 04 Febbraio 2023
 - aggiunte classi istituto ITT e LICEO
 - aggiornata policy per supportare TUTOR-SICUREZZA
