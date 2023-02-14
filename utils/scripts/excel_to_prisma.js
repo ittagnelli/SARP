@@ -12,7 +12,7 @@ const nascita_row = "Nato il";
 const nato_a = "Nato a";
 const cf_row = "Cod. Fis.";
 const email_row = "E-mail studente";
-const bes_row = "BES";
+const pdp_row = "PDP";
 const class_row = "Classe:";
 
 
@@ -117,7 +117,7 @@ function write_invalid_email(emails) {
 }
 
 function capitalize(phrase) {
-    return phrase.charAt(0).toUpperCase() + phrase.slice(1);
+    return phrase.charAt(0).toUpperCase() + phrase.slice(1).toLowerCase();
 }
 
 async function main(filename) {
@@ -149,7 +149,7 @@ async function main(filename) {
         const nato_a_index = rows[index_of_type].indexOf(nato_a);
         const cf_index = rows[index_of_type].indexOf(cf_row);
         const email_index = rows[index_of_type].indexOf(email_row);
-        const bes_index = rows[index_of_type].indexOf(bes_row);
+        const bes_index = rows[index_of_type].indexOf(pdp_row);
 
         // let classe_db; // La classe che stiamo scrivendo nel DB
         let studenti_invalid = [];
@@ -191,12 +191,14 @@ async function main(filename) {
                         await prisma.utente.upsert({
                             create: {   // Creaiamo un nuovo record secondo la regola di parsing spiegata sopra
                                 nome: capitalize(row[nome_index].replace("'", "").toLowerCase()),
-                                cognome: row[cognome_index].replace("'", ""),
+                                cognome: capitalize(row[cognome_index].replace("'", "")),
                                 natoIl: row[nascita_index],
-                                natoA: row[nato_a_index].replace("'", "").split("(")[0], // Splittiamo la frase al primo (   TORINO(TO) [TORINO, TO)]
+                                natoA: capitalize(row[nato_a_index].replace("'", "").split("(")[0]), // Splittiamo la frase al primo (   TORINO(TO) [TORINO, TO)]
                                 codiceF: row[cf_index],
                                 email: row[email_index],
                                 bes: mastercom_bool_to_real_bool(row[bes_index]),
+                                picture: 'img/avatar.png',
+                                can_login: true,
                                 creatoDa: 1,
                                 classeId: classe.id,
                                 istituto: classe.istituto,
