@@ -1,4 +1,6 @@
 ## v0.21.0 – 14 Febbraio 2023
+- `fix#170`: Utenti Codice Fiscale opzionale
+- Utenti NatoA opzionale
 - update logo a rosso Agnelli
 - aggiunto supporto per PCTO Stellantis
 - `fix#166`: PCTO creazione presenze di gruppo
