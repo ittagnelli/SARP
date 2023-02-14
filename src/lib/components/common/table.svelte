@@ -17,6 +17,7 @@ export let print;
 export let actions;
 
 const dispatch = createEventDispatcher();
+const MAX_PAGES = 20; //massimo numero di pagine visualizzabili nella barra
 
 let num_pages = Math.ceil(rows.length / page_size); //numero di pagines
 let current_page = 1; //pagina da visualizzare nella tabella
@@ -24,6 +25,7 @@ let col_names = columns.map((item) => item.name); //nomi delle colonne
 let page_start = 0; //inizio della pagine nell'array rows
 let page_end = page_size; //fine della pagina nell'array rows
 let rows_paged = []; //pagina attuale di rows
+let bigpage; // numero di pagina contenente MAX_PAGES pagine
 let rows_filtered = []; // contiene le righe di rows con le chiavi ordinate come la tabella
 let footer_num = 0, footer_den = 0;
 
@@ -75,6 +77,12 @@ function update_row(id) {
         id: id
     });
 }
+
+function calculate_bigpage(i) {
+    bigpage = MAX_PAGES * Math.floor(current_page / (MAX_PAGES + 1));
+    console.log(i, bigpage)
+    return '';
+}
 </script>
 
 <div class="card">
@@ -109,7 +117,7 @@ function update_row(id) {
                             <td class="sort-{col}" valign="middle">{row[col] ? row[col].toLocaleTimeString() : "--"}</td>
                             {:else if columns[i].type == 'object'}
                             <td class="sort-{col}" valign="middle">
-                                {ellipses(row[col][columns.filter((item) => item.name == col)[0].key])}
+                                {ellipses(columns[i].size || 3, row[col][columns.filter((item) => item.name == col)[0].key])}
                             </td>
                             {:else if columns[i].type == 'boolean'}
                             <td class="sort-{col}" valign="middle">
@@ -145,7 +153,7 @@ function update_row(id) {
                             </td>
                             {/if}
                             {:else if columns[i].type != 'hidden'}
-                            <td class="sort-{col}" valign="middle">{ellipses(row[col])}</td>
+                            <td class="sort-{col}" valign="middle">{ellipses(columns[i].size || 3, row[col])}</td>
                             {/if}
                             {/if}
                             {/each}
@@ -197,10 +205,12 @@ function update_row(id) {
                     prev
                 </a>
             </li>
-            {#each Array(num_pages) as _, i}
-            <li class="page-item" class:active={i == current_page - 1}>
-                <a class="page-link" href="##" on:click={() => change_page(i + 1)}>{i + 1}</a>
-            </li>
+            {#each Array(num_pages > MAX_PAGES ? MAX_PAGES : num_pages) as _, i}
+                {#if ((MAX_PAGES * Math.floor((current_page - 1) / (MAX_PAGES))) + 1 + i) <= num_pages }
+                    <li class="page-item" class:active={i == ((current_page - 1) % MAX_PAGES)}>
+                        <a class="page-link" href="##" on:click={() => change_page((MAX_PAGES * Math.floor((current_page  - 1)/ (MAX_PAGES))) + 1 + i)}>{(MAX_PAGES * Math.floor((current_page - 1) / (MAX_PAGES))) + 1 + i}</a>
+                    </li>
+                {/if}
             {/each}
             <li class="page-item" class:disabled={current_page == num_pages}>
                 <a class="page-link" href="##" on:click={next_page}>

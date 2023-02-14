@@ -1,5 +1,3 @@
-const ELLIPSES_LENGTH = 50;
-
 import { redirect } from '@sveltejs/kit';
 import { error } from '@sveltejs/kit';
 import { PUBLIC_ADMIN_ROLE } from '$env/static/public';
@@ -18,11 +16,11 @@ export const convert_date = (d) => {
 	return `${data[2]}-${data[1]}-${data[0]}`;
 };
 
-export const ellipses = (text) => {
+export const ellipses = (len, text) => {
 	if (text)
-		return text.length < ELLIPSES_LENGTH || typeof text != 'string'
+		return text.length < len || typeof text != 'string'
 			? text
-			: text.substring(0, ELLIPSES_LENGTH).concat('...');
+			: text.substring(0, len).concat('...');
 	return '';
 };
 

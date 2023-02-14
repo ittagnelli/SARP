@@ -152,14 +152,14 @@
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
 		{ name: 'picture', type: 'image', display: 'Utente' },
-		{ name: 'cognome', type: 'string', display: 'Cognome' },
-		{ name: 'nome', type: 'string', display: 'Nome' },
+		{ name: 'cognome', type: 'string', display: 'Cognome', size: 11 },
+		{ name: 'nome', type: 'string', display: 'Nome', size: 11 },
         { name: 'natoIl', type: 'date', display: 'Nato il' },
-        { name: 'tipo', type: 'string', display: 'Tipo' },
+        { name: 'tipo', type: 'string', display: 'Tipo', size: 10 },
         { name: 'ruoli', type: 'array', subtype: 'object', key: 'ruolo', display: 'Ruolo' },
-		{ name: 'email', type: 'string', display: 'email' },
+		{ name: 'email', type: 'string', display: 'email', size: 30 },
 		{ name: 'bes', type: 'boolean', display: 'pdp' },
-		{ name: 'istituto', type: 'string', display: 'istituto' },
+		{ name: 'istituto', type: 'string', display: 'istituto', size: 6 },
 		{ name: 'can_login', type: 'boolean', display: 'can_login' }
 	]}
 	rows={utenti}
