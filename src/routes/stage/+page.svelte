@@ -121,10 +121,10 @@
 <Table
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
-		{ name: 'offertoDa', type: 'object', key: 'nome', display: 'azienda' },
-		{ name: 'tutor', type: 'string', display: 'tutor' },
-		{ name: 'titolo', type: 'string', display: 'titolo' },
-		{ name: 'descrizione', type: 'string', display: 'descrizione' },
+		{ name: 'offertoDa', type: 'object', key: 'nome', display: 'azienda', size: 40 },
+		{ name: 'tutor', type: 'string', display: 'tutor', size: 20 },
+		{ name: 'titolo', type: 'string', display: 'titolo', size: 50 },
+		{ name: 'descrizione', type: 'string', display: 'descrizione', size: 50 },
 		{ name: 'dataInizio', type: 'date', display: 'Inizio' },
 		{ name: 'dataFine', type: 'date', display: 'Fine' },
 		{ name: 'svoltoDa', type: 'array', subtype: 'picture', key: 'picture', display: 'iscritti' }

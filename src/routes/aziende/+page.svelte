@@ -165,16 +165,16 @@
 <Table
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
-		{ name: 'idConvenzione', type: 'string', display: 'NO.' },
-		{ name: 'nome', type: 'string', display: 'Azienda/Ente' },
-        { name: 'indirizzo', type: 'string', display: 'indirizzo' },
-        { name: 'piva', type: 'string', display: 'piva' },
-        { name: 'telefono', type: 'string', display: 'telefono' },
-        { name: 'direttore_nome', type: 'string', display: 'direttore' },
+		{ name: 'idConvenzione', type: 'string', display: 'NO.', size: 10 },
+		{ name: 'nome', type: 'string', display: 'Azienda/Ente', size: 40 },
+        { name: 'indirizzo', type: 'string', display: 'indirizzo', size: 30 },
+        { name: 'piva', type: 'string', display: 'piva', size: 12 },
+        { name: 'telefono', type: 'string', display: 'telefono', size: 14 },
+        { name: 'direttore_nome', type: 'string', display: 'direttore', size: 20 },
 		{ name: 'idUtente', type: 'string', display: 'Creato da' },
 		{ name: 'dataConvenzione', type: 'date', display: 'Data Convenzione' },
 		{ name: 'dataProtocollo', type: 'date', display: 'Data Protocollo' },
-		{ name: 'istituto', type: 'string', display: 'Istituto' }
+		{ name: 'istituto', type: 'string', display: 'Istituto', size: 6 }
 	]}
 	rows={aziende}
 	page_size={10}
