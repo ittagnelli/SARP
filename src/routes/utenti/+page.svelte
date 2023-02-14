@@ -158,8 +158,7 @@
         { name: 'tipo', type: 'string', display: 'Tipo' },
         { name: 'ruoli', type: 'array', subtype: 'object', key: 'ruolo', display: 'Ruolo' },
 		{ name: 'email', type: 'string', display: 'email' },
-		{ name: 'telefono', type: 'string', display: 'telefono' },
-		{ name: 'bes', type: 'boolean', display: 'bes' },
+		{ name: 'bes', type: 'boolean', display: 'pdp' },
 		{ name: 'istituto', type: 'string', display: 'istituto' },
 		{ name: 'can_login', type: 'boolean', display: 'can_login' }
 	]}

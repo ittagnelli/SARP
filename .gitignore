@@ -30,3 +30,5 @@ utils/security/endpoints.txt
 # Temp files from upload
 tmp/
 
+# Generated files from Excel to Prisma
+utils/scripts/*.txt
