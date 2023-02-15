@@ -281,6 +281,6 @@ a {
 }
 
 .badge-container {
-    width: 30vh;
+    width: 25vh;
 }
 </style>

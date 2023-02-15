@@ -18,6 +18,14 @@
 	let ruoli_utente = helper.data2arr(data.ruoli_utente);
     let classi = helper.data2arr(data.classi);
 
+    // aggiungo la classe come stringa agli utenti per poi stamparlo nella tabella
+    utenti.forEach((item, idx) => { 
+        if(utenti[idx]?.classe?.id == undefined)
+            utenti[idx]['classe_str'] = utenti[idx].istituto;
+        else
+        utenti[idx]['classe_str'] = utenti[idx].istituto.concat(" ", utenti[idx].classe.classe, " ", utenti[idx].classe.sezione);
+    });
+    
 	//configura la pagina pre-titolo, titolo e nome del modale
 	$page_pre_title = 'ADMIN';
 	$page_title = 'Utenti';
@@ -156,10 +164,10 @@
 		{ name: 'nome', type: 'string', display: 'Nome', size: 11 },
         { name: 'natoIl', type: 'date', display: 'Nato il' },
         { name: 'tipo', type: 'string', display: 'Tipo', size: 10 },
+        { name: 'classe_str', type: 'string', display: 'Classe', size: 20 },
         { name: 'ruoli', type: 'array', subtype: 'object', key: 'ruolo', display: 'Ruolo' },
 		{ name: 'email', type: 'string', display: 'email', size: 30 },
 		{ name: 'bes', type: 'boolean', display: 'pdp' },
-		{ name: 'istituto', type: 'string', display: 'istituto', size: 6 },
 		{ name: 'can_login', type: 'boolean', display: 'can_login' }
 	]}
 	rows={utenti}
