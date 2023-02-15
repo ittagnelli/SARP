@@ -57,12 +57,12 @@
 		nome: yup
 			.string()
 			.required('Nome utente necessario')
-			.matches(/^[A-Z][a-zA-Z]{2,20}$/, 'Nome utente non valido'),
+			.matches(/^[A-Z][a-z A-Z]{2,20}$/, 'Nome utente non valido'),
 
 		cognome: yup
 			.string()
 			.required('Cognome utente necessario')
-			.matches(/^[A-Z][a-zA-Z]{2,20}$/, 'Cognome utente non valido'),
+			.matches(/^[A-Z][a-z A-Z]{2,20}$/, 'Cognome utente non valido'),
 
         natoA: yup
             .string()
