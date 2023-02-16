@@ -77,7 +77,7 @@
         indirizzo: yup
         .string()
         .required("Indirizzo dell'azienda necessario")
-        .matches(/^[a-zA-Z0-9 /]{3,40}$/, "Indirizzo azienda non valido"),
+        .matches(/^[a-zA-Z0-9 (),/]{3,100}$/, "Indirizzo azienda non valido"),
 
         piva: yup
         .string()
