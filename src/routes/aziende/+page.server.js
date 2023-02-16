@@ -117,7 +117,7 @@ export const actions = {
 			await SARP.pcto_Azienda.update({
 				where: { id: +id },
 				data: {
-					xidConvenzione: form_data.get('idConvenzione'),
+					idConvenzione: form_data.get('idConvenzione'),
 					nome: form_data.get('nome'),
 					indirizzo: form_data.get('indirizzo'),
 					piva: form_data.get('piva'),
