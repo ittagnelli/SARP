@@ -1,3 +1,14 @@
+## v0.22.0 – 16 Febbraio 2023
+- `fix#173`: Page bar in tabella con troppe pagine 
+- `fix#172`: Nome Utenti occupa troppo spazio in tabella 
+- Aggiunto parametro size alla tabella per definire la dimesnione di un campo stringa
+- Modificata la page bar della tabella in modo da visualizzare sempre al massimo 20 pagine
+- Aggiunti spazi in nome e cognome utente
+- Aggiunto classe alla tabella utenti
+- Aggiunto excelt to prisma
+- Script permette di caricare un file Excel generato dal registro elettronico nel nostro DB
+-  prisma connection limits DEV and PRODUCTION
+
 ## v0.21.0 – 14 Febbraio 2023
 - `fix#170`: Utenti Codice Fiscale opzionale
 - Utenti NatoA opzionale
