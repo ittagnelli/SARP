@@ -1,5 +1,5 @@
 import { PrismaDB } from '../../js/prisma_db';
-import { route_protect, user_id, pcto_presenze_where, raise_error, access_protect } from '../../js/helper';
+import { route_protect, user_id, pcto_presenze_where, raise_error, access_protect, user_ruolo } from '../../js/helper';
 import { Logger } from '../../js/logger';
 import { PrismaClientValidationError } from '@prisma/client/runtime';
 
@@ -98,10 +98,15 @@ export const actions = {
         let hh_fine = form_data.get('oraFine').split(':')[0];
         let mm_fine = form_data.get('oraFine').split(':')[1];
         
+        let update_obj = {id: +id};
+        let message = '';
+        if(user_ruolo(locals) == 'STUDENTE') 
+            update_obj['approvato'] = false;
+           
         SARP.set_session(locals); // passa la sessione all'audit
 		try {
-			await SARP.pcto_Presenza.update({
-				where: { id: +id },
+			let res = await SARP.pcto_Presenza.updateMany({
+				where: update_obj,
 				data: {
 					dataPresenza: new Date(form_data.get('dataPresenza')),
 					oraInizio: new Date(1970, 1, 1, hh_inizio, mm_inizio),
@@ -111,6 +116,12 @@ export const actions = {
                     approvato: form_data.get('approvato') == "SI" ? true : false
 				}
 			});
+
+            if(res.count == 0)
+                message = 'Non puoi aggiornare una presenza già approvata!!!';
+            return {
+                message: message
+            }
 		} catch (exception) {
 			catch_error(exception, "l'aggiornamento", 402)
 		}
@@ -122,15 +133,25 @@ export const actions = {
         route_protect(locals);
         access_protect(403, locals, action, resource);
 
-
 		const form_data = await request.formData();
 		const id = form_data.get('id');
 
+        let delete_obj = {id: +id};
+        let message = '';
+        if(user_ruolo(locals) == 'STUDENTE')
+            delete_obj['approvato'] = false;
+
         SARP.set_session(locals); // passa la sessione all'audit
-		try {
-			await SARP.pcto_Presenza.delete({
-				where: { id: +id }
+        try {
+			let res = await SARP.pcto_Presenza.deleteMany({
+				where: delete_obj
 			});
+
+            if(res.count == 0)
+                message = 'Non puoi cancellare una presenza già approvata!!!';
+            return {
+                message: message
+            }
 		} catch (exception) {
 			catch_error(exception, "l'eliminazione", 403);
 		}

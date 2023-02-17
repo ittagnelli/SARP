@@ -147,6 +147,7 @@
     footer="Corsi di Sicurezza"
     actions={true}
     print={true}
+    resource="sicurezza_corso"
 />
 
 <!-- Modal from Page action -->

@@ -6,10 +6,13 @@
     import * as helper from '../../js/helper';
     import * as yup from 'yup';
     import { Logger } from '../../js/logger';
-
+    
     let logger = new Logger("client");
 	export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
-    
+    export let form;
+    let error_message;
+    let show_error_mex = false;
+
 	let presenze = helper.data2arr(data.presenze);
     // aggiungo il full name per ogni presenza per poi stamparlo nella tabella
     presenze.forEach((item, idx) => presenze[idx].presenza['full_name'] = (presenze[idx].presenza['cognome']).concat(" ", presenze[idx].presenza['nome']));
@@ -110,13 +113,30 @@
 			logger.error(`Errori nella validazione del form presenze. Oggetto: ${JSON.stringify(form_values)} -- Errore: ${JSON.stringify(errors)}`);
 		}
 	}
+
+    function show_error_message() {
+        error_message = form.message;
+        show_error_mex = true;
+        setTimeout(() => show_error_mex = false, 3000);
+
+        return '';
+    }
+
 </script>
+
+{#if form && form.message.length > 0}
+    {show_error_message()}
+    <div class="error-mex {show_error_mex ? '' : 'hidden'}">
+        {error_message}
+    </div>
+{/if}
 
 <Table
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
-        { name: 'lavoraPer', type: 'object', key: 'titolo', display: 'pcto' },
-        { name: 'presenza', type: 'object', key: 'full_name', display: 'studente' },
+        { name: 'creatoDa', type: 'hidden', display: 'creatoDa' },
+        { name: 'lavoraPer', type: 'object', key: 'titolo', display: 'pcto', size: 30 },
+        { name: 'presenza', type: 'object', key: 'full_name', display: 'studente', size: 30 },
         { name: 'dataPresenza', type: 'date', display: 'data' },
         { name: 'oraInizio', type: 'time', display: 'entrata' },
         { name: 'oraFine', type: 'time', display: 'uscita' },
@@ -129,6 +149,7 @@
 	endpoint="presenze"
     footer="Presenze"
     actions={true}
+    resource="pcto_presenze"
 />
 
 <!-- Modal from Page action -->
@@ -262,3 +283,17 @@
 		</div>
 	</form>
 </div>
+
+<style>
+    .error-mex {
+        text-align: center;
+        font-size: 1.5rem;
+        font-weight: bolder;
+        color: red;
+        margin-bottom: 2rem;
+    }
+
+    .hidden {
+        display: none;
+    }
+</style>

@@ -1,7 +1,7 @@
 <script>
 // @ts-nocheck
 import { createEventDispatcher } from 'svelte';
-import { ellipses, user_id, is_admin } from '../../../js/helper';
+import { ellipses, user_id, is_admin,  has_grant, user_ruolo } from '../../../js/helper';
 import { page } from '$app/stores';
 
 // dichiara le colonne della tabella
@@ -15,6 +15,7 @@ export let endpoint; // Cosa visualizza la tabella?
 export let footer;
 export let print;
 export let actions;
+export let resource;
 
 const dispatch = createEventDispatcher();
 const MAX_PAGES = 20; //massimo numero di pagine visualizzabili nella barra
@@ -175,7 +176,7 @@ function calculate_bigpage(i) {
                                     >
                                     <icon class="ti ti-edit icon" />
                                 </a>
-                                {#if user_id($page.data) == row.id || is_admin($page.data)}
+                                {#if (user_id($page.data) == row.creatoDa && has_grant(user_ruolo($page.data),'delete', resource)) || is_admin($page.data)}
                                 <form id="form-delete" method="POST" action={`/${endpoint}?/delete`}>
                                     <button class="icon-button" name="id" value={row.id}>
                                         <icon class="ti ti-trash icon" />

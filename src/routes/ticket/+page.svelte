@@ -91,6 +91,7 @@
         footer="Ticket"
 		print={false}
         actions={false}
+        resource="ticket"
 	/>
 {:else}
 	<div class="page-wrapper">

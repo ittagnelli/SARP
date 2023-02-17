@@ -145,6 +145,7 @@ pcto_presenze:
     - ADMIN
     - TUTOR-AZIENDALE
     - TUTOR-SCOLASTICO
+    - STUDENTE
   delete:
     - DEVELOPER
     - ADMIN

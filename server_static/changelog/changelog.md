@@ -1,3 +1,11 @@
+## v0.23.0 – 17 Febbraio 2023
+- fix problema in tabella che non visualizzava il delete per i propri campi
+- aggiunto impossibilità di cancellare una presenza PCTO se già approvata
+- rilassato vincoli date protocollo azienda PCTO
+- rilassato vincoli campi obbligatori azienda PCTO
+- fix tipo in aziende server side
+- update regex per indirizo azienda pcto
+
 ## v0.22.0 – 16 Febbraio 2023
 - `fix#173`: Page bar in tabella con troppe pagine 
 - `fix#172`: Nome Utenti occupa troppo spazio in tabella 

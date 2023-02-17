@@ -177,6 +177,7 @@
 	footer="Utenti"
     endpoint="utenti"
 	actions={true}
+    resource="utenti"
 />
 
 <!-- Modal from Page action -->

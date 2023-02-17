@@ -178,6 +178,7 @@
     footer="Aziende"
     print={true}
     actions={true}
+    resource="pcto_aziende"
 />
 
 <!-- Modal from Page action -->
