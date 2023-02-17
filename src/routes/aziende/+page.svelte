@@ -111,11 +111,11 @@
         
         dataConvenzione: yup
         .date()
-        .min(new Date(2022, 1, 1), "Data antecedente al 01/01/2022"),
+        .min(new Date(2016, 1, 1), "Data antecedente al 01/01/2016"),
         
         dataProtocollo: yup
         .date()
-        .min(new Date(2022, 1, 1), "Data antecedente al 01/01/2022")
+        .min(new Date(2016, 1, 1), "Data antecedente al 01/01/2016")
     });
 
     async function start_update(e) {
