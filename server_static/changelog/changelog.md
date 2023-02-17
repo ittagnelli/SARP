@@ -1,3 +1,7 @@
+## v0.24.0 – 17 Febbraio 2023
+- aggiunta di FAQ per il funzionamento di SARP e delle applicazioni
+- aggiunto tutor scolastico alla sezione stage del PCTO
+
 ## v0.23.0 – 17 Febbraio 2023
 - fix problema in tabella che non visualizzava il delete per i propri campi
 - aggiunto impossibilità di cancellare una presenza PCTO se già approvata

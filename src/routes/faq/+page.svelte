@@ -23,43 +23,70 @@
 			<div class="card card-lg">
 				<div class="card-body">
 					<div class="space-y-4">
-						<FaqSection title="1. Utenti" number="1">
+                        <FaqSection title="1. SARP" number="1">
 							<Faq
 								show={true}
 								number="1-1"
 								parent_number="1"
-								question="Come posso segnalare un malfunzionamento, un suggerimento o una richiesta di modifica?"
+								question="Cos'è e cosa significa SARP?"
 								answer={faq('faq1_1')}
 							/>
-							<Faq
-								show={false}
+                            <Faq
+								show={true}
 								number="1-2"
 								parent_number="1"
-								question="Posso effettuare il login con la mia email privata?"
+								question="Come funziona SARP?"
 								answer={faq('faq1_2')}
 							/>
-                            <Faq
-								show={false}
-								number="1-3"
-								parent_number="1"
-								question="Perchè non posso accedere a tutte le pagine?"
-								answer={faq('faq1_3')}
-							/>
 						</FaqSection>
-						<FaqSection title="2. PCTO" number="2">
+						<FaqSection title="2. Utenti" number="2">
 							<Faq
 								show={true}
 								number="2-1"
 								parent_number="2"
-								question="Domanda #1?"
-								answer="<p>Risposta #1</p>"
+								question="Come posso segnalare un malfunzionamento, un suggerimento o una richiesta di modifica?"
+								answer={faq('faq2_1')}
 							/>
 							<Faq
 								show={false}
 								number="2-2"
-								parent_number="2"
-								question="Domanda #2?"
-								answer="<p>Risposta #2</p>"
+								parent_number="1"
+								question="Posso effettuare il login con la mia email privata?"
+								answer={faq('faq2_2')}
+							/>
+                            <Faq
+								show={false}
+								number="2-3"
+								parent_number="1"
+								question="Perchè non posso accedere a tutte le pagine?"
+								answer={faq('faq2_3')}
+							/>
+						</FaqSection>
+						<FaqSection title="3. PCTO" number="3">
+							<Faq
+								show={true}
+								number="3-1"
+								parent_number="3"
+								question="Quali sono le principali funzioni dell'applicazione PCTO?"
+								answer={faq('faq3_1')}
+							/>
+						</FaqSection>
+                        <FaqSection title="4. Tools" number="4">
+							<Faq
+								show={true}
+								number="4-1"
+								parent_number="4"
+								question="Quali sono le principali funzioni dell'applicazione Convert to Print?"
+								answer={faq('faq4_1')}
+							/>
+						</FaqSection>
+                        <FaqSection title="5. Sicurezza sul Lavoro" number="5">
+							<Faq
+								show={true}
+								number="5-1"
+								parent_number="5"
+								question="Quali sono le principali funzioni dell'applicazione Sicurezza sul Lavoro?"
+								answer={faq('faq5_1')}
 							/>
 						</FaqSection>
 						<FaqSection title="0. Sviluppatori" number="0">

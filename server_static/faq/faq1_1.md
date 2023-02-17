@@ -1,18 +1,8 @@
-Il team di sviluppo ha predisposto un'apposita pagina per la segnalazione di:</p>
-* errori di funzionamento di SARP
-* errori di funzionamento delle varie applicazioni (es: PCTO)
-* generici suggerimenti sull'applicazione o un'aspetto specifico
-* richiesta di modifiche delle funzionalità presenti
-* richiesta di nuove funzionalità
-* altre segnalazioni
+## **S**cuola **A**gnelli **R**esource **P**lanning
 
+E' un sistema gestioanle interamente sviluppato internamente che hai pochi e semplici obiettivi:
 
-Per riportare, al team di sviluppo, una segnalazione basta andare nella pagina **ticket** facendo click in basso a destra sulla scritta *Segnala un problema*
-
-Basta compilare il semplice form predisposto indicando:
-* L'ambito della segnalazione
-  * SARP: segnalazione relativa all'intero ambiente SARP e non specifica per un'applicazione
-  * PCTO: segnalazione relativa all'applicazione PCTO
-* Il titolo della segnalazione
-* La descrizione dettagliata della segnalazione
-                                
+1. Creare un sistema di amministrazione e gestione dei principali processi della scuola
+2. Ridurre l'uso di documenti cartacei per snellire i processi e muoversi verso il concetto di ***papereless office***
+3. Agevolare le attività amministrative per i vari responsabili (docenti, preside, amministrazione, ...)
+4. Fornire una *"palestra"* per gli studenti per cimentarsi con un'attività non didattica di sviluppo software utilizzando moderne tecnologie web

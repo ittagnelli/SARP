@@ -33,7 +33,8 @@ export async function load({ locals }) {
             where: multi_user_where(locals), 
             include: {
                 offertoDa: true,
-                svoltoDa: true
+                svoltoDa: true,
+                tutor_scolastico: true
             }
         });
 
@@ -42,7 +43,8 @@ export async function load({ locals }) {
         });
 
         const utenti = await SARP.Utente.findMany({
-            orderBy: [{ id: 'desc' }]
+            orderBy: [{ id: 'desc' }],
+            include: {ruoli: true}
         });
 
         // restituisco il risultato della query SQL
@@ -81,7 +83,8 @@ export const actions = {
                 creatoDa: user_id(locals),
                 titolo: form_data.get('titolo'),
                 descrizione: form_data.get('descrizione'),
-				tutor: form_data.get('tutor'),
+				tutor_aziendale: form_data.get('tutor_aziendale'),
+                idTutor: +form_data.get('tutor_scolastico'),
                 dataInizio: new Date(form_data.get('dataInizio')),
 				dataFine: new Date(form_data.get('dataFine')),
                 idAzienda: +form_data.get('azienda'),
@@ -118,7 +121,8 @@ export const actions = {
                 data: {
                     titolo: form_data.get('titolo'),
                     descrizione: form_data.get('descrizione'),
-                    tutor: form_data.get('tutor'),
+                    tutor_aziendale: form_data.get('tutor_aziendale'),
+                    idTutor: +form_data.get('tutor_scolastico'),
                     dataInizio: new Date(form_data.get('dataInizio')),
                     dataFine: new Date(form_data.get('dataFine')),
                     idAzienda: +form_data.get('azienda'),
