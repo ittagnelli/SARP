@@ -76,32 +76,27 @@
         
         indirizzo: yup
         .string()
-        .required("Indirizzo dell'azienda necessario")
-        .matches(/^[a-zA-Z0-9 /]{3,40}$/, "Indirizzo azienda non valido"),
+        .matches(/^$|^[a-zA-Z0-9 (),/]{3,100}$/, "Indirizzo azienda non valido"),
 
         piva: yup
         .string()
-        .required("Partita Iva necessaria")
-        .matches(/^[0-9]{11}$/, "Partita Iva non valida"),
+        .matches(/^$|^[0-9]{11}$/, "Partita Iva non valida"),
 
         telefono: yup
 		.string()
-		.matches(/^[0-9]{3}\.[0-9]{3}\.[0-9]{2}\.[0-9]{2}$/, "Numero non valido [333.123.45.67]"),
+		.matches(/^$|^[0-9]{3}\.[0-9]{3}\.[0-9]{2}\.[0-9]{2}$/, "Numero non valido [333.123.45.67]"),
 
         direttore_nome: yup
         .string()
-        .required("Nome del direttore necessario")
-        .matches(/^[a-zA-Z ']{3,30}$/, "Nome Direttore non valido [Nome Cognome]"),
+        .matches(/^$|^[a-zA-Z ']{3,30}$/, "Nome Direttore non valido [Nome Cognome]"),
 
         direttore_natoA: yup
         .string()
-        .required("Luogo di nascita del Direttore necessario")
-        .matches(/^[a-zA-Z à-è-ì-ò-ù]{3,30}$/, "Luogo di nascita non valido"),
+        .matches(/^$|^[a-zA-Z à-è-ì-ò-ù]{3,30}$/, "Luogo di nascita non valido"),
 
         direttore_codiceF: yup
         .string()
-        .required("Codice Fiscale del Direttore necessario")
-        .matches(/^[0-9A-Z]{16}$/, "Codice fiscale non valido [LNSTVL69T28L219K]"),
+        .matches(/^$|^[0-9A-Z]{16}$/, "Codice fiscale non valido [LNSTVL69T28L219K]"),
 
         idConvenzione: yup
         .string()
@@ -112,16 +107,15 @@
         .positive(),
         
         direttore_natoIl: yup
-        .date()
-        .max(new Date(2004,1,1), "Data Invalida"),
+        .date(),
         
         dataConvenzione: yup
         .date()
-        .min(new Date(2022, 1, 1), "Data antecedente al 01/01/2022"),
+        .min(new Date(2016, 1, 1), "Data antecedente al 01/01/2016"),
         
         dataProtocollo: yup
         .date()
-        .min(new Date(2022, 1, 1), "Data antecedente al 01/01/2022")
+        .min(new Date(2016, 1, 1), "Data antecedente al 01/01/2016")
     });
 
     async function start_update(e) {
@@ -165,25 +159,26 @@
 <Table
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
-		{ name: 'idConvenzione', type: 'string', display: 'NO.' },
-		{ name: 'nome', type: 'string', display: 'Azienda/Ente' },
-        { name: 'indirizzo', type: 'string', display: 'indirizzo' },
-        { name: 'piva', type: 'string', display: 'piva' },
-        { name: 'telefono', type: 'string', display: 'telefono' },
-        { name: 'direttore_nome', type: 'string', display: 'direttore' },
+		{ name: 'idConvenzione', type: 'string', display: 'NO.', size: 10 },
+		{ name: 'nome', type: 'string', display: 'Azienda/Ente', size: 40 },
+        { name: 'indirizzo', type: 'string', display: 'indirizzo', size: 30 },
+        { name: 'piva', type: 'string', display: 'piva', size: 12 },
+        { name: 'telefono', type: 'string', display: 'telefono', size: 14 },
+        { name: 'direttore_nome', type: 'string', display: 'direttore', size: 20 },
 		{ name: 'idUtente', type: 'string', display: 'Creato da' },
 		{ name: 'dataConvenzione', type: 'date', display: 'Data Convenzione' },
 		{ name: 'dataProtocollo', type: 'date', display: 'Data Protocollo' },
-		{ name: 'istituto', type: 'string', display: 'Istituto' }
+		{ name: 'istituto', type: 'string', display: 'Istituto', size: 6 }
 	]}
 	rows={aziende}
-	page_size={5}
+	page_size={10}
 	modal_name={$page_action_modal}
 	on:update_start={start_update}
-	type="aziende"
-    type_genre="f"
+	endpoint="aziende"
+    footer="Aziende"
     print={true}
     actions={true}
+    resource="pcto_aziende"
 />
 
 <!-- Modal from Page action -->

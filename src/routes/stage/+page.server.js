@@ -1,15 +1,22 @@
 import { PrismaDB } from '../../js/prisma_db';
 import { route_protect, user_id, multi_user_where, raise_error, access_protect  } from '../../js/helper';
 import { Logger } from '../../js/logger';
+import { PrismaClientValidationError } from '@prisma/client/runtime';
 
 let logger = new Logger("server"); //instanzia il logger
 const SARP = new PrismaDB(); //Istanzia il client SARP DB
 let resource = "pcto_stage"; // definisco il nome della risorsa di questo endpoint
 
 // @ts-ignore
-function catch_error(exception, type) {
-    logger.error(JSON.stringify(exception)); //PROF: error è un oggetto ma serve qualcosa di più complicato. per il momento lascialo così. ho gia risolto in hooks nella versione 9.0
-    raise_error(500, 100, `Errore irreversibile durante ${type} dello stage. TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`); // TIMESTAMP ci serve per capire l'errore all'interno del log
+function catch_error(exception, type, code) {
+    if(exception instanceof PrismaClientValidationError)
+        logger.error(exception.message);
+    else {  
+        logger.error(JSON.stringify(exception));
+        logger.error(exception.message);
+        logger.error(exception.stack);
+    }
+    raise_error(500, code, `Errore irreversibile durante ${type} dello stage. TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`); // TIMESTAMP ci serve per capire l'errore all'interno del log
 }
 
 
@@ -26,7 +33,8 @@ export async function load({ locals }) {
             where: multi_user_where(locals), 
             include: {
                 offertoDa: true,
-                svoltoDa: true
+                svoltoDa: true,
+                tutor_scolastico: true
             }
         });
 
@@ -35,7 +43,8 @@ export async function load({ locals }) {
         });
 
         const utenti = await SARP.Utente.findMany({
-            orderBy: [{ id: 'desc' }]
+            orderBy: [{ id: 'desc' }],
+            include: {ruoli: true}
         });
 
         // restituisco il risultato della query SQL
@@ -44,9 +53,8 @@ export async function load({ locals }) {
             companies: companies,
             utenti: utenti
         }
-    } catch (error) {
-        logger.error(JSON.stringify(error)); //PROF: error è un oggetto ma serve qualcosa di più complicato. per il momento lascialo così. ho gia risolto in hooks nella versione 9.0
-		raise_error(500, 100, `Errore durante la ricerca degli stage. TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`);    // TIMESTAMP ci serve per capire l'errore all'interno del log
+    } catch (exception) {
+        catch_error(exception, "la ricerca", 300);
     }
 }
 
@@ -75,7 +83,8 @@ export const actions = {
                 creatoDa: user_id(locals),
                 titolo: form_data.get('titolo'),
                 descrizione: form_data.get('descrizione'),
-				tutor: form_data.get('tutor'),
+				tutor_aziendale: form_data.get('tutor_aziendale'),
+                idTutor: +form_data.get('tutor_scolastico'),
                 dataInizio: new Date(form_data.get('dataInizio')),
 				dataFine: new Date(form_data.get('dataFine')),
                 idAzienda: +form_data.get('azienda'),
@@ -84,8 +93,8 @@ export const actions = {
                 }
         }
     });
-        } catch (error) {
-            catch_error(error, "l'inserimento")
+        } catch (exception) {
+            catch_error(exception, "l'inserimento", 301)
         }
 
 	},
@@ -112,7 +121,8 @@ export const actions = {
                 data: {
                     titolo: form_data.get('titolo'),
                     descrizione: form_data.get('descrizione'),
-                    tutor: form_data.get('tutor'),
+                    tutor_aziendale: form_data.get('tutor_aziendale'),
+                    idTutor: +form_data.get('tutor_scolastico'),
                     dataInizio: new Date(form_data.get('dataInizio')),
                     dataFine: new Date(form_data.get('dataFine')),
                     idAzienda: +form_data.get('azienda'),
@@ -121,8 +131,8 @@ export const actions = {
                     }
                 }
             });
-        } catch (error) {
-            catch_error(error, "l'aggiornamento");
+        } catch (exception) {
+            catch_error(exception, "l'aggiornamento", 302);
         }
 
 	},
@@ -141,8 +151,8 @@ export const actions = {
             await SARP.pcto_Pcto.delete({
                 where: { id: +id }
             });       
-        } catch (error) {
-            catch_error(error, "l'eliminazione");
+        } catch (exception) {
+            catch_error(exception, "l'eliminazione", 303);
         }
 
 	}

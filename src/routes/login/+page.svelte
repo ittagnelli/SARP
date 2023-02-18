@@ -3,10 +3,12 @@
 	import { dev } from '$app/environment';
 	import { PUBLIC_GOOGLE_CLIENT_ID } from '$env/static/public';
 	import { invalidateAll } from '$app/navigation';
-	import { Logger } from '../../js/logger';
+    import { Logger } from '../../js/logger';
 
-	let logger = new Logger('client');
-
+    export let data;
+    let mobile = data.mobile;
+    
+    let logger = new Logger("client");
 	let login_error = false; // signal error to user
 	let google_button; // google login button
 	let dev_user; // user name to login ONLY for development
@@ -71,20 +73,27 @@
 </script>
 
 <div class="login-page row g-0 flex-fill">
-	<div class="col-12 col-lg-6 col-xl-4 d-flex flex-column justify-content-center">
-		<div class="text-center mb-5">
+	<div
+		class="col-12 col-lg-6 col-xl-4 d-flex flex-column justify-content-center"
+	>
+		<div class="text-center mb-5 mt-5">
 			<a href="." class="navbar-brand navbar-brand-autodark"
-				><img class="logo" src="img/logo_sarp.png" alt="" /></a
+				><img class="logo" src="img/logo_quadrato_nero_small.png" alt="" /></a
 			>
 		</div>
-		<h2 class="h3 text-center mb-3 text-muted">Fai il Log In con account istituzionale Agnelli</h2>
 
-		<div class="mb-4 mt-4 gbutton">
-			<div id="googleButton" bind:this={google_button} />
-		</div>
-		{#if login_error}
-			<div class="login-error text-center mt-3">Impossibile effettuare il login!!</div>
-		{/if}
+        {#if !mobile} 
+            <h2 class="h3 text-center mb-3 text-muted">Fai il Log In con account istituzionale Agnelli</h2>
+            <div class="mb-4 mt-4 gbutton">
+                <div id="googleButton" bind:this={google_button} />
+            </div>
+            {#if login_error}
+                <div class="login-error text-center mt-3">Impossibile effettuare il login!!</div>
+            {/if}
+        {:else}
+            <h1 class="text-center text-muted">Il sistema è disponibile solo dal desktop!!</h1>
+            <h3 class="text-center text-muted">Per cortesia, accedi comodamente dal tuo PC.</h3>
+        {/if}
 
 		{#if dev}
 			<div class="text-center mb-2" style="width:50%; position:relative; left:25%;">
@@ -101,6 +110,7 @@
 				<button type="submit" class="btn btn-primary" on:click={dev_login}>Dev Login</button>
 			</div>
 		{/if}
+
 	</div>
 	<div class="col-12 col-lg-6 col-xl-8 d-none d-lg-block">
 		<div class="bg-cover h-100 min-vh-100" style="background-image: url(/img/login_cover.jpg)" />
@@ -112,9 +122,9 @@
 		/* background-color: red; */
 	}
 
-	.logo {
-		width: 300px;
-	}
+    .logo {
+        width: 400px;
+    }
 
 	.login {
 		background-color: white;

@@ -29,10 +29,12 @@ async function main(argv){
             email: argv[2],
             telefono: "",   // Numero pseudocausuale da 11 cifre
             tipo: "ADMIN",  // Gli utenti di test sono sempre admin
-            ruolo: "PRESIDE",   // Nello sviluppo servono tutti i permessi
+            ruoli: {
+                connect: [{id: 1}, {id: 3}]
+            },
             istituto: "ITT",
             bes: false,
-            picture: "",
+            picture: "https://lh3.googleusercontent.com/a-/AOh14Gj-cdUSUVoEge7rD5a063tQkyTDT3mripEuDZ0v=s100",
             can_login: true
         }
     });

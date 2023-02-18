@@ -1,142 +1,183 @@
-// v 0.4.1
+// v 0.10.0 2023-02-16
 
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 generator erd {
-    provider                  = "prisma-erd-generator"
-    output                    = "./SARP_ERD.png"
-    theme                     = "neutral"
-    tableOnly                 = false
-    includeRelationFromFields = false
+  provider                  = "prisma-erd-generator"
+  output                    = "./SARP_ERD.png"
+  theme                     = "neutral"
+  tableOnly                 = false
+  includeRelationFromFields = false
 }
 
 datasource db {
-    provider = "sqlite"
-    url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
 }
 
 // Tabelle comuni a tutte le applicazioni e dizionari
 
+model Versione {
+  versione  String //deve coincidere con la versione di questo file
+  createdAt DateTime @default(now())
+
+  @@id([versione, createdAt])
+}
+
 model Utente {
-    id         Int                @id @default(autoincrement())
-    createdAt  DateTime           @default(now())
-    updatedAt  DateTime           @updatedAt
-    creatoDa   Int
-    tipo       String             @default("STUDENTE")
-    ruolo      String?
-    nome       String
-    cognome    String
-    email      String             @unique
-    telefono   String?
-    picture    String?
-    bes        Boolean?
-    can_login  Boolean            @default(false)
-    istituto   String?
-    valuta     pcto_Valutazione[]
-    presente   pcto_Presenza[]
-    stabilisce pcto_Azienda[]
-    iscritto   pcto_Pcto[]
-    Session    Session[]
-    Ticket     Ticket[]
+  id                       Int                @id @default(autoincrement())
+  createdAt                DateTime           @default(now())
+  updatedAt                DateTime           @updatedAt
+  creatoDa                 Int
+  tipo                     String             @default("STUDENTE")
+  nome                     String
+  cognome                  String
+  natoA                    String?
+  natoIl                   DateTime?
+  codiceF                  String?
+  email                    String             @unique
+  telefono                 String?
+  picture                  String?
+  bes                      Boolean?
+  can_login                Boolean            @default(false)
+  istituto                 String?
+  valuta                   pcto_Valutazione[]
+  presente                 pcto_Presenza[]
+  stabilisce               pcto_Azienda[]
+  iscritto                 pcto_Pcto[]        @relation("iscritto")
+  Session                  Session[]
+  Ticket                   Ticket[]
+  ruoli                    ruolo_Utente[]
+  iscritto_corso_sicurezza sicurezza_Corso[]
+  classe                   Classe?            @relation(fields: [classeId], references: [id])
+  classeId                 Int?
+  tutor_pcto               pcto_Pcto[]        @relation("tutor")
+}
+
+model Classe {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  classe    String
+  istituto  String
+  sezione   String
+  iscritti  Utente[]
 }
 
 model Session {
-    id         Int      @id @default(autoincrement())
-    createdAt  DateTime @default(now())
-    login      Utente   @relation(fields: [idUtente], references: [id])
-    idUtente   Int      @unique
-    session_id String   @unique
-    scadenza   DateTime @default(now())
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now())
+  login      Utente   @relation(fields: [idUtente], references: [id])
+  idUtente   Int      @unique
+  session_id String   @unique
+  scadenza   DateTime @default(now())
 }
 
 model tipo_Utente {
-    id        Int      @id @default(autoincrement())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    tipo      String   @unique
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  tipo      String   @unique
 }
 
 model ruolo_Utente {
-    id        Int      @id @default(autoincrement())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    ruolo     String   @unique
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ruolo     String   @unique
+  utenti    Utente[]
 }
 
 model Ticket {
-    id           Int      @id @default(autoincrement())
-    createdAt    DateTime @default(now())
-    updatedAt    DateTime @updatedAt
-    segnalatore  Utente   @relation(fields: [idUtente], references: [id])
-    idUtente     Int
-    applicazione String
-    titolo       String
-    descrizione  String
-    risolto      Boolean  @default(false)
+  id           Int      @id @default(autoincrement())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  segnalatore  Utente   @relation(fields: [idUtente], references: [id])
+  idUtente     Int
+  applicazione String
+  titolo       String
+  descrizione  String
+  risolto      Boolean  @default(false)
 }
 
 // Tabelle specifiche per l'applicazione PCTO
 
 model pcto_Presenza {
-    id           Int       @id @default(autoincrement())
-    createdAt    DateTime  @default(now())
-    updatedAt    DateTime  @updatedAt
-    presenza     Utente    @relation(fields: [creatoDa], references: [id])
-    creatoDa     Int
-    dataPresenza DateTime  @default(now())
-    oraInizio    DateTime?
-    oraFine      DateTime?
-    lavoraPer    pcto_Pcto @relation(fields: [idPcto], references: [id])
-    idPcto       Int
+  id           Int       @id @default(autoincrement())
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  presenza     Utente    @relation(fields: [svoltoDa], references: [id])
+  svoltoDa     Int       @default(1)
+  creatoDa     Int
+  dataPresenza DateTime  @default(now())
+  oraInizio    DateTime?
+  oraFine      DateTime?
+  approvato    Boolean   @default(false)
+  lavoraPer    pcto_Pcto @relation(fields: [idPcto], references: [id])
+  idPcto       Int
 }
 
 model pcto_Valutazione {
-    id        Int       @id @default(autoincrement())
-    createdAt DateTime  @default(now())
-    updatedAt DateTime  @updatedAt
-    utente    Utente    @relation(fields: [creatoDa], references: [id])
-    creatoDa  Int
-    pcto      pcto_Pcto @relation(fields: [idPcto], references: [id])
-    idPcto    Int
-    qna       String
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  utente    Utente    @relation(fields: [creatoDa], references: [id])
+  creatoDa  Int
+  pcto      pcto_Pcto @relation(fields: [idPcto], references: [id])
+  idPcto    Int
+  qna       String
 }
 
 model pcto_Azienda {
-    id                Int         @id @default(autoincrement())
-    createdAt         DateTime    @default(now())
-    updatedAt         DateTime    @updatedAt
-    creatore          Utente      @relation(fields: [creatoDa], references: [id])
-    creatoDa          Int
-    nome              String
-    indirizzo         String?
-    piva              String?
-    telefono          String?
-    direttore_nome    String?
-    direttore_natoA   String?
-    direttore_natoIl  DateTime?
-    direttore_codiceF String?
-    idConvenzione     String      @unique
-    dataConvenzione   DateTime    @default(now())
-    dataProtocollo    DateTime    @default(now())
-    istituto          String      @default("ITT")
-    offre             pcto_Pcto[]
+  id                Int         @id @default(autoincrement())
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+  creatore          Utente      @relation(fields: [creatoDa], references: [id])
+  creatoDa          Int
+  nome              String
+  indirizzo         String?
+  piva              String?
+  telefono          String?
+  direttore_nome    String?
+  direttore_natoA   String?
+  direttore_natoIl  DateTime?
+  direttore_codiceF String?
+  idConvenzione     String      @unique
+  dataConvenzione   DateTime    @default(now())
+  dataProtocollo    DateTime    @default(now())
+  istituto          String      @default("ITT")
+  offre             pcto_Pcto[]
 }
 
 model pcto_Pcto {
-    id            Int                @id @default(autoincrement())
-    createdAt     DateTime           @default(now())
-    updatedAt     DateTime           @updatedAt
-    creatoDa      Int
-    titolo        String
-    descrizione   String?
-    tutor         String?
-    dataInizio    DateTime
-    dataFine      DateTime
-    offertoDa     pcto_Azienda       @relation(fields: [idAzienda], references: [id])
-    idAzienda     Int
-    valutatoDa    pcto_Valutazione[]
-    presenziatoDa pcto_Presenza[]
-    svoltoDa      Utente[]
+  id               Int                @id @default(autoincrement())
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  creatoDa         Int
+  titolo           String
+  descrizione      String?
+  tutor_aziendale  String?
+  tutor_scolastico Utente?            @relation(name: "tutor", fields: [idTutor], references: [id])
+  idTutor          Int?
+  dataInizio       DateTime
+  dataFine         DateTime
+  offertoDa        pcto_Azienda       @relation(fields: [idAzienda], references: [id])
+  idAzienda        Int
+  valutatoDa       pcto_Valutazione[]
+  presenziatoDa    pcto_Presenza[]
+  svoltoDa         Utente[]           @relation("iscritto")
+}
+
+model sicurezza_Corso {
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  creatoDa   Int
+  titolo     String
+  dataInizio DateTime
+  dataFine   DateTime
+  tipo       String
+  seguitoDa  Utente[]
 }

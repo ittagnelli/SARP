@@ -1,15 +1,22 @@
 import { PrismaDB } from '../../js/prisma_db';
 import { route_protect,user_id, multi_user_where, raise_error, access_protect } from '../../js/helper';
 import { Logger } from '../../js/logger';
+import { PrismaClientValidationError } from '@prisma/client/runtime';
 
 let logger = new Logger("server"); //instanzia il logger
 const SARP = new PrismaDB(); //Istanzia il client SARP DB
 let resource = "pcto_valutazioni"; // definisco il nome della risorsa di questo endpoint
 
 // @ts-ignore
-function catch_error(exception, type) {
-    logger.error(JSON.stringify(exception)); //PROF: error è un oggetto ma serve qualcosa di più complicato. per il momento lascialo così. ho gia risolto in hooks nella versione 9.0
-    raise_error(500, 100, `Errore irreversibile durante ${type} della valutazione. TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`);    // TIMESTAMP ci serve per capire l'errore all'interno del log
+function catch_error(exception, type, code) {
+    if(exception instanceof PrismaClientValidationError)
+        logger.error(exception.message);
+    else {  
+        logger.error(JSON.stringify(exception));
+        logger.error(exception.message);
+        logger.error(exception.stack);
+    }
+    raise_error(500, code, `Errore irreversibile durante ${type} della valutazione. TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`);    // TIMESTAMP ci serve per capire l'errore all'interno del log
 }
 
 export async function load({ locals }) {
@@ -31,11 +38,9 @@ export async function load({ locals }) {
         const pcto = await SARP.pcto_Pcto.findMany();
 
         return { valutazioni: evaluations, stages: pcto };       
-    } catch (error) {
-        logger.error(JSON.stringify(exception)); //PROF: error è un oggetto ma serve qualcosa di più complicato. per il momento lascialo così. ho gia risolto in hooks nella versione 9.0
-		raise_error(500, 100, `Errore durante la ricerca delle valutazioni. TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`);    // TIMESTAMP ci serve per capire l'errore all'interno del log
+    } catch (exception) {
+        catch_error(exception, "la ricerca", 500);
     }
-
 }
 
 export const actions = {
@@ -58,8 +63,8 @@ export const actions = {
                     qna: qna
                 }
             });
-        } catch (error) {
-            catch_error(error, "l'inserimento");
+        } catch (exception) {
+            catch_error(exception, "l'inserimento", 501);
         }
 	},
 
@@ -83,8 +88,8 @@ export const actions = {
                     qna: qna
                 }
             });        
-        } catch (error) {
-            catch_error(error, "la modifica");
+        } catch (exception) {
+            catch_error(exception, "la modifica", 502);
         }
 	},
 
@@ -102,9 +107,8 @@ export const actions = {
             await SARP.pcto_Valutazione.delete({
                 where: { id: +id }
             });  
-        } catch (error) {
-            catch_error(error, "l'eliminazione");
+        } catch (exception) {
+            catch_error(exception, "l'eliminazione", 503);
         }
-		
 	}
 };

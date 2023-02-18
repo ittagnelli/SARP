@@ -1,6 +1,6 @@
-export const ruoli_utente = ["ADMIN", "READER", "WRITER", "DEVELOPER"];
-export const tipi_utente = ["STUDENTE", "DOCENTE", "PRESIDE"];
-export const istituti = [ "ITT", "LICEO" ];
+export const ruoli_utente = ["DEVELOPER", "ADMIN", "STUDENTE", "DOCENTE", "UTENTE", "TUTOR-AZIENDALE", "TUTOR-SCOLASTICO", "STAGISTA"];
+export const tipi_utente = ["STUDENTE", "DOCENTE", "AMMINISTRATIVO", "OSPITE"];
+export const istituti = [ "ITT", "LICEO", "CFP" ];
 
 export const developers = [
     {
@@ -49,11 +49,6 @@ export const developers = [
         tipo: 'STUDENTE',
     },
     {
-        nome: 'matteo',
-        cognome: 'licciardino',
-        tipo: 'STUDENTE',
-    },
-    {
         nome: 'philippe',
         cognome: 'smal',
         tipo: 'STUDENTE',
@@ -62,12 +57,7 @@ export const developers = [
         nome: 'tommaso',
         cognome: 'bramoso',
         tipo: 'STUDENTE',
-    },
-    {
-        nome: 'carlo',
-        cognome: 'follo',
-        tipo: 'STUDENTE',
-    },
+    }
 ];
 
 export const cognomi = [

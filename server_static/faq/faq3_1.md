@@ -1,0 +1,6 @@
+L'applicazione dedicata ai **PCTO** è composta da quattro funzioni e viste principali:
+
+1. **Aziende**: permette di creare a sistema una nuova azienda (o convenzione). Sono richiesti (anche se opzionali) tutti i principali dati necessari per stipulare la convenzione con una data azienda. Le aziende possono essere manipolate solo dagli ADMIN e dai TUTOR
+2. **Stage**: Permette di creare uno o più *stage** (PCTO) per ogni azienda presente a sistema. Informazioni fondamentali sono il tutor aziendale e quello scolastico. Gli stage possono essere manipolate solo dagli ADMIN e dai TUTOR
+3. **Presenze**: permette la creazione di una presenza per un dato studente sche sta svolgendo un dato stage per una specifica azienda. Le presenze possiedono uno stato di validazione che può essere confermato solo da ADMIN e TUTOR. La presenza può essere creata anche dallo STUDENTE. Ciò rende il processo di tracciamento delle ore snello e distribuito.
+4. **Valutazioni**: Permette di creare una valutazione di un PCTO da parte di uno studente

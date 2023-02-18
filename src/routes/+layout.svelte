@@ -8,7 +8,7 @@
 	import { fade } from 'svelte/transition';
     
 	export let data;
-    let version = '0.10.0';
+    let version = data.version;
 </script>
 
 {#if data.session}
@@ -17,10 +17,16 @@
 			<NavItem resource="menu_home" text="Home" icon="home-2" link="/" />
 			<NavItem resource="menu_utenti" text="Utenti" icon="users" link="/utenti" />
 			<NavMenu resource="menu_pcto" text="PCTO" icon="building-factory-2">
-				<NavSubItem resource="menu_aziende" text="Aziende" link="aziende" />
-				<NavSubItem resource="menu_stage" text="Stage" link="stage" />
-				<NavSubItem resource="menu_presenze" text="Presenze" link="presenze" />
-				<NavSubItem resource="menu_valutazioni" text="Valutazioni" link="valutazioni" />
+				<NavSubItem resource="menu_aziende" text="Aziende" link="/aziende" />
+				<NavSubItem resource="menu_stage" text="Stage" link="/stage" />
+				<NavSubItem resource="menu_presenze" text="Presenze" link="/presenze" />
+				<NavSubItem resource="menu_valutazioni" text="Valutazioni" link="/valutazioni" />
+			</NavMenu>
+			<NavMenu resource="menu_tools" text="Tools" icon="tools">
+				<NavSubItem resource="menu_convert_to_print" text="Convert to Print" link="/tools/convert-to-print" />
+			</NavMenu>
+            <NavMenu resource="menu_sicurezza_lavoro" text="Sicurezza sul Lavoro" icon="shield-half">
+				<NavSubItem resource="menu_sicurezza_corsi" text="Corsi Sicurezza" link="/sicurezza_sul_lavoro/corsi" />
 			</NavMenu>
 		</Navbar>
 

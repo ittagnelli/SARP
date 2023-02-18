@@ -1,4 +1,110 @@
-## v0.10.0 – 31 Dicembre 2022
+## v0.24.0 – 17 Febbraio 2023
+- aggiunta di FAQ per il funzionamento di SARP e delle applicazioni
+- aggiunto tutor scolastico alla sezione stage del PCTO
+
+## v0.23.0 – 17 Febbraio 2023
+- fix problema in tabella che non visualizzava il delete per i propri campi
+- aggiunto impossibilità di cancellare una presenza PCTO se già approvata
+- rilassato vincoli date protocollo azienda PCTO
+- rilassato vincoli campi obbligatori azienda PCTO
+- fix tipo in aziende server side
+- update regex per indirizo azienda pcto
+
+## v0.22.0 – 16 Febbraio 2023
+- `fix#173`: Page bar in tabella con troppe pagine 
+- `fix#172`: Nome Utenti occupa troppo spazio in tabella 
+- Aggiunto parametro size alla tabella per definire la dimesnione di un campo stringa
+- Modificata la page bar della tabella in modo da visualizzare sempre al massimo 20 pagine
+- Aggiunti spazi in nome e cognome utente
+- Aggiunto classe alla tabella utenti
+- Aggiunto excelt to prisma
+- Script permette di caricare un file Excel generato dal registro elettronico nel nostro DB
+-  prisma connection limits DEV and PRODUCTION
+
+## v0.21.0 – 14 Febbraio 2023
+- `fix#170`: Utenti Codice Fiscale opzionale
+- Utenti NatoA opzionale
+- update logo a rosso Agnelli
+- aggiunto supporto per PCTO Stellantis
+- `fix#166`: PCTO creazione presenze di gruppo
+- aggiunto possibilità di creare pcto presenze per tutti gli studenti di uno stage
+- modificato icona per i boolen nella tabella
+- `fix#164`: PCTO presenze validazione    
+- aggiunto possibilità da parte degli studenti di creare le presenze PCTO
+- aggiunto flag approvato per le presenze PCTO
+
+## v0.20.0 – 04 Febbraio 2023
+- aggiunte classi istituto ITT e LICEO
+- aggiornata policy per supportare TUTOR-SICUREZZA
+- aggiunto ruolo TUTOR-SICUREZZA
+- completato associazione classi utenti
+- completato sviluppo stampa attestati coraso di sicurezza generico e specifico
+- caricati template per attestati corso sicurezza
+- aggiunti campi natoA, natoIl e codiceF per Utente
+- aggiunta tabella Classe
+- aggiunta relazione tra Utente e Classe
+- aggiuinta stampa attestati corso sicurezza
+- aggiunta Applicazioni Corso di Sicurezza
+- aggiunta tabella corsi
+- aggiunta relazione tra Utente e Corsi di Sicurezza
+- `fix#159`: Limitare num file e size per convert to print 
+
+## v0.16.0 – 28 Gennaio 2023
+- `fix#157`: Refactor front-end convert-to-print 
+- `fix#129`: aggiunta nuova applicazione convert-to-print
+- `fix#155`: Refactor del log eccezioni - refactor di catcherror per stampare correttamente le eccezioni di Prisma 
+- `fix#152`: Footer tabelle errato - modificato footer per visualizzare n/M <nome entità>
+- `fix#146`: container for badges
+- `fix#148`: fix studente non visualizza le proprie presenze in PCTO
+- `fix#147`: fix problem of picture-margin e add grid for pictures
+
+## v0.15.0 – 24 Gennaio 2023
+- `fix#140`: View PCTO
+- `fix#139`: PCTO presenze nome studente errato
+- fix student relation in Presenza
+- modificato la migration siccome resettava il DB
+- modificata il front-end di presenze la tabell in modo che stampa nome e cognome
+
+## v0.14.0 – 20 Gennaio 2023
+- fix piccoli problemi
+- fix issue con pulsante delete
+- fix errore nella query multi user
+- aggiunto cognome a presenze, forzatura lettera maiuscola per nome e cognome
+- `fix#138`: PCTO Presenze nome studente incompleto
+- `fix#137`: Stage manca tutor in update 
+- `fix#45`: Aggiungere upload foto utente 
+- Aggiunto sistema immagine profilo
+- Immagine di default
+- Update dell'immagine al login se necessario o se è il primo accesso
+- Aggiunta policy per immagini da google
+
+## v0.13.0 – 19 Gennaio 2023
+- `fix#135`: Inibire accesso da piattaforma mobile
+  
+## v0.12.0 – 19 Gennaio 2023
+- Aggiunto service worker per caching file
+- Script di sicurezza (#131)    
+- security:initial exploit
+- security: add working xss script and payload
+- security: add some endpoints in script
+
+## v0.11.0 – 18 Gennaio 2023 - INIZIO PRODUZIONE
+- update homepage
+- update RBAC acl per inizio produzione
+- update lista iniziali ruoli utente
+- nuovo logo (grazie a Nicolo' Scena)
+- refactor per aggiungere supporto multi ruolo per utenti
+- modificato tabella per supportare una lista di ruoli visualizzati come badge
+- rilassato il vincolo sul telefono per la tabella utenti, ora può essere opzionale
+- crea ruoli leggendo il db
+- `fix#123`: Ruoli multipli per un utente
+- risolto problema in error.svelte
+- `fix#127`: 404 genera un crash
+- `fix#126`: Endpoint logger vulnerabile
+- `fix#125`: Pagina manutenzione va nascosta
+- `fix #65`: Bottone fantasma   
+
+## v0.10.0 – 31 Dicembre 2022   
 - `fix #51`:Aggiungere sistema RBAC 
 - implementato sistema RBAC basato su ACL sia lato client che lato server
 - protegge la vista dei menu

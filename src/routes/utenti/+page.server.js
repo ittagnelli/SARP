@@ -2,15 +2,23 @@ import { PrismaDB } from '../../js/prisma_db';
 import { route_protect, raise_error, multi_user_where, user_id, access_protect } from '../../js/helper';
 import { Logger } from '../../js/logger';
 import { fail } from '@sveltejs/kit';
+import { PrismaClientValidationError } from '@prisma/client/runtime';
+
 
 let logger = new Logger("server"); //instanzia il logger
 const SARP = new PrismaDB(); //Istanzia il client SARP DB
 let resource = "utenti"; // definisco il nome della risorsa di questo endpoint
 
 // @ts-ignore
-function catch_error(exception, type) {
-    logger.error(JSON.stringify(exception)); //PROF: error è un oggetto ma serve qualcosa di più complicato. per il momento lascialo così. ho gia risolto in hooks nella versione 9.0
-    raise_error(500, 100, `Errore irreversibile durante ${type} dell'utente. TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`);    // TIMESTAMP ci serve per capire l'errore all'interno del log
+function catch_error(exception, type, code) {
+    if(exception instanceof PrismaClientValidationError)
+        logger.error(exception.message);
+    else {  
+        logger.error(JSON.stringify(exception));
+        logger.error(exception.message);
+        logger.error(exception.stack);
+    }
+    raise_error(500, code, `Errore irreversibile durante ${type} dell'utente. TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`);    // TIMESTAMP ci serve per capire l'errore all'interno del log
 }
 
 export async function load({ locals }) {
@@ -23,7 +31,11 @@ export async function load({ locals }) {
 		// query SQL al DB per tutte le entry nella tabella todo
 		const utenti = await SARP.Utente.findMany({
 			orderBy: [{ id: 'desc' }],
-			where: multi_user_where(locals) 
+			where: multi_user_where(locals),
+            include: {
+                ruoli: true,
+                classe: true
+            } 
 		});
 
 		const tipi_utente = await SARP.tipo_Utente.findMany({
@@ -34,15 +46,19 @@ export async function load({ locals }) {
 			orderBy: [{ id: 'desc' }]
 		});
 
+        const classi = await SARP.Classe.findMany({
+			orderBy: [{ id: 'desc' }]
+		});
+
 		// restituisco il risultato della query SQL
 		return {
 			utenti: utenti,
 			tipi_utente: tipi_utente,
-			ruoli_utente: ruoli_utente
+			ruoli_utente: ruoli_utente,
+            classi: classi
 		}
-	} catch (error) {
-		logger.error(JSON.stringify(exception)); //PROF: error è un oggetto ma serve qualcosa di più complicato. per il momento lascialo così. ho gia risolto in hooks nella versione 9.0
-		raise_error(500, 100, `Errore durante la ricerca degli utenti. TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`);    // TIMESTAMP ci serve per capire l'errore all'interno del log
+	} catch (exception) {
+        catch_error(exception, "la ricerca", 100);
 	}
 
 }
@@ -55,6 +71,14 @@ export const actions = {
         access_protect(701, locals, action, resource);
 
 		const form_data = await request.formData();
+        let ids = [];
+        const roles = form_data.getAll('ruolo');
+        
+        if(roles.length > 0) {
+            roles.forEach(element => {
+                ids.push({id: +element})
+            });
+        }
 
         SARP.set_session(locals); // passa la sessione all'audit
 		try {
@@ -63,19 +87,28 @@ export const actions = {
 					creatoDa: user_id(locals),
 					nome: form_data.get('nome'),
 					cognome: form_data.get('cognome'),
+                    natoA: form_data.get('natoA'),
+                    natoIl: new Date(form_data.get('natoIl')),
+					codiceF: form_data.get('codiceF'),
 					email: form_data.get('email'),
 					telefono: form_data.get('telefono'),
-					tipo: form_data.get('tipo'),
-					ruolo: form_data.get('ruolo'),
+                    tipo: form_data.get('tipo'),
+                    picture: 'img/avatar.png',
 					istituto: form_data.get('istituto'),
 					bes: form_data.get('bes') == "SI" ? true : false,
-					can_login: form_data.get('can_login') == "SI" ? true : false
+					can_login: form_data.get('can_login') == "SI" ? true : false,
+                    ruoli: {
+                        connect: ids
+                    },
+                    classe: {
+                        connect: {id: +form_data.get('classe')},
+                    }
 				}
 			});
-		} catch (error) {
+		} catch (exception) {
             // @ts-ignore
-            if(error.code != "P2002")
-                catch_error(error, "l'inserimento");
+            if(exception.code != "P2002")
+                catch_error(exception, "l'inserimento", 101);
             else
                 return fail(400, { error_mex: "Email non univoca" });   // La richiesta fallisce
 		}
@@ -89,6 +122,14 @@ export const actions = {
 
 		const form_data = await request.formData();
 		let id = form_data.get('id');
+        let ids = [];
+        const roles = form_data.getAll('ruolo');
+        
+        if(roles.length > 0) {
+            roles.forEach(element => {
+                ids.push({id: +element})
+            });
+        }
         
         SARP.set_session(locals); // passa la sessione all'audit
 		try {
@@ -97,23 +138,30 @@ export const actions = {
 				data: {
 					nome: form_data.get('nome'),
 					cognome: form_data.get('cognome'),
+                    natoA: form_data.get('natoA'),
+                    natoIl: new Date(form_data.get('natoIl')),
+					codiceF: form_data.get('codiceF'),
 					email: form_data.get('email'),
 					telefono: form_data.get('telefono'),
 					tipo: form_data.get('tipo'),
-					ruolo: form_data.get('ruolo'),
 					istituto: form_data.get('istituto'),
 					bes: form_data.get('bes') == "SI" ? true : false,
-					can_login: form_data.get('can_login') == "SI" ? true : false
+					can_login: form_data.get('can_login') == "SI" ? true : false,
+                    ruoli: {
+                        set: ids
+                    },
+                    classe: {
+                        connect: {id: +form_data.get('classe')}
+                    }
 				}
 			});		
-		} catch (error) {
+		} catch (exception) {
             // @ts-ignore
-            if(error.code != "P2002")
-                catch_error(error, "l'aggiornamento");
+            if(exception.code != "P2002")
+                catch_error(exception, "l'aggiornamento", 102);
             else
                 return fail(400, { error_mex: "Email non univoca" });   // La richiesta fallisce
 		}
-
 	},
 
 	delete: async ({ cookies, request, locals }) => {
@@ -130,8 +178,8 @@ export const actions = {
 			await SARP.Utente.delete({
 				where: { id: +id }
 			});		
-		} catch (error) {
-			catch_error(error, "l'eliminazione");
+		} catch (exception) {
+			catch_error(exception, "l'eliminazione", 103);
 		}
 
 	}

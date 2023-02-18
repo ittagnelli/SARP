@@ -1,15 +1,22 @@
 import { PrismaDB } from '../../js/prisma_db';
-import { route_protect, user_id, multi_user_where, raise_error, access_protect } from '../../js/helper';
+import { route_protect, user_id, pcto_presenze_where, raise_error, access_protect, user_ruolo } from '../../js/helper';
 import { Logger } from '../../js/logger';
+import { PrismaClientValidationError } from '@prisma/client/runtime';
 
 let logger = new Logger("server"); //instanzia il logger
 const SARP = new PrismaDB(); //Istanzia il client SARP DB
 let resource = "pcto_presenze"; // definisco il nome della risorsa di questo endpoint
 
 // @ts-ignore
-function catch_error(exception, type) {
-    logger.error(JSON.stringify(exception)); //PROF: error è un oggetto ma serve qualcosa di più complicato. per il momento lascialo così. ho gia risolto in hooks nella versione 9.0
-    raise_error(500, 100, `Errore irreversibile durante ${type} della presenza. TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`);    // TIMESTAMP ci serve per capire l'errore all'interno del log
+function catch_error(exception, type, code) {
+    if(exception instanceof PrismaClientValidationError)
+        logger.error(exception.message);
+    else {  
+        logger.error(JSON.stringify(exception));
+        logger.error(exception.message);
+        logger.error(exception.stack);
+    }
+    raise_error(500, code, `Errore irreversibile durante ${type} della presenza. TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`);    // TIMESTAMP ci serve per capire l'errore all'interno del log
 }
 
 export async function load({ locals }) {
@@ -22,19 +29,18 @@ export async function load({ locals }) {
 		// query SQL al DB per tutte le entry nella tabella todo
 		const presenze = await SARP.pcto_Presenza.findMany({
 			orderBy: [{ id: 'desc' }],
-			where: multi_user_where(locals), 
+			where: pcto_presenze_where(locals), 
 			include: {
 				presenza: true,
 				lavoraPer: true
 			}
 		});
-	
-		const stages = await SARP.pcto_Pcto.findMany({
+
+        const stages = await SARP.pcto_Pcto.findMany({
 			orderBy: [{ id: 'desc' }],
 			include: {
 				offertoDa: true,
 				svoltoDa: true
-	
 			}
 		});
 	
@@ -43,11 +49,9 @@ export async function load({ locals }) {
 			presenze: presenze,
 			stages: stages
 		}
-	} catch (error) {
-		logger.error(JSON.stringify(exception)); //PROF: error è un oggetto ma serve qualcosa di più complicato. per il momento lascialo così. ho gia risolto in hooks nella versione 9.0
-		raise_error(500, 100, `Errore durante la ricerca delle presenze. TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`);    // TIMESTAMP ci serve per capire l'errore all'interno del log
+	} catch (exception) {
+        catch_error(exception, "load", 400) ;
 	}
-
 }
 
 export const actions = {
@@ -71,11 +75,13 @@ export const actions = {
 					dataPresenza: new Date(form_data.get('dataPresenza')),
 					oraInizio: new Date(1970, 1, 1, hh_inizio, mm_inizio),
 					oraFine: new Date(1970,1 ,1, hh_fine, mm_fine),
-					idPcto: +form_data.get('stage')
+					svoltoDa: +form_data.get('studente'),
+					idPcto: +form_data.get('stage'),
+                    approvato: form_data.get('approvato') == "SI" ? true : false
 				}
 			});	
-		} catch (error) {
-			catch_error(error, "l'inserimento");
+		} catch (exception) {
+			catch_error(exception, "l'inserimento", 401);
 		}
 	},
 
@@ -92,19 +98,32 @@ export const actions = {
         let hh_fine = form_data.get('oraFine').split(':')[0];
         let mm_fine = form_data.get('oraFine').split(':')[1];
         
+        let update_obj = {id: +id};
+        let message = '';
+        if(user_ruolo(locals) == 'STUDENTE') 
+            update_obj['approvato'] = false;
+           
         SARP.set_session(locals); // passa la sessione all'audit
 		try {
-			await SARP.pcto_Presenza.update({
-				where: { id: +id },
+			let res = await SARP.pcto_Presenza.updateMany({
+				where: update_obj,
 				data: {
 					dataPresenza: new Date(form_data.get('dataPresenza')),
 					oraInizio: new Date(1970, 1, 1, hh_inizio, mm_inizio),
 					oraFine: new Date(1970,1 ,1, hh_fine, mm_fine),
-					idPcto: +form_data.get('stage')
+					svoltoDa: +form_data.get('studente'),
+					idPcto: +form_data.get('stage'),
+                    approvato: form_data.get('approvato') == "SI" ? true : false
 				}
 			});
-		} catch (error) {
-			catch_error(error, "l'aggiornamento")
+
+            if(res.count == 0)
+                message = 'Non puoi aggiornare una presenza già approvata!!!';
+            return {
+                message: message
+            }
+		} catch (exception) {
+			catch_error(exception, "l'aggiornamento", 402)
 		}
 	},
 
@@ -114,17 +133,69 @@ export const actions = {
         route_protect(locals);
         access_protect(403, locals, action, resource);
 
-
 		const form_data = await request.formData();
 		const id = form_data.get('id');
 
+        let delete_obj = {id: +id};
+        let message = '';
+        if(user_ruolo(locals) == 'STUDENTE')
+            delete_obj['approvato'] = false;
+
         SARP.set_session(locals); // passa la sessione all'audit
-		try {
-			await SARP.pcto_Presenza.delete({
-				where: { id: +id }
+        try {
+			let res = await SARP.pcto_Presenza.deleteMany({
+				where: delete_obj
 			});
-		} catch (error) {
-			catch_error(error, "l'eliminazione");
+
+            if(res.count == 0)
+                message = 'Non puoi cancellare una presenza già approvata!!!';
+            return {
+                message: message
+            }
+		} catch (exception) {
+			catch_error(exception, "l'eliminazione", 403);
+		}
+	},
+
+    bulk_create: async ({ cookies, request, locals }) => {
+        let action = 'create';
+
+        route_protect(locals);
+        access_protect(401, locals, action, resource);
+
+		const form_data = await request.formData();
+        let hh_inizio = form_data.get('oraInizio').split(':')[0];
+        let mm_inizio = form_data.get('oraInizio').split(':')[1];
+        let hh_fine = form_data.get('oraFine').split(':')[0];
+        let mm_fine = form_data.get('oraFine').split(':')[1];
+        
+        SARP.set_session(locals); // passa la sessione all'audit
+
+        let stage_id = +form_data.get('stage');
+        const stage = await SARP.pcto_Pcto.findUnique({
+			where: { id: stage_id },
+			include: {
+				svoltoDa: true
+			}
+		});
+        let studenti = stage?.svoltoDa;
+        
+		try {
+            studenti?.forEach(async (studente)  => {
+                await SARP.pcto_Presenza.create({
+                    data: {
+                        creatoDa: user_id(locals),
+                        dataPresenza: new Date(form_data.get('dataPresenza')),
+                        oraInizio: new Date(1970, 1, 1, hh_inizio, mm_inizio),
+                        oraFine: new Date(1970,1 ,1, hh_fine, mm_fine),
+                        svoltoDa: studente.id,
+                        idPcto: +form_data.get('stage'),
+                        approvato: form_data.get('approvato') == "SI" ? true : false
+                    }
+                });	
+            });
+		} catch (exception) {
+			catch_error(exception, "l'inserimento", 404);
 		}
 	}
 };

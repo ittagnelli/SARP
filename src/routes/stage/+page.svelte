@@ -19,8 +19,13 @@
 	utenti.forEach((utente) => {
 		utente['label'] = utente.cognome.concat(' ', utente.nome);
 		utente['value'] = utente.id;
+        utente['tutor'] =   utente.ruoli.some(item => item.ruolo == 'TUTOR-SCOLASTICO');
 	});
 
+    stages.forEach((item, idx) => {
+        stages[idx].tutor_scolastico['full_name'] = stages[idx].tutor_scolastico.cognome.concat(" ", stages[idx].tutor_scolastico.nome);
+    });
+    
 	let svolto = [];
 	let svoltoDa = [];
 
@@ -46,17 +51,22 @@
 		azienda: 0,
 		titolo: '',
 		descrizione: '',
-		tutor: '',
+		tutor_aziendale: '',
+        tutor_scolastico: 0,
 		dataInizio: helper.convert_date(new Date()),
 		dataFine: helper.convert_date(new Date()),
 	};
 
 	// schema di validazione del form
 	const form_schema = yup.object().shape({
-		tutor: yup
+		tutor_aziendale: yup
 		.string()
 		.required("Nome e Cognome tutor necessario")
 		.matches(/^[a-zA-Z ']{3,40}$/, "Nome e Cognome tutor non valido"),
+
+        tutor_scolastico: yup
+		.number()
+		.min(1, 'Tutor Scolastico necessario'),
 		
 		titolo: yup
 		.string()
@@ -87,6 +97,8 @@
 
 		form_values.titolo = stage.titolo;
 		form_values.descrizione = stage.descrizione;
+		form_values.tutor_aziendale = stage.tutor_aziendale;
+        form_values.tutor_scolastico = stage.idTutor;
 		form_values.dataInizio = helper.convert_date(stage.dataInizio);
 		form_values.dataFine = helper.convert_date(stage.dataFine);
 	}
@@ -120,21 +132,23 @@
 <Table
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
-		{ name: 'offertoDa', type: 'object', key: 'nome', display: 'azienda' },
-		{ name: 'tutor', type: 'string', display: 'tutor' },
-		{ name: 'titolo', type: 'string', display: 'titolo' },
-		{ name: 'descrizione', type: 'string', display: 'descrizione' },
+		{ name: 'offertoDa', type: 'object', key: 'nome', display: 'azienda', size: 40 },
+		{ name: 'tutor_aziendale', type: 'string', display: 'tutor aziendale', size: 20 },
+        { name: 'tutor_scolastico', type: 'object', key: 'full_name', display: 'tutor scolastico', size: 20 },
+        { name: 'titolo', type: 'string', display: 'titolo', size: 50 },
+		{ name: 'descrizione', type: 'string', display: 'descrizione', size: 50 },
 		{ name: 'dataInizio', type: 'date', display: 'Inizio' },
 		{ name: 'dataFine', type: 'date', display: 'Fine' },
 		{ name: 'svoltoDa', type: 'array', subtype: 'picture', key: 'picture', display: 'iscritti' }
 	]}
 	rows={stages}
-	page_size={5}
+	page_size={10}
 	modal_name={$page_action_modal}
 	on:update_start={start_update}
-	type="stage"
-    type_genre="m"
+	endpoint="stage"
+    footer="Stage"
     actions={true}
+    resource="pcto_stage"
 />
 
 <!-- Modal from Page action -->
@@ -202,19 +216,45 @@
 					<div class="row">
 						<div class="col-lg-6">
 							<InputText
-								label="Tutor"
-								name="tutor"
+								label="Tutor Aziendale"
+								name="tutor_aziendale"
 								{errors}
 								placeholder="Tutor Aziendale"
-								bind:val={form_values.tutor}
+								bind:val={form_values.tutor_aziendale}
 							/>
 						</div>
                         <div class="col-lg-6">
+                          	<div class="mb-3">
+								<div class="form-label select_text">Tutor Scolastico</div>
+                                <select class="form-select" class:is-invalid="{errors.tutor_scolastico}" name="tutor_scolastico" bind:value={form_values.tutor_scolastico}>
+                                    {#each utenti as utente}
+                                        {#if utente.tutor}
+                                            <option value={utente.id}>{utente.label}</option>
+                                        {/if}
+                                    {/each}
+                                </select>
+                                {#if errors.tipo}
+                                    <span class="invalid-feedback">{errors.tutor_scolastico}</span>
+                                {/if}	
+							</div>
+						</div>
+                        <!-- <div class="col-lg-6">
 							<InputText
 								label="Titolo"
 								name="titolo"
 								{errors}
-								placeholder="Titolo PcTO"
+								placeholder="Titolo PCTO"
+								bind:val={form_values.titolo}
+							/>
+						</div> -->
+					</div>
+                    <div class="row">
+                        <div class="col-lg-12">
+							<InputText
+								label="Titolo"
+								name="titolo"
+								{errors}
+								placeholder="Titolo PCTO"
 								bind:val={form_values.titolo}
 							/>
 						</div>
@@ -233,7 +273,7 @@
 					<div class="row">
 						<div class="col-lg-12">
 							<div class="mb-3">
-								<label class="form-label">Studenti</label>
+								<label class="form-label">Studenti Iscritti</label>
 								<Select
 									class="form-select"
 									name="utenti"
