@@ -25,7 +25,6 @@ function generate_files() { # Generate i file testo e immagine dal pdf
 function sort_file() {
     if [ $2 == "1" ]
     then
-        echo "XIOXIOXI"
         sort -o tmp_$1/tmp_text_$1.txt tmp_$1/tmp_text_$1.txt  # Riordiniamo i file per sicurezza,
         # potrebbe capire che alcune volte il testo sia in ordine alfabetico e le foto no
         # Osservare il file di testo generato e le foto per capirlo
