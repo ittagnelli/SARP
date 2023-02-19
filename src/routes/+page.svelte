@@ -1,179 +1,94 @@
 <script>
 	import { page_pre_title, page_title, page_action_modal, page_action_title } from '../js/store';
+	import KpiNumber from '../lib/components/common/kpi_number.svelte';
 
-	$page_pre_title = 'Home';
-	$page_title = 'Page';
+	$page_pre_title = '';
+	$page_title = '';
 	$page_action_modal = null;
 	$page_action_title = null;
 
-    export let data;
+	export let data;
 </script>
 
-<br><br>
-<h1>Benvenuta/o su <b>S</b>cuola <b>A</b>gnelli <b>R</b>esource <b>P</b>lanning</h1>
-<br /><br />
-<h2>Obiettivi del progetto:</h2>
-<ul>
-	<li>Creare un sistema di amministrazione e gestione dei principlai processi della scuola</li>
-	<li>
-		Ridurre l'uso di documenti cartacei per snellire i processi e muoversi verso il concetto di
-		<i>papereless office</i>
-	</li>
-	<li>
-	    Agevolare le attività amministrative per i vari responsabili (docenti, preside,
-		amministrazione)
-	</li>
-	<li>
-		Fornire una "palestra" per gli studenti per cimentarsi con un'attività non
-		didattica di sviluppo software utilizzando moderne tecnologie web
-	</li>
-</ul>
+<svelte:head>
+	<!-- <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet"> -->
+</svelte:head>
 
-<br><br>
-<div>
+<div class="row row-cards">
+	<KpiNumber icon="bell" icon_color="blue" title="Utenti PCTO" value=812 size="sm"/>
+	<KpiNumber icon="building-factory-2" icon_color="green" title="Convenzioni PCTO" value=43 size="lg"/>
+    <!-- <div class="col-lg-2">
+        <div class="card">
+          <div class="card-stamp">
+            <div class="card-stamp-icon bg-yellow">
+                <i class="ti ti-bell"></i>
+            </div>
+          </div>
+          <div class="card-body">
+            <h2 class="title-card">Utenti PCTO</h2>
+            <div class="number">814</div>
+          </div>
+        </div>
+      </div> -->
+
+	<!-- <div class="col-lg-3">
+        <div class="card">
+          <div class="card-stamp">
+            <div class="card-stamp-icon bg-yellow">
+                <i class="ti ti-bell"></i>
+            </div>
+          </div>
+          <div class="card-body">
+            <h2 class="title-card">Convenzioni PCTO</h2>
+            <div class="number">23</div>
+          </div>
+        </div>
+      </div> -->
+
+	<!-- <div class="col-lg-2">
+        <div class="card">
+          <div class="card-stamp">
+            <div class="card-stamp-icon bg-yellow">
+                <i class="ti ti-bell"></i>
+            </div>
+          </div>
+          <div class="card-body">
+            <h2 class="title-card">PCTO Attivi</h2>
+            <div class="number">12</div>
+          </div>
+        </div>
+      </div> -->
+</div>
+
+<!-- <div>
     <img class="logo" src="img/logo_quadrato_nero_small.png" alt="" />
-</div>
-
-<div class="modal modal-blur fade" id="modal-name" tabindex="-1" role="dialog" aria-hidden="true">
-	<div class="modal-dialog modal-lg" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title">New report</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" />
-			</div>
-			<div class="modal-body">
-				<div class="mb-3">
-					<label class="form-label" for="text6">Name</label>
-					<input
-						id="text6"
-						type="text"
-						class="form-control"
-						name="example-text-input"
-						placeholder="Your report name"
-					/>
-				</div>
-				<label class="form-label" for="text5">Report type</label>
-				<div class="form-selectgroup-boxes row mb-3">
-					<div class="col-lg-6">
-						<label class="form-selectgroup-item">
-							<input
-								id="text5"
-								type="radio"
-								name="report-type"
-								value="1"
-								class="form-selectgroup-input"
-								checked
-							/>
-							<span class="form-selectgroup-label d-flex align-items-center p-3">
-								<span class="me-3">
-									<span class="form-selectgroup-check" />
-								</span>
-								<span class="form-selectgroup-label-content">
-									<span class="form-selectgroup-title strong mb-1">Simple</span>
-									<span class="d-block text-muted"
-										>Provide only basic data needed for the report</span
-									>
-								</span>
-							</span>
-						</label>
-					</div>
-					<div class="col-lg-6">
-						<label class="form-selectgroup-item">
-							<input type="radio" name="report-type" value="1" class="form-selectgroup-input" />
-							<span class="form-selectgroup-label d-flex align-items-center p-3">
-								<span class="me-3">
-									<span class="form-selectgroup-check" />
-								</span>
-								<span class="form-selectgroup-label-content">
-									<span class="form-selectgroup-title strong mb-1">Advanced</span>
-									<span class="d-block text-muted"
-										>Insert charts and additional advanced analyses to be inserted in the report</span
-									>
-								</span>
-							</span>
-						</label>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-lg-8">
-						<div class="mb-3">
-							<label class="form-label" for="text4">Report url</label>
-							<div class="input-group input-group-flat">
-								<span class="input-group-text"> https://tabler.io/reports/ </span>
-								<input
-									id="text4"
-									type="text"
-									class="form-control ps-0"
-									value="report-01"
-									autocomplete="off"
-								/>
-							</div>
-						</div>
-					</div>
-					<div class="col-lg-4">
-						<div class="mb-3">
-							<label class="form-label" for="text4">Visibility</label>
-							<select id="text4" class="form-select">
-								<option value="1" selected>Private</option>
-								<option value="2">Public</option>
-								<option value="3">Hidden</option>
-							</select>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="modal-body">
-				<div class="row">
-					<div class="col-lg-6">
-						<div class="mb-3">
-							<label class="form-label" for="text3">Client name</label>
-							<input id="text3" type="text" class="form-control" />
-						</div>
-					</div>
-					<div class="col-lg-6">
-						<div class="mb-3">
-							<label class="form-label" for="text2">Reporting period</label>
-							<input id="text2" type="date" class="form-control" />
-						</div>
-					</div>
-					<div class="col-lg-12">
-						<div>
-							<label class="form-label" for="text1">Additional information</label>
-							<textarea id="text1" class="form-control" rows="3" />
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="modal-footer">
-				<a href="/" class="btn btn-link link-secondary" data-bs-dismiss="modal"> Cancel </a>
-				<a href="/" class="btn btn-primary ms-auto" data-bs-dismiss="modal">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						class="icon"
-						width="24"
-						height="24"
-						viewBox="0 0 24 24"
-						stroke-width="2"
-						stroke="currentColor"
-						fill="none"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						><path stroke="none" d="M0 0h24v24H0z" fill="none" /><line
-							x1="12"
-							y1="5"
-							x2="12"
-							y2="19"
-						/><line x1="5" y1="12" x2="19" y2="12" /></svg
-					>
-					Create new report
-				</a>
-			</div>
-		</div>
-	</div>
-</div>
-
+</div> -->
 <style>
-	h1 {
+	/* .title-card {
+        border: 0px solid black;
+        max-width: 8vw;
+        min-height: 80px;
+        color: black;
+        font-size: 1.3vw;
+        line-height: 2.5rem;
+        font-weight: bold;
+        opacity: .4;
+    }
+
+    .number {
+        border: 0px solid black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: black;
+        font-size: 4.5rem;
+        min-height: 150px;
+        opacity: 0.5;
+        font-family: 'Fredoka One';
+        letter-spacing: 0.5rem;
+    } */
+
+	/* h1 {
 		font-size: 3rem;
 	}
 	h2,
@@ -187,5 +102,5 @@
 
     .logo {
         width: 300px;
-    }
+    } */
 </style>
