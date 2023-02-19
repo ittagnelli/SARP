@@ -43,6 +43,7 @@ then
     echo "Usage: pdf_to_images.sh NOMEFILE SORT SCOSTAMENTO URL PORTA FOLDER"
     echo "SORT può assumere 2 valori 0 = no oppure 1 = si"
     echo "RICORDA: Controlla il file testo generato per capire se può essere utile, nella maggior parte dei casi è inutile"
+    echo "Classi in cui è stata testata l'efficacia di SORT: 4INFO"
     exit 1
 fi
 
