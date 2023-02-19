@@ -59,11 +59,10 @@ clean_up_useless_files tmp_$filename
 sort_file $filename $2
 
 counter=$((4-$3))    # La prima foto utile è la quarta
-regex='([IVXLCDM]){1,4}(-([IVXLCDM]){1,4}){0,2}'    # Se contiene un numero romano skippiamo la riga
 
 cat tmp_$filename/tmp_text_$filename.txt | while read line
 do
-    if [[ "$line" == *"ENERGIA"* ]] || [[ "$line" == *"LIC"* ]]
+    if [[ "$line" == *"ENERGIA"* ]] || [[ "$line" == *"LIC"* ]] || [[ "$line" == *"ITT"* ]] || [[ "$line" == *"ELE"* ]] || [[ "$line" == *"ELETTRONICA"* ]] || [[ "$line" == *"INFO"* ]] || [[ "$line" == *"MEC"* ]]
     then   # Salta un giro se c'è il nome della classe o l'istituto
         continue
     fi
