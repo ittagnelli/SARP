@@ -31,15 +31,9 @@ function sort_file() {
     fi
 }
 
-function scp_upload() {
-    echo "La chiave per il caricamento deve essere importata nel ssh agent"
-    # Copia tutti i file in $4 nell'host $1:$2 in cartella $3
-    scp -P $2 $4/* sarp@$1:$3
-}
-
-if [ "$1" == "" ] || [ "$2" == "" ] || [ "$3" == "" ] || [ "$4" == "" ] || [ "$5" == "" ] || [ "$6" == "" ]
+if [ "$1" == "" ] || [ "$2" == "" ] || [ "$3" == "" ]
 then
-    echo "Usage: pdf_to_images.sh NOMEFILE SORT SCOSTAMENTO URL PORTA FOLDER"
+    echo "Usage: pdf_to_images.sh NOMEFILE SORT SCOSTAMENTO"
     echo "SORT può assumere 2 valori 0 = no oppure 1 = si"
     echo "RICORDA: Controlla il file testo generato per capire se può essere utile, nella maggior parte dei casi è inutile"
     echo "Classi in cui è stata testata l'efficacia di SORT: 4INFO"
@@ -52,9 +46,12 @@ mv "$1" ${filename// /_}.pdf
 
 filename=${filename// /_}
 
+cleanup_files $filename
+
 generate_files "$filename"
 
 clean_up_useless_files tmp_$filename
+
 
 sort_file $filename $2
 
@@ -87,9 +84,3 @@ do
         ((counter++))
     fi
 done
-
-node upload_files_to_db.js tmp_$filename    # Carica le immagini nel DB
-
-scp_upload $4 $5 $6 tmp_$filename
-
-cleanup_files "$filename"
