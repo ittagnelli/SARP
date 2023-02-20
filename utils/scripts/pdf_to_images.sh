@@ -73,7 +73,7 @@ do
     
     if [ "$line" != "" ]
     then
-        if [ "$line" == "Coordinatore prof.ssa" ]   # Se c'è la frase coordinatore siamo arrivati alla fìne
+        if [ "$line" == "Coordinatore" ]   # Se c'è la frase coordinatore siamo arrivati alla fìne
         then
             break
         fi
