@@ -3,23 +3,19 @@
 </svelte:head>
 
 <script>
-    export let icon;
-    export let icon_color;
-    export let title;
-    export let value;
     export let size;
 </script>
 
 <div class="col-{size}">
 	<div class="card">
 		<div class="card-stamp">
-			<div class="card-stamp-icon bg-{icon_color || 'yellow'}">
-				<i class="ti ti-{icon}" />
-			</div>
+			<!-- <div class="card-stamp-icon bg-yellow">
+				<i class="ti ti-clock-2" />
+			</div> -->
 		</div>
 		<div class="card-body">
-			<h2 class="title-card">{title}</h2>
-			<div class="number">{value}</div>
+			<h2 class="title-card"></h2>
+			<div class="number"></div>
 		</div>
 	</div>
 </div>
