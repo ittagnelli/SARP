@@ -4,6 +4,10 @@ import { exit } from "process";
 
 const prisma = new PrismaClient();
 
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 async function main(folder) {
     if (!folder) {
         console.log("Specificare una cartella valida");
@@ -19,7 +23,7 @@ async function main(folder) {
                 const user_to_change = await prisma.utente.findFirst({
                     where: {
                         nome: file_splittato[1],
-                        cognome: file_splittato[0]
+                        cognome: capitalizeFirstLetter(file_splittato[0].toLowerCase())
                     }
                 });
 
@@ -29,11 +33,11 @@ async function main(folder) {
                             id: user_to_change.id
                         },
                         data: {
-                            picture: file
+                            picture: "static/".concat(file)
                         }
                     });
                 else
-                    console.log("Utente ".concat(file_splittato[0]).concat(" ").concat(file_splittato[1]).concat(" non trovato"));
+                    console.log("Utente ".concat(capitalizeFirstLetter(file_splittato[0].toLowerCase())).concat(" ").concat(file_splittato[1]).concat(" non trovato"));
             }
         })
     })
@@ -41,4 +45,4 @@ async function main(folder) {
 
 const argv = process.argv;
 
-main(argv[argv.length - 1]);
+main(argv[2]);
