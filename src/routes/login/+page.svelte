@@ -62,11 +62,13 @@
 	});
 
 	function dev_login() {
+        console.log("DEV LOGIN:", dev);
         // se in sviluppo chiamiamo il server login con 
         // credenziali uguali al nome utente (nome.cognome)
         // e anzichè fare il decode del token passiamo
         // subito all'autenticazione nel DB e alla sessione
 		if (dev) {
+            console.log("CALL CALLBACK")
 			login_callback({ credential: dev_user });
 		}
 	}
