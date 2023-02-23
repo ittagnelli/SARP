@@ -11,7 +11,13 @@ describe('Vista Utenti', () => {
     /* ==== Generated with Cypress Studio ==== */
     cy.get('.form-control').clear('e');
     cy.wait(2000);
-    cy.get('.form-control').type('espedito.mancuso@istitutoagnelli.it');
+    cy.get('.form-control').type('marco.cellini@istitutoagnelli.it');
+    cy.get('.btn').click();
+    cy.wait(500);
+    cy.get(':nth-child(2) > .link-secondary').click();
+    cy.get(':nth-child(3) > .form-selectgroup-label').click();
+    cy.get('.col-md-8 > .mb-3 > .form-control').type('PROBLEMI!!!');
+    cy.get('.col-md-12 > .mb-3 > .form-control').type('Ci sono dei grossi problemi');
     cy.get('.btn').click();
     /* ==== End Cypress Studio ==== */
   })
