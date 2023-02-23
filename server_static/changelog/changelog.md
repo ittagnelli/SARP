@@ -1,3 +1,10 @@
+## v0.25.0 – 22 Febbraio 2023
+- `fix#176`
+- aggiunto dashbopard in home page
+- creato componente per KPI number
+- creata tabella per KPI summary
+- creato script per aggiornamento KPI
+
 ## v0.24.0 – 17 Febbraio 2023
 - aggiunta di FAQ per il funzionamento di SARP e delle applicazioni
 - aggiunto tutor scolastico alla sezione stage del PCTO

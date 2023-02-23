@@ -185,6 +185,7 @@ export const actions = {
                 filler['classe'] = studente.classe.classe;
                 filler['istituto'] = studente.classe.istituto;
                 filler['sezione'] = studente.classe.sezione;
+                filler['today'] = new Date().toLocaleDateString();
 
                 let TEMPLATE_FILE;
                 if(corso.tipo == 'SPECIFICO')
