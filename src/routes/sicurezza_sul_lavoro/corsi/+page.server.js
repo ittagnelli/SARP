@@ -180,12 +180,12 @@ export const actions = {
                 filler['nome'] = studente.nome;
                 filler['cognome'] = studente.cognome 
                 filler['natoA'] = studente.natoA;
-                filler['natoIl'] = studente.natoIl.toLocaleDateString();
+                filler['natoIl'] = studente.natoIl.toLocaleDateString("it-IT");
                 filler['codiceF'] = studente.codiceF;
                 filler['classe'] = studente.classe.classe;
                 filler['istituto'] = studente.classe.istituto;
                 filler['sezione'] = studente.classe.sezione;
-                filler['today'] = new Date().toLocaleDateString();
+                filler['today'] = new Date().toLocaleDateString("it-IT");
 
                 let TEMPLATE_FILE;
                 if(corso.tipo == 'SPECIFICO')
