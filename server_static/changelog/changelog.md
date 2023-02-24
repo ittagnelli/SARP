@@ -1,3 +1,13 @@
+## v0.26.0 – 24 Febbraio 2023
+- fix piccolo bug in script upload immagini
+- piccoli cambiamenti estetici suggeriti dagli studenti
+- rimossa immagine dal profilo google
+- aggiunta data nel template corso sicurezza
+- stampa data in formato italiano
+- Introduce pdf_to_images   
+- rename student pictures to proper name
+- script to add student picture in DB
+
 ## v0.25.0 – 22 Febbraio 2023
 - `fix#176`
 - aggiunto dashbopard in home page
