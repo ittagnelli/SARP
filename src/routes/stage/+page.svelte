@@ -15,6 +15,14 @@
 	let stages = helper.data2arr(data.stages);
     let aziende = helper.data2arr(data.companies);
     let utenti = helper.data2arr(data.utenti);
+	let classi = helper.data2arr(data.classi);
+	let classi_iscritte = [];
+	let old_studenti = [];
+
+	classi.forEach( classe => {
+		classe['label'] = classe.classe.concat(" " + classe.istituto).concat(" " + classe.sezione);
+		classe['value'] = classe.id;
+	});
 
 	utenti.forEach((utente) => {
 		utente['label'] = utente.cognome.concat(' ', utente.nome);
@@ -103,15 +111,62 @@
 		form_values.dataFine = helper.convert_date(stage.dataFine);
 	}
 
+	function findDeselectedItem(CurrentArray, PreviousArray) {
+
+		var CurrentArrSize = CurrentArray.length;
+		var PreviousArrSize = PreviousArray.length;
+
+		// loop through previous array
+		for(var j = 0; j < PreviousArrSize; j++) {
+
+		// look for same thing in new array
+		if (CurrentArray.indexOf(PreviousArray[j]) == -1)
+			return PreviousArray[j];
+		}
+
+		return null;
+
+	}
+
 	function handleSelect(event) {
 		let user_selected = event.detail;
-
-       svolto = [];
+       	svolto = [];
+		let i = 0;
         if(user_selected) {
             user_selected.forEach((item) => {
                 svolto = [...svolto, item.value];
             });
-        }
+			let removed = findDeselectedItem(user_selected, old_studenti);
+			if(old_studenti.length != 0){
+				let classi_ids = classi_iscritte.map(classe => classe.id);
+				if(removed){
+					let users_id = user_selected.map(user => user.classeId);
+					if(users_id.indexOf(removed.classeId) == -1){
+						let index_to_remove = classi_ids.indexOf(removed.classeId);
+						classi_iscritte.splice(index_to_remove, 1);
+						classi_iscritte = classi_iscritte;
+					}
+				}
+
+			}
+			old_studenti = user_selected;
+        }else {
+			classi_iscritte = [];
+		}
+	}
+
+	function handleSelect_classi(event) {
+		let classe_selected = event.detail;
+		svoltoDa = [];
+		if(classe_selected){
+			classi_iscritte = classe_selected;
+			classe_selected.forEach((item) => {
+				let utenti_partecipanti = utenti.filter((utente) => {
+					return utente.classeId == item.id;
+				});
+				svoltoDa = [...svoltoDa, ...utenti_partecipanti];
+			});
+		}
 	}
 
 	async function handleSubmit() {
@@ -238,15 +293,6 @@
                                 {/if}	
 							</div>
 						</div>
-                        <!-- <div class="col-lg-6">
-							<InputText
-								label="Titolo"
-								name="titolo"
-								{errors}
-								placeholder="Titolo PCTO"
-								bind:val={form_values.titolo}
-							/>
-						</div> -->
 					</div>
                     <div class="row">
                         <div class="col-lg-12">
@@ -286,6 +332,24 @@
 							</div>
 						</div>
 					</div>
+					{#if modal_action == 'create'}
+						<div class="row">
+							<div class="col-lg-12">
+								<div class="mb-3">
+									<label class="form-label">Classi Iscritte</label>
+									<Select
+										class="form-select"
+										name="utenti"
+										items={classi}
+										value={classi_iscritte}
+										isMulti={true}
+										placeholder="Selezione gli studenti..."
+										on:select={handleSelect_classi}
+									/>
+								</div>
+							</div>
+						</div>
+					{/if}
 					<div class="modal-footer">
 						<a href="#" class="btn btn-danger" data-bs-dismiss="modal">
 							<b>Cancel</b>
