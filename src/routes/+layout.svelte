@@ -14,8 +14,8 @@
 {#if data.session}
 	<div class="page" in:fade={{ delay: 200, duration: 1500 }}>
 		<Navbar>
-			<NavItem resource="menu_home" text="Home" icon="home-2" link="/" />
-			<NavItem resource="menu_utenti" text="Utenti" icon="users" link="/utenti" />
+                <NavItem resource="menu_home" text="Home" icon="home-2" link="/" />
+                <NavItem resource="menu_utenti" text="Utenti" icon="users" link="/utenti" />
 			<NavMenu resource="menu_pcto" text="PCTO" icon="building-factory-2">
 				<NavSubItem resource="menu_aziende" text="Aziende" link="/aziende" />
 				<NavSubItem resource="menu_stage" text="Stage" link="/stage" />

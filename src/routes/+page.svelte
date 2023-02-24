@@ -23,10 +23,10 @@
     <KpiNumber icon="school" icon_color="blue" title="Studenti PCTO" value={kpi.n_studenti_pcto_attivi} size=3/>
 	<KpiNumber icon="building-factory-2" icon_color="green" title="Convenzioni PCTO" value={kpi.n_pcto_aziende_attive} size=3/>
     <KpiNumber icon="chef-hat" icon_color="green" title="PCTO Attivi" value={kpi.n_pcto_attivi} size=3/>
-    <KpiSpacer size=2 />
-    <KpiNumber icon="hourglass-empty" icon_color="yellow" title="Ore PCTO Attivi" value={kpi.n_ore_tot_pcto_attivi} size=4/>
-    <KpiNumber icon="clock-2" icon_color="yellow" title="Ore PCTO Totali" value={kpi.n_ore_tot_pcto} size=4/>    
-    <KpiSpacer size=2 />
+    <KpiSpacer size=3 />
+    <KpiNumber icon="hourglass-empty" icon_color="yellow" title="Ore PCTO Attivi" value={kpi.n_ore_tot_pcto_attivi} size=3/>
+    <KpiNumber icon="clock-2" icon_color="yellow" title="Ore PCTO Totali" value={kpi.n_ore_tot_pcto} size=3/>    
+    <KpiSpacer size=3 />
 </div>
 
 </div>
