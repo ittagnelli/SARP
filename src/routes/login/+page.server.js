@@ -94,15 +94,6 @@ export const actions = {
 				where: { idUtente: utente.id }
 			});
 
-			// esegue l'update dell'immmagine se necessario
-			if (db_query.picture != info_utente.picture) {
-				await SARP.Utente.update({
-					where: { id: utente.id },
-					data: {
-						picture: info_utente.picture
-					}
-				});
-			}
 			// utente valido quindi crea la sessione con scadenza SESSION_TIMEOUT
 			await SARP.Session.create({
 				data: {
