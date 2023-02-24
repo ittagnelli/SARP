@@ -33,7 +33,7 @@ async function main(folder) {
                             id: user_to_change.id
                         },
                         data: {
-                            picture: "static/".concat(file)
+                            picture: "img/users/".concat(file)
                         }
                     });
                 else
