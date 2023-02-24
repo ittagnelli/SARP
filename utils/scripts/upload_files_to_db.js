@@ -22,7 +22,7 @@ async function main(folder) {
             if (file_splittato[0] != "tmp") {
                 const user_to_change = await prisma.utente.findFirst({
                     where: {
-                        nome: file_splittato[1],
+                        nome: capitalizeFirstLetter(file_splittato[1].toLowerCase()),
                         cognome: capitalizeFirstLetter(file_splittato[0].toLowerCase())
                     }
                 });
