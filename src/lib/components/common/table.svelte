@@ -262,7 +262,8 @@ a {
 }
 
 .picture {
-    width: 40px;
+    /* width: 40px; */
+    height: 50px;
     margin-right: 10px;
     border: 0px solid black;
     border-radius: 12px;
@@ -277,8 +278,9 @@ a {
 
 .picture-item {
     margin: auto;
-    width: 40px;
-    border-radius: 12px;
+    /* width: 40px; */
+    height: 50px;
+    border-radius: 8px;
 }
 
 .badge-container {

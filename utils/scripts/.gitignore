@@ -1,0 +1,6 @@
+# Generated file from pdf_to_images.sh
+*.png
+*.txt
+
+# Don't leak user image
+*.pdf
