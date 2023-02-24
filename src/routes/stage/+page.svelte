@@ -19,10 +19,7 @@
 	let classi_iscritte = [];
 	let old_studenti = [];
 
-	classi.forEach( classe => {
-		classe['label'] = classe.classe.concat(" " + classe.istituto).concat(" " + classe.sezione);
-		classe['value'] = classe.id;
-	});
+	classi = helper.db_to_select(classi);
 
 	utenti.forEach((utente) => {
 		utente['label'] = utente.cognome.concat(' ', utente.nome);
@@ -111,23 +108,6 @@
 		form_values.dataFine = helper.convert_date(stage.dataFine);
 	}
 
-	function findDeselectedItem(CurrentArray, PreviousArray) {
-
-		var CurrentArrSize = CurrentArray.length;
-		var PreviousArrSize = PreviousArray.length;
-
-		// loop through previous array
-		for(var j = 0; j < PreviousArrSize; j++) {
-
-		// look for same thing in new array
-		if (CurrentArray.indexOf(PreviousArray[j]) == -1)
-			return PreviousArray[j];
-		}
-
-		return null;
-
-	}
-
 	function handleSelect(event) {
 		let user_selected = event.detail;
        	svolto = [];
@@ -136,7 +116,7 @@
             user_selected.forEach((item) => {
                 svolto = [...svolto, item.value];
             });
-			let removed = findDeselectedItem(user_selected, old_studenti);
+			let removed = helper.findDeselectedItem(user_selected, old_studenti);
 			if(old_studenti.length != 0){
 				let classi_ids = classi_iscritte.map(classe => classe.id);
 				if(removed){
