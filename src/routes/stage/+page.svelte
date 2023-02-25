@@ -108,6 +108,23 @@
 		form_values.dataFine = helper.convert_date(stage.dataFine);
 	}
 
+	function findDeselectedItem(CurrentArray, PreviousArray) {
+
+		var CurrentArrSize = CurrentArray.length;
+		var PreviousArrSize = PreviousArray.length;
+
+		// loop through previous array
+		for(var j = 0; j < PreviousArrSize; j++) {
+
+		// look for same thing in new array
+		if (CurrentArray.indexOf(PreviousArray[j]) == -1)
+			return PreviousArray[j];
+		}
+
+		return null;
+
+	}
+
 	function handleSelect(event) {
 		let user_selected = event.detail;
        	svolto = [];
@@ -312,7 +329,7 @@
 							</div>
 						</div>
 					</div>
-					{#if modal_action == 'create'}
+					{#if svoltoDa.length == 0}
 						<div class="row">
 							<div class="col-lg-12">
 								<div class="mb-3">
