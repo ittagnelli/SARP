@@ -55,10 +55,13 @@ export async function load({ locals }) {
             orderBy: [{ id: 'desc' }]
         });
 
+        const classi = await SARP.Classe.findMany();
+
         // restituisco il risultato della query SQL
         return {
             corsi: corsi,
-            utenti: utenti
+            utenti: utenti,
+            classi: classi
         }
     } catch (exception) {
         catch_error(exception, "la ricerca", 800);

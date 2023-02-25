@@ -19,10 +19,7 @@
 	let classi_iscritte = [];
 	let old_studenti = [];
 
-	classi.forEach( classe => {
-		classe['label'] = classe.classe.concat(" " + classe.istituto).concat(" " + classe.sezione);
-		classe['value'] = classe.id;
-	});
+	classi = helper.db_to_select(classi);
 
 	utenti.forEach((utente) => {
 		utente['label'] = utente.cognome.concat(' ', utente.nome);
@@ -136,7 +133,7 @@
             user_selected.forEach((item) => {
                 svolto = [...svolto, item.value];
             });
-			let removed = findDeselectedItem(user_selected, old_studenti);
+			let removed = helper.findDeselectedItem(user_selected, old_studenti);
 			if(old_studenti.length != 0){
 				let classi_ids = classi_iscritte.map(classe => classe.id);
 				if(removed){
