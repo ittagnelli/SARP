@@ -140,6 +140,29 @@
         form_values.istituto = azienda.istituto;
 	}
 
+    async function cancel_action(){
+        if(modal_action == "update"){
+            await helper.wait_fade_finish();
+            modal_action = 'create';    // Reset model string
+            form_values = { // Reset form values
+                company_id: 0,
+                nome: "",
+                indirizzo: "",      
+                piva: "",
+                telefono: "",
+                direttore_nome: "",
+                direttore_natoA: "",
+                direttore_natoIl: helper.convert_date(new Date()),
+                direttore_codiceF: "",
+                idConvenzione: "",
+                idUtente: undefined,
+                dataConvenzione: helper.convert_date(new Date()),
+                dataProtocollo: helper.convert_date(new Date()),
+                istituto: "ITT"
+            };
+        }
+    }
+
     async function handleSubmit() {
         try {
             // valida il form prima del submit
@@ -201,7 +224,7 @@
 					{:else}
 						<h5 class="modal-title">Aggiorna Azienda</h5>
 					{/if}
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" />
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" on:click={cancel_action}/>
 				</div>
 				<div class="modal-body">
                     {#if form}
@@ -343,7 +366,7 @@
 					</div>
 				</div>
 				<div class="modal-footer">
-					<a href="#" class="btn btn-danger" data-bs-dismiss="modal">
+					<a href="#" class="btn btn-danger" data-bs-dismiss="modal" on:click={cancel_action}>
 						<b>Cancel</b>
 					</a>
 					<button class="btn btn-success ms-auto">

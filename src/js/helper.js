@@ -159,3 +159,5 @@ export function delay(msec) {
 		setTimeout(resolve, msec || 1000);
 	});
 }
+
+export const wait_fade_finish = async () => await delay(150); // Avoid graphic issue, wait for the finish of modal closing animation. 150 ms from Tabler css
