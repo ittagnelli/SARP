@@ -62,3 +62,4 @@
 		"seed": "node utils/scripts/seed_db.js"
 	}
 }
+
