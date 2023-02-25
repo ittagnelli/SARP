@@ -191,7 +191,7 @@
 		{ name: 'descrizione', type: 'string', display: 'descrizione', size: 50 },
 		{ name: 'dataInizio', type: 'date', display: 'Inizio' },
 		{ name: 'dataFine', type: 'date', display: 'Fine' },
-		{ name: 'svoltoDa', type: 'array', subtype: 'picture', key: 'picture', display: 'iscritti' }
+		{ name: 'svoltoDa', type: 'array', subtype: 'picture', key: 'picture', display: 'iscritti', size: 5 }
 	]}
 	rows={stages}
 	page_size={10}

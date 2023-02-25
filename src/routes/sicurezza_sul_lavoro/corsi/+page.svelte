@@ -172,7 +172,7 @@
         { name: 'tipo', type: 'string', display: 'tipo', size: 20 },
         { name: 'dataInizio', type: 'date', display: 'Inizio' },
 		{ name: 'dataFine', type: 'date', display: 'Fine' },	
-		{ name: 'seguitoDa', type: 'array', subtype: 'picture', key: 'picture', display: 'iscritti' }
+		{ name: 'seguitoDa', type: 'array', subtype: 'picture', key: 'picture', display: 'iscritti', size: 5 }
 	]}
 	rows={corsi}
 	page_size={10}
