@@ -274,7 +274,7 @@
 							</div>
 						</div>
 					</div>
-					{#if modal_action == 'create'}
+					{#if seguitoDa.length == 0}
 					<div class="row">
 						<div class="col-lg-12">
 							<div class="mb-3">
