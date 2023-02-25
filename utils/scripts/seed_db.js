@@ -36,7 +36,7 @@ function random_item(list) {
 async function create_ruoli() {
     for (const role of ruoli_utente) {
 		try {
-			await SARP.ruolo_Utente.create({	
+			await SARP.ruolo_Utente.create({
 				data: { ruolo: role }
 			});
 			console.log(`Creazione RUOLO utente -> ${role}`);
