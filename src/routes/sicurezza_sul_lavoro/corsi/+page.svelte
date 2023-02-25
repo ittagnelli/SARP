@@ -145,13 +145,14 @@
 		}
 	}
 
-    onMount(() => { // Controlliamo che l'inserimento sia andato a buon fine, usiamo on mount per richiamare le funzioni del DOM
+    onMount(async () => { // Controlliamo che l'inserimento sia andato a buon fine, usiamo on mount per richiamare le funzioni del DOM
         if (form != null) {
                 if (form.files != null) { // è stato richiesto la generazione di uno o più file
                     for(let doc of form.files) {
                         const buffer = new Uint8Array(JSON.parse(doc.file).data); // Convertiamo la stringa in un oggetto che conterrà il nostro array di bytes che verrà poi convertito in Uint8Array, necessario all'oggetto Blob
                         var blob = new Blob([buffer], { type: 'application/msword' });
                         saveAs(blob, doc.name);
+                        await helper.delay(100); //chrome can download max 10 files at the time
                     }
                 } else { // file è null quindi l'unico caso possibile è la violazione della chiave unique nel DB
                     form_values = JSON.parse(localStorage.getItem('form')); // Riempiamo il modale
