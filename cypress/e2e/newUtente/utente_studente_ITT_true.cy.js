@@ -15,7 +15,7 @@ describe('Vista Utenti', () => {
     cy.get('.btn').click();
     cy.get(':nth-child(2) > .nav-link > .nav-link-title').click();
     cy.get('#btn_action_modal').click();
-    cy.wait(200);
+    cy.wait(100);
     cy.get(':nth-child(1) > :nth-child(1) > .mb-3 > .form-control').type('Pippo');
     cy.wait(10);
     cy.get(':nth-child(1) > :nth-child(2) > .mb-3 > .form-control').type('Pluto');
@@ -30,10 +30,9 @@ describe('Vista Utenti', () => {
     cy.wait(10);
     cy.get(':nth-child(2) > :nth-child(2) > .mb-3 > .form-control').type('333.123.45.67');
     cy.wait(10);
-    cy.get(':nth-child(3) > .mb-3 > .form-select').select(0);
-    cy.get(':nth-child(4) > .mb-3 > .form-select').select(0);
+    cy.get(':nth-child(3) > .mb-3 > .form-select').select(3);
+    cy.get(':nth-child(4) > .mb-3 > .form-select').select(20);
     cy.wait(10);
-    cy.get(':nth-child(5) > .mb-3 > .form-selectgroup > :nth-child(2) > .form-selectgroup-label').click();
     cy.get('.col-lg-12 > .form-selectgroup > :nth-child(1) > .form-selectgroup-label').click();
     cy.get('.col-lg-12 > .form-selectgroup > :nth-child(2) > .form-selectgroup-label').click();
     cy.get(':nth-child(3) > .form-selectgroup-label').click();
@@ -42,6 +41,7 @@ describe('Vista Utenti', () => {
     cy.get(':nth-child(6) > .form-selectgroup-label').click();
     cy.get(':nth-child(7) > .form-selectgroup-label').click();
     cy.get(':nth-child(8) > .form-selectgroup-label').click();
+    cy.get(':nth-child(2) > .mb-3 > .form-selectgroup > :nth-child(1) > .form-selectgroup-label').click();
     cy.wait(10);
     cy.get('.btn-success').click();
     /* ==== End Cypress Studio ==== */

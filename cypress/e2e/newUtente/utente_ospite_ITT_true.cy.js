@@ -31,6 +31,7 @@ describe('Vista Utenti', () => {
     cy.get(':nth-child(2) > :nth-child(2) > .mb-3 > .form-control').type('333.123.45.67');
     cy.wait(10);
     cy.get(':nth-child(3) > .mb-3 > .form-select').select(0);
+    cy.get(':nth-child(4) > .mb-3 > .form-select').select(20);
     cy.wait(10);
     cy.get('.col-lg-12 > .form-selectgroup > :nth-child(1) > .form-selectgroup-label').click();
     cy.get('.col-lg-12 > .form-selectgroup > :nth-child(2) > .form-selectgroup-label').click();
