@@ -55,10 +55,13 @@ export async function load({ locals }) {
             orderBy: [{ id: 'desc' }]
         });
 
+        const classi = await SARP.Classe.findMany();
+
         // restituisco il risultato della query SQL
         return {
             corsi: corsi,
-            utenti: utenti
+            utenti: utenti,
+            classi: classi
         }
     } catch (exception) {
         catch_error(exception, "la ricerca", 800);
@@ -180,11 +183,12 @@ export const actions = {
                 filler['nome'] = studente.nome;
                 filler['cognome'] = studente.cognome 
                 filler['natoA'] = studente.natoA;
-                filler['natoIl'] = studente.natoIl.toLocaleDateString();
+                filler['natoIl'] = studente.natoIl.toLocaleDateString("it-IT");
                 filler['codiceF'] = studente.codiceF;
                 filler['classe'] = studente.classe.classe;
                 filler['istituto'] = studente.classe.istituto;
                 filler['sezione'] = studente.classe.sezione;
+                filler['today'] = new Date().toLocaleDateString("it-IT");
 
                 let TEMPLATE_FILE;
                 if(corso.tipo == 'SPECIFICO')

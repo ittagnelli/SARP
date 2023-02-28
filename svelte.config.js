@@ -18,7 +18,7 @@ const config = {
 				'base-uri': ['self'],
 				'connect-src': ['self', 'localhost', 'https://sarp.agnelli.it'],
 				'default-src': ['self', 'https://accounts.google.com/'],
-				'font-src': ['self'],
+				'font-src': ['self', 'https://fonts.googleapis.com/', 'https://fonts.gstatic.com'],
 				'form-action': ['self'],
 				'frame-src': ['https://accounts.google.com/'], // Non usiamo iframe nel sito per il momento
                 'img-src': ['self', 'data:', 'https://lh3.googleusercontent.com/'],
@@ -28,7 +28,7 @@ const config = {
 				'script-src': ['self', "unsafe-inline"],// Dovremmo rimuovere gli script inline
 				'script-src-elem': ['self', "unsafe-inline"],
 				'style-src': ['self', 'https://accounts.google.com/', "unsafe-inline"],	// Dovremmo rimuovere gli stili inline
-				'style-src-elem': ['self','https://accounts.google.com/', "unsafe-inline"],
+				'style-src-elem': ['self','https://accounts.google.com/', 'https://fonts.googleapis.com/', 'https://fonts.gstatic.com', "unsafe-inline"],
 				'worker-src': ['self']
 			}
 		},

@@ -48,7 +48,7 @@ export const has_grant = (role, action, resource) => {
 
 // genera un errore per l'utrente
 export const raise_error = (http_code, code, mex) => {
-    throw error(http_code, {
+	throw error(http_code, {
 		code: code,
 		message: mex
 	});
@@ -87,8 +87,8 @@ export const user_id = (data) => {
 };
 
 export const is_admin = (data) => {
-    return user_ruolo(data).includes(PUBLIC_ADMIN_ROLE);
-}
+	return user_ruolo(data).includes(PUBLIC_ADMIN_ROLE);
+};
 
 // restituisce una clausola di ricerca per utente ADMIN e non
 export const multi_user_where = (data) => {
@@ -108,7 +108,6 @@ export const pcto_presenze_where = (data) => {
 
 	return clausola_where;
 };
-
 
 // auto button click for modal PROF:
 export const show_modal = () => {
@@ -131,3 +130,32 @@ export const is_mobile = (request) => {
 
 	return ua.includes('Android') || ua.includes('Mobile') || ua.includes('iPhone');
 };
+
+/*
+	CLASSE SELECT HELPERS
+*/
+
+export function findDeselectedItem(now_studenti, old_studenti) {
+	// loop through previous array
+	for (const studente of old_studenti) {
+		// look for same thing in new array
+		if (now_studenti.indexOf(studente) == -1) return studente;
+	}
+	return null;
+}
+
+export const db_to_select = (classi) => {
+	classi.forEach((classe) => {
+		classe['label'] = classe.classe.concat(' ' + classe.istituto).concat(' ' + classe.sezione);
+		classe['value'] = classe.id;
+	});
+
+	return classi;
+};
+
+// delay for msec ms (1 sec by default)
+export function delay(msec) {
+	return new Promise((resolve, reject) => {
+		setTimeout(resolve, msec || 1000);
+	});
+}
