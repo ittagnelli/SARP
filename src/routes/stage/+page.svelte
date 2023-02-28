@@ -87,6 +87,17 @@
 		.min(1, 'Azienda necessaria')
 	});
 
+    let stage_modal_values = {
+		pcto_id: 0,
+		azienda: 0,
+		titolo: '',
+		descrizione: '',
+		tutor_aziendale: '',
+        tutor_scolastico: 0,
+		dataInizio: helper.convert_date(new Date()),
+		dataFine: helper.convert_date(new Date()),
+	};
+
 	async function start_update(e) {
 		modal_action = 'update';
 
@@ -106,23 +117,6 @@
         form_values.tutor_scolastico = stage.idTutor;
 		form_values.dataInizio = helper.convert_date(stage.dataInizio);
 		form_values.dataFine = helper.convert_date(stage.dataFine);
-	}
-
-	function findDeselectedItem(CurrentArray, PreviousArray) {
-
-		var CurrentArrSize = CurrentArray.length;
-		var PreviousArrSize = PreviousArray.length;
-
-		// loop through previous array
-		for(var j = 0; j < PreviousArrSize; j++) {
-
-		// look for same thing in new array
-		if (CurrentArray.indexOf(PreviousArray[j]) == -1)
-			return PreviousArray[j];
-		}
-
-		return null;
-
 	}
 
 	function handleSelect(event) {
@@ -179,16 +173,37 @@
 			logger.error(`Errori nella validazione del form stage. Oggetto: ${JSON.stringify(form_values)} -- Errore: ${JSON.stringify(errors)}`);
 		}
 	}
+
+    function show_stage_modal(e) {
+        let stage_detail_modal = helper.get_modal('stage_detail_modal');
+        let stage_detail = e.detail.id;
+
+        let stage = stages.filter(stage => stage.id == stage_detail)[0];
+        console.log("STAGE:", stage);
+
+        stage_modal_values.pcto_id = stage.id;
+		stage_modal_values.azienda = stage.offertoDa.nome;
+		stage_modal_values.titolo = stage.titolo;
+		stage_modal_values.descrizione = stage.descrizione;
+		stage_modal_values.tutor_aziendale = stage.tutor_aziendale;
+        stage_modal_values.tutor_scolastico = stage.tutor_scolastico.full_name;
+		stage_modal_values.dataInizio = helper.convert_date(stage.dataInizio);
+		stage_modal_values.dataFine = helper.convert_date(stage.dataFine);
+
+        console.log("STAGE MODLA VALUES:", stage_modal_values);
+        stage_detail_modal.show();
+    }
+
 </script>
 
 <Table
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
-		{ name: 'offertoDa', type: 'object', key: 'nome', display: 'azienda', size: 40 },
+		{ name: 'titolo', type: 'string', display: 'titolo', size: 50 },
+		{ name: 'descrizione', type: 'string', display: 'descrizione', size: 50 },
+        { name: 'offertoDa', type: 'object', key: 'nome', display: 'azienda', size: 40 },
 		{ name: 'tutor_aziendale', type: 'string', display: 'tutor aziendale', size: 20 },
         { name: 'tutor_scolastico', type: 'object', key: 'full_name', display: 'tutor scolastico', size: 20 },
-        { name: 'titolo', type: 'string', display: 'titolo', size: 50 },
-		{ name: 'descrizione', type: 'string', display: 'descrizione', size: 50 },
 		{ name: 'dataInizio', type: 'date', display: 'Inizio' },
 		{ name: 'dataFine', type: 'date', display: 'Fine' },
 		{ name: 'svoltoDa', type: 'array', subtype: 'picture', key: 'picture', display: 'iscritti', size: 5 }
@@ -200,6 +215,8 @@
 	endpoint="stage"
     footer="Stage"
     actions={true}
+    custom_action_icon="eye"
+    on:custom_action={show_stage_modal}
     resource="pcto_stage"
 />
 
@@ -364,4 +381,30 @@
 			</div>
 		</div>
 	</form>
+</div>
+
+
+<!-- modale per dettatglio stage -->
+<div
+	class="modal modal-blur fade"
+	id="stage_detail_modal"
+	tabindex="-1"
+	role="dialog"
+	aria-hidden="true"
+>
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                    <h5 class="modal-title">Nuovo Modale</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" />
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <h1>CIAO</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

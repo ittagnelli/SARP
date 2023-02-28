@@ -117,6 +117,10 @@ export const show_modal = () => {
 		btn.click();
 };
 
+export function get_modal(el_id) {
+    return new globalThis.bootstrap.Modal(document.getElementById(el_id));
+}
+
 export const diff_time = (h1, h2) => {
 	const h1_split = h1.split(':'); // 00:01	[00,01]
 	const h2_split = h2.split(':');
