@@ -1,3 +1,18 @@
+## v0.27.0 – 01 Marzo 2023
+- `fix#190`: corso sicurezza genera max 10 attestati
+-  aggiunto delay di 100ms nella generazione di ogni attestato del corso di sicurezza
+- ciò è dovuto per aggirare la limitazione di chrome a max 10 download contemporaneai
+- `fix#189`: Ridurre lista iscritti stage pcto 
+- ridotta lista studenti visualizzatio per stage e corso sicurezza
+- aggiunto parametro size per decidere il numero di immagini da visualizzare in tabella
+- `fix#186`: Aggiungi modale apre l'aggiornamento in alcuni casi
+-  Se l'utente chiude il modale update, i dati non vengono puliti così quando premerà crea $action rimarrà l'update.
+- Aggiunta una funzione che pulisce il form dopo un cancel o close
+- `fix#184`: Rimuovere immagine utente proveniente dal profilo google
+- `fix#181`: Assegnazione classe a Corso Sicurezza
+- `fix#180`: Assegnazione classe a PCTO stage 
+- Ora è possibile creare stage e corsi sicurezza assegnando un'intera classe di studenti
+
 ## v0.26.0 – 24 Febbraio 2023
 - fix piccolo bug in script upload immagini
 - piccoli cambiamenti estetici suggeriti dagli studenti
