@@ -43,7 +43,7 @@ describe('Vista Utenti', () => {
       cy.get(':nth-child(2) > .nav-link > .nav-link-title').click();
       cy.get('#btn_action_modal').click();
       cy.get(':nth-child(1) > :nth-child(1) > .mb-3 > .form-control').type('Tutor');            // creazione del tutor scolastico
-      cy.wait(10);
+      cy.wait(30);
       cy.get(':nth-child(1) > :nth-child(2) > .mb-3 > .form-control').type('Pluto');
       cy.wait(10);
       cy.get(':nth-child(3) > .mb-3 > .form-control').type('Putignano');
@@ -64,6 +64,7 @@ describe('Vista Utenti', () => {
       cy.wait(300);
 
       cy.get(':nth-child(3) > .nav-link').click();              // creazione azienda
+      cy.wait(20);
       cy.get('[href="/aziende"]').click();
       cy.wait(2000);
       cy.get('#btn_action_modal').click();
@@ -99,7 +100,7 @@ describe('Vista Utenti', () => {
       cy.get('#btn_action_modal').click();              // creazione stage
       cy.wait(200);
       cy.get(':nth-child(1) > .mb-3 > .form-select').select(0);
-      cy.get(':nth-child(2) > .mb-3 > .form-control').clear().type('2023-03-1');
+      cy.get(':nth-child(2) > .mb-3 > .form-control').clear().type('2023-03-01');
       cy.wait(10);
       cy.get(':nth-child(3) > .mb-3 > .form-control').clear().type('2023-03-10');
       cy.wait(10);
@@ -108,8 +109,10 @@ describe('Vista Utenti', () => {
       cy.get(':nth-child(3) > .col-lg-12 > .mb-3 > .form-control').type('zappare la vigna');
       cy.wait(10);
       cy.get(':nth-child(4) > .col-lg-12 > .mb-3 > .form-control').type('zappare la vigna sotto il sole con minimo 40 gradi');
-      cy.get(':nth-child(5) > .col-lg-12 > .mb-3 > .selectContainer > [autocapitalize="none"]').select(0);
-      cy.get(':nth-child(6) > .col-lg-12 > .mb-3 > .selectContainer > [autocapitalize="none"]').select(0);
+      cy.get(':nth-child(5) > .col-lg-12 > .mb-3 > .selectContainer').click();
+      cy.get(':nth-child(2) > .item').click();
+      cy.get(':nth-child(6) > .col-lg-12 > .mb-3 > .selectContainer').click();
+      cy.get(':nth-child(1) > .item').click();
       cy.get('.btn-success').click();
       
       /* ==== End Cypress Studio ==== */
