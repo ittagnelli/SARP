@@ -20,6 +20,11 @@
     // let aziende = helper.data2arr(data.companies);
     let tipi_corso = ['GENERICO', 'SPECIFICO'];
     let utenti = helper.data2arr(data.utenti);
+	let classi = helper.data2arr(data.classi);
+	let classi_iscritte = [];
+	let old_studenti = [];
+
+	classi = helper.db_to_select(classi);
 
 	utenti.forEach((utente) => {
 		utente['label'] = utente.cognome.concat(' ', utente.nome);
@@ -86,13 +91,43 @@
 
 	function handleSelect(event) {
 		let user_selected = event.detail;
-
-       seguito = [];
+       	seguito = [];
+		let i = 0;
         if(user_selected) {
             user_selected.forEach((item) => {
                 seguito = [...seguito, item.value];
             });
-        }
+			let removed = helper.findDeselectedItem(user_selected, old_studenti);
+			if(old_studenti.length != 0){
+				let classi_ids = classi_iscritte.map(classe => classe.id);
+				if(removed){
+					let users_id = user_selected.map(user => user.classeId);
+					if(users_id.indexOf(removed.classeId) == -1){
+						let index_to_remove = classi_ids.indexOf(removed.classeId);
+						classi_iscritte.splice(index_to_remove, 1);
+						classi_iscritte = classi_iscritte;
+					}
+				}
+
+			}
+			old_studenti = user_selected;
+        }else {
+			classi_iscritte = [];
+		}
+	}
+
+	function handleSelect_classi(event) {
+		let classe_selected = event.detail;
+		seguitoDa = [];
+		if(classe_selected){
+			classi_iscritte = classe_selected;
+			classe_selected.forEach((item) => {
+				let utenti_partecipanti = utenti.filter((utente) => {
+					return utente.classeId == item.id;
+				});
+				seguitoDa = [...seguitoDa, ...utenti_partecipanti];
+			});
+		}
 	}
 
 	async function handleSubmit() {
@@ -110,13 +145,14 @@
 		}
 	}
 
-    onMount(() => { // Controlliamo che l'inserimento sia andato a buon fine, usiamo on mount per richiamare le funzioni del DOM
+    onMount(async () => { // Controlliamo che l'inserimento sia andato a buon fine, usiamo on mount per richiamare le funzioni del DOM
         if (form != null) {
                 if (form.files != null) { // è stato richiesto la generazione di uno o più file
                     for(let doc of form.files) {
                         const buffer = new Uint8Array(JSON.parse(doc.file).data); // Convertiamo la stringa in un oggetto che conterrà il nostro array di bytes che verrà poi convertito in Uint8Array, necessario all'oggetto Blob
                         var blob = new Blob([buffer], { type: 'application/msword' });
                         saveAs(blob, doc.name);
+                        await helper.delay(100); //chrome can download max 10 files at the time
                     }
                 } else { // file è null quindi l'unico caso possibile è la violazione della chiave unique nel DB
                     form_values = JSON.parse(localStorage.getItem('form')); // Riempiamo il modale
@@ -133,11 +169,11 @@
 <Table
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
-		{ name: 'titolo', type: 'string', display: 'titolo' },
-        { name: 'tipo', type: 'string', display: 'tipo' },
+		{ name: 'titolo', type: 'string', display: 'titolo', size: 50 },
+        { name: 'tipo', type: 'string', display: 'tipo', size: 20 },
         { name: 'dataInizio', type: 'date', display: 'Inizio' },
 		{ name: 'dataFine', type: 'date', display: 'Fine' },	
-		{ name: 'seguitoDa', type: 'array', subtype: 'picture', key: 'picture', display: 'iscritti' }
+		{ name: 'seguitoDa', type: 'array', subtype: 'picture', key: 'picture', display: 'iscritti', size: 5 }
 	]}
 	rows={corsi}
 	page_size={10}
@@ -239,6 +275,24 @@
 							</div>
 						</div>
 					</div>
+					{#if seguitoDa.length == 0}
+					<div class="row">
+						<div class="col-lg-12">
+							<div class="mb-3">
+								<label class="form-label">Classi Iscritte</label>
+								<Select
+									class="form-select"
+									name="utenti"
+									items={classi}
+									value={classi_iscritte}
+									isMulti={true}
+									placeholder="Selezione gli studenti..."
+									on:select={handleSelect_classi}
+								/>
+							</div>
+						</div>
+					</div>
+					{/if}
 					<div class="modal-footer">
 						<a href="#" class="btn btn-danger" data-bs-dismiss="modal">
 							<b>Cancel</b>

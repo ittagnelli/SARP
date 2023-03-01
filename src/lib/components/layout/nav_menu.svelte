@@ -20,16 +20,30 @@
 		aria-expanded="false"
 	>
 		<span class="nav-link-icon d-md-none d-lg-inline-block">
-			<i class="ti ti-{icon} icon" />
+			<i class="ti ti-{icon} icon menu-icon" />
 		</span>
-		<span class="nav-link-title">{text}</span>
+		<span class="nav-link-title menu-title">{text}</span>
 	</a>
 	<div class="dropdown-menu">
 		<div class="dropdown-menu-columns">
-			<div class="dropdown-menu-column">
-				<slot />
+			<div class="dropdown-menu-column menu-title">
+			    <slot />
 			</div>
 		</div>
 	</div>
 </li>
 {/if}
+
+<style>
+    .menu-title {
+        font-size: 1rem;
+    }
+
+    .menu-icon {
+        font-size: 1.3rem;
+        position:relative;
+        top: -2px;
+        color: #D90000;
+        opacity: 0.8;
+    }
+</style>

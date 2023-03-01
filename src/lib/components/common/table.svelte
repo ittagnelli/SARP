@@ -137,8 +137,10 @@ function calculate_bigpage(i) {
                             {#if columns[i].subtype == 'picture'}
                             <td class="sort-{col}" valign="middle">
                                 <div class="picture-container">
-                                    {#each row[col] as item }
-                                    <img class="picture-item" src={item[columns.filter((item) => item.name == col)[0].key]}>
+                                    {#each row[col] as item,idx }    
+                                    {#if idx < (columns[i].size || 1)}
+                                            <img class="picture-item" src={item[columns.filter((item) => item.name == col)[0].key]}>
+                                        {/if}
                                     {/each}
                                 </div>
                             </td>
@@ -262,7 +264,8 @@ a {
 }
 
 .picture {
-    width: 40px;
+    /* width: 40px; */
+    height: 50px;
     margin-right: 10px;
     border: 0px solid black;
     border-radius: 12px;
@@ -270,15 +273,17 @@ a {
 
 .picture-container {
     display: grid;
-    width: 75%;
+    width: 85%;
     grid-template-columns: auto auto auto auto auto;
     row-gap: 10px;
+    column-gap: 10px;
 }
 
 .picture-item {
     margin: auto;
-    width: 40px;
-    border-radius: 12px;
+    /* width: 40px; */
+    height: 50px;
+    border-radius: 8px;
 }
 
 .badge-container {

@@ -47,11 +47,14 @@ export async function load({ locals }) {
             include: {ruoli: true}
         });
 
+        const classi = await SARP.classe.findMany();
+
         // restituisco il risultato della query SQL
         return {
             stages: stages,
             companies: companies,
-            utenti: utenti
+            utenti: utenti,
+            classi: classi
         }
     } catch (exception) {
         catch_error(exception, "la ricerca", 300);

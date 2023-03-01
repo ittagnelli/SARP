@@ -1,3 +1,20 @@
+## v0.26.0 – 24 Febbraio 2023
+- fix piccolo bug in script upload immagini
+- piccoli cambiamenti estetici suggeriti dagli studenti
+- rimossa immagine dal profilo google
+- aggiunta data nel template corso sicurezza
+- stampa data in formato italiano
+- Introduce pdf_to_images   
+- rename student pictures to proper name
+- script to add student picture in DB
+
+## v0.25.0 – 22 Febbraio 2023
+- `fix#176`
+- aggiunto dashbopard in home page
+- creato componente per KPI number
+- creata tabella per KPI summary
+- creato script per aggiornamento KPI
+
 ## v0.24.0 – 17 Febbraio 2023
 - aggiunta di FAQ per il funzionamento di SARP e delle applicazioni
 - aggiunto tutor scolastico alla sezione stage del PCTO
