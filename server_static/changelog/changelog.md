@@ -1,3 +1,11 @@
+## v0.28.0 – 02 Marzo 2023
+- `fix#182`: Report per inserimenti SIDI PCTO
+- aggiunto endpoint per recuperare le ore approvate di tutti gli studenti di un PCTO
+- aggiunto un modale per visualizzare il summary del PCTO e una tabella per tutti gli studenti contenente nome, cognome e numero di ore svolte
+- aggiunta capacità di gestire i modali via js
+- aggiunta custom action alla tabella di visualizzazione risorse
+- aggiunto DB backup script
+  
 ## v0.27.0 – 01 Marzo 2023
 - `fix#190`: corso sicurezza genera max 10 attestati
 -  aggiunto delay di 100ms nella generazione di ogni attestato del corso di sicurezza
