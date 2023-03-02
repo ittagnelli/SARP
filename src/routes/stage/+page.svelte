@@ -96,6 +96,7 @@
         tutor_scolastico: 0,
 		dataInizio: helper.convert_date(new Date()),
 		dataFine: helper.convert_date(new Date()),
+        studenti: []
 	};
 
 	async function start_update(e) {
@@ -174,12 +175,36 @@
 		}
 	}
 
-    function show_stage_modal(e) {
+    async function query_ore_pcto(pcto_id) {
+        // query endpoint per ricavare leggere tutte le ore di questo PCTO
+        const get_response = await fetch(`/stage?pcto=${pcto_id}`);
+        let presenze = await get_response.json();
+
+        //processo il risultato della query
+        let studenti_presenze = new Map();
+        presenze.forEach(presenza => {
+            if(!studenti_presenze.has(presenza.presenza.codiceF)) {
+                studenti_presenze.set(presenza.presenza.codiceF, {
+                    picture: presenza.presenza.picture,
+                    nome: presenza.presenza.nome,
+                    cognome: presenza.presenza.cognome,
+                    istituto: presenza.presenza.istituto,
+                    ore: (new Date(presenza.oraFine) - new Date(presenza.oraInizio))/(60 * 60 * 1000)
+                });
+            } else {
+                let tmp_value = studenti_presenze.get(presenza.presenza.codiceF);
+                let ore = (new Date(presenza.oraFine) - new Date(presenza.oraInizio))/(60 * 60 * 1000);
+                tmp_value.ore += ore;
+                studenti_presenze.set(presenza.presenza.codiceF, tmp_value);
+            }
+        });
+        return Array.from(studenti_presenze.values());
+    } 
+
+    async function show_stage_modal(e) {
         let stage_detail_modal = helper.get_modal('stage_detail_modal');
         let stage_detail = e.detail.id;
-
         let stage = stages.filter(stage => stage.id == stage_detail)[0];
-        console.log("STAGE:", stage);
 
         stage_modal_values.pcto_id = stage.id;
 		stage_modal_values.azienda = stage.offertoDa.nome;
@@ -189,8 +214,8 @@
         stage_modal_values.tutor_scolastico = stage.tutor_scolastico.full_name;
 		stage_modal_values.dataInizio = helper.convert_date(stage.dataInizio);
 		stage_modal_values.dataFine = helper.convert_date(stage.dataFine);
-
-        console.log("STAGE MODLA VALUES:", stage_modal_values);
+        stage_modal_values.studenti = await query_ore_pcto(stage.id)
+        
         stage_detail_modal.show();
     }
 
@@ -395,15 +420,129 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                    <h5 class="modal-title">Nuovo Modale</h5>
+                    <h5 class="modal-title">Dettagli PCTO</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" />
             </div>
             <div class="modal-body">
+                <fieldset class="form-fieldset">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <div class="mb-3">
+                                <label class="form-label">Azienda/Convenzione</label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    value={stage_modal_values.azienda}
+                                    readonly
+                                />
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="mb-3">
+                                <label class="form-label">Tutor Aziendale</label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    value={stage_modal_values.tutor_aziendale}
+                                    readonly
+                                />
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="mb-3">
+                                <label class="form-label">Tutor Scolastico</label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    value={stage_modal_values.tutor_scolastico}
+                                    readonly
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="mb-3">
+                                <label class="form-label">Titolo</label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    value={stage_modal_values.titolo}
+                                    readonly
+                                />
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="mb-3">
+                                <label class="form-label">Data Inizio</label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    value={stage_modal_values.dataInizio}
+                                    readonly
+                                />
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="mb-3">
+                                <label class="form-label">Data Fine</label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    value={stage_modal_values.dataFine}
+                                    readonly
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="mb-3">
+                                <label class="form-label">Descrizione</label>
+                                <textarea
+                                    class="form-control"
+                                    rows=3
+                                    value={stage_modal_values.descrizione}
+                                    readonly
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
                 <div class="row">
-                    <div class="col-lg-4">
-                        <h1>CIAO</h1>
+                    <div class="col-lg-12">
+                        <div class="card-table table-responsive">
+                            <table class="table table-vcenter">
+                              <thead>
+                                <tr>
+                                  <th>Foto</th>
+                                  <th>Studente</th>
+                                  <th>Istituto</th>
+                                  <th>Ore</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {#each stage_modal_values.studenti as studente}
+                                    <tr>
+                                        <td>
+                                            <span class="avatar avatar-sm" style="background-image: url({studente.picture})"></span>
+                                        </td>
+                                        <td>{studente.cognome} {studente.nome}</td>
+                                        <td>{studente.istituto}</td>
+                                        <td>{studente.ore}</td>
+                                    </tr>
+                                {/each}
+                              </tbody>
+                            </table>
+                          </div>
                     </div>
                 </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="btn btn-success ms-auto" data-bs-dismiss="modal">
+                    <b>Chiudi</b>
+                </a>
+                
             </div>
         </div>
     </div>
