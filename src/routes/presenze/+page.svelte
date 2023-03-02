@@ -114,6 +114,21 @@
 		}
 	}
 
+	async function cancel_action(){
+		if(modal_action == 'update'){
+			await helper.wait_fade_finish();
+			modal_action = "create";	// Reset string
+			form_values = {	// Reset form
+				presenza_id: 0,
+				stage: 0,
+				studente: -1,
+				dataPresenza: helper.convert_date(new Date()),
+				oraInizio: '',
+				oraFine: '',
+				approvato_select: 'NO',
+			};
+		}
+	}
     function show_error_message() {
         error_message = form.message;
         show_error_mex = true;
@@ -172,7 +187,7 @@
 					{:else}
 						<h5 class="modal-title">Aggiorna Presenza</h5>
 					{/if}
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" />
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" on:click={cancel_action}/>
 				</div>
 				<div class="modal-body">
 					<div class="row">
@@ -267,7 +282,7 @@
                     </div>
 				</div>
 				<div class="modal-footer">
-					<a href="#" class="btn btn-danger" data-bs-dismiss="modal">
+					<a href="#" class="btn btn-danger" data-bs-dismiss="modal" on:click={cancel_action}>
 						<b>Cancel</b>
 					</a>
 					<button class="btn btn-success ms-auto">

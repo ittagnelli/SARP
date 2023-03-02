@@ -120,6 +120,40 @@
 		form_values.dataFine = helper.convert_date(stage.dataFine);
 	}
 
+	function findDeselectedItem(CurrentArray, PreviousArray) {
+
+		var CurrentArrSize = CurrentArray.length;
+		var PreviousArrSize = PreviousArray.length;
+
+		// loop through previous array
+		for(var j = 0; j < PreviousArrSize; j++) {
+
+		// look for same thing in new array
+		if (CurrentArray.indexOf(PreviousArray[j]) == -1)
+			return PreviousArray[j];
+		}
+
+		return null;
+
+	}
+
+	async function cancel_action(){
+		if(modal_action == "update"){
+			await helper.wait_fade_finish();
+			modal_action = 'create';	// Reset modal string
+			form_values = {	// Reset modal form
+				pcto_id: 0,
+				azienda: 0,
+				titolo: '',
+				descrizione: '',
+				tutor_aziendale: '',
+				tutor_scolastico: 0,
+				dataInizio: helper.convert_date(new Date()),
+				dataFine: helper.convert_date(new Date()),
+			};
+		}
+	}
+
 	function handleSelect(event) {
 		let user_selected = event.detail;
        	svolto = [];
@@ -271,7 +305,7 @@
 					{:else}
 						<h5 class="modal-title">Aggiorna Stage</h5>
 					{/if}
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" />
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" on:click={cancel_action}/>
 				</div>
 				<div class="modal-body">
 					<div class="row">
@@ -390,7 +424,7 @@
 						</div>
 					{/if}
 					<div class="modal-footer">
-						<a href="#" class="btn btn-danger" data-bs-dismiss="modal">
+						<a href="#" class="btn btn-danger" data-bs-dismiss="modal" on:click={cancel_action}>
 							<b>Cancel</b>
 						</a>
 						<button class="btn btn-success ms-auto">
