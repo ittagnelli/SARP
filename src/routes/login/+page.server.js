@@ -7,6 +7,7 @@ import { Logger } from '../../js/logger';
 import { Auditor, audit_mex } from '../../js/audit';
 import { is_mobile } from '../../js/helper';
 import { PrismaClientValidationError } from '@prisma/client/runtime';
+import { dev } from '$app/environment';
 
 
 let logger = new Logger('server'); //instanzia il logger
@@ -48,7 +49,23 @@ export const actions = {
 
 			const form_data = await request.formData();
 			let jwt_token = form_data.get('token'); // google token da autenticare
-			let info_utente = await decode_JWT(jwt_token);
+			//let info_utente = await decode_JWT(jwt_token);
+            let info_utente;
+
+			console.log("DEV:",dev);
+            console.log("TOKEN:", jwt_token);
+			// se in produzione autentico il token con goole
+			// altrimenti salto questo passo
+			if (!dev)										// se scommento questo pezzo il login con google smette di funzionare e quello dev continua a non funzionare
+				info_utente = await decode_JWT(jwt_token);
+			else
+				info_utente = {
+					hd: 'istitutoagnelli.it',
+					email_verified: true,
+					email: jwt_token
+				}
+
+            console.log("INFO UTENTE:", info_utente)
 
 			// se utente non è verificato e non appartiene ad istituto agnelli errore
 			if (info_utente.hd != 'istitutoagnelli.it' || !info_utente.email_verified) {
@@ -126,8 +143,8 @@ export const actions = {
 			);
 			auditor.audit(valid_mex);
 		} catch (exception) {
-			if (exception instanceof PrismaClientValidationError) 
-                logger.error(exception.message);
+			if (exception instanceof PrismaClientValidationError)
+				logger.error(exception.message);
 			else {
 				logger.error(JSON.stringify(exception));
 				logger.error(exception.message);
