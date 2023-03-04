@@ -56,6 +56,7 @@
 		azienda: 0,
 		titolo: '',
 		descrizione: '',
+        contabilizzato: 'NO',
 		tutor_aziendale: '',
         tutor_scolastico: 0,
 		dataInizio: helper.convert_date(new Date()),
@@ -114,6 +115,7 @@
 
 		form_values.titolo = stage.titolo;
 		form_values.descrizione = stage.descrizione;
+        form_values.contabilizzato = stage.contabilizzato ? 'SI' : 'NO';
 		form_values.tutor_aziendale = stage.tutor_aziendale;
         form_values.tutor_scolastico = stage.idTutor;
 		form_values.dataInizio = helper.convert_date(stage.dataInizio);
@@ -146,6 +148,7 @@
 				azienda: 0,
 				titolo: '',
 				descrizione: '',
+                contabilizzato: 'NO',
 				tutor_aziendale: '',
 				tutor_scolastico: 0,
 				dataInizio: helper.convert_date(new Date()),
@@ -261,6 +264,7 @@
 		{ name: 'titolo', type: 'string', display: 'titolo', size: 50 },
 		{ name: 'descrizione', type: 'string', display: 'descrizione', size: 50 },
         { name: 'offertoDa', type: 'object', key: 'nome', display: 'azienda', size: 40 },
+        { name: 'contabilizzato', type: 'boolean', display: 'SIDI'},
 		{ name: 'tutor_aziendale', type: 'string', display: 'tutor aziendale', size: 20 },
         { name: 'tutor_scolastico', type: 'object', key: 'full_name', display: 'tutor scolastico', size: 20 },
 		{ name: 'dataInizio', type: 'date', display: 'Inizio' },
@@ -342,7 +346,7 @@
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-lg-6">
+						<div class="col-lg-5">
 							<InputText
 								label="Tutor Aziendale"
 								name="tutor_aziendale"
@@ -351,7 +355,7 @@
 								bind:val={form_values.tutor_aziendale}
 							/>
 						</div>
-                        <div class="col-lg-6">
+                        <div class="col-lg-5">
                           	<div class="mb-3">
 								<div class="form-label select_text">Tutor Scolastico</div>
                                 <select class="form-select" class:is-invalid="{errors.tutor_scolastico}" name="tutor_scolastico" bind:value={form_values.tutor_scolastico}>
@@ -366,6 +370,33 @@
                                 {/if}	
 							</div>
 						</div>
+                        <div class="col-lg-2">
+                            <div class="mb-3">
+                                <label class="form-label">Contabilizzato</label>
+                                <div class="form-selectgroup">
+                                    <label class="form-selectgroup-item">
+                                        <input
+                                            type="radio"
+                                            name="contabilizzato"
+                                            value="SI"
+                                            class="form-selectgroup-input"
+                                            bind:group={form_values.contabilizzato}
+                                        />
+                                        <span class="form-selectgroup-label">SI</span>
+                                    </label>
+                                    <label class="form-selectgroup-item">
+                                        <input
+                                            type="radio"
+                                            name="contabilizzato"
+                                            value="NO"
+                                            class="form-selectgroup-input"
+                                            bind:group={form_values.contabilizzato}
+                                        />
+                                        <span class="form-selectgroup-label">NO</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
 					</div>
                     <div class="row">
                         <div class="col-lg-12">
