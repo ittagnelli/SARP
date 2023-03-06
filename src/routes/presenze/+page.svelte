@@ -6,7 +6,8 @@
     import * as helper from '../../js/helper';
     import * as yup from 'yup';
     import { Logger } from '../../js/logger';
-    
+    import { onMount } from 'svelte';
+
     let logger = new Logger("client");
 	export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
     export let form;
@@ -19,9 +20,10 @@
     
     let pcto = helper.data2arr(data.stages);
     let pcto_studenti = [];
+    let tipo_utente = helper.user_tipo(data); 
+    let totale_ore_pcto = 0;
 
     $: {
-        // pcto_studenti = [];
         let selected_stage = pcto.filter((item) => item.id == form_values.stage);
         if(selected_stage[0]) {
             if (helper.user_ruolo(data) != 'STUDENTE')
@@ -137,6 +139,16 @@
         return '';
     }
 
+    onMount(async () => {
+        // per STUDENTE calcolo le ore complessive di PCTO solo per ore approvate e PCTO contabilizzati
+        if(tipo_utente == "STUDENTE") {
+            presenze.map(presenza => {
+                if(presenza.approvato && presenza.lavoraPer.contabilizzato)
+                    totale_ore_pcto += helper.ore_pcto(presenza.oraInizio, presenza.oraFine);    
+            });
+        }
+	});
+
 </script>
 
 {#if form && form.message.length > 0}
@@ -144,6 +156,12 @@
     <div class="error-mex {show_error_mex ? '' : 'hidden'}">
         {error_message}
     </div>
+{/if}
+
+{#if tipo_utente == "STUDENTE"}
+<p class="ore-pcto">
+    TOTALE ORE PCTO: {totale_ore_pcto}
+</p>
 {/if}
 
 <Table
@@ -310,5 +328,9 @@
 
     .hidden {
         display: none;
+    }
+
+    .ore-pcto {
+        font-size: 1.4rem;
     }
 </style>
