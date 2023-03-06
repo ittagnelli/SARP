@@ -1,4 +1,5 @@
 <script>
+    
 	import { page_pre_title, page_title, page_action_title, page_action_modal } from '../../js/store';
 	import InputText from '$lib/components/modal/input_text.svelte';
     import InputDate from '$lib/components/modal/input_date.svelte';
