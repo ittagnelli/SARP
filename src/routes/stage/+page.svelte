@@ -226,11 +226,11 @@
                     nome: presenza.presenza.nome,
                     cognome: presenza.presenza.cognome,
                     istituto: presenza.presenza.istituto,
-                    ore: (new Date(presenza.oraFine) - new Date(presenza.oraInizio))/(60 * 60 * 1000)
+                    ore: helper.ore_pcto(presenza.oraInizio, presenza.oraFine)
                 });
             } else {
                 let tmp_value = studenti_presenze.get(presenza.presenza.codiceF);
-                let ore = (new Date(presenza.oraFine) - new Date(presenza.oraInizio))/(60 * 60 * 1000);
+                let ore = helper.ore_pcto(presenza.oraInizio, presenza.oraFine);
                 tmp_value.ore += ore;
                 studenti_presenze.set(presenza.presenza.codiceF, tmp_value);
             }
