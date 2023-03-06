@@ -188,7 +188,6 @@
         { name: 'piva', type: 'string', display: 'piva', size: 12 },
         { name: 'telefono', type: 'string', display: 'telefono', size: 14 },
         { name: 'direttore_nome', type: 'string', display: 'direttore', size: 20 },
-		{ name: 'idUtente', type: 'string', display: 'Creato da' },
 		{ name: 'dataConvenzione', type: 'date', display: 'Data Convenzione' },
 		{ name: 'dataProtocollo', type: 'date', display: 'Data Protocollo' },
 		{ name: 'istituto', type: 'string', display: 'Istituto', size: 6 }
