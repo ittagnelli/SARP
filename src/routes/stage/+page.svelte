@@ -61,6 +61,7 @@
         tutor_scolastico: 0,
 		dataInizio: helper.convert_date(new Date()),
 		dataFine: helper.convert_date(new Date()),
+        anno_scolastico: undefined
 	};
 
 	// schema di validazione del form
@@ -85,7 +86,11 @@
 
         azienda: yup
 		.number()
-		.min(1, 'Azienda necessaria')
+		.min(1, 'Azienda necessaria'),
+
+        anno_scolastico: yup
+        .number()
+        .min(2019, 'Anno Scolastico necessario')
 	});
 
     let stage_modal_values = {
@@ -93,6 +98,7 @@
 		azienda: 0,
 		titolo: '',
 		descrizione: '',
+        anno_scolastico: 0,
 		tutor_aziendale: '',
         tutor_scolastico: 0,
 		dataInizio: helper.convert_date(new Date()),
@@ -120,6 +126,7 @@
         form_values.tutor_scolastico = stage.idTutor;
 		form_values.dataInizio = helper.convert_date(stage.dataInizio);
 		form_values.dataFine = helper.convert_date(stage.dataFine);
+        form_values.anno_scolastico = stage.anno_scolastico;
 	}
 
 	function findDeselectedItem(CurrentArray, PreviousArray) {
@@ -247,6 +254,7 @@
 		stage_modal_values.azienda = stage.offertoDa.nome;
 		stage_modal_values.titolo = stage.titolo;
 		stage_modal_values.descrizione = stage.descrizione;
+        stage_modal_values.anno_scolastico = stage.anno_scolastico;
 		stage_modal_values.tutor_aziendale = stage.tutor_aziendale;
         stage_modal_values.tutor_scolastico = stage.tutor_scolastico.full_name;
 		stage_modal_values.dataInizio = helper.convert_date(stage.dataInizio);
@@ -264,6 +272,7 @@
 		{ name: 'titolo', type: 'string', display: 'titolo', size: 50 },
 		{ name: 'descrizione', type: 'string', display: 'descrizione', size: 50 },
         { name: 'offertoDa', type: 'object', key: 'nome', display: 'azienda', size: 40 },
+        { name: 'anno_scolastico', type: 'number', display: 'a.s.'},
         { name: 'contabilizzato', type: 'boolean', display: 'SIDI'},
 		{ name: 'tutor_aziendale', type: 'string', display: 'tutor aziendale', size: 20 },
         { name: 'tutor_scolastico', type: 'object', key: 'full_name', display: 'tutor scolastico', size: 20 },
@@ -346,7 +355,7 @@
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-lg-5">
+						<div class="col-lg-4">
 							<InputText
 								label="Tutor Aziendale"
 								name="tutor_aziendale"
@@ -355,7 +364,7 @@
 								bind:val={form_values.tutor_aziendale}
 							/>
 						</div>
-                        <div class="col-lg-5">
+                        <div class="col-lg-4">
                           	<div class="mb-3">
 								<div class="form-label select_text">Tutor Scolastico</div>
                                 <select class="form-select" class:is-invalid="{errors.tutor_scolastico}" name="tutor_scolastico" bind:value={form_values.tutor_scolastico}>
@@ -371,8 +380,17 @@
 							</div>
 						</div>
                         <div class="col-lg-2">
+							<InputText
+								label="A.S."
+								name="anno_scolastico"
+								{errors}
+								placeholder="2022"
+								bind:val={form_values.anno_scolastico}
+							/>
+						</div>
+                        <div class="col-lg-2">
                             <div class="mb-3">
-                                <label class="form-label">Contabilizzato</label>
+                                <label class="form-label">Regigstrato</label>
                                 <div class="form-selectgroup">
                                     <label class="form-selectgroup-item">
                                         <input
@@ -491,6 +509,17 @@
             <div class="modal-body">
                 <fieldset class="form-fieldset">
                     <div class="row">
+                        <div class="col-lg-2">
+                            <div class="mb-3">
+                                <label class="form-label">A.S.</label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    value={stage_modal_values.anno_scolastico}
+                                    readonly
+                                />
+                            </div>
+                        </div>
                         <div class="col-lg-4">
                             <div class="mb-3">
                                 <label class="form-label">Azienda/Convenzione</label>
@@ -502,7 +531,7 @@
                                 />
                             </div>
                         </div>
-                        <div class="col-lg-4">
+                        <div class="col-lg-3">
                             <div class="mb-3">
                                 <label class="form-label">Tutor Aziendale</label>
                                 <input
@@ -513,7 +542,7 @@
                                 />
                             </div>
                         </div>
-                        <div class="col-lg-4">
+                        <div class="col-lg-3">
                             <div class="mb-3">
                                 <label class="form-label">Tutor Scolastico</label>
                                 <input

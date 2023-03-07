@@ -1,4 +1,4 @@
-// v 0.12.0 2023-03-04
+// v 0.13.0 2023-03-07
 
 generator client {
     provider = "prisma-client-js"
@@ -169,6 +169,7 @@ model pcto_Pcto {
     presenziatoDa    pcto_Presenza[]
     svoltoDa         Utente[]           @relation("iscritto")
     contabilizzato   Boolean            @default(false)
+    anno_scolastico  Int?
 }
 
 model sicurezza_Corso {
