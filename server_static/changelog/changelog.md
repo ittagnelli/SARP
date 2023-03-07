@@ -1,3 +1,12 @@
+## v0.30.0 – 07 Marzo 2023
+- `fix#205`: ordine aziende PCTO
+- PCTO Aziende ordinate per numero convenzione
+- `fix#215`: anno scolastico in stage
+- modificato DB aggiunto anno_scolastico a PCTO
+- modificato front_end per supportare a.s.
+- modificando back_end per supportare a.s.
+- modificato presenze per visualizzare a.s. nel titolo dello stage in caso di stage con nome uguale
+
 ## v0.29.0 – 07 Marzo 2023
 - `fix#200`: PCTO report   
 - aggiunta sezione verifica_stato in PCTO in layout
