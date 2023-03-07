@@ -135,6 +135,8 @@ function custom_action(id) {
                             <td class="sort-{col}" valign="middle">
                                 <img class="picture" src={row[col]}>
                             </td>
+                            {:else if columns[i].type == 'number'}
+                                <td class="sort-{col}" valign="middle">{row[col]}</td>
                             {:else if columns[i].type == 'array'}
                             {#if columns[i].subtype == 'picture'}
                             <td class="sort-{col}" valign="middle">

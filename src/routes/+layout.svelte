@@ -21,6 +21,7 @@
 				<NavSubItem resource="menu_stage" text="Stage" link="/stage" />
 				<NavSubItem resource="menu_presenze" text="Presenze" link="/presenze" />
 				<NavSubItem resource="menu_valutazioni" text="Valutazioni" link="/valutazioni" />
+				<NavSubItem resource="menu_verifica_stato" text="Verifica Stato" link="/verifica_stato" />
 			</NavMenu>
 			<NavMenu resource="menu_tools" text="Tools" icon="tools">
 				<NavSubItem resource="menu_convert_to_print" text="Convert to Print" link="/tools/convert-to-print" />

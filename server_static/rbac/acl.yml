@@ -63,6 +63,13 @@ menu_valutazioni:
     - TUTOR-AZIENDALE
     - TUTOR-SCOLASTICO
 
+menu_verifica_stato:
+  view:
+    - DEVELOPER
+    - ADMIN
+    - TUTOR-AZIENDALE
+    - TUTOR-SCOLASTICO
+
 changelog:
   read:
     - '*'
