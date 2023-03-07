@@ -1,3 +1,31 @@
+## v0.29.0 – 07 Marzo 2023
+- `fix#200`: PCTO report   
+- aggiunta sezione verifica_stato in PCTO in layout
+- aggiornato rbac peer visualizzare menu a ADMIN e TUTOR_
+- aggiunto front_end per ricerca studente
+- aggiunto backend API per prelievo informazioni PCTO relative allo studente ricercato
+- aggiunta tabella stato PCTO con dettaglio ore
+- aggiunto campo di tipo number al componente Table
+- `fix#206`: caratteri validi nome azienda pcto
+- aggiunto & nel regex del nome azienda
+- `fix#204`: update tabella view PCTO aziende 
+-  Rimozione della colonna 'CREATO DA' nella visuale
+-  Update +page.svelte
+- aggiunto script per aggiunta docenti
+- `fix#199`: report ore PCTO studente 
+- aggiunto calcolo ore complessive PCTO per utente di tipo STUDENTE
+- le ore complessive sono quelle approvate appartenenti a stage contabilizzati
+- `fix#197`: Stage contabilizzato
+- fix bug in autenticazione dev per cypress
+- ora è possibile autenticarsi con google o con credenziali email se in DEV
+- modificato tabella pcto aggiunto flad contabilizzato
+- modificato view stage per gestire flag contabilizzato
+- ora è possibile contrassegnare uno stage come contabilizzato se tutte le sue ore sono state riportate in SIDI
+- `fix#108`: Aggiunta test automatici per la vista utenti 
+- aggiunto cypress per test automatici e visuali
+- aggiunto login per developer senza google
+- aggiunto suite iniziale di test
+
 ## v0.28.0 – 02 Marzo 2023
 - `fix#182`: Report per inserimenti SIDI PCTO
 - aggiunto endpoint per recuperare le ore approvate di tutti gli studenti di un PCTO
