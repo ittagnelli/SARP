@@ -73,7 +73,7 @@
         nome: yup
         .string()
         .required("Nome Azienda necessario")
-        .matches(/^[a-zA-Z0-9.@\- 'à-è-ì-ò-ù]{3,40}$/, "Nome azienda non valida"),
+        .matches(/^[a-zA-Z0-9.@\- '&à-è-ì-ò-ù]{3,40}$/, "Nome azienda non valida"),
         
         indirizzo: yup
         .string()
