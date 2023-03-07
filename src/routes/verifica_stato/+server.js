@@ -24,9 +24,6 @@ export async function GET({ request, url, locals }) {
     let cognome = url.searchParams.get("cognome");
     let nome = url.searchParams.get("nome");
     
-    console.log(cognome)
-    console.log(nome)
-    
     try {
         const studente = await SARP.utente.findMany({
             where: {
