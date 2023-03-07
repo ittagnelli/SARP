@@ -86,6 +86,7 @@ export const actions = {
                 creatoDa: user_id(locals),
                 titolo: form_data.get('titolo'),
                 descrizione: form_data.get('descrizione'),
+                anno_scolastico: +form_data.get('anno_scolastico'),
                 contabilizzato: form_data.get('contabilizzato') == "SI" ? true : false,
 				tutor_aziendale: form_data.get('tutor_aziendale'),
                 idTutor: +form_data.get('tutor_scolastico'),
@@ -125,6 +126,7 @@ export const actions = {
                 data: {
                     titolo: form_data.get('titolo'),
                     descrizione: form_data.get('descrizione'),
+                    anno_scolastico: +form_data.get('anno_scolastico'),
                     contabilizzato: form_data.get('contabilizzato') == "SI" ? true : false,
                     tutor_aziendale: form_data.get('tutor_aziendale'),
                     idTutor: +form_data.get('tutor_scolastico'),

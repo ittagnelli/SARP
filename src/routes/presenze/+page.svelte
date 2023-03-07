@@ -216,7 +216,7 @@
 								<div class="form-label select_text">PCTO</div>
                                 <select class="form-select" class:is-invalid="{errors.stage}" name="stage" bind:value={form_values.stage}>
                                     {#each pcto as stage}
-                                        <option value={stage.id}>{stage.titolo}</option>
+                                        <option value={stage.id}>{stage.titolo} (a.s.{stage.anno_scolastico})</option>
                                     {/each}
                                 </select>
                                 {#if errors.stage}
