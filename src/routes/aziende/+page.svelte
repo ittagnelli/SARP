@@ -183,8 +183,8 @@
 <Table
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
-		{ name: 'idConvenzione', type: 'string', display: 'NO.', size: 10 },
-		{ name: 'nome', type: 'string', display: 'Azienda/Ente', size: 40 },
+		{ name: 'idConvenzione', type: 'string', display: 'NO.', size: 10, search: true },
+		{ name: 'nome', type: 'string', display: 'Azienda/Ente', size: 40, search: true },
         { name: 'indirizzo', type: 'string', display: 'indirizzo', size: 30 },
         { name: 'piva', type: 'string', display: 'piva', size: 12 },
         { name: 'telefono', type: 'string', display: 'telefono', size: 14 },

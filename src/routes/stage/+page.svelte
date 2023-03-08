@@ -269,13 +269,13 @@
 <Table
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
-		{ name: 'titolo', type: 'string', display: 'titolo', size: 50 },
+		{ name: 'titolo', type: 'string', display: 'titolo', size: 50, search: true },
 		{ name: 'descrizione', type: 'string', display: 'descrizione', size: 50 },
-        { name: 'offertoDa', type: 'object', key: 'nome', display: 'azienda', size: 40 },
-        { name: 'anno_scolastico', type: 'number', display: 'a.s.'},
-        { name: 'contabilizzato', type: 'boolean', display: 'SIDI'},
-		{ name: 'tutor_aziendale', type: 'string', display: 'tutor aziendale', size: 20 },
-        { name: 'tutor_scolastico', type: 'object', key: 'full_name', display: 'tutor scolastico', size: 20 },
+        { name: 'offertoDa', type: 'object', key: 'nome', display: 'azienda', size: 40, search: true },
+        { name: 'anno_scolastico', type: 'number', display: 'a.s.', search: true },
+        { name: 'contabilizzato', type: 'boolean', display: 'SIDI', search: true},
+		{ name: 'tutor_aziendale', type: 'string', display: 'tutor aziendale', size: 20, search: true },
+        { name: 'tutor_scolastico', type: 'object', key: 'full_name', display: 'tutor scolastico', size: 20, search: true },
 		{ name: 'dataInizio', type: 'date', display: 'Inizio' },
 		{ name: 'dataFine', type: 'date', display: 'Fine' },
 		{ name: 'svoltoDa', type: 'array', subtype: 'picture', key: 'picture', display: 'iscritti', size: 5 }
