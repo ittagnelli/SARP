@@ -145,6 +145,20 @@
 		}
 	}
 
+	async function cancel_action(){
+		if(modal_action == 'update'){
+			await helper.wait_fade_finish();
+			modal_action = 'create';
+			form_values = {
+				corso_id: 0,
+				titolo: '',
+				tipo: '',
+				dataInizio: helper.convert_date(new Date()),
+				dataFine: helper.convert_date(new Date()),
+			};
+		}
+	}
+
     onMount(async () => { // Controlliamo che l'inserimento sia andato a buon fine, usiamo on mount per richiamare le funzioni del DOM
         if (form != null) {
                 if (form.files != null) { // è stato richiesto la generazione di uno o più file
@@ -212,7 +226,7 @@
 					{:else}
 						<h5 class="modal-title">Aggiorna Corso</h5>
 					{/if}
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" />
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" on:click={cancel_action}/>
 				</div>
 				<div class="modal-body">
 					<div class="row">
@@ -294,7 +308,7 @@
 					</div>
 					{/if}
 					<div class="modal-footer">
-						<a href="#" class="btn btn-danger" data-bs-dismiss="modal">
+						<a href="#" class="btn btn-danger" data-bs-dismiss="modal" on:click={cancel_action}>
 							<b>Cancel</b>
 						</a>
 						<button class="btn btn-success ms-auto">

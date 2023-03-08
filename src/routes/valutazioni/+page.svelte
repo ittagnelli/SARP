@@ -4,6 +4,7 @@
 	import * as yup from 'yup';
 	import { Logger } from '../../js/logger';
 	import { qna_db } from './qna_db';
+	import { wait_fade_finish } from '../..//js/helper';
 
 	let logger = new Logger('client');
 	export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
@@ -77,6 +78,19 @@
 		}
 	}
 
+	async function cancel_action(){
+		if(modal_action == 'update'){
+			await wait_fade_finish();
+			modal_action = 'create';
+			form_values = {
+				id_valutazione: 0,
+				idUtente: data.session.idUtente,
+				idPcto: undefined,
+				current_question: 1,
+				qna: [...qna_db]
+			};
+		}
+	}
 	function select_answer(answer) {
 		let current_question = form_values.qna[form_values.current_question - 1].answers;
 		current_question.map((risposta) => {
@@ -129,7 +143,7 @@
 					{:else}
 						<h5 class="modal-title">Aggiorna Valutazione</h5>
 					{/if}
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" />
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" on:click={cancel_action}/>
 				</div>
 				<div class="modal-body">
 					<div class="row">
@@ -193,7 +207,7 @@
 					</div>
 				</div>
 				<div class="modal-footer">
-					<a href="#" class="btn btn-danger" data-bs-dismiss="modal">
+					<a href="#" class="btn btn-danger" data-bs-dismiss="modal" on:click={cancel_action}>
 						<b>Cancel</b>
 					</a>
 					<button class="btn btn-success ms-auto">

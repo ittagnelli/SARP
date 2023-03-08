@@ -136,6 +136,28 @@
         form_values.classe = utente.classe.id;
 	}
 
+	async function cancel_action(){
+		if(modal_action == 'update'){
+			await helper.wait_fade_finish();
+			modal_action = 'create';	// Reset model string
+			form_values = {	// Reset form values
+				user_id: 0,
+				tipo: '',
+				ruolo: [],
+				nome: '',
+				cognome: '',
+				natoA: '',
+				natoIl: '',
+				codiceF: '',
+				email: '',
+				telefono: '',
+				bes_select: 'NO',
+				can_login_select: 'SI',
+				istituto_select: 'ITT',
+				classe: 0
+			};
+		}
+	}
 	async function handleSubmit() {
 		try {
 			// valida il form prima del submit
@@ -205,7 +227,7 @@
 					{:else}
 						<h5 class="modal-title">Aggiorna Utente</h5>
 					{/if}
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" />
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" on:click={cancel_action}/>
 				</div>
 				<div class="modal-body">
 					{#if form}
@@ -411,7 +433,7 @@
 					</div>
 				</div>
 				<div class="modal-footer">
-					<a href="#" class="btn btn-danger" data-bs-dismiss="modal">
+					<a href="#" class="btn btn-danger" data-bs-dismiss="modal" on:click={cancel_action}>
 						<b>Cancel</b>
 					</a>
 					<button class="btn btn-success ms-auto">

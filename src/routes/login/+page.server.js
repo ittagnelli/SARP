@@ -49,23 +49,20 @@ export const actions = {
 
 			const form_data = await request.formData();
 			let jwt_token = form_data.get('token'); // google token da autenticare
-			//let info_utente = await decode_JWT(jwt_token);
             let info_utente;
 
-			console.log("DEV:",dev);
-            console.log("TOKEN:", jwt_token);
 			// se in produzione autentico il token con goole
 			// altrimenti salto questo passo
-			if (!dev)										// se scommento questo pezzo il login con google smette di funzionare e quello dev continua a non funzionare
+			if (!dev)	
 				info_utente = await decode_JWT(jwt_token);
-			else
-				info_utente = {
+			else if(jwt_token.split('@')[1] != 'istitutoagnelli.it')
+                info_utente = await decode_JWT(jwt_token);
+			else 
+                info_utente = {
 					hd: 'istitutoagnelli.it',
 					email_verified: true,
 					email: jwt_token
 				}
-
-            console.log("INFO UTENTE:", info_utente)
 
 			// se utente non è verificato e non appartiene ad istituto agnelli errore
 			if (info_utente.hd != 'istitutoagnelli.it' || !info_utente.email_verified) {

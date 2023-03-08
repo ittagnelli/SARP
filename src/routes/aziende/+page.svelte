@@ -1,4 +1,5 @@
 <script>
+    
 	import { page_pre_title, page_title, page_action_title, page_action_modal } from '../../js/store';
 	import InputText from '$lib/components/modal/input_text.svelte';
     import InputDate from '$lib/components/modal/input_date.svelte';
@@ -72,7 +73,7 @@
         nome: yup
         .string()
         .required("Nome Azienda necessario")
-        .matches(/^[a-zA-Z0-9.@\- 'à-è-ì-ò-ù]{3,40}$/, "Nome azienda non valida"),
+        .matches(/^[a-zA-Z0-9.@\- '&à-è-ì-ò-ù]{3,40}$/, "Nome azienda non valida"),
         
         indirizzo: yup
         .string()
@@ -140,6 +141,29 @@
         form_values.istituto = azienda.istituto;
 	}
 
+    async function cancel_action(){
+        if(modal_action == "update"){
+            await helper.wait_fade_finish();
+            modal_action = 'create';    // Reset model string
+            form_values = { // Reset form values
+                company_id: 0,
+                nome: "",
+                indirizzo: "",      
+                piva: "",
+                telefono: "",
+                direttore_nome: "",
+                direttore_natoA: "",
+                direttore_natoIl: helper.convert_date(new Date()),
+                direttore_codiceF: "",
+                idConvenzione: "",
+                idUtente: undefined,
+                dataConvenzione: helper.convert_date(new Date()),
+                dataProtocollo: helper.convert_date(new Date()),
+                istituto: "ITT"
+            };
+        }
+    }
+
     async function handleSubmit() {
         try {
             // valida il form prima del submit
@@ -165,7 +189,6 @@
         { name: 'piva', type: 'string', display: 'piva', size: 12 },
         { name: 'telefono', type: 'string', display: 'telefono', size: 14 },
         { name: 'direttore_nome', type: 'string', display: 'direttore', size: 20 },
-		{ name: 'idUtente', type: 'string', display: 'Creato da' },
 		{ name: 'dataConvenzione', type: 'date', display: 'Data Convenzione' },
 		{ name: 'dataProtocollo', type: 'date', display: 'Data Protocollo' },
 		{ name: 'istituto', type: 'string', display: 'Istituto', size: 6 }
@@ -201,7 +224,7 @@
 					{:else}
 						<h5 class="modal-title">Aggiorna Azienda</h5>
 					{/if}
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" />
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" on:click={cancel_action}/>
 				</div>
 				<div class="modal-body">
                     {#if form}
@@ -343,7 +366,7 @@
 					</div>
 				</div>
 				<div class="modal-footer">
-					<a href="#" class="btn btn-danger" data-bs-dismiss="modal">
+					<a href="#" class="btn btn-danger" data-bs-dismiss="modal" on:click={cancel_action}>
 						<b>Cancel</b>
 					</a>
 					<button class="btn btn-success ms-auto">

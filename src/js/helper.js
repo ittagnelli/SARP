@@ -117,6 +117,10 @@ export const show_modal = () => {
 		btn.click();
 };
 
+export function get_modal(el_id) {
+    return new globalThis.bootstrap.Modal(document.getElementById(el_id));
+}
+
 export const diff_time = (h1, h2) => {
 	const h1_split = h1.split(':'); // 00:01	[00,01]
 	const h2_split = h2.split(':');
@@ -158,4 +162,11 @@ export function delay(msec) {
 	return new Promise((resolve, reject) => {
 		setTimeout(resolve, msec || 1000);
 	});
+}
+
+export const wait_fade_finish = async () => await delay(150); // Avoid graphic issue, wait for the finish of modal closing animation. 150 ms from Tabler css
+
+export const ore_pcto = (inizio, fine) => {
+    return ((new Date(fine) - new Date(inizio))/(60 * 60 * 1000));
+
 }

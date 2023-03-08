@@ -6,7 +6,8 @@
     import * as helper from '../../js/helper';
     import * as yup from 'yup';
     import { Logger } from '../../js/logger';
-    
+    import { onMount } from 'svelte';
+
     let logger = new Logger("client");
 	export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
     export let form;
@@ -19,9 +20,10 @@
     
     let pcto = helper.data2arr(data.stages);
     let pcto_studenti = [];
+    let tipo_utente = helper.user_tipo(data); 
+    let totale_ore_pcto = 0;
 
     $: {
-        // pcto_studenti = [];
         let selected_stage = pcto.filter((item) => item.id == form_values.stage);
         if(selected_stage[0]) {
             if (helper.user_ruolo(data) != 'STUDENTE')
@@ -114,6 +116,21 @@
 		}
 	}
 
+	async function cancel_action(){
+		if(modal_action == 'update'){
+			await helper.wait_fade_finish();
+			modal_action = "create";	// Reset string
+			form_values = {	// Reset form
+				presenza_id: 0,
+				stage: 0,
+				studente: -1,
+				dataPresenza: helper.convert_date(new Date()),
+				oraInizio: '',
+				oraFine: '',
+				approvato_select: 'NO',
+			};
+		}
+	}
     function show_error_message() {
         error_message = form.message;
         show_error_mex = true;
@@ -122,6 +139,16 @@
         return '';
     }
 
+    onMount(async () => {
+        // per STUDENTE calcolo le ore complessive di PCTO solo per ore approvate e PCTO contabilizzati
+        if(tipo_utente == "STUDENTE") {
+            presenze.map(presenza => {
+                if(presenza.approvato && presenza.lavoraPer.contabilizzato)
+                    totale_ore_pcto += helper.ore_pcto(presenza.oraInizio, presenza.oraFine);    
+            });
+        }
+	});
+
 </script>
 
 {#if form && form.message.length > 0}
@@ -129,6 +156,12 @@
     <div class="error-mex {show_error_mex ? '' : 'hidden'}">
         {error_message}
     </div>
+{/if}
+
+{#if tipo_utente == "STUDENTE"}
+<p class="ore-pcto">
+    TOTALE ORE PCTO: {totale_ore_pcto}
+</p>
 {/if}
 
 <Table
@@ -172,7 +205,7 @@
 					{:else}
 						<h5 class="modal-title">Aggiorna Presenza</h5>
 					{/if}
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" />
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" on:click={cancel_action}/>
 				</div>
 				<div class="modal-body">
 					<div class="row">
@@ -183,7 +216,7 @@
 								<div class="form-label select_text">PCTO</div>
                                 <select class="form-select" class:is-invalid="{errors.stage}" name="stage" bind:value={form_values.stage}>
                                     {#each pcto as stage}
-                                        <option value={stage.id}>{stage.titolo}</option>
+                                        <option value={stage.id}>{stage.titolo} (a.s.{stage.anno_scolastico})</option>
                                     {/each}
                                 </select>
                                 {#if errors.stage}
@@ -267,7 +300,7 @@
                     </div>
 				</div>
 				<div class="modal-footer">
-					<a href="#" class="btn btn-danger" data-bs-dismiss="modal">
+					<a href="#" class="btn btn-danger" data-bs-dismiss="modal" on:click={cancel_action}>
 						<b>Cancel</b>
 					</a>
 					<button class="btn btn-success ms-auto">
@@ -295,5 +328,9 @@
 
     .hidden {
         display: none;
+    }
+
+    .ore-pcto {
+        font-size: 1.4rem;
     }
 </style>

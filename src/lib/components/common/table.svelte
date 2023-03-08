@@ -15,6 +15,7 @@ export let endpoint; // Cosa visualizza la tabella?
 export let footer;
 export let print;
 export let actions;
+export let custom_action_icon;
 export let resource;
 
 const dispatch = createEventDispatcher();
@@ -79,11 +80,12 @@ function update_row(id) {
     });
 }
 
-function calculate_bigpage(i) {
-    bigpage = MAX_PAGES * Math.floor(current_page / (MAX_PAGES + 1));
-    console.log(i, bigpage)
-    return '';
+function custom_action(id) {
+    dispatch('custom_action', {
+        id: id
+    });
 }
+
 </script>
 
 <div class="card">
@@ -133,6 +135,8 @@ function calculate_bigpage(i) {
                             <td class="sort-{col}" valign="middle">
                                 <img class="picture" src={row[col]}>
                             </td>
+                            {:else if columns[i].type == 'number'}
+                                <td class="sort-{col}" valign="middle">{row[col]}</td>
                             {:else if columns[i].type == 'array'}
                             {#if columns[i].subtype == 'picture'}
                             <td class="sort-{col}" valign="middle">
@@ -162,29 +166,41 @@ function calculate_bigpage(i) {
                             {/each}
                             {#if actions == true}
                             <td valign="middle">
-                                {#if print == true}
-                                <form id="form-pdf" method="POST" action={`/${endpoint}?/pdf`}>
-                                    <button class="icon-button" name="id" value={row.id}>
-                                        <icon class="ti ti-printer icon" />
+                                <div class="action-container">
+                                    <!-- print action icon -->
+                                    {#if print == true}
+                                    <form id="form-pdf" method="POST" action={`/${endpoint}?/pdf`}>
+                                        <button class="icon-button" name="id" value={row.id}>
+                                            <icon class="ti ti-printer icon" />
+                                        </button>
+                                    </form>
+                                    {/if}
+
+                                    <!-- update action icon -->
+                                    <a
+                                        href="##"
+                                        class=""
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#{modal_name}"
+                                        on:click={() => update_row(row.id)}
+                                        >
+                                        <icon class="ti ti-edit icon" />
+                                    </a>
+
+                                    <!-- custom action icon -->
+                                    <button class="icon-button" name="custom-action" on:click={() => custom_action(row.id)}>
+                                        <icon class="ti ti-{custom_action_icon} icon" />
                                     </button>
-                                </form>
-                                {/if}
-                                <a
-                                    href="##"
-                                    class=""
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#{modal_name}"
-                                    on:click={() => update_row(row.id)}
-                                    >
-                                    <icon class="ti ti-edit icon" />
-                                </a>
-                                {#if (user_id($page.data) == row.creatoDa && has_grant(user_ruolo($page.data),'delete', resource)) || is_admin($page.data)}
-                                <form id="form-delete" method="POST" action={`/${endpoint}?/delete`}>
-                                    <button class="icon-button" name="id" value={row.id}>
-                                        <icon class="ti ti-trash icon" />
-                                    </button>
-                                </form>
-                                {/if}
+                                    
+                                    <!-- delete action icon -->
+                                    {#if (user_id($page.data) == row.creatoDa && has_grant(user_ruolo($page.data),'delete', resource)) || is_admin($page.data)}
+                                    <form id="form-delete" method="POST" action={`/${endpoint}?/delete`}>
+                                        <button class="icon-button" name="id" value={row.id}>
+                                            <icon class="ti ti-trash icon" />
+                                        </button>
+                                    </form>
+                                    {/if}
+                                </div>
                             </td>
                             {/if}
                         </tr>
@@ -243,22 +259,6 @@ function calculate_bigpage(i) {
     font-weight: bolder;
 }
 
-form {
-    display: inline;
-}
-
-#form-delete {
-    border: 0px solid red;
-    position: relative;
-    left: 1.5rem;
-}
-
-#form-pdf {
-    border: 0px solid red;
-    position: relative;
-    left: -1.5rem;
-}
-
 a {
     color: black;
 }
@@ -289,4 +289,11 @@ a {
 .badge-container {
     width: 25vh;
 }
+
+.action-container {
+    display: flex;
+    width: 6vw;
+    justify-content:space-around;
+}
+
 </style>

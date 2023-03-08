@@ -1,3 +1,63 @@
+## v0.30.0 – 07 Marzo 2023
+- `fix#205`: ordine aziende PCTO
+- PCTO Aziende ordinate per numero convenzione
+- `fix#215`: anno scolastico in stage
+- modificato DB aggiunto anno_scolastico a PCTO
+- modificato front_end per supportare a.s.
+- modificando back_end per supportare a.s.
+- modificato presenze per visualizzare a.s. nel titolo dello stage in caso di stage con nome uguale
+
+## v0.29.0 – 07 Marzo 2023
+- `fix#200`: PCTO report   
+- aggiunta sezione verifica_stato in PCTO in layout
+- aggiornato rbac peer visualizzare menu a ADMIN e TUTOR_
+- aggiunto front_end per ricerca studente
+- aggiunto backend API per prelievo informazioni PCTO relative allo studente ricercato
+- aggiunta tabella stato PCTO con dettaglio ore
+- aggiunto campo di tipo number al componente Table
+- `fix#206`: caratteri validi nome azienda pcto
+- aggiunto & nel regex del nome azienda
+- `fix#204`: update tabella view PCTO aziende 
+-  Rimozione della colonna 'CREATO DA' nella visuale
+-  Update +page.svelte
+- aggiunto script per aggiunta docenti
+- `fix#199`: report ore PCTO studente 
+- aggiunto calcolo ore complessive PCTO per utente di tipo STUDENTE
+- le ore complessive sono quelle approvate appartenenti a stage contabilizzati
+- `fix#197`: Stage contabilizzato
+- fix bug in autenticazione dev per cypress
+- ora è possibile autenticarsi con google o con credenziali email se in DEV
+- modificato tabella pcto aggiunto flad contabilizzato
+- modificato view stage per gestire flag contabilizzato
+- ora è possibile contrassegnare uno stage come contabilizzato se tutte le sue ore sono state riportate in SIDI
+- `fix#108`: Aggiunta test automatici per la vista utenti 
+- aggiunto cypress per test automatici e visuali
+- aggiunto login per developer senza google
+- aggiunto suite iniziale di test
+
+## v0.28.0 – 02 Marzo 2023
+- `fix#182`: Report per inserimenti SIDI PCTO
+- aggiunto endpoint per recuperare le ore approvate di tutti gli studenti di un PCTO
+- aggiunto un modale per visualizzare il summary del PCTO e una tabella per tutti gli studenti contenente nome, cognome e numero di ore svolte
+- aggiunta capacità di gestire i modali via js
+- aggiunta custom action alla tabella di visualizzazione risorse
+- aggiunto DB backup script
+  
+## v0.27.0 – 01 Marzo 2023
+- `fix#190`: corso sicurezza genera max 10 attestati
+-  aggiunto delay di 100ms nella generazione di ogni attestato del corso di sicurezza
+- ciò è dovuto per aggirare la limitazione di chrome a max 10 download contemporaneai
+- `fix#189`: Ridurre lista iscritti stage pcto 
+- ridotta lista studenti visualizzatio per stage e corso sicurezza
+- aggiunto parametro size per decidere il numero di immagini da visualizzare in tabella
+- `fix#186`: Aggiungi modale apre l'aggiornamento in alcuni casi
+-  Se l'utente chiude il modale update, i dati non vengono puliti così quando premerà crea $action rimarrà l'update.
+- Aggiunta una funzione che pulisce il form dopo un cancel o close
+- `fix#184`: Rimuovere immagine utente proveniente dal profilo google
+- `fix#181`: Assegnazione classe a Corso Sicurezza
+- `fix#180`: Assegnazione classe a PCTO stage 
+- Ora è possibile creare stage e corsi sicurezza assegnando un'intera classe di studenti
+
 ## v0.26.0 – 24 Febbraio 2023
 - fix piccolo bug in script upload immagini
 - piccoli cambiamenti estetici suggeriti dagli studenti
