@@ -52,7 +52,7 @@ describe('Vista Utenti', () => {
       cy.wait(10);
       cy.get(':nth-child(5) > .mb-3 > .form-control').type('RSSFLV95C12H118C');
       cy.wait(10);
-      cy.get(':nth-child(2) > :nth-child(1) > .mb-3 > .form-control').type('presenzaTutor.pluto@istitutoagnelli.it');
+      cy.get(':nth-child(2) > :nth-child(1) > .mb-3 > .form-control').type('presentutor.pluto@istitutoagnelli.it');
       cy.wait(10);
       cy.get(':nth-child(2) > :nth-child(2) > .mb-3 > .form-control').type('333.123.45.67');
       cy.wait(10);
@@ -100,38 +100,43 @@ describe('Vista Utenti', () => {
       cy.get('#btn_action_modal').click();              // creazione stage
       cy.wait(200);
       cy.get(':nth-child(1) > .mb-3 > .form-select').select(0);
-      cy.get(':nth-child(2) > .mb-3 > .form-control').clear().type('2023-03-01');
+      cy.get('.modal-body > :nth-child(1) > :nth-child(2) > .mb-3 > .form-control').clear().type('2023-03-01');
       cy.wait(10);
-      cy.get(':nth-child(3) > .mb-3 > .form-control').clear().type('2023-03-10');
+      cy.get('.modal-body > :nth-child(1) > :nth-child(3) > .mb-3 > .form-control').clear().type('2023-03-10');
       cy.wait(10);
-      cy.get(':nth-child(2) > :nth-child(1) > .mb-3 > .form-control').type('Gino Ciro');
+      cy.get('.modal-body > :nth-child(2) > :nth-child(1) > .mb-3 > .form-control').type('Gino Ciro');
       cy.get(':nth-child(2) > .mb-3 > .form-select').select(0);
-      cy.get(':nth-child(3) > .col-lg-12 > .mb-3 > .form-control').type('Presenza');
+      cy.wait(10);
+      cy.get('.modal-body > :nth-child(2) > :nth-child(3) > .mb-3 > .form-control').type('2023');
+      cy.wait(10);
+      cy.get('.modal-body > :nth-child(3) > .col-lg-12 > .mb-3 > .form-control').type('Presenza');
       cy.wait(10);
       cy.get(':nth-child(4) > .col-lg-12 > .mb-3 > .form-control').type('zappare la vigna sotto il sole con minimo 40 gradi');
       cy.get(':nth-child(5) > .col-lg-12 > .mb-3 > .selectContainer').click();
       cy.get(':nth-child(2) > .item').click();
       cy.get(':nth-child(6) > .col-lg-12 > .mb-3 > .selectContainer').click();
       cy.get(':nth-child(1) > .item').click();
-      cy.get('.btn-success').click();
+      cy.get('.modal-body > .modal-footer > .btn-success').click();
       
       cy.wait(1000);
-      cy.get(':nth-child(3) > .nav-link').click();
-      cy.get('[href="/presenze"]');
-      cy.get('#btn_action_modal');
-      cy.get(':nth-child(1) > .mb-3 > .form-select').select(0);
+      cy.get(':nth-child(3) > .nav-link').click();    // creazione presenza
+      cy.get('[href="/presenze"]').click();
+      cy.wait(200);
+      cy.get('#btn_action_modal').click();
       cy.wait(10);
-      cy.get(':nth-child(2) > .mb-3 > .form-select').select(0);
+      cy.get('form.s-xU3aCZoywAA_ > .modal-dialog > .modal-content > .modal-body > :nth-child(1) > :nth-child(1) > .mb-3 > .form-select').select(0);
       cy.wait(10);
-      cy.get(':nth-child(1) > .mb-3 > .form-control').type('2023-03-08');
+      cy.get(':nth-child(1) > :nth-child(2) > .mb-3 > .form-select').select(0);
       cy.wait(10);
-      cy.get(':nth-child(2) > .mb-3 > .form-control').type('08:00');
+      cy.get('form.s-xU3aCZoywAA_ > .modal-dialog > .modal-content > .modal-body > :nth-child(2) > :nth-child(1) > .mb-3 > .form-control').type('2023-03-08');
       cy.wait(10);
-      cy.get(':nth-child(3) > .mb-3 > .form-control').type('17:00');
+      cy.get(':nth-child(2) > :nth-child(2) > .mb-3 > .form-control').type('08:00');
       cy.wait(10);
-      cy.get(':nth-child(1) > .form-selectgroup-label').click();
+      cy.get('form.s-xU3aCZoywAA_ > .modal-dialog > .modal-content > .modal-body > :nth-child(2) > :nth-child(3) > .mb-3 > .form-control').type('17:00');
       cy.wait(10);
-      cy.get('.btn-success').click();
+      cy.get('form.s-xU3aCZoywAA_ > .modal-dialog > .modal-content > .modal-body > :nth-child(2) > :nth-child(4) > .mb-3 > .form-selectgroup > :nth-child(1) > .form-selectgroup-label').click();
+      cy.wait(10);
+      cy.get('.btn-success > b.s-xU3aCZoywAA_').click();
 
       /* ==== End Cypress Studio ==== */
     })
