@@ -94,6 +94,7 @@ export const actions = {
                 tipo: form_data.get('tipo'),
                 dataInizio: new Date(form_data.get('dataInizio')),
 				dataFine: new Date(form_data.get('dataFine')),
+                dataTest: new Date(form_data.get('dataTest')),
                 seguitoDa: {
                     connect: ids
                 }
@@ -129,6 +130,7 @@ export const actions = {
                     tipo: form_data.get('tipo'),
                     dataInizio: new Date(form_data.get('dataInizio')),
                     dataFine: new Date(form_data.get('dataFine')),
+                    dataTest: new Date(form_data.get('dataTest')),
                     seguitoDa: {
                         set: ids
                     }
@@ -188,7 +190,7 @@ export const actions = {
                 filler['classe'] = studente.classe.classe;
                 filler['istituto'] = studente.classe.istituto;
                 filler['sezione'] = studente.classe.sezione;
-                filler['today'] = new Date().toLocaleDateString("it-IT");
+                filler['today'] = corso.dataTest.toLocaleDateString("it-IT");
 
                 let TEMPLATE_FILE;
                 if(corso.tipo == 'SPECIFICO')
@@ -221,10 +223,6 @@ export const actions = {
             }       
 
             return {files: return_files};
-			// return {
-			// 	file: JSON.stringify(buf), // Convertiamo il buffer in stringa sennò sveltekit va in errore
-			// 	nome_convenzione: `01-Convenzione-generale-${company.idConvenzione}.docx`
-			// };
 		} catch (exception) {
 			catch_error_pdf(exception, 'la generazione', 804);
 		}
