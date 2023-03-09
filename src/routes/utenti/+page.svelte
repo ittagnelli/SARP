@@ -182,8 +182,8 @@
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
 		{ name: 'picture', type: 'image', display: 'Utente' },
-		{ name: 'cognome', type: 'string', display: 'Cognome', size: 11 },
-		{ name: 'nome', type: 'string', display: 'Nome', size: 11 },
+		{ name: 'cognome', type: 'string', display: 'Cognome', size: 11, search: true },
+		{ name: 'nome', type: 'string', display: 'Nome', size: 11, search: true },
         { name: 'natoIl', type: 'date', display: 'Nato il' },
         { name: 'tipo', type: 'string', display: 'Tipo', size: 10 },
         { name: 'classe_str', type: 'string', display: 'Classe', size: 20 },

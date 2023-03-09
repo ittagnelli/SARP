@@ -183,8 +183,8 @@
 <Table
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
-		{ name: 'titolo', type: 'string', display: 'titolo', size: 50 },
-        { name: 'tipo', type: 'string', display: 'tipo', size: 20 },
+		{ name: 'titolo', type: 'string', display: 'titolo', size: 50, search: true },
+        { name: 'tipo', type: 'string', display: 'tipo', size: 20, search: true },
         { name: 'dataInizio', type: 'date', display: 'Inizio' },
 		{ name: 'dataFine', type: 'date', display: 'Fine' },	
 		{ name: 'seguitoDa', type: 'array', subtype: 'picture', key: 'picture', display: 'iscritti', size: 5 }

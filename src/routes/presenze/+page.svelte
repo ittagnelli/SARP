@@ -168,12 +168,12 @@
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
         { name: 'creatoDa', type: 'hidden', display: 'creatoDa' },
-        { name: 'lavoraPer', type: 'object', key: 'titolo', display: 'pcto', size: 30 },
-        { name: 'presenza', type: 'object', key: 'full_name', display: 'studente', size: 30 },
+        { name: 'lavoraPer', type: 'object', key: 'titolo', display: 'pcto', size: 30, search: true },
+        { name: 'presenza', type: 'object', key: 'full_name', display: 'studente', size: 30, search: true },
         { name: 'dataPresenza', type: 'date', display: 'data' },
         { name: 'oraInizio', type: 'time', display: 'entrata' },
         { name: 'oraFine', type: 'time', display: 'uscita' },
-        { name: 'approvato', type: 'boolean', display: 'approvato'}
+        { name: 'approvato', type: 'boolean', display: 'approvato', search: true}
 	]}
 	rows={presenze}
 	page_size={10}
