@@ -153,6 +153,7 @@ function table_filter(col, type, key) {
                                                 size=5  
                                                 on:input={() => table_filter(`${col.name}`, col.type, col.key)}
                                                 autocomplete="off"
+                                                placeholder="filtro"
                                             />
                                             {:else}
                                                 <label class="form-check">
