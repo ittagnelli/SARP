@@ -445,7 +445,7 @@
 								<Select
 									class="form-select"
 									name="utenti"
-									items={utenti}
+									items={utenti.filter(utente => utente.tipo == "STUDENTE")}
 									value={svoltoDa}
 									isMulti={true}
 									placeholder="Selezione gli studenti..."
