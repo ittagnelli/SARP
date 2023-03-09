@@ -28,8 +28,10 @@ let page_start = 0; //inizio della pagine nell'array rows
 let page_end = page_size; //fine della pagina nell'array rows
 let rows_paged = []; //pagina attuale di rows
 let bigpage; // numero di pagina contenente MAX_PAGES pagine
-let rows_filtered = []; // contiene le righe di rows con le chiavi ordinate come la tabella
+let rows_db = []; // contiene le righe di rows con le chiavi ordinate come la tabella
+let rows_filtered = []; //contiene le righe filtrate dall'utente
 let footer_num = 0, footer_den = 0;
+let show_pagination = true;
 
 // filtra da rows le chiavi non presenti nelle colonne della tabella
 //in questo modo viene rispettato l'ordine di visualizzazione
@@ -39,6 +41,7 @@ rows.forEach((row) => {
     columns.forEach((col) => {
         tmp_row[col['name']] = row[col['name']];
     });
+    rows_db.push(tmp_row);
     rows_filtered.push(tmp_row);
 });
 
@@ -86,6 +89,36 @@ function custom_action(id) {
     });
 }
 
+function table_filter(col, type, key) {
+    change_page(1);
+
+    if(type != 'boolean') {
+        let val = document.getElementById(`filter_${col}`).value;
+        if(val.length == 0)
+            rows_filtered = rows_db;
+        else {
+            if(type == 'string') 
+                rows_filtered = rows_db.filter(item => item[col].toLowerCase().startsWith(val.toLowerCase()));    
+            if(type == 'number')
+                rows_filtered = rows_db.filter(item => item[col] == +val);
+            if(type == 'object')
+                rows_filtered = rows_db.filter(item => item[col][key].toLowerCase().startsWith(val.toLowerCase()));
+        }   
+    } else {
+        let valt = document.getElementById(`filter_${col}T`).checked;
+        let valf = document.getElementById(`filter_${col}F`).checked;
+        
+        if(valt && !valf)
+            rows_filtered = rows_db.filter(item => item[col] == valt);
+        else if(!valt && valf)
+            rows_filtered = rows_db.filter(item => item[col] == !valf);
+        else
+            rows_filtered = rows_db;
+    }
+    show_pagination = rows_filtered.length == rows_db.length;
+    rows_paged = [...rows_filtered.slice(page_start, page_end)];
+}
+
 </script>
 
 <div class="card">
@@ -96,115 +129,161 @@ function custom_action(id) {
                     <thead>
                         <tr>
                             {#each columns as col}
-                            <!-- {#if col.name != 'id'} -->
-                            {#if col.type != 'hidden'}
-                            <th>
-                                <button class="table-sort" data-sort="sort-{col.name}">{col.display}</button>
-                            </th>
-                            {/if}
+                                {#if col.type != 'hidden'}
+                                <th>
+                                    <button class="table-sort" data-sort="sort-{col.name}">{col.display}</button>
+                                </th>
+                                {/if}
                             {/each}
                             {#if actions == true}
-                            <th>Azioni</th>
+                                <th>Azioni</th>
+                            {/if}
+                        </tr>
+                        <tr>
+                            {#each columns as col}
+                                {#if col.type != 'hidden'}
+                                    {#if col.search == true}
+                                        <th>
+                                            {#if col.type != 'boolean'}
+                                            <input
+                                                id="filter_{col.name}"
+                                                type="text"
+                                                class="form-control"
+                                                name={col.name}
+                                                size=5  
+                                                on:input={() => table_filter(`${col.name}`, col.type, col.key)}
+                                                autocomplete="off"
+                                                placeholder="filtro"
+                                            />
+                                            {:else}
+                                                <label class="form-check">
+                                                    <input 
+                                                        id="filter_{col.name}T"
+                                                        class="form-check-input" 
+                                                        type="checkbox"
+                                                        on:click={() => table_filter(`${col.name}`, col.type, col.key)}
+                                                    />
+                                                </label>
+                                                <label class="form-check">
+                                                    <input 
+                                                        id="filter_{col.name}F"
+                                                        class="form-check-input" 
+                                                        type="checkbox"
+                                                        on:click={() => table_filter(`${col.name}`, col.type, col.key)}
+                                                    />
+                                                </label>
+                                            {/if}
+                                        </th>
+                                    {:else}
+                                    <th>
+                                    </th>
+                                    {/if}
+                                {/if}
+                            {/each}
+                            {#if actions == true}
+                                <th></th>
                             {/if}
                         </tr>
                     </thead>
                     <tbody class="table-tbody">
-                        {#each rows_paged as row}
-                        <tr>
-                            {#each Object.keys(row) as col, i}
-                            <!-- {#if col_names.includes(col) && col != 'id'} -->
-                            {#if col_names.includes(col)}
-                            {#if columns[i].type == 'date'}
-                            <td class="sort-{col}" valign="middle">{row[col] ? row[col].toLocaleDateString() : "--"}</td>
-                            {:else if columns[i].type == 'time'}
-                            <td class="sort-{col}" valign="middle">{row[col] ? row[col].toLocaleTimeString() : "--"}</td>
-                            {:else if columns[i].type == 'object'}
-                            <td class="sort-{col}" valign="middle">
-                                {ellipses(columns[i].size || 3, row[col][columns.filter((item) => item.name == col)[0].key])}
-                            </td>
-                            {:else if columns[i].type == 'boolean'}
-                            <td class="sort-{col}" valign="middle">
-                                <!-- {row[col] ? "SI" : "NO"} -->
-                                {#if row[col]}
-                                    <icon class="ti ti-check icon green" />
-                                {:else}
-                                    <icon class="ti ti-circle-x icon red" />
+                        {#if rows_paged.length > 0}
+                            {#each rows_paged as row}
+                            <tr>
+                                {#each Object.keys(row) as col, i}
+                                <!-- {#if col_names.includes(col) && col != 'id'} -->
+                                {#if col_names.includes(col)}
+                                {#if columns[i].type == 'date'}
+                                <td class="sort-{col}" valign="middle">{row[col] ? row[col].toLocaleDateString() : "--"}</td>
+                                {:else if columns[i].type == 'time'}
+                                <td class="sort-{col}" valign="middle">{row[col] ? row[col].toLocaleTimeString() : "--"}</td>
+                                {:else if columns[i].type == 'object'}
+                                <td class="sort-{col}" valign="middle">
+                                    {ellipses(columns[i].size || 3, row[col][columns.filter((item) => item.name == col)[0].key])}
+                                </td>
+                                {:else if columns[i].type == 'boolean'}
+                                <td class="sort-{col}" valign="middle">
+                                    <!-- {row[col] ? "SI" : "NO"} -->
+                                    {#if row[col]}
+                                        <icon class="ti ti-check icon green" />
+                                    {:else}
+                                        <icon class="ti ti-circle-x icon red" />
+                                    {/if}
+                                </td>
+                                {:else if columns[i].type == 'image'}
+                                <td class="sort-{col}" valign="middle">
+                                    <img class="picture" src={row[col]}>
+                                </td>
+                                {:else if columns[i].type == 'number'}
+                                    <td class="sort-{col}" valign="middle">{row[col]}</td>
+                                {:else if columns[i].type == 'array'}
+                                {#if columns[i].subtype == 'picture'}
+                                <td class="sort-{col}" valign="middle">
+                                    <div class="picture-container">
+                                        {#each row[col] as item,idx }    
+                                        {#if idx < (columns[i].size || 1)}
+                                                <img class="picture-item" src={item[columns.filter((item) => item.name == col)[0].key]}>
+                                            {/if}
+                                        {/each}
+                                    </div>
+                                </td>
+                                {:else if columns[i].subtype == 'object'}
+                                <td class="sort-{col}" valign="middle">
+                                    <div class="badges-list badge-container">
+                                        {#each row[col] as item }
+                                        <span class="badge bg-green">
+                                            <b>{item[columns.filter((item) => item.name == col)[0].key]}</b>
+                                        </span>
+                                        {/each}
+                                    </div>
+                                </td>
                                 {/if}
-                            </td>
-                            {:else if columns[i].type == 'image'}
-                            <td class="sort-{col}" valign="middle">
-                                <img class="picture" src={row[col]}>
-                            </td>
-                            {:else if columns[i].type == 'number'}
-                                <td class="sort-{col}" valign="middle">{row[col]}</td>
-                            {:else if columns[i].type == 'array'}
-                            {#if columns[i].subtype == 'picture'}
-                            <td class="sort-{col}" valign="middle">
-                                <div class="picture-container">
-                                    {#each row[col] as item,idx }    
-                                    {#if idx < (columns[i].size || 1)}
-                                            <img class="picture-item" src={item[columns.filter((item) => item.name == col)[0].key]}>
+                                {:else if columns[i].type != 'hidden'}
+                                <td class="sort-{col}" valign="middle">{ellipses(columns[i].size || 3, row[col])}</td>
+                                {/if}
+                                {/if}
+                                {/each}
+                                {#if actions == true}
+                                <td valign="middle">
+                                    <div class="action-container">
+                                        <!-- print action icon -->
+                                        {#if print == true}
+                                        <form id="form-pdf" method="POST" action={`/${endpoint}?/pdf`}>
+                                            <button class="icon-button" name="id" value={row.id}>
+                                                <icon class="ti ti-printer icon" />
+                                            </button>
+                                        </form>
                                         {/if}
-                                    {/each}
-                                </div>
-                            </td>
-                            {:else if columns[i].subtype == 'object'}
-                            <td class="sort-{col}" valign="middle">
-                                <div class="badges-list badge-container">
-                                    {#each row[col] as item }
-                                    <span class="badge bg-green">
-                                        <b>{item[columns.filter((item) => item.name == col)[0].key]}</b>
-                                    </span>
-                                    {/each}
-                                </div>
-                            </td>
-                            {/if}
-                            {:else if columns[i].type != 'hidden'}
-                            <td class="sort-{col}" valign="middle">{ellipses(columns[i].size || 3, row[col])}</td>
-                            {/if}
-                            {/if}
+
+                                        <!-- update action icon -->
+                                        <a
+                                            href="##"
+                                            class=""
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#{modal_name}"
+                                            on:click={() => update_row(row.id)}
+                                            >
+                                            <icon class="ti ti-edit icon" />
+                                        </a>
+
+                                        <!-- custom action icon -->
+                                        <button class="icon-button" name="custom-action" on:click={() => custom_action(row.id)}>
+                                            <icon class="ti ti-{custom_action_icon} icon" />
+                                        </button>
+                                        
+                                        <!-- delete action icon -->
+                                        {#if (user_id($page.data) == row.creatoDa && has_grant(user_ruolo($page.data),'delete', resource)) || is_admin($page.data)}
+                                        <form id="form-delete" method="POST" action={`/${endpoint}?/delete`}>
+                                            <button class="icon-button" name="id" value={row.id}>
+                                                <icon class="ti ti-trash icon" />
+                                            </button>
+                                        </form>
+                                        {/if}
+                                    </div>
+                                </td>
+                                {/if}
+                            </tr>
                             {/each}
-                            {#if actions == true}
-                            <td valign="middle">
-                                <div class="action-container">
-                                    <!-- print action icon -->
-                                    {#if print == true}
-                                    <form id="form-pdf" method="POST" action={`/${endpoint}?/pdf`}>
-                                        <button class="icon-button" name="id" value={row.id}>
-                                            <icon class="ti ti-printer icon" />
-                                        </button>
-                                    </form>
-                                    {/if}
-
-                                    <!-- update action icon -->
-                                    <a
-                                        href="##"
-                                        class=""
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#{modal_name}"
-                                        on:click={() => update_row(row.id)}
-                                        >
-                                        <icon class="ti ti-edit icon" />
-                                    </a>
-
-                                    <!-- custom action icon -->
-                                    <button class="icon-button" name="custom-action" on:click={() => custom_action(row.id)}>
-                                        <icon class="ti ti-{custom_action_icon} icon" />
-                                    </button>
-                                    
-                                    <!-- delete action icon -->
-                                    {#if (user_id($page.data) == row.creatoDa && has_grant(user_ruolo($page.data),'delete', resource)) || is_admin($page.data)}
-                                    <form id="form-delete" method="POST" action={`/${endpoint}?/delete`}>
-                                        <button class="icon-button" name="id" value={row.id}>
-                                            <icon class="ti ti-trash icon" />
-                                        </button>
-                                    </form>
-                                    {/if}
-                                </div>
-                            </td>
-                            {/if}
-                        </tr>
-                        {/each}
+                        {/if}
                     </tbody>
                 </table>
             </div>
@@ -212,6 +291,7 @@ function custom_action(id) {
     </div>
 
     <!-- pager -->
+    {#if show_pagination}
     <div class="card-footer d-flex align-items-center">
         <p class="m-0 text-muted" id="users-count">
             {footer_num}/{footer_den} {footer}
@@ -240,6 +320,7 @@ function custom_action(id) {
         </ul>
         {/if}
     </div>
+    {/if}
 </div>
 
 <style>
