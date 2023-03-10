@@ -30,7 +30,7 @@ export async function load({ locals }) {
 	try {
 		// query SQL al DB per tutte le entry nella tabella todo
 		const utenti = await SARP.Utente.findMany({
-			orderBy: [{ id: 'desc' }],
+			orderBy: [{ tipo: 'desc' }],
 			where: multi_user_where(locals),
             include: {
                 ruoli: true,

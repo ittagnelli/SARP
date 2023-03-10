@@ -57,6 +57,7 @@
 		tipo: '',
 		dataInizio: helper.convert_date(new Date()),
 		dataFine: helper.convert_date(new Date()),
+        dataTest: helper.convert_date(new Date()),
 	};
 
 	// schema di validazione del form
@@ -87,6 +88,7 @@
 		form_values.tipo = corso.tipo;
 		form_values.dataInizio = helper.convert_date(corso.dataInizio);
 		form_values.dataFine = helper.convert_date(corso.dataFine);
+        form_values.dataTest = helper.convert_date(corso.dataTest);
 	}
 
 	function handleSelect(event) {
@@ -155,6 +157,7 @@
 				tipo: '',
 				dataInizio: helper.convert_date(new Date()),
 				dataFine: helper.convert_date(new Date()),
+                dataTest: helper.convert_date(new Date()),
 			};
 		}
 	}
@@ -186,7 +189,8 @@
 		{ name: 'titolo', type: 'string', display: 'titolo', size: 50, search: true },
         { name: 'tipo', type: 'string', display: 'tipo', size: 20, search: true },
         { name: 'dataInizio', type: 'date', display: 'Inizio' },
-		{ name: 'dataFine', type: 'date', display: 'Fine' },	
+		{ name: 'dataFine', type: 'date', display: 'Fine' },
+        { name: 'dataTest', type: 'date', display: 'Test' },	
 		{ name: 'seguitoDa', type: 'array', subtype: 'picture', key: 'picture', display: 'iscritti', size: 5 }
 	]}
 	rows={corsi}
@@ -230,7 +234,7 @@
 				</div>
 				<div class="modal-body">
 					<div class="row">
-						<div class="col-lg-6">
+						<div class="col-lg-8">
 							<div class="mb-3">
 								<InputText
 								label="Titolo"
@@ -241,17 +245,7 @@
 							/>
 							</div>
 						</div>
-                        <div class="col-lg-6">
-							<InputDate
-								label="Data Inizio"
-								name="dataInizio"
-								{errors}
-								bind:val={form_values.dataInizio}
-							/>
-						</div>
-					</div>
-					<div class="row">
-                        <div class="col-lg-6">
+                        <div class="col-lg-4">
 							<div class="mb-3">
 								<div class="form-label select_text">Tipo</div>
                                 <select class="form-select" class:is-invalid="{errors.tipo}" name="tipo" bind:value={form_values.tipo}>
@@ -264,12 +258,30 @@
                                 {/if}	
 							</div>
 						</div>
-                        <div class="col-lg-6">
+					</div>
+					<div class="row">
+                        <div class="col-lg-4">
+							<InputDate
+								label="Data Inizio"
+								name="dataInizio"
+								{errors}
+								bind:val={form_values.dataInizio}
+							/>
+						</div>
+                        <div class="col-lg-4">
 							<InputDate
 								label="Data Fine"
 								name="dataFine"
 								{errors}
 								bind:val={form_values.dataFine}
+							/>
+						</div>
+                        <div class="col-lg-4">
+							<InputDate
+								label="Data Test"
+								name="dataTest"
+								{errors}
+								bind:val={form_values.dataTest}
 							/>
 						</div>
 					</div>

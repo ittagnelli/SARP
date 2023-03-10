@@ -1,3 +1,18 @@
+## v0.31.0 – 09 Marzo 2023
+- `fix#220`: Aggiungere data del corso di sicurezza
+- aggiunto campo dataTest al corso di sicurezza
+- aggiornata tabella
+- aggiornato modale insert e update
+- aggiornato backend
+- `fix#214`: Rimuovere possibilità di inserire docenti in stage 
+- aggiunto filtro per docenti, pertanto solo gli studenti possono essere aggiunti ad uno stage
+- `fix#178`: filtri tabella 
+- aggiunta la possibilità di filtare una tabella per uno specifico campo
+- aggiunta l'opzione searchable alle righe della table
+- si possono fare ricerche per campi string, boolean e number
+- aggiunto placeholder al campo filtro
+- aggiunto  test automatico per view presenze
+
 ## v0.30.0 – 07 Marzo 2023
 - `fix#205`: ordine aziende PCTO
 - PCTO Aziende ordinate per numero convenzione
