@@ -28,6 +28,10 @@
     }
 
     async function verifica_studente() {
+        cognome = cognome[0].toUpperCase().concat(cognome.slice(1).toLowerCase());
+        nome = nome[0].toUpperCase().concat(nome.slice(1).toLowerCase());
+        
+        console.log(cognome, nome)
         const get_pcto_status = await fetch(`/verifica_stato?cognome=${cognome}&nome=${nome}`);
         let stato_pcto = await get_pcto_status.json();
         pctos = [];
@@ -140,7 +144,7 @@
             { name: 'id', type: 'hidden', display: 'ID' },
             { name: 'azienda', type: 'string', display: 'Azienda', size: 30 },
             { name: 'pcto', type: 'string', display: 'PCTO', size: 30 },
-            { name: 'ore_contabilizzate', type: 'number', display: 'ORE CONTABILIZZATE', size: 10 },
+            { name: 'ore_contabilizzate', type: 'number', display: 'ORE REGISTRATE', size: 10 },
             { name: 'ore_totali', type: 'number', display: 'ORE TOTALI', size: 10 },
             { name: 'ore_approvate', type: 'number', display: 'ORE APPROVATE', size: 10 },
         ]}

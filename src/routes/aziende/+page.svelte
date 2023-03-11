@@ -81,7 +81,7 @@
 
         piva: yup
         .string()
-        .matches(/^$|^[0-9]{11}$/, "Partita Iva non valida"),
+        .matches(/^$|^[0-9]{11}$|^[0-9A-Z]{16}$/, "Partita Iva non valida"),
 
         telefono: yup
 		.string()
@@ -191,10 +191,10 @@
         { name: 'direttore_nome', type: 'string', display: 'direttore', size: 20 },
 		{ name: 'dataConvenzione', type: 'date', display: 'Data Convenzione' },
 		{ name: 'dataProtocollo', type: 'date', display: 'Data Protocollo' },
-		{ name: 'istituto', type: 'string', display: 'Istituto', size: 6 }
+		{ name: 'istituto', type: 'string', display: 'Istituto', size: 10 }
 	]}
 	rows={aziende}
-	page_size={10}
+	page_size={11}
 	modal_name={$page_action_modal}
 	on:update_start={start_update}
 	endpoint="aziende"
@@ -328,7 +328,7 @@
                                 bind:val={form_values.dataConvenzione}
                             />
 						</div>
-						<div class="col-lg-4">
+						<div class="col-lg-3">
                             <InputDate
                             label="Data Protocollo"
                             name="dataProtocollo"
@@ -336,7 +336,7 @@
                             bind:val={form_values.dataProtocollo}
                         />
 						</div>
-						<div class="col-lg-4">
+						<div class="col-lg-5">
 							<div class="mb-3">
 								<label class="form-label">Istituto</label>
 								<div class="form-selectgroup">
@@ -359,6 +359,16 @@
 											bind:group={form_values.istituto}
 										/>
 										<span class="form-selectgroup-label">LICEO</span>
+									</label>
+                                    <label class="form-selectgroup-item">
+										<input
+											type="radio"
+											name="istituto"
+											value="ITT-LICEO"
+											class="form-selectgroup-input"
+											bind:group={form_values.istituto}
+										/>
+										<span class="form-selectgroup-label">ITT-LICEO</span>
 									</label>
 								</div>
 							</div>

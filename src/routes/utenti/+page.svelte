@@ -193,7 +193,7 @@
 		{ name: 'can_login', type: 'boolean', display: 'can_login' }
 	]}
 	rows={utenti}
-	page_size={10}
+	page_size={6}
 	modal_name={$page_action_modal}
 	on:update_start={start_update}
 	footer="Utenti"

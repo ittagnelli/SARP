@@ -169,7 +169,7 @@ export const actions = {
 				where: { id: +id }
 			});
 			//arricchisce l'oggetto
-			company['today'] = new Date().toLocaleDateString();
+			company['today'] = company['dataConvenzione'].toLocaleDateString();
 			company['direttore_natoIl'] = company['direttore_natoIl'].toLocaleDateString();
 
 			const content = fs.readFileSync(

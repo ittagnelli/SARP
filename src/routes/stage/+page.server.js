@@ -29,7 +29,7 @@ export async function load({ locals }) {
     try {
         // query SQL al DB per tutte le entry nella tabella todo
         const stages = await SARP.pcto_Pcto.findMany({
-            orderBy: [{ id: 'desc' }],
+            orderBy: [{ anno_scolastico: 'desc' }],
             where: multi_user_where(locals), 
             include: {
                 offertoDa: true,
