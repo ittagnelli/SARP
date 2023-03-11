@@ -28,6 +28,10 @@
     }
 
     async function verifica_studente() {
+        cognome = cognome[0].toUpperCase().concat(cognome.slice(1).toLowerCase());
+        nome = nome[0].toUpperCase().concat(nome.slice(1).toLowerCase());
+        
+        console.log(cognome, nome)
         const get_pcto_status = await fetch(`/verifica_stato?cognome=${cognome}&nome=${nome}`);
         let stato_pcto = await get_pcto_status.json();
         pctos = [];
