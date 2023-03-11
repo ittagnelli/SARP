@@ -81,7 +81,7 @@
 
         piva: yup
         .string()
-        .matches(/^$|^[0-9]{11}$/, "Partita Iva non valida"),
+        .matches(/^$|^[0-9]{11}$|^[0-9A-Z]{16}$/, "Partita Iva non valida"),
 
         telefono: yup
 		.string()
