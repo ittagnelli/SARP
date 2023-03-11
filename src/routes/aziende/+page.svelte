@@ -194,7 +194,7 @@
 		{ name: 'istituto', type: 'string', display: 'Istituto', size: 6 }
 	]}
 	rows={aziende}
-	page_size={10}
+	page_size={11}
 	modal_name={$page_action_modal}
 	on:update_start={start_update}
 	endpoint="aziende"
