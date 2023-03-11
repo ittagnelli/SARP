@@ -140,7 +140,7 @@
             { name: 'id', type: 'hidden', display: 'ID' },
             { name: 'azienda', type: 'string', display: 'Azienda', size: 30 },
             { name: 'pcto', type: 'string', display: 'PCTO', size: 30 },
-            { name: 'ore_contabilizzate', type: 'number', display: 'ORE CONTABILIZZATE', size: 10 },
+            { name: 'ore_contabilizzate', type: 'number', display: 'ORE REGISTRATE', size: 10 },
             { name: 'ore_totali', type: 'number', display: 'ORE TOTALI', size: 10 },
             { name: 'ore_approvate', type: 'number', display: 'ORE APPROVATE', size: 10 },
         ]}
