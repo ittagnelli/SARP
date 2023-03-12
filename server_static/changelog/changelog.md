@@ -1,3 +1,17 @@
+## v0.32.0 – 12 Marzo 2023
+- apportate modifiche come richiesto dalla segreteria
+- `fix#231`: Fix typo in modal
+- `fix#227`: Fix select during update and delete of students
+- `fix#226`: sessione troppo breve
+- aggiornato copyright footer
+- `fix#218`: stage ordinati per anno scolastico
+- `fix#207`: ridimensionamento view PCTO aziende e presenze
+- `fix#212`: rename ore contabilizzate in ore registrate
+- `fix#228`: azienda PIVA e CF
+- `fix#229`: azienda ITT e LICEO
+- `fix#213`: PCTO verifica stato ricerca più flessibile
+- `fix#203`: data documento convenzione errata
+
 ## v0.31.0 – 09 Marzo 2023
 - `fix#220`: Aggiungere data del corso di sicurezza
 - aggiunto campo dataTest al corso di sicurezza
