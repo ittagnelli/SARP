@@ -391,7 +391,7 @@
 						</div>
                         <div class="col-lg-2">
                             <div class="mb-3">
-                                <label class="form-label">Regigstrato</label>
+                                <label class="form-label">Registrato</label>
                                 <div class="form-selectgroup">
                                     <label class="form-selectgroup-item">
                                         <input
