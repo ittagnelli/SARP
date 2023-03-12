@@ -177,10 +177,10 @@
 				let classi_ids = classi_iscritte.map(classe => classe.id);
 				if(removed){
 					let users_id = user_selected.map(user => user.classeId);
-					if(users_id.indexOf(removed.classeId) == -1){
+					if(users_id.indexOf(removed.classeId) != -1){
 						let index_to_remove = classi_ids.indexOf(removed.classeId);
 						classi_iscritte.splice(index_to_remove, 1);
-						classi_iscritte = classi_iscritte;
+						classi_iscritte = classi_iscritte
 					}
 				}
 
@@ -193,8 +193,9 @@
 
 	function handleSelect_classi(event) {
 		let classe_selected = event.detail;
-		svoltoDa = [];
-		if(classe_selected){
+		if(classe_selected == null)
+			svoltoDa = [];
+		if(classe_selected && classe_selected.length > 0){
 			classi_iscritte = classe_selected;
 			classe_selected.forEach((item) => {
 				let utenti_partecipanti = utenti.filter((utente) => {
@@ -454,7 +455,6 @@
 							</div>
 						</div>
 					</div>
-					{#if svoltoDa.length == 0}
 						<div class="row">
 							<div class="col-lg-12">
 								<div class="mb-3">
@@ -471,7 +471,6 @@
 								</div>
 							</div>
 						</div>
-					{/if}
 					<div class="modal-footer">
 						<a href="#" class="btn btn-danger" data-bs-dismiss="modal" on:click={cancel_action}>
 							<b>Cancel</b>
