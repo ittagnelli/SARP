@@ -17,11 +17,20 @@
 	let presenze = helper.data2arr(data.presenze);
     // aggiungo il full name per ogni presenza per poi stamparlo nella tabella
     presenze.forEach((item, idx) => presenze[idx].presenza['full_name'] = (presenze[idx].presenza['cognome']).concat(" ", presenze[idx].presenza['nome']));
-    
-    let pcto = helper.data2arr(data.stages);
+
     let pcto_studenti = [];
     let tipo_utente = helper.user_tipo(data); 
+    let id_utente = helper.user_id(data);
     let totale_ore_pcto = 0;
+    let pcto = helper.data2arr(data.stages);
+
+    //se tutor aziendale o studente filtro i PCTO
+    //se ADMIN faccio vedere tutti i PCTO 
+    if(helper.is_tutor(data) && !helper.is_admin(data)) {
+        pcto = [...pcto.filter(stage => stage.idTutor == id_utente && stage.contabilizzato == false)];
+    } else if(helper.is_studente(data) && !helper.is_admin(data)) {
+        pcto = [...pcto.filter(stage => stage.contabilizzato == false && stage.svoltoDa.some(item => item.id == id_utente))];
+    }
 
     $: {
         let selected_stage = pcto.filter((item) => item.id == form_values.stage);
@@ -29,8 +38,10 @@
             if (helper.user_ruolo(data) != 'STUDENTE')
                 pcto_studenti = selected_stage[0].svoltoDa;
             else
-                pcto_studenti = selected_stage[0].svoltoDa.filter(item => item.id == helper.user_id(data));
+                pcto_studenti = selected_stage[0].svoltoDa.filter(item => item.id == id_utente);
         }
+        if(pcto_studenti.length == 1)
+            form_values.studente = id_utente;
     }
 
 	//configura la pagina pre-titolo, titolo e nome del modale
@@ -228,18 +239,22 @@
                             <!-- InputSelect component ha dei problemi (two way binding) non ancora risolti
                             che non permettono di usarlo qui -->
 							<div class="mb-3">
-								<div class="form-label select_text">Studente</div>
-                                <select class="form-select" class:is-invalid="{errors.studente}" name="studente" bind:value={form_values.studente}>
-                                    {#if modal_action == 'create' && helper.user_ruolo(data) != "STUDENTE"}
-                                        <option value=0>TUTTI GLI STUDENTI</option>
+                                {#if pcto_studenti.length > 1}
+                                    <div class="form-label select_text">Studente</div>
+                                    <select class="form-select" class:is-invalid="{errors.studente}" name="studente" bind:value={form_values.studente}>
+                                        {#if modal_action == 'create' && helper.user_ruolo(data) != "STUDENTE"}
+                                            <option value=0>TUTTI GLI STUDENTI</option>
+                                        {/if} 
+                                        {#each pcto_studenti as studente}
+                                            <option value={studente.id}>{studente.cognome} {studente.nome}</option>
+                                        {/each}
+                                    </select>
+                                    {#if errors.studente}
+                                        <span class="invalid-feedback">{errors.studente}</span>
                                     {/if}
-                                    {#each pcto_studenti as studente}
-                                        <option value={studente.id}>{studente.cognome} {studente.nome}</option>
-                                    {/each}
-                                </select>
-                                {#if errors.studente}
-                                    <span class="invalid-feedback">{errors.studente}</span>
-                                {/if}	
+                                {:else}
+                                <input type="hidden" name="studente" bind:value={form_values.studente} />
+                                {/if}
 							</div>
 						</div>
 					</div>

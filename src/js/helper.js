@@ -90,6 +90,17 @@ export const is_admin = (data) => {
 	return user_ruolo(data).includes(PUBLIC_ADMIN_ROLE);
 };
 
+export const is_tutor = (data) => {
+	return ( user_ruolo(data).includes('TUTOR-SCOLASTICO') || 
+            user_ruolo(data).includes('TUTOR-AZIENDALE')
+            );
+};
+
+export const is_studente = (data) => {
+	return user_ruolo(data).includes('STUDENTE');
+};
+
+
 // restituisce una clausola di ricerca per utente ADMIN e non
 export const multi_user_where = (data) => {
 	let clausola_where;
