@@ -1,4 +1,5 @@
 ## v1.0.0 – 13 Marzo 2023
+- da domano 14/03/2023 SARP entra ufficialmente in PRODUZIONE
 - `fix#234`: nuova presenza PCTO ordinati 
 - `fix#235`: aziende ordinate in nuovo stage
 - `fix#236`: PCTO filtrati in nuova presenza
