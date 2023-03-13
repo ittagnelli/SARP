@@ -39,7 +39,7 @@ export async function load({ locals }) {
         });
 
         const companies = await SARP.pcto_Azienda.findMany({
-            orderBy: [{ id: 'desc' }]
+            orderBy: [{ nome: 'asc' }]
         });
 
         const utenti = await SARP.Utente.findMany({
