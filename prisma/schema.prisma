@@ -54,6 +54,7 @@ model Utente {
     classe                   Classe?            @relation(fields: [classeId], references: [id])
     classeId                 Int?
     tutor_pcto               pcto_Pcto[]        @relation("tutor")
+    insegna_in               insegna_In[]
 }
 
 model Classe {
@@ -64,6 +65,24 @@ model Classe {
     istituto  String
     sezione   String
     iscritti  Utente[]
+    docenti   insegna_In[]
+}
+
+model Materia {
+    id           Int          @id @default(autoincrement())
+    nome         String
+    insegnata_in insegna_In[]
+}
+
+model insegna_In {
+    id        Int     @id @default(autoincrement())
+    docente   Utente  @relation(fields: [idDocente], references: [id])
+    idDocente Int
+    materia   Materia @relation(fields: [idMateria], references: [id])
+    idMateria Int
+    classe    Classe  @relation(fields: [idClasse], references: [id])
+    idClasse  Int
+    anno      Int //solo il primo dei due anni che compongolo l'anno scolastico
 }
 
 model Session {
