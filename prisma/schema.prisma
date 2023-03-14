@@ -1,4 +1,4 @@
-// v 0.14.0 2023-03-09
+// v 0.15.0 2023-03-14
 
 generator client {
     provider = "prisma-client-js"
@@ -54,27 +54,27 @@ model Utente {
     classe                   Classe?            @relation(fields: [classeId], references: [id])
     classeId                 Int?
     tutor_pcto               pcto_Pcto[]        @relation("tutor")
-    insegna_in               insegna_In[]
+    insegna_in               Insegnamenti[]
 }
 
 model Classe {
-    id        Int      @id @default(autoincrement())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    classe    String
-    istituto  String
-    sezione   String
-    iscritti  Utente[]
-    docenti   insegna_In[]
+    id           Int            @id @default(autoincrement())
+    createdAt    DateTime       @default(now())
+    updatedAt    DateTime       @updatedAt
+    classe       String
+    istituto     String
+    sezione      String
+    iscritti     Utente[]
+    insegnamenti Insegnamenti[]
 }
 
 model Materia {
-    id           Int          @id @default(autoincrement())
+    id           Int            @id @default(autoincrement())
     nome         String
-    insegnata_in insegna_In[]
+    insegnata_in Insegnamenti[]
 }
 
-model insegna_In {
+model Insegnamenti {
     id        Int     @id @default(autoincrement())
     docente   Utente  @relation(fields: [idDocente], references: [id])
     idDocente Int
@@ -82,6 +82,7 @@ model insegna_In {
     idMateria Int
     classe    Classe  @relation(fields: [idClasse], references: [id])
     idClasse  Int
+    titolare  Boolean  @default(false) //TRUE:docente principale  FALSE: compresenza o altro
     anno      Int //solo il primo dei due anni che compongolo l'anno scolastico
 }
 
@@ -192,9 +193,9 @@ model pcto_Pcto {
 }
 
 model sicurezza_Corso {
-    id         Int      @id @default(autoincrement())
-    createdAt  DateTime @default(now())
-    updatedAt  DateTime @updatedAt
+    id         Int       @id @default(autoincrement())
+    createdAt  DateTime  @default(now())
+    updatedAt  DateTime  @updatedAt
     creatoDa   Int
     titolo     String
     dataInizio DateTime
