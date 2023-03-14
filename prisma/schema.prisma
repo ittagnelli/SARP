@@ -1,4 +1,4 @@
-// v 0.14.0 2023-03-09
+// v 0.15.0 2023-03-14
 
 generator client {
     provider = "prisma-client-js"
@@ -54,16 +54,36 @@ model Utente {
     classe                   Classe?            @relation(fields: [classeId], references: [id])
     classeId                 Int?
     tutor_pcto               pcto_Pcto[]        @relation("tutor")
+    insegna_in               Insegnamenti[]
 }
 
 model Classe {
-    id        Int      @id @default(autoincrement())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    classe    String
-    istituto  String
-    sezione   String
-    iscritti  Utente[]
+    id           Int            @id @default(autoincrement())
+    createdAt    DateTime       @default(now())
+    updatedAt    DateTime       @updatedAt
+    classe       String
+    istituto     String
+    sezione      String
+    iscritti     Utente[]
+    insegnamenti Insegnamenti[]
+}
+
+model Materia {
+    id           Int            @id @default(autoincrement())
+    nome         String
+    insegnata_in Insegnamenti[]
+}
+
+model Insegnamenti {
+    id        Int     @id @default(autoincrement())
+    docente   Utente  @relation(fields: [idDocente], references: [id])
+    idDocente Int
+    materia   Materia @relation(fields: [idMateria], references: [id])
+    idMateria Int
+    classe    Classe  @relation(fields: [idClasse], references: [id])
+    idClasse  Int
+    titolare  Boolean  @default(false) //TRUE:docente principale  FALSE: compresenza o altro
+    anno      Int //solo il primo dei due anni che compongolo l'anno scolastico
 }
 
 model Session {
@@ -173,9 +193,9 @@ model pcto_Pcto {
 }
 
 model sicurezza_Corso {
-    id         Int      @id @default(autoincrement())
-    createdAt  DateTime @default(now())
-    updatedAt  DateTime @updatedAt
+    id         Int       @id @default(autoincrement())
+    createdAt  DateTime  @default(now())
+    updatedAt  DateTime  @updatedAt
     creatoDa   Int
     titolo     String
     dataInizio DateTime
