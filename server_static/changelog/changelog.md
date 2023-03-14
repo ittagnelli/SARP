@@ -1,3 +1,9 @@
+## v1.1.0 – 14 Marzo 2023
+- `fix#52`: ralazioni tra docenti materie e classi 
+- aggiunta tabella Insegnamenti
+- aggiunte relazioni docente, classe e materia
+- `fix#96`: Aggiungere conferma per i delete di elementi
+
 ## v1.0.0 – 13 Marzo 2023
 - da domano 14/03/2023 SARP entra ufficialmente in PRODUZIONE
 - `fix#234`: nuova presenza PCTO ordinati 
