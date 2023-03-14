@@ -1,7 +1,7 @@
 <script>
 // @ts-nocheck
 import { createEventDispatcher } from 'svelte';
-import { ellipses, user_id, is_admin,  has_grant, user_ruolo } from '../../../js/helper';
+import { ellipses, user_id, is_admin,  has_grant, user_ruolo, get_modal } from '../../../js/helper';
 import { page } from '$app/stores';
 
 // dichiara le colonne della tabella
@@ -32,6 +32,7 @@ let rows_db = []; // contiene le righe di rows con le chiavi ordinate come la ta
 let rows_filtered = []; //contiene le righe filtrate dall'utente
 let footer_num = 0, footer_den = 0;
 let show_pagination = true;
+let current_item_delete = 0; //elemento corrente da eliminare per una data risorsa
 
 // filtra da rows le chiavi non presenti nelle colonne della tabella
 //in questo modo viene rispettato l'ordine di visualizzazione
@@ -87,6 +88,11 @@ function custom_action(id) {
     dispatch('custom_action', {
         id: id
     });
+}
+
+function start_delete(id) {
+    current_item_delete = id;
+    get_modal('delete_modal').show();
 }
 
 function table_filter(col, type, key) {
@@ -272,11 +278,9 @@ function table_filter(col, type, key) {
                                         
                                         <!-- delete action icon -->
                                         {#if (user_id($page.data) == row.creatoDa && has_grant(user_ruolo($page.data),'delete', resource)) || is_admin($page.data)}
-                                        <form id="form-delete" method="POST" action={`/${endpoint}?/delete`}>
-                                            <button class="icon-button" name="id" value={row.id}>
+                                            <button class="icon-button" name="delete-action" on:click={() => start_delete(row.id)}>
                                                 <icon class="ti ti-trash icon" />
                                             </button>
-                                        </form>
                                         {/if}
                                     </div>
                                 </td>
@@ -322,6 +326,36 @@ function table_filter(col, type, key) {
     </div>
     {/if}
 </div>
+
+<div class="modal modal-blur fade" id="delete_modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-status bg-danger"></div>
+        <div class="modal-body text-center py-4">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-danger icon-lg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v2m0 4v.01" /><path d="M5 19h14a2 2 0 0 0 1.84 -2.75l-7.1 -12.25a2 2 0 0 0 -3.5 0l-7.1 12.25a2 2 0 0 0 1.75 2.75" /></svg>
+          <h3>Sicuro?</h3>
+          <div class="text-muted">Vuoi veramente cancellare l'elemento selezionato? Questa operazione è irreversibile</div>
+        </div>
+        <div class="modal-footer">
+          <div class="w-100">
+            <div class="row">
+              <div class="col">
+                <button type="button" class="btn w-100" data-bs-dismiss="modal" aria-label="Close">Annulla</button>
+              </div>
+              <div class="col">
+                <form id="form-delete" method="POST" action={`/${endpoint}?/delete`}>
+                    <button class="btn btn-danger w-100" name="id" value={current_item_delete}>
+                        <icon class="ti ti-trash icon" /> Rimuovi
+                    </button>
+                </form>
+             </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 
 <style>
 .icon-button {
