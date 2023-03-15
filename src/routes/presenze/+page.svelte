@@ -21,7 +21,7 @@
     let pcto_studenti = [];
     let tipo_utente = helper.user_tipo(data); 
     let id_utente = helper.user_id(data);
-    let totale_ore_pcto = 0;
+    let totale_ore_pcto = {totali: 0, approvate: 0, registrate: 0};
     let pcto = helper.data2arr(data.stages);
 
     //se tutor aziendale o studente filtro i PCTO
@@ -154,8 +154,11 @@
         // per STUDENTE calcolo le ore complessive di PCTO solo per ore approvate e PCTO contabilizzati
         if(tipo_utente == "STUDENTE") {
             presenze.map(presenza => {
+                let lavorato = helper.ore_pcto(presenza.oraInizio, presenza.oraFine);
+                totale_ore_pcto.totali += lavorato;
+                if(presenza.approvato) totale_ore_pcto.approvate += lavorato;
                 if(presenza.approvato && presenza.lavoraPer.contabilizzato)
-                    totale_ore_pcto += helper.ore_pcto(presenza.oraInizio, presenza.oraFine);    
+                    totale_ore_pcto.registrate += lavorato;    
             });
         }
 	});
@@ -171,7 +174,10 @@
 
 {#if tipo_utente == "STUDENTE"}
 <p class="ore-pcto">
-    TOTALE ORE PCTO: {totale_ore_pcto}
+    <button class="btn position-relative">ORE PCTO</button> 
+    <button class="btn position-relative">Registrate <span class="badge bg-green ms-3">{totale_ore_pcto.registrate}</span></button>
+    <button class="btn position-relative">Approvate <span class="badge bg-azure ms-3">{totale_ore_pcto.approvate}</span></button>
+    <button class="btn position-relative">Totali <span class="badge bg-yellow ms-3">{totale_ore_pcto.totali}</span></button>
 </p>
 {/if}
 
