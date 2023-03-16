@@ -270,6 +270,7 @@
 <Table
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
+        { name: 'creatoDa', type: 'hidden', display: 'creatoDa' },
 		{ name: 'titolo', type: 'string', display: 'titolo', size: 50, search: true },
 		{ name: 'descrizione', type: 'string', display: 'descrizione', size: 50 },
         { name: 'offertoDa', type: 'object', key: 'nome', display: 'azienda', size: 40, search: true },

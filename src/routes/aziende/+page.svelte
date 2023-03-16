@@ -183,6 +183,7 @@
 <Table
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
+        { name: 'creatoDa', type: 'hidden', display: 'creatoDa' },
 		{ name: 'idConvenzione', type: 'string', display: 'NO.', size: 10, search: true },
 		{ name: 'nome', type: 'string', display: 'Azienda/Ente', size: 40, search: true },
         { name: 'indirizzo', type: 'string', display: 'indirizzo', size: 30 },
