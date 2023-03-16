@@ -41,6 +41,7 @@ menu_aziende:
   view:
     - DEVELOPER
     - ADMIN
+    - TUTOR-SCOLASTICO
 
 menu_stage:
   view:
@@ -106,15 +107,19 @@ pcto_aziende:
   create:
     - DEVELOPER
     - ADMIN
+    - TUTOR-SCOLASTICO
   read:
     - DEVELOPER
     - ADMIN
+    - TUTOR-SCOLASTICO
   update:
     - DEVELOPER
     - ADMIN
+    - TUTOR-SCOLASTICO
   delete:
     - DEVELOPER
     - ADMIN
+    - TUTOR-SCOLASTICO
 
 pcto_stage:
   create:
