@@ -6,7 +6,6 @@
     import { Logger } from '../../js/logger';
 
     export let data;
-    let mobile = data.mobile;
     
     let logger = new Logger("client");
 	let login_error = false; // signal error to user
@@ -82,7 +81,6 @@
 			>
 		</div>
 
-        {#if !mobile} 
             <h2 class="h3 text-center mb-3 text-muted">Fai il Log In con account istituzionale Agnelli</h2>
             <div class="mb-4 mt-4 gbutton">
                 <div id="googleButton" bind:this={google_button} />
@@ -90,10 +88,6 @@
             {#if login_error}
                 <div class="login-error text-center mt-3">Impossibile effettuare il login!!</div>
             {/if}
-        {:else}
-            <h1 class="text-center text-muted">Il sistema è disponibile solo dal desktop!!</h1>
-            <h3 class="text-center text-muted">Per cortesia, accedi comodamente dal tuo PC.</h3>
-        {/if}
 
 		{#if dev}
 			<div class="text-center mb-2" style="width:50%; position:relative; left:25%;">

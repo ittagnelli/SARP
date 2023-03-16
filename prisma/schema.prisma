@@ -93,6 +93,7 @@ model Session {
     idUtente   Int      @unique
     session_id String   @unique
     scadenza   DateTime @default(now())
+    mobile     Boolean  @default(false)
 }
 
 model tipo_Utente {

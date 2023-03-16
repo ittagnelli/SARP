@@ -113,7 +113,8 @@ export const actions = {
 				data: {
 					idUtente: utente.id,
 					session_id: session_id,
-					scadenza: new Date(Date.now() + +SESSION_TIMEOUT)
+					scadenza: new Date(Date.now() + +SESSION_TIMEOUT),
+					mobile: is_mobile(request)
 				}
 			});
 

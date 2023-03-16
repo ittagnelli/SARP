@@ -181,6 +181,7 @@
 </p>
 {/if}
 
+{#if tipo_utente != "STUDENTE"}
 <Table
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
@@ -201,7 +202,27 @@
     actions={true}
     resource="pcto_presenze"
 />
-
+{:else}
+	<Table
+		columns={[
+			{ name: 'id', type: 'hidden', display: 'ID' },
+			{ name: 'creatoDa', type: 'hidden', display: 'creatoDa' },
+			{ name: 'lavoraPer', type: 'object', key: 'titolo', display: 'pcto', size: 30, search: true },
+			{ name: 'dataPresenza', type: 'date', display: 'data' },
+			{ name: 'oraInizio', type: 'time', display: 'entrata' },
+			{ name: 'oraFine', type: 'time', display: 'uscita' },
+			{ name: 'approvato', type: 'boolean', display: 'approvato', search: true}
+		]}
+		rows={presenze}
+		page_size={10}
+		modal_name={$page_action_modal}
+		on:update_start={start_update}
+		endpoint="presenze"
+		footer="Presenze"
+		actions={true}
+		resource="pcto_presenze"
+	/>
+{/if}
 <!-- Modal from Page action -->
 <div
 	class="modal modal-blur fade"

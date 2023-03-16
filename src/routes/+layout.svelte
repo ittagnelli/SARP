@@ -6,12 +6,13 @@
 	import NavMenu from '$lib/components/layout/nav_menu.svelte';
 	import NavSubItem from '$lib/components/layout/nav_sub_item.svelte';
 	import { fade } from 'svelte/transition';
-    
+    import { page } from '$app/stores';
+
 	export let data;
     let version = data.version;
 </script>
 
-{#if data.session}
+{#if data.session && !data.session.mobile}
 	<div class="page" in:fade={{ delay: 200, duration: 1500 }}>
 		<Navbar>
                 <NavItem resource="menu_home" text="Home" icon="home-2" link="/" />
@@ -75,6 +76,30 @@
 			<Footer {version} />
 		</div>
 	</div>
-{:else}
-	<slot />
+	{:else if  data.session &&  data.session.mobile}
+	{#if $page.route.id == "/presenze"}
+	<Navbar />
+		<div class="col p-2">
+			<div class="page-pretitle">
+				{$page_pre_title}
+			</div>
+			<h2 class="page-title">
+				{$page_title}
+			</h2>
+		</div>
+			<slot />
+		<Footer {version} />
+	{:else}
+		<div class="col-12 col-lg-6 col-xl-4 d-flex flex-column justify-content-center">
+		<div class="text-center mb-5 mt-5">
+			<a href="." class="navbar-brand navbar-brand-autodark"
+				><img class="logo" src="/img/logo_quadrato_nero_small.png" alt="" />
+			</a>
+		</div>
+		</div>
+		<h1 class="text-center text-muted">Il sistema è disponibile solo dal desktop!!</h1>
+		<h3 class="text-center text-muted">Per cortesia, accedi comodamente dal tuo PC.</h3>
+	{/if}
+	{:else}
+		<slot />
 {/if}
