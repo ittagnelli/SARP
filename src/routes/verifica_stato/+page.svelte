@@ -17,6 +17,9 @@
     let show_error_mex = false;
     let user_found = false;
     let pctos = [];
+    let totale_ore_totali = 0;
+    let totale_ore_approvate = 0;
+    let totale_ore_contabilizzate = 0;
 
     function show_error_message() {
         setTimeout(() => {
@@ -79,8 +82,28 @@
             obj['ore_approvate'] = ore_approvate;
             obj['ore_contabilizzate'] = ore_contabilizzate;
             pctos.push(obj);
+
+            totale_ore_totali += ore_totali;
+            totale_ore_approvate += ore_approvate;
+            totale_ore_contabilizzate += ore_contabilizzate;
         });
 
+        pctos.push({
+            id: -1,
+            azienda: '',
+            pcto: '',
+            ore_totali: '',
+            ore_approvate: '',
+            ore_contabilizzate: ''
+        },
+        {
+            id: -1,
+            azienda: '---',
+            pcto: 'TOTALE',
+            ore_totali: totale_ore_totali,
+            ore_approvate: totale_ore_approvate,
+            ore_contabilizzate: totale_ore_contabilizzate
+        });
         return pctos;
     }
     
