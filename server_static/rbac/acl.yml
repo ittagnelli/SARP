@@ -22,11 +22,13 @@ menu_pcto:
 
 menu_tools:
   view:
+    - ADMIN
     - DOCENTE
     - DEVELOPER
 
 menu_convert_to_print:
   view:
+    - ADMIN
     - DOCENTE
     - DEVELOPER
 
@@ -214,5 +216,6 @@ verifica_stato:
 
 convert_to_print:
   post:
+    - ADMIN
     - DOCENTE
     - DEVELOPER
