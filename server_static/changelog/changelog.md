@@ -1,3 +1,19 @@
+## v1.2.0 – 17 Marzo 2023
+- `fix#245`: Vulnerabilità Convert to print     
+- Fix vulnerable endpoint
+- fix policy
+- `fix#243`: Presenze mobili 
+- Support presenze on mobile
+- fix table layout and ore layout
+- layout: Add page_action_btn to layout on mobile view
+- `fix#248`: totale ore in verifica stato   
+- aggiunta linea in tabella con le ore totale di tutti i pcto di uno studente
+- `fix#247`: tutor crea aziende
+- fix permessi RBAC per tutor-scolastico
+- `fix#242`: TOTALE ORE PCTO
+- refactor totale ore pcto visualizzate per uno studente
+- vengono visualizzate le ore registrate, approvate e totali
+
 ## v1.1.0 – 14 Marzo 2023
 - `fix#52`: ralazioni tra docenti materie e classi 
 - aggiunta tabella Insegnamenti
