@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit';
 import { PrismaDB } from '../../js/prisma_db';
-import { route_protect, raise_error  } from '../../js/helper';
+import { route_protect, raise_error, access_protect  } from '../../js/helper';
 import { PrismaClientValidationError } from '@prisma/client/runtime';
 import { Logger } from '../../js/logger';
 
@@ -19,8 +19,11 @@ function catch_error(exception, code) {
 }
 
 export async function GET({ request, url, locals }) {
-	
+    let action = 'get';
+    let resource = "verifica_stato"; // definisco il nome della risorsa di questo endpoint
     route_protect(locals);
+    access_protect(500, locals, action, resource);
+    
     let cognome = url.searchParams.get("cognome");
     let nome = url.searchParams.get("nome");
     

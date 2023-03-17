@@ -1,4 +1,4 @@
-import { raise_error, route_protect, user_login, user_id } from '../../../js/helper'; //PROF: usa l'helper raise_erorr che ho cretao qualche settimana fa
+import { raise_error, route_protect, user_login, user_id, access_protect } from '../../../js/helper'; //PROF: usa l'helper raise_erorr che ho cretao qualche settimana fa
 import { Logger } from '../../../js/logger';
 import fs from 'fs';
 import PDFMerger from 'pdf-merger-js';
@@ -45,12 +45,19 @@ function autit_conversion(locals, mex) {
 }
 
 const random_name = () => crypto.randomBytes(20).toString('hex'); // Genera 20 bytes casuali e li converte in esadecimale
+const action = 'post';
+const resource = "convert_to_print"; // definisco il nome della risorsa di questo endpoint
 
 
+export async function load({ locals }) {
+    route_protect(locals);
+    access_protect(500, locals, action, resource);
+}
 
 export const actions = {
 	pdf: async ({ request, locals }) => {
 		route_protect(locals); // Controlla che l'utente sia autenticato
+		access_protect(500, locals, action, resource);
 
         const merger = new PDFMerger();
 		const form_data = await request.formData();

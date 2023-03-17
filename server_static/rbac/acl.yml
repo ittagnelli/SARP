@@ -22,10 +22,13 @@ menu_pcto:
 
 menu_tools:
   view:
-    - '*'
+    - DOCENTE
+    - DEVELOPER
+
 menu_convert_to_print:
   view:
-    - '*'
+    - DOCENTE
+    - DEVELOPER
 
 menu_sicurezza_lavoro:
   view:
@@ -201,3 +204,15 @@ sicurezza_corso:
   delete:
     - ADMIN
     - TUTOR-SICUREZZA
+
+verifica_stato:
+  get:
+    - DEVELOPER
+    - ADMIN
+    - TUTOR-AZIENDALE
+    - TUTOR-SCOLASTICO
+
+convert_to_print:
+  post:
+    - DOCENTE
+    - DEVELOPER
