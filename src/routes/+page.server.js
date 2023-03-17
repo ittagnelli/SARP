@@ -27,10 +27,13 @@ function catch_error(exception, type, code) {
 
 export async function load({ locals }) {
     const session = locals.session;
-
 	if (!session) {
 		throw redirect(302, '/login');
 	}
+	if(session.mobile) {
+		throw redirect(302, "/presenze");
+	}
+
 
 	route_protect(locals);
 

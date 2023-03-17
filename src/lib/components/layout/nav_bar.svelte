@@ -1,14 +1,8 @@
+<script>
+	export let mobile = false;
+</script>
 <aside class="navbar navbar-vertical navbar-expand-lg navbar-dark">
 	<div class="container-fluid">
-		<!-- mobile menu button   -->
-		<button
-			class="navbar-toggler"
-			type="button"
-			data-bs-toggle="collapse"
-			data-bs-target="#navbar-menu"
-		>
-			<span class="navbar-toggler-icon" />
-		</button>
 		<!-- logo -->
 		<h1 class="navbar-brand navbar-brand-autodark">
 			<a href=".">

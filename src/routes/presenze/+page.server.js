@@ -47,7 +47,8 @@ export async function load({ locals }) {
 		// restituisco il risultato della query SQL
 		return {
 			presenze: presenze,
-			stages: stages
+			stages: stages,
+            session: locals.session
 		}
 	} catch (exception) {
         catch_error(exception, "load", 400) ;

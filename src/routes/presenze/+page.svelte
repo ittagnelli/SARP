@@ -16,8 +16,12 @@
 
 	let presenze = helper.data2arr(data.presenze);
     // aggiungo il full name per ogni presenza per poi stamparlo nella tabella
-    presenze.forEach((item, idx) => presenze[idx].presenza['full_name'] = (presenze[idx].presenza['cognome']).concat(" ", presenze[idx].presenza['nome']));
-
+    // presenze.forEach((item, idx) => presenze[idx].presenza['full_name'] = (presenze[idx].presenza['cognome']).concat(" ", presenze[idx].presenza['nome']));
+    presenze.forEach((item, idx) => {
+        presenze[idx].presenza['full_name'] = (presenze[idx].presenza['cognome']).concat(" ", presenze[idx].presenza['nome']);
+        presenze[idx]['ore'] = helper.ore_pcto(presenze[idx].oraInizio, presenze[idx].oraFine);
+    });
+    
     let pcto_studenti = [];
     let tipo_utente = helper.user_tipo(data); 
     let id_utente = helper.user_id(data);
@@ -174,13 +178,16 @@
 
 {#if tipo_utente == "STUDENTE"}
 <p class="ore-pcto">
-    <button class="btn position-relative">ORE PCTO</button> 
-    <button class="btn position-relative">Registrate <span class="badge bg-green ms-3">{totale_ore_pcto.registrate}</span></button>
-    <button class="btn position-relative">Approvate <span class="badge bg-azure ms-3">{totale_ore_pcto.approvate}</span></button>
-    <button class="btn position-relative">Totali <span class="badge bg-yellow ms-3">{totale_ore_pcto.totali}</span></button>
+    {#if !data.session.mobile}
+    <button class="btn position-relative">ORE PCTO</button>
+    {/if} 
+    <button class="btn position-relative">Registrate <span class="badge bg-green ms-2">{totale_ore_pcto.registrate}</span></button>
+    <button class="btn position-relative">Approvate <span class="badge bg-azure ms-2">{totale_ore_pcto.approvate}</span></button>
+    <button class="btn position-relative">Totali <span class="badge bg-yellow ms-2">{totale_ore_pcto.totali}</span></button>
 </p>
 {/if}
 
+{#if !data.session.mobile}
 <Table
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
@@ -201,7 +208,25 @@
     actions={true}
     resource="pcto_presenze"
 />
-
+{:else}
+	<Table
+		columns={[
+			{ name: 'id', type: 'hidden', display: 'ID' },
+			{ name: 'creatoDa', type: 'hidden', display: 'creatoDa' },
+			{ name: 'lavoraPer', type: 'object', key: 'titolo', display: 'pcto', size: 15},
+			{ name: 'dataPresenza', type: 'date', display: 'data' },
+            { name: 'ore', type: 'number', display: 'ore'}
+		]}
+		rows={presenze}
+		page_size={10}
+		modal_name={$page_action_modal}
+		on:update_start={start_update}
+		endpoint="presenze"
+		footer="Presenze"
+		actions={true}
+		resource="pcto_presenze"
+	/>
+{/if}
 <!-- Modal from Page action -->
 <div
 	class="modal modal-blur fade"
