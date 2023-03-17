@@ -86,8 +86,26 @@
 			<h2 class="page-title">
 				{$page_title}
 			</h2>
+			{#if $page_action_title}
+				<br>
+				<div class="col-12 col-md-auto ms-auto d-print-none">
+					<div class="btn-list">
+						<a
+							href="/"
+							class="btn btn-primary d-sm-inline-block"
+							data-bs-toggle="modal"
+							data-bs-target="#{$page_action_modal}"
+							id="btn_action_modal"
+						>
+							<i class="ti ti-plus icon" />
+							{$page_action_title}
+						</a>
+					</div>
+				</div>
+				<br>
+			{/if}
 		</div>
-			<slot />
+		<slot />
 		<Footer {version} />
 	{:else}
 		<div class="col-12 col-lg-6 col-xl-4 d-flex flex-column justify-content-center">
