@@ -195,7 +195,7 @@
 		{ name: 'seguitoDa', type: 'array', subtype: 'picture', key: 'picture', display: 'iscritti', size: 5 }
 	]}
 	rows={corsi}
-	page_size={10}
+	page_size={6}
 	modal_name={$page_action_modal}
 	on:update_start={start_update}
 	endpoint="sicurezza_sul_lavoro/corsi"
