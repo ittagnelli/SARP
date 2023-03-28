@@ -148,6 +148,7 @@ export const actions = {
 				logger.error(exception.message);
 				logger.error(exception.stack);
 			}
+            throw error(401, 'Impossibile autenticare utente');
 		}
 		return { success: true };
 	}
