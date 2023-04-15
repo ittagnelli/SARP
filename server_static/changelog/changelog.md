@@ -1,3 +1,19 @@
+## v1.2.1 – 15 Aprile 2023
+- `fix#262`: refactor di PCTO
+- riorganizzazione della struttura delle directory
+- ogni applicazione ha la sua directory in src/routes
+- tutto il resto va in support
+- `fix#259`: PCTO Verifica Stato totale errato 
+- azzerato ore totali ad ogni query
+- `fix#257`: ridimensionare tabella corsi sicurezza 
+- `fix#255`: Login mancato messaggio errore (#256)
+- aggiunta generazione errore in caso di login fallito
+- `fix#252`:script inserimento e update materie classi 
+- utils: add import_docenti
+- full refactor of ad dinsegnamenti
+- modified DB to add a unique constraint on Materia.nome
+- add script to fill Materie table
+
 ## v1.2.0 – 17 Marzo 2023
 - `fix#245`: Vulnerabilità Convert to print     
 - Fix vulnerable endpoint
