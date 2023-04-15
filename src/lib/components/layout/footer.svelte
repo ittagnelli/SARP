@@ -3,7 +3,7 @@
 	export let version;
 
 	async function logout() {
-		const res = await fetch('/logout', {
+		const res = await fetch('/support/logout', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/x-www-form-urlencoded'
@@ -24,13 +24,13 @@
 						<a href="./docs/index.html" class="link-secondary">Documentazione</a>
 					</li> -->
 					<li class="list-inline-item">
-						<a href="/faq" class="link-secondary">FAQ</a>
+						<a href="/support/faq" class="link-secondary">FAQ</a>
 					</li>
 					<li class="list-inline-item">
-						<a href="/ticket" class="link-secondary">Segnala un problema</a>
+						<a href="/support/ticket" class="link-secondary">Segnala un problema</a>
 					</li>
                     <li class="list-inline-item">
-						<a href="/changelog" class="link-secondary">Changelog</a>
+						<a href="/support/changelog" class="link-secondary">Changelog</a>
 					</li>
                     <li class="list-inline-item" on:click={() => logout()}>
 						<a href="#" class="link-secondary">Log Out</a>

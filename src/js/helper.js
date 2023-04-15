@@ -100,6 +100,9 @@ export const is_studente = (data) => {
 	return user_ruolo(data).includes('STUDENTE');
 };
 
+export const is_dev = (data) => {
+	return user_ruolo(data).includes('DEVELOPER');
+};
 
 // restituisce una clausola di ricerca per utente ADMIN e non
 export const multi_user_where = (data) => {

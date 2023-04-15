@@ -1,6 +1,6 @@
 <script>
 	import { page } from '$app/stores';
-	import { page_pre_title, page_title, page_action_title } from '../js/store';
+	import { page_pre_title, page_title, page_action_title } from '$js/store';
 
 	$page_pre_title = '';
 	$page_title = '';
