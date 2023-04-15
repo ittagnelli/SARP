@@ -1,8 +1,8 @@
-import { PrismaDB } from '../js/prisma_db';
+import { PrismaDB } from '$js/prisma_db';
 import {
 	route_protect,
 	raise_error,
-} from '../js/helper'; 
+} from '$js/helper'; 
 import { redirect } from '@sveltejs/kit';
 import { Logger } from '../js/logger';
 import { PrismaClientValidationError } from '@prisma/client/runtime';
@@ -28,10 +28,10 @@ function catch_error(exception, type, code) {
 export async function load({ locals }) {
     const session = locals.session;
 	if (!session) {
-		throw redirect(302, '/login');
+		throw redirect(302, '/support/login');
 	}
 	if(session.mobile) {
-		throw redirect(302, "/presenze");
+		throw redirect(302, "/pcto/presenze");
 	}
 
 

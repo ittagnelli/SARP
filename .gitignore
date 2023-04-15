@@ -32,3 +32,6 @@ tmp/
 
 # Generated files from Excel to Prisma
 utils/scripts/*.txt
+
+*.xlsx
+*.xls

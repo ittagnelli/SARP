@@ -1,5 +1,5 @@
 <script>
-	import { page_pre_title, page_title, page_action_title, page_action_modal } from '../js/store';
+	import { page_pre_title, page_title, page_action_title, page_action_modal } from '$js/store';
 	import Footer from '$lib/components/layout/footer.svelte';
 	import Navbar from '$lib/components/layout/nav_bar.svelte';
 	import NavItem from '$lib/components/layout/nav_item.svelte';
@@ -16,13 +16,13 @@
 	<div class="page" in:fade={{ delay: 200, duration: 1500 }}>
 		<Navbar>
                 <NavItem resource="menu_home" text="Home" icon="home-2" link="/" />
-                <NavItem resource="menu_utenti" text="Utenti" icon="users" link="/utenti" />
+                <NavItem resource="menu_utenti" text="Utenti" icon="users" link="/support/utenti" />
 			<NavMenu resource="menu_pcto" text="PCTO" icon="building-factory-2">
-				<NavSubItem resource="menu_aziende" text="Aziende" link="/aziende" />
-				<NavSubItem resource="menu_stage" text="Stage" link="/stage" />
-				<NavSubItem resource="menu_presenze" text="Presenze" link="/presenze" />
-				<NavSubItem resource="menu_valutazioni" text="Valutazioni" link="/valutazioni" />
-				<NavSubItem resource="menu_verifica_stato" text="Verifica Stato" link="/verifica_stato" />
+				<NavSubItem resource="menu_aziende" text="Aziende" link="/pcto/aziende" />
+				<NavSubItem resource="menu_stage" text="Stage" link="/pcto/stage" />
+				<NavSubItem resource="menu_presenze" text="Presenze" link="/pcto/presenze" />
+				<NavSubItem resource="menu_valutazioni" text="Valutazioni" link="/pcto/valutazioni" />
+				<NavSubItem resource="menu_verifica_stato" text="Verifica Stato" link="/pcto/verifica_stato" />
 			</NavMenu>
 			<NavMenu resource="menu_tools" text="Tools" icon="tools">
 				<NavSubItem resource="menu_convert_to_print" text="Convert to Print" link="/tools/convert-to-print" />
@@ -77,7 +77,7 @@
 		</div>
 	</div>
 	{:else if  data.session &&  data.session.mobile}
-	{#if $page.route.id == "/presenze"}
+	{#if $page.route.id == "/pcto/presenze"}
 	<Navbar />
 		<div class="col p-2">
 			<div class="page-pretitle">

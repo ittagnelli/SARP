@@ -1,6 +1,7 @@
 import adapter from '@sveltejs/adapter-node';
 import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
+import path from "path"
  
 const file = fileURLToPath(new URL('package.json', import.meta.url));
 const json = readFileSync(file, 'utf8');
@@ -37,7 +38,10 @@ const config = {
 		},
 		csrf: {
 			checkOrigin: true
-		}
+		},
+        alias: {
+            '$js': './src/js'
+        }
 	}
 };
 

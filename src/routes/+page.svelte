@@ -1,7 +1,7 @@
 <script>
-	import { page_pre_title, page_title, page_action_modal, page_action_title } from '../js/store';
-	import KpiNumber from '../lib/components/common/kpi_number.svelte';
-    import KpiSpacer from '../lib/components/common/kpi_spacer.svelte';
+	import { page_pre_title, page_title, page_action_modal, page_action_title } from '$js/store';
+	import KpiNumber from '$lib/components/common/kpi_number.svelte';
+    import KpiSpacer from '$lib/components/common/kpi_spacer.svelte';
 
 	$page_pre_title = '';
 	$page_title = '';
