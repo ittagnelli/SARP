@@ -17,9 +17,9 @@
     let show_error_mex = false;
     let user_found = false;
     let pctos = [];
-    let totale_ore_totali = 0;
-    let totale_ore_approvate = 0;
-    let totale_ore_contabilizzate = 0;
+    // let totale_ore_totali = 0;
+    // let totale_ore_approvate = 0;
+    // let totale_ore_contabilizzate = 0;
 
     function show_error_message() {
         setTimeout(() => {
@@ -57,6 +57,10 @@
 
     function build_table_row(pcto) {
         let pctos = [];
+        let totale_ore_totali = 0;
+        let totale_ore_approvate = 0;
+        let totale_ore_contabilizzate = 0;
+        
         //determina tutti i PCTO a cui lo studente è iscritto
         //e per ciascuno calcolo le ore
         pcto.iscritto.forEach(item => {
