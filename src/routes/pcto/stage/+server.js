@@ -1,8 +1,8 @@
 import { json } from '@sveltejs/kit';
-import { PrismaDB } from '../../js/prisma_db';
-import { route_protect, raise_error  } from '../../js/helper';
+import { PrismaDB } from '$js/prisma_db';
+import { route_protect, raise_error  } from '$js/helper';
 import { PrismaClientValidationError } from '@prisma/client/runtime';
-import { Logger } from '../../js/logger';
+import { Logger } from '$js/logger';
 
 let logger = new Logger("server"); //instanzia il logger
 const SARP = new PrismaDB(); //Istanzia il client SARP DB
