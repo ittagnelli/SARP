@@ -15,20 +15,25 @@
 {#if data.session && !data.session.mobile}
 	<div class="page" in:fade={{ delay: 200, duration: 1500 }}>
 		<Navbar>
-                <NavItem resource="menu_home" text="Home" icon="home-2" link="/" />
-                <NavItem resource="menu_utenti" text="Utenti" icon="users" link="/support/utenti" />
-			<NavMenu resource="menu_pcto" text="PCTO" icon="building-factory-2">
-				<NavSubItem resource="menu_aziende" text="Aziende" link="/pcto/aziende" />
-				<NavSubItem resource="menu_stage" text="Stage" link="/pcto/stage" />
-				<NavSubItem resource="menu_presenze" text="Presenze" link="/pcto/presenze" />
-				<NavSubItem resource="menu_valutazioni" text="Valutazioni" link="/pcto/valutazioni" />
-				<NavSubItem resource="menu_verifica_stato" text="Verifica Stato" link="/pcto/verifica_stato" />
-			</NavMenu>
-			<NavMenu resource="menu_tools" text="Tools" icon="tools">
-				<NavSubItem resource="menu_convert_to_print" text="Convert to Print" link="/tools/convert-to-print" />
+            <NavItem resource="menu_home" text="Home" icon="home-2" link="/" />
+            <NavItem resource="menu_utenti" text="Utenti" icon="users" link="/support/utenti" />
+            <NavMenu resource="menu_pcto" text="PCTO" icon="building-factory-2">
+                <NavSubItem resource="menu_aziende" text="Aziende" link="/pcto/aziende" />
+                <NavSubItem resource="menu_stage" text="Stage" link="/pcto/stage" />
+                <NavSubItem resource="menu_presenze" text="Presenze" link="/pcto/presenze" />
+                <NavSubItem resource="menu_valutazioni" text="Valutazioni" link="/pcto/valutazioni" />
+                <NavSubItem resource="menu_verifica_stato" text="Verifica Stato" link="/pcto/verifica_stato" />
+            </NavMenu>
+            <NavMenu resource="menu_programmazione" text="Programma Annuale" icon="list">
+				<NavSubItem resource="menu_programmazione_template" text="Template Docente" link="/programmazione/template" />
+                <NavSubItem resource="menu_programmazione_docente" text="Programmazione Docente" link="/programmazione/docente" />
+                <NavSubItem resource="menu_programmazione_classe" text="Programmazione Classe" link="/programmazione/classe" />
 			</NavMenu>
             <NavMenu resource="menu_sicurezza_lavoro" text="Sicurezza sul Lavoro" icon="shield-half">
 				<NavSubItem resource="menu_sicurezza_corsi" text="Corsi Sicurezza" link="/sicurezza_sul_lavoro/corsi" />
+			</NavMenu>
+            <NavMenu resource="menu_tools" text="Tools" icon="tools">
+				<NavSubItem resource="menu_convert_to_print" text="Convert to Print" link="/tools/convert-to-print" />
 			</NavMenu>
 		</Navbar>
 
