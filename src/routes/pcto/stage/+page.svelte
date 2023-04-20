@@ -222,7 +222,7 @@
 
     async function query_ore_pcto(pcto_id) {
         // query endpoint per ricavare leggere tutte le ore di questo PCTO
-        const get_response = await fetch(`/stage?pcto=${pcto_id}`);
+        const get_response = await fetch(`/pcto/stage?pcto=${pcto_id}`);
         let presenze = await get_response.json();
 
         //processo il risultato della query
@@ -264,7 +264,6 @@
         
         stage_detail_modal.show();
     }
-
 </script>
 
 <Table
