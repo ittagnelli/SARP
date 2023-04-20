@@ -1,3 +1,11 @@
+## v1.2.2 – 20 Aprile 2023
+- `fix#266`: ricerca per cognome in verifica stato pcto (#270)
+- ora è possibile fare una verifica stato PCTO cercando solo per nome o solo per cognome
+- se il risultato è diverso da un solo utente viene chiesto di essere più specifici nella ricerca
+- `fix#264`:     
+- Riepilogo stage non funzionante
+
+
 ## v1.2.1 – 15 Aprile 2023
 - `fix#262`: refactor di PCTO
 - riorganizzazione della struttura delle directory
