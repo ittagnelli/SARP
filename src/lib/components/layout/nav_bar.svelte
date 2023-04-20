@@ -5,7 +5,7 @@
 	<div class="container-fluid">
 		<!-- logo -->
 		<h1 class="navbar-brand navbar-brand-autodark">
-			<a href=".">
+			<a href="/">
 				<img
                     class="logo"
 					src="/img/logo_rettangolare_bianco_small.png"

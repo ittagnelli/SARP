@@ -26,13 +26,16 @@ export async function GET({ request, url, locals }) {
     
     let cognome = url.searchParams.get("cognome");
     let nome = url.searchParams.get("nome");
+    let whereobj = {};
+
+    if(cognome)
+        whereobj['cognome'] = cognome;
+    if(nome)
+        whereobj['nome'] = nome;
     
     try {
         const studente = await SARP.utente.findMany({
-            where: {
-                cognome: cognome,
-                nome: nome
-            },
+            where: whereobj,
             include: {
                 iscritto: {
                     include: {
