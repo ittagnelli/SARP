@@ -1,3 +1,8 @@
+## v1.3.0 – 23 Aprile 2023
+- `fix#265`: Ore previste stage
+- `fix#267`: stage per classe
+- In fase di creazione dello stage è necessario specificare la classe e il numero di ore previste
+
 ## v1.2.2 – 20 Aprile 2023
 - `fix#266`: ricerca per cognome in verifica stato pcto (#270)
 - ora è possibile fare una verifica stato PCTO cercando solo per nome o solo per cognome
