@@ -69,7 +69,6 @@ export const actions = {
         access_protect(501, locals, action, resource);
 
 		const form_data = await request.formData();
-
         let studenti = form_data.get('studenti').split(',')
         let ids = [];
         
@@ -81,23 +80,25 @@ export const actions = {
 
         SARP.set_session(locals); // passa la sessione all'audit
         try {
-        await SARP.pcto_Pcto.create({
-			data: {
-                creatoDa: user_id(locals),
-                titolo: form_data.get('titolo'),
-                descrizione: form_data.get('descrizione'),
-                anno_scolastico: +form_data.get('anno_scolastico'),
-                contabilizzato: form_data.get('contabilizzato') == "SI" ? true : false,
-				tutor_aziendale: form_data.get('tutor_aziendale'),
-                idTutor: +form_data.get('tutor_scolastico'),
-                dataInizio: new Date(form_data.get('dataInizio')),
-				dataFine: new Date(form_data.get('dataFine')),
-                idAzienda: +form_data.get('azienda'),
-                svoltoDa: {
-                    connect: ids
+            await SARP.pcto_Pcto.create({
+                data: {
+                    creatoDa: user_id(locals),
+                    titolo: form_data.get('titolo'),
+                    descrizione: form_data.get('descrizione'),
+                    anno_scolastico: +form_data.get('anno_scolastico'),
+                    contabilizzato: form_data.get('contabilizzato') == "SI" ? true : false,
+                    tutor_aziendale: form_data.get('tutor_aziendale'),
+                    idTutor: +form_data.get('tutor_scolastico'),
+                    dataInizio: new Date(form_data.get('dataInizio')),
+                    dataFine: new Date(form_data.get('dataFine')),
+                    durata_ore: +form_data.get('durata_ore'),
+                    idAzienda: +form_data.get('azienda'),
+                    idClasse: +form_data.get('classe'),
+                    svoltoDa: {
+                        connect: ids
+                    }
                 }
-        }
-    });
+            });
         } catch (exception) {
             catch_error(exception, "l'inserimento", 301)
         }
@@ -111,7 +112,7 @@ export const actions = {
         access_protect(502, locals, action, resource);
 
 		const form_data = await request.formData();
-		let id = form_data.get('id');
+        let id = form_data.get('id');
         let studenti = form_data.get('studenti').split(',');
         let ids = [];
 
@@ -132,7 +133,9 @@ export const actions = {
                     idTutor: +form_data.get('tutor_scolastico'),
                     dataInizio: new Date(form_data.get('dataInizio')),
                     dataFine: new Date(form_data.get('dataFine')),
+                    durata_ore: +form_data.get('durata_ore'),
                     idAzienda: +form_data.get('azienda'),
+                    idClasse: +form_data.get('classe'),
                     svoltoDa: {
                         set: ids
                     }
