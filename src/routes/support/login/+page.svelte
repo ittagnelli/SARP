@@ -77,7 +77,7 @@
 	>
 		<div class="text-center mb-5 mt-5">
 			<a href="." class="navbar-brand navbar-brand-autodark"
-				><img class="logo" src="img/logo_quadrato_nero_small.png" alt="" /></a
+				><img class="logo" src="/img/logo_quadrato_nero_small.png" alt="" /></a
 			>
 		</div>
 
@@ -117,7 +117,7 @@
 	}
 
     .logo {
-        width: 400px;
+        width: 350px;
     }
 
 	.login {
