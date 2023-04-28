@@ -1,3 +1,6 @@
+## v1.3.1 – 28 Aprile 2023
+- `fix#273`: logout 404
+
 ## v1.3.0 – 23 Aprile 2023
 - `fix#265`: Ore previste stage
 - `fix#267`: stage per classe
