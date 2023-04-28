@@ -41,6 +41,7 @@
         indirizzo: "",      
         piva: "",
         telefono: "",
+        email_privacy: "",
         direttore_nome: "",
         direttore_natoA: "",
         direttore_natoIl: helper.convert_date(new Date()),
@@ -87,6 +88,13 @@
 		.string()
 		.matches(/^$|^[0-9]{3}\.[0-9]{3}\.[0-9]{2}\.[0-9]{2}$/, "Numero non valido [333.123.45.67]"),
 
+        email_privacy: yup
+			.string()
+			.matches(
+				/^$|^[a-z]+@[a-z]+\.[a-z]+$/,
+				'Email non valida'
+			),
+
         direttore_nome: yup
         .string()
         .matches(/^$|^[a-zA-Z ']{3,30}$/, "Nome Direttore non valido [Nome Cognome]"),
@@ -130,6 +138,7 @@
 		form_values.indirizzo = azienda.indirizzo;
         form_values.piva = azienda.piva;
         form_values.telefono = azienda.telefono;
+        form_values.email_privacy = azienda.email_privacy;
         form_values.direttore_nome = azienda.direttore_nome;
         form_values.direttore_natoA = azienda.direttore_natoA;
         form_values.direttore_natoIl = helper.convert_date(azienda.direttore_natoIl);
@@ -189,7 +198,7 @@
         { name: 'indirizzo', type: 'string', display: 'indirizzo', size: 30 },
         { name: 'piva', type: 'string', display: 'piva', size: 12 },
         { name: 'telefono', type: 'string', display: 'telefono', size: 14 },
-        { name: 'direttore_nome', type: 'string', display: 'direttore', size: 20 },
+        { name: 'direttore_nome', type: 'string', display: 'Legale Rappresentante', size: 20 },
 		{ name: 'dataConvenzione', type: 'date', display: 'Data Convenzione' },
 		{ name: 'dataProtocollo', type: 'date', display: 'Data Protocollo' },
 		{ name: 'istituto', type: 'string', display: 'Istituto', size: 10 }
@@ -263,7 +272,7 @@
 						</div>
 					</div>
                     <div class="row">
-						<div class="col-lg-6">
+						<div class="col-lg-4">
                             <InputText
                                 label="P.IVA"
                                 name="piva"
@@ -272,7 +281,7 @@
                                 bind:val={form_values.piva}
                             />
 						</div>
-                        <div class="col-lg-6">
+                        <div class="col-lg-3">
                             <InputText
                                 label="Telefono"
                                 name="telefono"
@@ -281,11 +290,20 @@
                                 bind:val={form_values.telefono}
                             />
 						</div>
+                        <div class="col-lg-5">
+                            <InputText
+                                label="Email Privacy"
+                                name="email_privacy"
+                                {errors}
+                                placeholder="privacy@azienda.com"
+                                bind:val={form_values.email_privacy}
+                            />
+						</div>
 					</div>
                     <div class="row">
 						<div class="col-lg-3">
                             <InputText
-                                label="Direttore"
+                                label="Legale Rappresentante"
                                 name="direttore_nome"
                                 {errors}
                                 placeholder="Nome e Cognome"

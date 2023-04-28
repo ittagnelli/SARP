@@ -1,4 +1,4 @@
-// v 0.16.2 2023-04-23
+// v 0.16.3 2023-04-28
 
 generator client {
     provider = "prisma-client-js"
@@ -162,6 +162,7 @@ model pcto_Azienda {
     indirizzo         String?
     piva              String?
     telefono          String?
+    email_privacy     String?
     direttore_nome    String?
     direttore_natoA   String?
     direttore_natoIl  DateTime?
