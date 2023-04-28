@@ -14,7 +14,7 @@ class Client_Logger {
     }
 
     async logger(level, mex) {
-        const res = await fetch(`${PUBLIC_BASE_URL}/logger`, {
+        const res = await fetch(`${PUBLIC_BASE_URL}/support/logger`, {
             method: 'POST',
             headers: {
                 'content-type': 'application/json'

@@ -17,9 +17,6 @@
     let show_error_mex = false;
     let user_found = false;
     let pctos = [];
-    // let totale_ore_totali = 0;
-    // let totale_ore_approvate = 0;
-    // let totale_ore_contabilizzate = 0;
 
     function show_error_message() {
         setTimeout(() => {
@@ -31,22 +28,23 @@
     }
 
     async function verifica_studente() {
-        cognome = cognome[0].toUpperCase().concat(cognome.slice(1).toLowerCase());
-        nome = nome[0].toUpperCase().concat(nome.slice(1).toLowerCase());
+        cognome = cognome ? cognome[0].toUpperCase().concat(cognome.slice(1).toLowerCase()) : '';
+        nome = nome ? nome[0].toUpperCase().concat(nome.slice(1).toLowerCase()) : '';
         
-        console.log(cognome, nome)
         const get_pcto_status = await fetch(`/pcto/verifica_stato?cognome=${cognome}&nome=${nome}`);
         let stato_pcto = await get_pcto_status.json();
+
         pctos = [];
         user_found = false;
 
-        if(stato_pcto.length == 0) {
+        if(stato_pcto.length != 1) {
             show_error_mex = true;
             user_found = false;
         } else {
-            pctos = build_table_row(stato_pcto[0]);
-            found_cognome = cognome;
-            found_nome = nome;
+            let result = stato_pcto[0];
+            pctos = build_table_row(result);
+            found_cognome = result.cognome;
+            found_nome = result.nome;
             nome = '';
             cognome = '';
             //questo è un hack necessario per far visualizzare 
@@ -116,7 +114,7 @@
 {#if show_error_mex}
     {show_error_message()}
     <div class="error-mex {show_error_mex ? '' : 'hidden'}">
-        L'utente {cognome} {nome} non è presente nel sistema
+        Prova ad essere più specifico nella ricerca
     </div>
 {/if}
 
@@ -151,7 +149,7 @@
             <div class="col-lg-2">
                 <div class="mb-3">
                     <label class="form-label">&nbsp;</label>
-                    <button class="btn btn-success ms-auto" on:click={verifica_studente} disabled={cognome.length == 0 || nome.length ==0}>
+                    <button class="btn btn-success ms-auto" on:click={verifica_studente} disabled={cognome.length == 0 && nome.length ==0}>
 						<i class="ti ti-zoom-check icon" />
 							<b>Verifica</b>
 					</button>

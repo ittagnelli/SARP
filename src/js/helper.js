@@ -153,15 +153,6 @@ export const is_mobile = (request) => {
 	CLASSE SELECT HELPERS
 */
 
-export function findDeselectedItem(now_studenti, old_studenti) {
-	// loop through previous array
-	for (const studente of old_studenti) {
-		// look for same thing in new array
-		if (now_studenti.indexOf(studente) == -1) return studente;
-	}
-	return null;
-}
-
 export const db_to_select = (classi) => {
 	classi.forEach((classe) => {
 		classe['label'] = classe.classe.concat(' ' + classe.istituto).concat(' ' + classe.sezione);

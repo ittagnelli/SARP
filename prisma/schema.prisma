@@ -1,4 +1,4 @@
-// v 0.17.0 2023-04-17
+// v 0.16.2 2023-04-23
 
 generator client {
     provider = "prisma-client-js"
@@ -66,6 +66,7 @@ model Classe {
     sezione      String
     iscritti     Utente[]
     insegnamenti Insegnamenti[]
+    pcto_Pcto    pcto_Pcto[]
 }
 
 model Materia {
@@ -82,7 +83,7 @@ model Insegnamenti {
     idMateria Int
     classe    Classe  @relation(fields: [idClasse], references: [id])
     idClasse  Int
-    titolare  Boolean  @default(false) //TRUE:docente principale  FALSE: compresenza o altro
+    titolare  Boolean @default(false) //TRUE:docente principale  FALSE: compresenza o altro
     anno      Int //solo il primo dei due anni che compongolo l'anno scolastico
 }
 
@@ -184,6 +185,7 @@ model pcto_Pcto {
     idTutor          Int?
     dataInizio       DateTime
     dataFine         DateTime
+    durata_ore       Int                @default(0)
     offertoDa        pcto_Azienda       @relation(fields: [idAzienda], references: [id])
     idAzienda        Int
     valutatoDa       pcto_Valutazione[]
@@ -191,6 +193,8 @@ model pcto_Pcto {
     svoltoDa         Utente[]           @relation("iscritto")
     contabilizzato   Boolean            @default(false)
     anno_scolastico  Int?
+    classe           Classe             @relation(fields: [idClasse], references: [id])
+    idClasse         Int                @default(1)
 }
 
 model programmazione_Template {

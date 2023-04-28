@@ -16,8 +16,6 @@
     let aziende = helper.data2arr(data.companies);
     let utenti = helper.data2arr(data.utenti);
 	let classi = helper.data2arr(data.classi);
-	let classi_iscritte = [];
-	let old_studenti = [];
 
 	classi = helper.db_to_select(classi);
 
@@ -29,6 +27,7 @@
 
     stages.forEach((item, idx) => {
         stages[idx].tutor_scolastico['full_name'] = stages[idx].tutor_scolastico.cognome.concat(" ", stages[idx].tutor_scolastico.nome);
+        stages[idx]['classe'] = (classi.filter(item => item.id == stages[idx].idClasse)[0]).label;
     });
     
 	let svolto = [];
@@ -61,7 +60,9 @@
         tutor_scolastico: 0,
 		dataInizio: helper.convert_date(new Date()),
 		dataFine: helper.convert_date(new Date()),
-        anno_scolastico: undefined
+        durata_ore: 0,
+        anno_scolastico: 0,
+        classe: 0
 	};
 
 	// schema di validazione del form
@@ -90,7 +91,15 @@
 
         anno_scolastico: yup
         .number()
-        .min(2019, 'Anno Scolastico necessario')
+        .min(2019, 'Anno Scolastico necessario'),
+
+        durata_ore: yup
+        .number()
+        .min(2, 'Ore previste necessarie'),
+
+        classe: yup
+        .number()
+        .min(2, 'Classe obbligatoria')
 	});
 
     let stage_modal_values = {
@@ -103,21 +112,25 @@
         tutor_scolastico: 0,
 		dataInizio: helper.convert_date(new Date()),
 		dataFine: helper.convert_date(new Date()),
+        durata_ore: 0,
         studenti: []
 	};
 
 	async function start_update(e) {
 		modal_action = 'update';
+        svolto = [];
 
 		form_values.pcto_id = e.detail.id;
 		//cerca l'azienda da fare update
 		let stage = stages.filter((item) => item.id == form_values.pcto_id)[0];
-		form_values.azienda = stage.offertoDa.id;
+
+        form_values.azienda = stage.offertoDa.id;
 		stage.svoltoDa.forEach((utente) => {
 			utente['label'] = utente.cognome.concat(' ', utente.nome);
 			utente['value'] = utente.id;
 		});
 		svoltoDa = stage.svoltoDa;
+        svoltoDa.forEach(item => svolto.push(item.id));
 
 		form_values.titolo = stage.titolo;
 		form_values.descrizione = stage.descrizione;
@@ -126,24 +139,10 @@
         form_values.tutor_scolastico = stage.idTutor;
 		form_values.dataInizio = helper.convert_date(stage.dataInizio);
 		form_values.dataFine = helper.convert_date(stage.dataFine);
+        form_values.durata_ore = stage.durata_ore;
         form_values.anno_scolastico = stage.anno_scolastico;
-	}
-
-	function findDeselectedItem(CurrentArray, PreviousArray) {
-
-		var CurrentArrSize = CurrentArray.length;
-		var PreviousArrSize = PreviousArray.length;
-
-		// loop through previous array
-		for(var j = 0; j < PreviousArrSize; j++) {
-
-		// look for same thing in new array
-		if (CurrentArray.indexOf(PreviousArray[j]) == -1)
-			return PreviousArray[j];
-		}
-
-		return null;
-
+        form_values.classe = stage.idClasse;
+        
 	}
 
 	async function cancel_action(){
@@ -160,50 +159,31 @@
 				tutor_scolastico: 0,
 				dataInizio: helper.convert_date(new Date()),
 				dataFine: helper.convert_date(new Date()),
+                classe: 0
 			};
 		}
 	}
 
-	function handleSelect(event) {
+    function handleSelect(event) {
 		let user_selected = event.detail;
-       	svolto = [];
-		let i = 0;
+        svolto = [];
         if(user_selected) {
             user_selected.forEach((item) => {
                 svolto = [...svolto, item.value];
             });
-			let removed = helper.findDeselectedItem(user_selected, old_studenti);
-			if(old_studenti.length != 0){
-				let classi_ids = classi_iscritte.map(classe => classe.id);
-				if(removed){
-					let users_id = user_selected.map(user => user.classeId);
-					if(users_id.indexOf(removed.classeId) != -1){
-						let index_to_remove = classi_ids.indexOf(removed.classeId);
-						classi_iscritte.splice(index_to_remove, 1);
-						classi_iscritte = classi_iscritte
-					}
-				}
-
-			}
-			old_studenti = user_selected;
-        }else {
-			classi_iscritte = [];
 		}
 	}
+    
+    function handleSelect_classi(event) {
+        // classe_iscritta = form_values.classe;
+		svoltoDa = [];
+        svolto = [];
 
-	function handleSelect_classi(event) {
-		let classe_selected = event.detail;
-		if(classe_selected == null)
-			svoltoDa = [];
-		if(classe_selected && classe_selected.length > 0){
-			classi_iscritte = classe_selected;
-			classe_selected.forEach((item) => {
-				let utenti_partecipanti = utenti.filter((utente) => {
-					return utente.classeId == item.id;
-				});
-				svoltoDa = [...svoltoDa, ...utenti_partecipanti];
-			});
-		}
+        let utenti_partecipanti = utenti.filter((utente) => {
+                return utente.classeId == form_values.classe;
+            });
+        svoltoDa = [...svoltoDa, ...utenti_partecipanti];
+        svoltoDa.forEach(item => svolto.push(item.id));
 	}
 
 	async function handleSubmit() {
@@ -211,7 +191,7 @@
 			// valida il form prima del submit
 			await form_schema.validate(form_values, { abortEarly: false });
 			errors = {};
-			modal_form.submit();
+            modal_form.submit();
 		} catch (err) {
 			errors = err.inner.reduce((acc, err) => {
 				return { ...acc, [err.path]: err.message };
@@ -260,6 +240,7 @@
         stage_modal_values.tutor_scolastico = stage.tutor_scolastico.full_name;
 		stage_modal_values.dataInizio = helper.convert_date(stage.dataInizio);
 		stage_modal_values.dataFine = helper.convert_date(stage.dataFine);
+        stage_modal_values.durata_ore = stage.durata_ore;
         stage_modal_values.studenti = await query_ore_pcto(stage.id)
         
         stage_detail_modal.show();
@@ -273,13 +254,14 @@
 		{ name: 'titolo', type: 'string', display: 'titolo', size: 50, search: true },
 		{ name: 'descrizione', type: 'string', display: 'descrizione', size: 50 },
         { name: 'offertoDa', type: 'object', key: 'nome', display: 'azienda', size: 40, search: true },
+        { name: 'classe', type: 'string', display: 'classe', size: 20, search: true},
         { name: 'anno_scolastico', type: 'number', display: 'a.s.', search: true },
-        { name: 'contabilizzato', type: 'boolean', display: 'SIDI', search: true},
-		{ name: 'tutor_aziendale', type: 'string', display: 'tutor aziendale', size: 20, search: true },
-        { name: 'tutor_scolastico', type: 'object', key: 'full_name', display: 'tutor scolastico', size: 20, search: true },
+		{ name: 'tutor_scolastico', type: 'object', key: 'full_name', display: 'tutor scolastico', size: 20, search: true },
+        { name: 'durata_ore', type: 'number', display: 'ore'},
 		{ name: 'dataInizio', type: 'date', display: 'Inizio' },
 		{ name: 'dataFine', type: 'date', display: 'Fine' },
-		{ name: 'svoltoDa', type: 'array', subtype: 'picture', key: 'picture', display: 'iscritti', size: 5 }
+		{ name: 'svoltoDa', type: 'array', subtype: 'picture', key: 'picture', display: 'iscritti', size: 5 },
+        { name: 'contabilizzato', type: 'boolean', display: 'SIDI', search: true},
 	]}
 	rows={stages}
 	page_size={6}
@@ -333,12 +315,12 @@
                                         <option value={azienda.id}>{azienda.nome}</option>
                                     {/each}
                                 </select>
-                                {#if errors.tipo}
+                                {#if errors.azienda}
                                     <span class="invalid-feedback">{errors.azienda}</span>
                                 {/if}	
 							</div>
 						</div>
-						<div class="col-lg-4">
+						<div class="col-lg-3">
 							<InputDate
 								label="Data Inizio"
 								name="dataInizio"
@@ -346,12 +328,21 @@
 								bind:val={form_values.dataInizio}
 							/>
 						</div>
-						<div class="col-lg-4">
+						<div class="col-lg-3">
 							<InputDate
 								label="Data Fine"
 								name="dataFine"
 								{errors}
 								bind:val={form_values.dataFine}
+							/>
+						</div>
+                        <div class="col-lg-2">
+							<InputText
+								label="Ore Previste"
+								name="durata_ore"
+								{errors}
+								placeholder="40"
+								bind:val={form_values.durata_ore}
 							/>
 						</div>
 					</div>
@@ -375,7 +366,7 @@
                                         {/if}
                                     {/each}
                                 </select>
-                                {#if errors.tipo}
+                                {#if errors.tutor_scolastico}
                                     <span class="invalid-feedback">{errors.tutor_scolastico}</span>
                                 {/if}	
 							</div>
@@ -439,38 +430,46 @@
                             />
 						</div>
 					</div>
-					<div class="row">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="mb-3">
+								<div class="form-label select_text">Classe</div>
+                                <select 
+                                    class="form-select" 
+                                    class:is-invalid="{errors.classe}" 
+                                    name="classe" 
+                                    bind:value={form_values.classe}
+                                    on:change="{() => handleSelect_classi()}"
+                                >
+                                    {#each classi as classe}
+                                        <option value={classe.id}>{classe.label}</option>
+                                    {/each}
+                                </select>
+                                {#if errors.classe}
+                                    <span class="invalid-feedback">{errors.classe}</span>
+                                {/if}	
+							</div>
+
+                        </div>
+                    </div>
+					{#if form_values.classe > 1}
+                    <div class="row">
 						<div class="col-lg-12">
 							<div class="mb-3">
 								<label class="form-label">Studenti Iscritti</label>
 								<Select
 									class="form-select"
 									name="utenti"
-									items={utenti.filter(utente => utente.tipo == "STUDENTE")}
+									items={utenti.filter(utente => utente.tipo == "STUDENTE" && utente.classeId == form_values.classe)}
 									value={svoltoDa}
 									isMulti={true}
-									placeholder="Selezione gli studenti..."
+                                    placeholder="Selezione gli studenti..."
 									on:select={handleSelect}
 								/>
 							</div>
 						</div>
 					</div>
-						<div class="row">
-							<div class="col-lg-12">
-								<div class="mb-3">
-									<label class="form-label">Classi Iscritte</label>
-									<Select
-										class="form-select"
-										name="utenti"
-										items={classi}
-										value={classi_iscritte}
-										isMulti={true}
-										placeholder="Selezione gli studenti..."
-										on:select={handleSelect_classi}
-									/>
-								</div>
-							</div>
-						</div>
+                    {/if}
 					<div class="modal-footer">
 						<a href="#" class="btn btn-danger" data-bs-dismiss="modal" on:click={cancel_action}>
 							<b>Cancel</b>
@@ -622,7 +621,7 @@
                                         </td>
                                         <td>{studente.cognome} {studente.nome}</td>
                                         <td>{studente.istituto}</td>
-                                        <td>{studente.ore}</td>
+                                        <td>{studente.ore}/{stage_modal_values.durata_ore}</td>
                                     </tr>
                                 {/each}
                               </tbody>
