@@ -55,6 +55,7 @@ model Utente {
     classeId                 Int?
     tutor_pcto               pcto_Pcto[]        @relation("tutor")
     insegna_in               Insegnamenti[]
+    template                 programmazione_Template[]
 }
 
 model Classe {
@@ -73,6 +74,7 @@ model Materia {
     id           Int            @id @default(autoincrement())
     nome         String         @unique
     insegnata_in Insegnamenti[]
+    template     programmazione_Template[]
 }
 
 model Insegnamenti {
@@ -201,9 +203,13 @@ model programmazione_Template {
     id        Int      @id @default(autoincrement())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+    docente   Utente  @relation(fields: [creatoDa], references: [id])
     creatoDa  Int
     nome      String
     template  String
+    libro     String
+    materia   Materia @relation(fields: [idMateria], references: [id])
+    idMateria Int
 }
 
 model sicurezza_Corso {
