@@ -50,7 +50,8 @@
         idUtente: undefined,
         dataConvenzione: helper.convert_date(new Date()),
         dataProtocollo: helper.convert_date(new Date()),
-        istituto: "ITT"
+        istituto: "ITT",
+        firma_convenzione: 'NO'
     };
 
     onMount(() => { // Controlliamo che l'inserimento sia andato a buon fine, usiamo on mount per richiamare le funzioni del DOM
@@ -148,6 +149,7 @@
 		form_values.dataConvenzione = helper.convert_date(azienda.dataConvenzione);
 		form_values.dataProtocollo = helper.convert_date(azienda.dataProtocollo);
         form_values.istituto = azienda.istituto;
+        form_values.firma_convenzione = azienda.firma_convenzione ? 'SI' : 'NO';
 	}
 
     async function cancel_action(){
@@ -168,7 +170,8 @@
                 idUtente: undefined,
                 dataConvenzione: helper.convert_date(new Date()),
                 dataProtocollo: helper.convert_date(new Date()),
-                istituto: "ITT"
+                istituto: "ITT",
+                firma_convenzione: 'NO'
             };
         }
     }
@@ -201,7 +204,8 @@
         { name: 'direttore_nome', type: 'string', display: 'Legale Rappresentante', size: 20 },
 		{ name: 'dataConvenzione', type: 'date', display: 'Data Convenzione' },
 		{ name: 'dataProtocollo', type: 'date', display: 'Data Protocollo' },
-		{ name: 'istituto', type: 'string', display: 'Istituto', size: 10 }
+		{ name: 'istituto', type: 'string', display: 'Istituto', size: 10 },
+        { name: 'firma_convenzione', type: 'boolean', display: 'Firmata'}
 	]}
 	rows={aziende}
 	page_size={11}
@@ -393,6 +397,37 @@
 							</div>
 						</div>
 					</div>
+                    {#if helper.is_admin(data) == true}
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <div class="mb-3">
+                                <label class="form-label">Convenzione Firmata ?</label>
+                                <div class="form-selectgroup">
+                                    <label class="form-selectgroup-item">
+                                        <input
+                                            type="radio"
+                                            name="firma_convenzione"
+                                            value="SI"
+                                            class="form-selectgroup-input"
+                                            bind:group={form_values.firma_convenzione}
+                                        />
+                                        <span class="form-selectgroup-label">SI</span>
+                                    </label>
+                                    <label class="form-selectgroup-item">
+                                        <input
+                                            type="radio"
+                                            name="firma_convenzione"
+                                            value="NO"
+                                            class="form-selectgroup-input"
+                                            bind:group={form_values.firma_convenzione}
+                                        />
+                                        <span class="form-selectgroup-label">NO</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {/if}
 				</div>
 				<div class="modal-footer">
 					<a href="#" class="btn btn-danger" data-bs-dismiss="modal" on:click={cancel_action}>

@@ -93,7 +93,8 @@ export const actions = {
 					direttore_codiceF: form_data.get('direttore_codiceF'),
 					dataConvenzione: new Date(form_data.get('dataConvenzione')),
 					dataProtocollo: new Date(form_data.get('dataProtocollo')),
-					istituto: form_data.get('istituto')
+					istituto: form_data.get('istituto'),
+                    firma_convenzione: form_data.get('firma_convenzione') == "SI" ? true : false
 				}
 			});
 		} catch (exception) {
@@ -130,7 +131,8 @@ export const actions = {
 					direttore_codiceF: form_data.get('direttore_codiceF'),
 					dataConvenzione: new Date(form_data.get('dataConvenzione')),
 					dataProtocollo: new Date(form_data.get('dataProtocollo')),
-					istituto: form_data.get('istituto')
+					istituto: form_data.get('istituto'),
+                    firma_convenzione: form_data.get('firma_convenzione') == "SI" ? true : false
 				}
 			});
 		} catch (exception) {
