@@ -37,6 +37,7 @@ export async function load({ locals }) {
 		});
 
         const stages = await SARP.pcto_Pcto.findMany({
+            where: { firma_pcto: true},
 			orderBy: [{ titolo: 'asc' }],
 			include: {
 				offertoDa: true,
