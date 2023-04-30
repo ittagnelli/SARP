@@ -38,6 +38,13 @@ async function main(filename) {
         }
     });
 
+    if(classi.length == 0 ||
+        materie.length == 0 ||
+        docenti.length == 0) {
+            console.log("ERRORE: classi,materie e docenti devono essere presenti nel DB!!!!");
+            process.exit(1)
+    }
+    
     let rows =  await readXlsxFile(filename);
 
     console.log('Elaborazione XLSX...');
