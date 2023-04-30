@@ -1,4 +1,4 @@
-// v 0.16.4 2023-04-29
+// v 0.16.5 2023-04-30
 
 generator client {
     provider = "prisma-client-js"
@@ -197,6 +197,7 @@ model pcto_Pcto {
     anno_scolastico  Int?
     classe           Classe             @relation(fields: [idClasse], references: [id])
     idClasse         Int                @default(1)
+    firma_pcto       Boolean            @default(false)
 }
 
 model sicurezza_Corso {

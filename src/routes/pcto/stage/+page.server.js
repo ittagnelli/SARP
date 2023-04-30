@@ -96,7 +96,8 @@ export const actions = {
                     idClasse: +form_data.get('classe'),
                     svoltoDa: {
                         connect: ids
-                    }
+                    },
+                    firma_pcto: form_data.get('firma_pcto') == "SI" ? true : false
                 }
             });
         } catch (exception) {
@@ -138,7 +139,8 @@ export const actions = {
                     idClasse: +form_data.get('classe'),
                     svoltoDa: {
                         set: ids
-                    }
+                    },
+                    firma_pcto: form_data.get('firma_pcto') == "SI" ? true : false
                 }
             });
         } catch (exception) {

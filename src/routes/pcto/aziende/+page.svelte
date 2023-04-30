@@ -205,7 +205,7 @@
 		{ name: 'dataConvenzione', type: 'date', display: 'Data Convenzione' },
 		{ name: 'dataProtocollo', type: 'date', display: 'Data Protocollo' },
 		{ name: 'istituto', type: 'string', display: 'Istituto', size: 10 },
-        { name: 'firma_convenzione', type: 'boolean', display: 'Firmata'}
+        { name: 'firma_convenzione', type: 'boolean', display: 'Documentazione'}
 	]}
 	rows={aziende}
 	page_size={11}

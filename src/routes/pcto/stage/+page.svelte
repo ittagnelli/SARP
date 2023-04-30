@@ -62,7 +62,8 @@
 		dataFine: helper.convert_date(new Date()),
         durata_ore: 0,
         anno_scolastico: 0,
-        classe: 0
+        classe: 0,
+        firma_pcto: 'NO'
 	};
 
 	// schema di validazione del form
@@ -83,6 +84,7 @@
 
 		descrizione: yup
 		.string()
+        .required('Descrizione PCTO necessaria')
 		.max(500, "Descrizione troppo lunga. Max 500 caratteri"),
 
         azienda: yup
@@ -142,6 +144,7 @@
         form_values.durata_ore = stage.durata_ore;
         form_values.anno_scolastico = stage.anno_scolastico;
         form_values.classe = stage.idClasse;
+        form_values.firma_pcto = stage.firma_pcto ? 'SI' : 'NO';
         
 	}
 
@@ -159,7 +162,8 @@
 				tutor_scolastico: 0,
 				dataInizio: helper.convert_date(new Date()),
 				dataFine: helper.convert_date(new Date()),
-                classe: 0
+                classe: 0,
+                firma_pcto: 'NO'
 			};
 		}
 	}
@@ -260,8 +264,9 @@
         { name: 'durata_ore', type: 'number', display: 'ore'},
 		{ name: 'dataInizio', type: 'date', display: 'Inizio' },
 		{ name: 'dataFine', type: 'date', display: 'Fine' },
-		{ name: 'svoltoDa', type: 'array', subtype: 'picture', key: 'picture', display: 'iscritti', size: 5 },
+		{ name: 'svoltoDa', type: 'array', subtype: 'picture', key: 'picture', display: 'iscritti', size: 3 },
         { name: 'contabilizzato', type: 'boolean', display: 'SIDI', search: true},
+        { name: 'firma_pcto', type: 'boolean', display: 'Doc', search: true}
 	]}
 	rows={stages}
 	page_size={6}
@@ -305,7 +310,7 @@
 				</div>
 				<div class="modal-body">
 					<div class="row">
-						<div class="col-lg-4">
+						<div class="col-lg-6">
                             <!-- InputSelect component ha dei problemi (two way binding) non ancora risolti
                             che non permettono di usarlo qui -->
 							<div class="mb-3">
@@ -334,15 +339,6 @@
 								name="dataFine"
 								{errors}
 								bind:val={form_values.dataFine}
-							/>
-						</div>
-                        <div class="col-lg-2">
-							<InputText
-								label="Ore Previste"
-								name="durata_ore"
-								{errors}
-								placeholder="40"
-								bind:val={form_values.durata_ore}
 							/>
 						</div>
 					</div>
@@ -381,8 +377,20 @@
 							/>
 						</div>
                         <div class="col-lg-2">
+							<InputText
+								label="Ore Previste"
+								name="durata_ore"
+								{errors}
+								placeholder="40"
+								bind:val={form_values.durata_ore}
+							/>
+						</div>
+					</div>
+                    <div class="row">
+                        {#if helper.is_admin(data) == true}
+                        <div class="col-lg-6">
                             <div class="mb-3">
-                                <label class="form-label">Registrato</label>
+                                <label class="form-label">Registrato in SIDI</label>
                                 <div class="form-selectgroup">
                                     <label class="form-selectgroup-item">
                                         <input
@@ -407,7 +415,35 @@
                                 </div>
                             </div>
                         </div>
-					</div>
+                        <div class="col-lg-6">
+                            <div class="mb-3">
+                                <label class="form-label">Documenti PCTO  Firmati ?</label>
+                                <div class="form-selectgroup">
+                                    <label class="form-selectgroup-item">
+                                        <input
+                                            type="radio"
+                                            name="firma_pcto"
+                                            value="SI"
+                                            class="form-selectgroup-input"
+                                            bind:group={form_values.firma_pcto}
+                                        />
+                                        <span class="form-selectgroup-label">SI</span>
+                                    </label>
+                                    <label class="form-selectgroup-item">
+                                        <input
+                                            type="radio"
+                                            name="firma_pcto"
+                                            value="NO"
+                                            class="form-selectgroup-input"
+                                            bind:group={form_values.firma_pcto}
+                                        />
+                                        <span class="form-selectgroup-label">NO</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        {/if}
+                    </div>
                     <div class="row">
                         <div class="col-lg-12">
 							<InputText
@@ -426,6 +462,7 @@
                                 bind:val={form_values.descrizione}
                                 name="descrizione"
                                 placeholder="Descrizione PCTO..."
+                                rows={5}
                                 {errors}
                             />
 						</div>
