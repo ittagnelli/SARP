@@ -348,7 +348,7 @@
 								label="Tutor Aziendale"
 								name="tutor_aziendale"
 								{errors}
-								placeholder="Tutor Aziendale"
+								placeholder="Cognome Nome"
 								bind:val={form_values.tutor_aziendale}
 							/>
 						</div>
@@ -442,6 +442,9 @@
                                 </div>
                             </div>
                         </div>
+                        {:else}
+                            <input type="hidden" name="contabilizzato" bind:value={form_values.contabilizzato} />
+                            <input type="hidden" name="firma_pcto" bind:value={form_values.firma_pcto} />
                         {/if}
                     </div>
                     <div class="row">

@@ -15,6 +15,7 @@
     let show_error_mex = false;
 
 	let presenze = helper.data2arr(data.presenze);
+    let show_actions = true;
     // aggiungo il full name per ogni presenza per poi stamparlo nella tabella
     // presenze.forEach((item, idx) => presenze[idx].presenza['full_name'] = (presenze[idx].presenza['cognome']).concat(" ", presenze[idx].presenza['nome']));
     presenze.forEach((item, idx) => {
@@ -28,14 +29,12 @@
     let totale_ore_pcto = {totali: 0, approvate: 0, registrate: 0};
     let pcto = helper.data2arr(data.stages);
 
-    //se tutor aziendale o studente filtro i PCTO
+    //se tutor aziendale filtro i PCTO
     //se ADMIN faccio vedere tutti i PCTO 
-    if(helper.is_tutor(data) && !helper.is_admin(data)) {
-        pcto = [...pcto.filter(stage => stage.idTutor == id_utente && stage.contabilizzato == false)];
-    } else if(helper.is_studente(data) && !helper.is_admin(data)) {
-        pcto = [...pcto.filter(stage => stage.contabilizzato == false && stage.svoltoDa.some(item => item.id == id_utente))];
-    }
-
+    if(helper.is_tutor(data) && !helper.is_admin(data))
+        pcto = [...pcto.filter(stage => (stage.idTutor == id_utente || stage.tutor_aziendale == helper.user_name(data)) && stage.contabilizzato == false)];
+     
+    
     $: {
         let selected_stage = pcto.filter((item) => item.id == form_values.stage);
         if(selected_stage[0]) {
@@ -54,6 +53,12 @@
 	$page_action_title = 'Aggiungi Presenza';
 	$page_action_modal = 'modal-add-presenze';
 	let modal_action = 'create';
+
+    if(tipo_utente == "STUDENTE") {
+        $page_action_title = '';
+	    $page_action_modal = '';
+        show_actions = false;
+    }
 
     let modal_form; // entry point del form nel modale
 	let errors = {}; //traccia gli errori di validazione del form
@@ -182,7 +187,6 @@
     <button class="btn position-relative">ORE PCTO</button>
     {/if} 
     <button class="btn position-relative">Registrate <span class="badge bg-green ms-2">{totale_ore_pcto.registrate}</span></button>
-    <button class="btn position-relative">Approvate <span class="badge bg-azure ms-2">{totale_ore_pcto.approvate}</span></button>
     <button class="btn position-relative">Totali <span class="badge bg-yellow ms-2">{totale_ore_pcto.totali}</span></button>
 </p>
 {/if}
@@ -197,7 +201,6 @@
         { name: 'dataPresenza', type: 'date', display: 'data' },
         { name: 'oraInizio', type: 'time', display: 'entrata' },
         { name: 'oraFine', type: 'time', display: 'uscita' },
-        { name: 'approvato', type: 'boolean', display: 'approvato', search: true}
 	]}
 	rows={presenze}
 	page_size={10}
@@ -205,7 +208,7 @@
 	on:update_start={start_update}
 	endpoint="pcto/presenze"
     footer="Presenze"
-    actions={true}
+    actions={show_actions}
     resource="pcto_presenze"
 />
 {:else}
@@ -223,7 +226,7 @@
 		on:update_start={start_update}
 		endpoint="pcto/presenze"
 		footer="Presenze"
-		actions={true}
+		actions={false}
 		resource="pcto_presenze"
 	/>
 {/if}
@@ -290,7 +293,7 @@
 						</div>
 					</div>
                     <div class="row">
-                        <div class="col-lg-3">
+                        <div class="col-lg-4">
                             <InputDate
 								label="Data presenza"
 								name="dataPresenza"
@@ -298,7 +301,7 @@
 								bind:val={form_values.dataPresenza}
 							/>
 						</div>
-						<div class="col-lg-3">
+						<div class="col-lg-4">
                             <InputTime
 								label="Ingresso"
 								name="oraInizio"
@@ -306,7 +309,7 @@
 								bind:val={form_values.oraInizio}
 							/>
 						</div>
-                        <div class="col-lg-3">
+                        <div class="col-lg-4">
                             <InputTime
 								label="Uscita"
 								name="oraFine"
@@ -314,35 +317,6 @@
 								bind:val={form_values.oraFine}
 							/>
 						</div>
-                        {#if helper.user_ruolo(data) != "STUDENTE"}
-                        <div class="col-lg-3">
-							<div class="mb-3">
-								<label class="form-label">Presenza Approvata</label>
-								<div class="form-selectgroup">
-									<label class="form-selectgroup-item">
-										<input
-											type="radio"
-											name="approvato"
-											value="SI"
-											class="form-selectgroup-input"
-											bind:group={form_values.approvato_select}
-										/>
-										<span class="form-selectgroup-label">SI</span>
-									</label>
-									<label class="form-selectgroup-item">
-										<input
-											type="radio"
-											name="approvato"
-											value="NO"
-											class="form-selectgroup-input"
-											bind:group={form_values.approvato_select}
-										/>
-										<span class="form-selectgroup-label">NO</span>
-									</label>
-								</div>
-							</div>
-						</div>
-                        {/if}
                     </div>
 				</div>
 				<div class="modal-footer">

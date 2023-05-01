@@ -79,7 +79,7 @@ export const actions = {
 					oraFine: new Date(1970,1 ,1, hh_fine, mm_fine),
 					svoltoDa: +form_data.get('studente'),
 					idPcto: +form_data.get('stage'),
-                    approvato: form_data.get('approvato') == "SI" ? true : false
+                    approvato: true
 				}
 			});	
 		} catch (exception) {
@@ -115,7 +115,7 @@ export const actions = {
 					oraFine: new Date(1970,1 ,1, hh_fine, mm_fine),
 					svoltoDa: +form_data.get('studente'),
 					idPcto: +form_data.get('stage'),
-                    approvato: form_data.get('approvato') == "SI" ? true : false
+                    approvato: true
 				}
 			});
 
