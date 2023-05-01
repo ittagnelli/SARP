@@ -150,7 +150,6 @@ pcto_presenze:
     - ADMIN
     - TUTOR-AZIENDALE
     - TUTOR-SCOLASTICO
-    - STUDENTE
   read:
     - DEVELOPER
     - ADMIN
@@ -162,13 +161,11 @@ pcto_presenze:
     - ADMIN
     - TUTOR-AZIENDALE
     - TUTOR-SCOLASTICO
-    - STUDENTE
   delete:
     - DEVELOPER
     - ADMIN
     - TUTOR-AZIENDALE
     - TUTOR-SCOLASTICO
-    - STUDENTE
 
 pcto_valutazioni:
   create:

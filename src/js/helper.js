@@ -71,6 +71,11 @@ export const user_login = (data) => {
 	return data?.session?.login;
 };
 
+//restituisce cognome e nome utente
+export const user_name = (data) => {
+	return data?.session?.login?.cognome.concat(" ", data?.session?.login?.nome);
+};
+
 // restituisce il ruolo dell'utente
 export const user_ruolo = (data) => {
 	return data?.session?.login?.ruoli.map((ruolo) => ruolo.ruolo);
@@ -117,9 +122,15 @@ export const multi_user_where = (data) => {
 export const pcto_presenze_where = (data) => {
 	let clausola_where;
 
-	if (!is_admin(data)) clausola_where = { svoltoDa: user_id(data) };
-	else clausola_where = { id: { gt: 0 } };
-
+    if (!is_admin(data)) {
+        if(is_studente(data))
+            clausola_where = { svoltoDa: user_id(data) };
+        else if(is_tutor(data))
+            clausola_where = { creatoDa: user_id(data) };
+    } else {
+        clausola_where = { id: { gt: 0 } };
+    }
+    
 	return clausola_where;
 };
 
