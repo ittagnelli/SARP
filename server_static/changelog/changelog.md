@@ -1,3 +1,19 @@
+## v1.4.0 – 01 Maggio 2023
+- `fix#278`: PCTO presenze creaziono solo dei tutor (#289)    
+- le ore sono automaticamente approvate e non è più possibile modificare da UI
+- le presenze possono essere create solo da web da admin, tutor scolastico o tutor aziendale
+- lo studente può solo consultare il suo monte ore e le ore scvolte via web e mobile
+- `fix#280`: PCTO Stage presenze solo se PCTO valido (#288)
+- le presenze possono essere create solo per i PCTO con tutti i documenti firmati e approvati dalla segreteria
+- `fix#277`: PCTO Stage flag firma feature (#287)
+- aggiunto flag documenti PCTO  firmati modificabile solo da ADMIN
+- `fix#276`: PCTO Azienda flag firma (#286)
+- aggiunto flag convenzione firmata modificabile solo da ADMIN
+- `fix#274`: Da direttore a legale rappresentante
+- Cambiato nome campo modale e colonna tabella da direttore a Legale Rappresentante
+- `fix#275`: Email PCTO Azienda per privacy
+- Aggiunto campo emailk_privacy al DB e CRUD
+
 ## v1.3.1 – 28 Aprile 2023
 - `fix#283`: Logo Login mancante 
 - `fix#273`: logout 404
