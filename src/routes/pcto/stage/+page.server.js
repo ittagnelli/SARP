@@ -97,7 +97,11 @@ export const actions = {
                     svoltoDa: {
                         connect: ids
                     },
-                    firma_pcto: form_data.get('firma_pcto') == "SI" ? true : false
+                    firma_pcto: form_data.get('firma_pcto') == "SI" ? true : false,
+                    task1: form_data.get('task1'),
+                    task2: form_data.get('task2'),
+                    task3: form_data.get('task3'),
+                    task4: form_data.get('task4')
                 }
             });
         } catch (exception) {
@@ -140,7 +144,11 @@ export const actions = {
                     svoltoDa: {
                         set: ids
                     },
-                    firma_pcto: form_data.get('firma_pcto') == "SI" ? true : false
+                    firma_pcto: form_data.get('firma_pcto') == "SI" ? true : false,
+                    task1: form_data.get('task1'),
+                    task2: form_data.get('task2'),
+                    task3: form_data.get('task3'),
+                    task4: form_data.get('task4')
                 }
             });
         } catch (exception) {

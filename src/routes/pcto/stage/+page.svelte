@@ -63,7 +63,11 @@
         durata_ore: 0,
         anno_scolastico: 0,
         classe: 0,
-        firma_pcto: 'NO'
+        firma_pcto: 'NO',
+        task1: '',
+        task2: '',
+        task3: '',
+        task4: ''
 	};
 
 	// schema di validazione del form
@@ -86,6 +90,11 @@
 		.string()
         .required('Descrizione PCTO necessaria')
 		.max(500, "Descrizione troppo lunga. Max 500 caratteri"),
+
+        task1: yup
+        .string()
+        .nullable()
+        .required("Attività necessaria"),
 
         azienda: yup
 		.number()
@@ -145,7 +154,10 @@
         form_values.anno_scolastico = stage.anno_scolastico;
         form_values.classe = stage.idClasse;
         form_values.firma_pcto = stage.firma_pcto ? 'SI' : 'NO';
-        
+        form_values.task1 = stage.task1;
+        form_values.task2 = stage.task2;
+        form_values.task3 = stage.task3;
+        form_values.task4 = stage.task4;
 	}
 
 	async function cancel_action(){
@@ -163,7 +175,11 @@
 				dataInizio: helper.convert_date(new Date()),
 				dataFine: helper.convert_date(new Date()),
                 classe: 0,
-                firma_pcto: 'NO'
+                firma_pcto: 'NO',
+                task1: '',
+                task2: '',
+                task3: '',
+                task4: ''
 			};
 		}
 	}
@@ -465,9 +481,57 @@
                                 bind:val={form_values.descrizione}
                                 name="descrizione"
                                 placeholder="Descrizione PCTO..."
-                                rows={5}
+                                rows={3}
                                 {errors}
                             />
+						</div>                        
+					</div>
+                    <div class="row">
+						<div class="col-lg-6">
+							<div class="mb-3">
+                                <InputText
+								label="Attività"
+								name="task1"
+								{errors}
+								placeholder="Attività PCTO"
+								bind:val={form_values.task1}
+							/>
+                            </div>
+						</div>
+                        <div class="col-lg-6">
+							<div class="mb-3">
+                                <InputText
+								label="Attività"
+								name="task2"
+								{errors}
+								placeholder="Attività PCTO"
+								bind:val={form_values.task2}
+							/>
+                            </div>
+						</div>
+					</div>
+                    <div class="row">
+						<div class="col-lg-6">
+							<div class="mb-3">
+                                <InputText
+								label="Attività"
+								name="task3"
+								{errors}
+								placeholder="Attività PCTO"
+								bind:val={form_values.task3}
+							/>
+                            </div>
+						</div>
+                        <div class="col-lg-6">
+							<div class="mb-3">
+                                <InputText
+								label="Attività"
+								name="task4"
+								{errors}
+								placeholder="Attività PCTO"
+								bind:val={form_values.task4}
+							/>
+                            </div>
 						</div>
 					</div>
                     <div class="row">
