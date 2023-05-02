@@ -11,7 +11,7 @@
 	$page_pre_title = 'Programma annuale';
 	$page_title = 'Template';
 	$page_action_modal = 'modal-template';
-	//console.log(data.insegnamenti)
+
 	/* Page form model */
 	let modal_form;
 	let form_values = {
@@ -119,6 +119,11 @@
 		form_values.libri.push('');
 		form_values.libri = form_values.libri;
 	}
+
+	function delete_libro(libro) {
+		const index = form_values.libri.indexOf(libro);
+		form_values.libri[index] = 'null';
+	}
 </script>
 
 <Table
@@ -206,21 +211,83 @@
 						<div class="col">
 							<div class="form-label select_text mt-3">Libro di testo</div>
 							{#each form_values.libri as libro}
-								<input
-									type="text"
-									class="form-control mt-2"
-									bind:value={libro}
-									id="libro"
-									class:is-invalid={errors.libri}
-								/>
+								{#if libro != 'null'}
+									<div class="input-group input-group-flat">
+										<input
+											type="text"
+											class="form-control mt-2"
+											bind:value={libro}
+											id="libro"
+											class:is-invalid={errors.libri}
+										/>
+										<span class="input-group-text">
+											<a
+												href="#0"
+												on:click={new_libro}
+												class="link-secondary"
+												title="Clear search"
+												data-bs-toggle="tooltip"
+												><!-- Download SVG icon from http://tabler-icons.io/i/x -->
+												<svg
+													xmlns="http://www.w3.org/2000/svg"
+													class="icon icon-tabler icon-tabler-plus"
+													width="24"
+													height="24"
+													viewBox="0 0 24 24"
+													stroke-width="2"
+													stroke="currentColor"
+													fill="none"
+													stroke-linecap="round"
+													stroke-linejoin="round"
+												>
+													<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+													<path d="M12 5l0 14" />
+													<path d="M5 12l14 0" />
+												</svg>
+											</a>
+											<a
+												href="#0"
+												class="link-secondary"
+												title="Clear search"
+												data-bs-toggle="tooltip"
+												on:click={() => delete_libro(libro)}
+												><!-- Download SVG icon from http://tabler-icons.io/i/x -->
+												<svg
+													xmlns="http://www.w3.org/2000/svg"
+													class="icon icon-tabler icon-tabler-trash-filled"
+													width="24"
+													height="24"
+													viewBox="0 0 24 24"
+													stroke-width="2"
+													stroke="currentColor"
+													fill="none"
+													stroke-linecap="round"
+													stroke-linejoin="round"
+												>
+													<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+													<path
+														d="M20 6a1 1 0 0 1 .117 1.993l-.117 .007h-.081l-.919 11a3 3 0 0 1 -2.824 2.995l-.176 .005h-8c-1.598 0 -2.904 -1.249 -2.992 -2.75l-.005 -.167l-.923 -11.083h-.08a1 1 0 0 1 -.117 -1.993l.117 -.007h16z"
+														stroke-width="0"
+														fill="currentColor"
+													/>
+													<path
+														d="M14 2a2 2 0 0 1 2 2a1 1 0 0 1 -1.993 .117l-.007 -.117h-4l-.007 .117a1 1 0 0 1 -1.993 -.117a2 2 0 0 1 1.85 -1.995l.15 -.005h4z"
+														stroke-width="0"
+														fill="currentColor"
+													/>
+												</svg>
+											</a>
+										</span>
+									</div>
+								{/if}
 							{/each}
 							<input type="hidden" name="libri" bind:value={form_values.libri} />
 							{#if errors.libri}
 								<span class="invalid-feedback">{errors.libri}</span>
 							{/if}
-							<button class="btn btn-primary mt-2" on:click={new_libro} type="button"
+							<!-- <button class="btn btn-primary mt-2" on:click={new_libro} type="button"
 								>Aggiungi un altro libro</button
-							>
+							> -->
 						</div>
 					</div>
 					<div class="row">
