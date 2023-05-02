@@ -11,7 +11,7 @@
 	$page_pre_title = 'Programma annuale';
 	$page_title = 'Template';
 	$page_action_modal = 'modal-template';
-
+	//console.log(data.insegnamenti)
 	/* Page form model */
 	let modal_form;
 	let form_values = {
@@ -52,7 +52,7 @@
 		}
 	];
 
-	let materie = data.insegnamenti.map((insegnamento) => insegnamento.materia);
+	//let materie = data.insegnamenti.map((insegnamento) => insegnamento.materia);
 	let argomenti_primo_quadrimestre_raw = '';
 	let argomenti_secondo_quadrimestre_raw = '';
 
@@ -193,7 +193,7 @@
 								name="materia"
 								bind:value={form_values.materia}
 							>
-								{#each materie as materia}
+								{#each data.materie as materia}
 									<option value={materia.id}>{materia.nome}</option>
 								{/each}
 							</select>

@@ -173,5 +173,16 @@ export const wait_fade_finish = async () => await delay(150); // Avoid graphic i
 
 export const ore_pcto = (inizio, fine) => {
     return ((new Date(fine) - new Date(inizio))/(60 * 60 * 1000));
-
 }
+
+export const filter_array_for_id = (array, key) => {
+	let array_of_name = array.map(element => element[key].nome);
+	let filtered_set_name = new Set(array_of_name);
+	let filtered_array = Array.from(filtered_set_name).map((element, index) => {
+		return { 
+			nome: element,																	
+			id: array[index][key].id
+		}
+	});
+	return filtered_array;																							
+};

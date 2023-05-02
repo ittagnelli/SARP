@@ -1,4 +1,4 @@
-import { access_protect, route_protect, user_id } from "$js/helper";
+import { access_protect, filter_array_for_id, route_protect, user_id } from "$js/helper";
 import { PrismaDB } from "$js/prisma_db.js";
 
 const resource = "menu_programmazione_template";
@@ -12,21 +12,22 @@ export async function load({ locals }) {
     access_protect(200, locals, action, resource);
     SARP.set_session(locals);
 
+    let insegnamenti = await SARP.insegnamenti.findMany({
+        where: {
+            idDocente: user_id(locals)  // Vogliamo solo le materie dell'utente loggato
+        },
+        include: {
+            materia: true,
+            classe: true
+        }
+    });
     return {
         templates: await SARP.programmazione_Template.findMany({
             include: {
                 materia: true
             }
         }),
-        insegnamenti: await SARP.insegnamenti.findMany({
-            where: {
-                idDocente: user_id(locals)  // Vogliamo solo le materie dell'utente loggato
-            },
-            include: {
-                materia: true,
-                classe: true
-            }
-        })
+        materie: filter_array_for_id(insegnamenti, "materia")
     };
 }
 
