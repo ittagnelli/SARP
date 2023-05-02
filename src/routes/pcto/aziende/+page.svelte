@@ -91,8 +91,9 @@
 
         email_privacy: yup
 			.string()
+            .nullable()
 			.matches(
-				/^$|^[a-z]+@[a-z]+\.[a-z]+$/,
+				/^$|^[a-z.-_]+@[a-z.-_]+\.[a-z]+$/,
 				'Email non valida'
 			),
 
