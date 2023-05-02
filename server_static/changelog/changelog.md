@@ -1,3 +1,13 @@
+## v1.5.0 – 02 Maggio 2023
+- `fix#291`: PCTO Stage tutor
+- aggiunto email e numero di telefono del tutor aziendale
+- informazioni utili per la generazione dei documenti pcto
+- `fix#290`: PCTO Stage attività 
+- aggiunte 4 attività per un PCTO
+- questi dati utili per la compilazione della documentazione
+- `fix#292`: PCTO Azienda email privacy regex troppo restrittiva
+
+
 ## v1.4.0 – 01 Maggio 2023
 - `fix#278`: PCTO presenze creaziono solo dei tutor (#289)    
 - le ore sono automaticamente approvate e non è più possibile modificare da UI
