@@ -33,7 +33,6 @@
     //se ADMIN faccio vedere tutti i PCTO 
     if(helper.is_tutor(data) && !helper.is_admin(data))
         pcto = [...pcto.filter(stage => (stage.idTutor == id_utente || stage.tutor_aziendale == helper.user_name(data)) && stage.contabilizzato == false)];
-     
     
     $: {
         let selected_stage = pcto.filter((item) => item.id == form_values.stage);

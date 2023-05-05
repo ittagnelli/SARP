@@ -90,10 +90,11 @@
 		email: yup
 			.string()
 			.required('Email necessaria')
-			.matches(
-				/^[a-z]+\.[a-z]+@istitutoagnelli.it$/,
-				'Email non valida [nome.cognome@istitutoagnelli.it]'
-			),
+			// .matches(
+			// 	/^[a-z]+\.[a-z]+@istitutoagnelli.it$/,
+			// 	'Email non valida [nome.cognome@istitutoagnelli.it]'
+			// ),
+            ,
 
 		telefono: yup
 			.string()

@@ -66,14 +66,12 @@ menu_valutazioni:
   view:
     - DEVELOPER
     - ADMIN
-    - TUTOR-AZIENDALE
     - TUTOR-SCOLASTICO
 
 menu_verifica_stato:
   view:
     - DEVELOPER
     - ADMIN
-    - TUTOR-AZIENDALE
     - TUTOR-SCOLASTICO
 
 changelog:
