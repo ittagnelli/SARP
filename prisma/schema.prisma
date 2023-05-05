@@ -1,4 +1,4 @@
-// v 0.16.8 2023-05-05
+// v 0.16.9 2023-05-05
 
 generator client {
     provider = "prisma-client-js"
@@ -205,6 +205,7 @@ model pcto_Pcto {
     task2            String?
     task3            String?
     task4            String?
+    attrezzature     String?
 }
 
 model sicurezza_Corso {

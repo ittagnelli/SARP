@@ -2,6 +2,12 @@ import { PrismaDB } from '$js/prisma_db';
 import { route_protect, user_id, multi_user_where, raise_error, access_protect  } from '$js/helper';
 import { Logger } from '$js/logger';
 import { PrismaClientValidationError } from '@prisma/client/runtime';
+import * as helper from '../../../js/helper';
+import PizZip from 'pizzip';
+import Docxtemplater from 'docxtemplater';
+import fs from 'fs';
+import path from 'path';
+import { PUBLIC_PCTO_TEMPLATES_DIR, PUBLIC_PCTO_TEMPLATE_CONVENZIONE_STUDENTE, PUBLIC_PCTO_TEMPLATE_PATTO_FORMATIVO } from '$env/static/public';
 
 let logger = new Logger("server"); //instanzia il logger
 const SARP = new PrismaDB(); //Istanzia il client SARP DB
@@ -19,6 +25,42 @@ function catch_error(exception, type, code) {
     raise_error(500, code, `Errore irreversibile durante ${type} dello stage. TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`); // TIMESTAMP ci serve per capire l'errore all'interno del log
 }
 
+function catch_error_pdf(exception, type, code) {
+	logger.error(JSON.stringify(exception)); 
+	raise_error(
+		500,
+		code,
+		`${type} TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`
+	);
+}
+
+const convert_date = (d) => {
+	let data = d
+		.toLocaleDateString('it-IT', { year: 'numeric', month: '2-digit', day: '2-digit' })
+		.split('/');
+	return `${data[0]}-${data[1]}-${data[2]}`;
+};
+
+const generate_file = (template_file, data) => {
+    const template = fs.readFileSync(
+        path.resolve(PUBLIC_PCTO_TEMPLATES_DIR, template_file),
+        'binary'
+    );
+    
+    const doc = new Docxtemplater(new PizZip(template), {
+        paragraphLoop: true,
+        linebreaks: true
+    });
+    
+    doc.render(data);
+    
+    let buf = doc.getZip().generate({
+        type: 'nodebuffer',
+        compression: 'DEFLATE'
+    });
+
+    return buf;
+}
 
 export async function load({ locals }) {
     let action = 'read';
@@ -103,13 +145,13 @@ export const actions = {
                     task1: form_data.get('task1'),
                     task2: form_data.get('task2'),
                     task3: form_data.get('task3'),
-                    task4: form_data.get('task4')
+                    task4: form_data.get('task4'),
+                    attrezzature: form_data.get('attrezzature')
                 }
             });
         } catch (exception) {
             catch_error(exception, "l'inserimento", 301)
         }
-
 	},
 
 	update: async ({ cookies, request, locals }) => {
@@ -152,13 +194,13 @@ export const actions = {
                     task1: form_data.get('task1'),
                     task2: form_data.get('task2'),
                     task3: form_data.get('task3'),
-                    task4: form_data.get('task4')
+                    task4: form_data.get('task4'),
+                    attrezzature: form_data.get('attrezzature')
                 }
             });
         } catch (exception) {
             catch_error(exception, "l'aggiornamento", 302);
         }
-
 	},
 
 	delete: async ({ cookies, request, locals }) => {
@@ -179,5 +221,80 @@ export const actions = {
             catch_error(exception, "l'eliminazione", 303);
         }
 
+	},
+
+    pdf: async ({ cookies, request }) => {
+		try {
+			const form_data = await request.formData();
+			const id = form_data.get('id');
+            let return_files = [];
+            
+			// preleva il PCTO dal DB
+			let pcto = await SARP.pcto_Pcto.findUnique({
+				where: { id: +id },
+                include: {
+                    offertoDa: true,
+                    tutor_scolastico: true,
+                    svoltoDa: {
+                        include: {
+                            classe: true
+                        }
+                    }
+                }
+			});
+
+            //informazioni comuni per compilazione documento #2 convenzione stage
+            let ddata = {};
+            ddata['P_AS'] = String(helper.get_as());
+            ddata['P_CONVENZIONE'] = pcto?.offertoDa.idConvenzione;
+            ddata['A_NOME'] = pcto?.offertoDa.nome;
+            ddata['A_SEDE'] = pcto?.offertoDa.indirizzo;
+            ddata['P_INIZIO'] = convert_date (pcto?.dataInizio);
+            ddata['P_FINE'] = convert_date (pcto?.dataFine);
+            ddata['A_ATTIVITA_1'] = pcto?.task1;
+            ddata['A_ATTIVITA_2'] = pcto?.task2;
+            ddata['A_ATTIVITA_3'] = pcto?.task3;
+            ddata['A_ATTIVITA_4'] = pcto?.task4;
+            ddata['A_ATTREZZATURE'] = pcto?.attrezzature;
+            ddata['A_TUTOR'] = pcto?.tutor_aziendale;
+            ddata['A_TUTOR_CELL'] = pcto?.tutor_telefono;
+            ddata['A_TUTOR_EMAIL'] = pcto?.tutor_email;
+            ddata['P_TUTOR'] = pcto?.tutor_scolastico?.cognome + ' ' + pcto?.tutor_scolastico?.nome;
+            ddata['P_TUTOR_CELL'] = pcto?.tutor_scolastico?.telefono;
+            ddata['P_TUTOR_EMAIL'] = pcto?.tutor_scolastico?.email;
+            ddata['P_DATA_STIPULA'] = convert_date(pcto?.offertoDa?.dataConvenzione)
+
+            //genero il documento #2 per ogni studente con le informazioni specifiche
+            for(let studente of pcto?.svoltoDa) {
+                let uid = helper.get_uid();
+                ddata['N_PROTOCOLLO_CS'] = ddata['P_CONVENZIONE'] + '-CS-' + uid;
+                ddata['N_PROTOCOLLO_PF'] = ddata['P_CONVENZIONE'] + '-PF-' + uid;
+                ddata['S_NOME'] = studente.cognome + ' ' + studente.nome;
+                ddata['S_NATOA'] = studente.natoA;
+                ddata['S_NATOIL'] = convert_date(studente.natoIl);
+                ddata['S_CF'] = studente.codiceF || '';
+                ddata['S_CI'] = studente.cartaI || '';
+                ddata['S_TELEFONO'] = studente.telefono || '';
+                ddata['S_EMAIL'] = studente.email || '';
+                ddata['S_CLASSE'] = studente.classe.classe;
+                ddata['S_SEZIONE'] = studente.classe.sezione;
+            
+                return_files.push({
+                        file: JSON.stringify(generate_file(PUBLIC_PCTO_TEMPLATE_CONVENZIONE_STUDENTE, ddata)),
+                        name: `02-Convenzione_studente_${studente.cognome}_${studente.nome}.docx`
+                    },
+                    {
+                        file: JSON.stringify(generate_file(PUBLIC_PCTO_TEMPLATE_PATTO_FORMATIVO, ddata)),
+                        name: `03-Patto_formativo_studente_${studente.cognome}_${studente.nome}.docx`
+                    }
+                );
+                    
+                logger.info(`Generato Convezione Studente per ${studente.cognome}_${studente.nome}`);
+                logger.info(`Generato Patto Formativo per ${studente.cognome}_${studente.nome}`);
+            }
+            return {files: return_files};
+		} catch (exception) {
+			catch_error_pdf(exception, 'la generazione', 304);
+		}
 	}
 };
