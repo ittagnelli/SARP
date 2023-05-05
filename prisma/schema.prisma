@@ -1,4 +1,4 @@
-// v 0.16.7 2023-05-02
+// v 0.16.8 2023-05-05
 
 generator client {
     provider = "prisma-client-js"
@@ -37,6 +37,7 @@ model Utente {
     natoA                    String?
     natoIl                   DateTime?
     codiceF                  String?
+    cartaI                   String?
     email                    String             @unique
     telefono                 String?
     picture                  String?
