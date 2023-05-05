@@ -196,3 +196,8 @@ export const get_as = () => {
         year--;
     return year;
 }
+
+//genera uno uid univoco
+export const get_uid = () => {
+    return (new Date().valueOf() + (Math.ceil((Math.random() * 1000000)))).toString(36);
+}

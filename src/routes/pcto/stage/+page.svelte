@@ -72,7 +72,8 @@
         task1: '',
         task2: '',
         task3: '',
-        task4: ''
+        task4: '',
+        attrezzature: ''
 	};
 
 	// schema di validazione del form
@@ -172,6 +173,7 @@
         form_values.task2 = stage.task2;
         form_values.task3 = stage.task3;
         form_values.task4 = stage.task4;
+        form_values.attrezzature = stage.attrezzature;
 	}
 
 	async function cancel_action(){
@@ -195,7 +197,8 @@
                 task1: '',
                 task2: '',
                 task3: '',
-                task4: ''
+                task4: '',
+                attrezzature: ''
 			};
 		}
 	}
@@ -599,6 +602,19 @@
                             </div>
 						</div>
 					</div>
+                    <div class="row">
+						<div class="col-lg-12">
+							<div class="mb-3">
+                                <InputText
+								label="Attrezzature"
+								name="attrezzature"
+								{errors}
+								placeholder="PC Portatile, Mouse"
+								bind:val={form_values.attrezzature}
+							/>
+                            </div>
+						</div>
+                    </div>
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="mb-3">
