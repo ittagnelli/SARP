@@ -2,6 +2,12 @@ import { PrismaDB } from '$js/prisma_db';
 import { route_protect, user_id, multi_user_where, raise_error, access_protect  } from '$js/helper';
 import { Logger } from '$js/logger';
 import { PrismaClientValidationError } from '@prisma/client/runtime';
+import * as helper from '../../../js/helper';
+import PizZip from 'pizzip';
+import Docxtemplater from 'docxtemplater';
+import fs from 'fs';
+import path from 'path';
+import { PUBLIC_PCTO_TEMPLATES_DIR, PUBLIC_PCTO_TEMPLATE_CONVENZIONE_STUDENTE, PUBLIC_PCTO_TEMPLATE_PATTO_FORMATIVO } from '$env/static/public';
 
 let logger = new Logger("server"); //instanzia il logger
 const SARP = new PrismaDB(); //Istanzia il client SARP DB
@@ -19,6 +25,12 @@ function catch_error(exception, type, code) {
     raise_error(500, code, `Errore irreversibile durante ${type} dello stage. TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`); // TIMESTAMP ci serve per capire l'errore all'interno del log
 }
 
+export const convert_date = (d) => {
+	let data = d
+		.toLocaleDateString('it-IT', { year: 'numeric', month: '2-digit', day: '2-digit' })
+		.split('/');
+	return `${data[0]}-${data[1]}-${data[2]}`;
+};
 
 export async function load({ locals }) {
     let action = 'read';
@@ -109,7 +121,6 @@ export const actions = {
         } catch (exception) {
             catch_error(exception, "l'inserimento", 301)
         }
-
 	},
 
 	update: async ({ cookies, request, locals }) => {
@@ -158,7 +169,6 @@ export const actions = {
         } catch (exception) {
             catch_error(exception, "l'aggiornamento", 302);
         }
-
 	},
 
 	delete: async ({ cookies, request, locals }) => {
@@ -179,5 +189,132 @@ export const actions = {
             catch_error(exception, "l'eliminazione", 303);
         }
 
+	},
+
+    pdf: async ({ cookies, request }) => {
+		try {
+			const form_data = await request.formData();
+			const id = form_data.get('id');
+            let return_files = [];
+
+            console.log("STAMPO FILE STAGE: ", id)
+            
+			// preleva il PCTO dal DB
+			let pcto = await SARP.pcto_Pcto.findUnique({
+				where: { id: +id },
+                include: {
+                    offertoDa: {
+                        // include: {
+                        //     classe: true
+                        // }
+                    } 
+                }
+			});
+
+            console.log("PCTO:", pcto)
+
+            // PCTO: {
+            //     id: 44,
+            //     createdAt: 2023-04-30T10:32:08.663Z,
+            //     updatedAt: 2023-05-02T20:04:45.071Z,
+            //     creatoDa: 1,
+            //     titolo: 'mio pcto',
+            //     descrizione: 'qui una lunga descrizione:\r\n- punto 1\r\n- punto 2\r\nancora dfescrizione',
+            //     tutor_aziendale: 'Bosco Giovanni',
+            //     tutor_telefono: '54334',
+            //     tutor_email: 'bosco@istituto.it',
+            //     idTutor: 627,
+            //     dataInizio: 2023-04-30T00:00:00.000Z,
+            //     dataFine: 2023-04-30T00:00:00.000Z,
+            //     durata_ore: 51,
+            //     idAzienda: 10,
+            //     contabilizzato: false,
+            //     anno_scolastico: 2029,
+            //     idClasse: 8,
+            //     firma_pcto: true,
+            //     task1: 'task1',
+            //     task2: 'task2',
+            //     task3: 'attività 3',
+            //     task4: 'programmazione web 4',
+            //     offertoDa: {
+            //       id: 10,
+            //       createdAt: 2023-03-06T11:49:53.055Z,
+            //       updatedAt: 2023-03-06T14:18:30.653Z,
+            //       creatoDa: 1,
+            //       nome: 'CASA ATC SERVIZI SRL',
+            //       indirizzo: 'Corso Stati Uniti, 50, 10128 Torino TO',
+            //       piva: '08930260016',
+            //       telefono: '011.561.92.37',
+            //       email_privacy: null,
+            //       direttore_nome: 'Maurizio Pedrini',
+            //       direttore_natoA: 'Savona',
+            //       direttore_natoIl: 1972-06-04T00:00:00.000Z,
+            //       direttore_codiceF: 'PDRMRZ72H04I480A',
+            //       idConvenzione: '2122-29',
+            //       dataConvenzione: 2022-05-31T00:00:00.000Z,
+            //       dataProtocollo: 2022-05-31T00:00:00.000Z,
+            //       istituto: 'ITT',
+            //       firma_convenzione: false
+            //     }
+            //   }
+
+            let ddata = {};
+            ddata['P_AS'] = String(helper.get_as());
+            ddata['P_CONVENZIONE'] = pcto?.offertoDa.idConvenzione;
+            ddata['A_NOME'] = pcto?.offertoDa.nome;
+            ddata['A_SEDE'] = pcto?.offertoDa.indirizzo;
+            ddata['P_INIZIO'] = convert_date (pcto?.dataInizio);
+            ddata['P_FINE'] = convert_date (pcto?.dataFine);
+            
+            
+
+            console.log("DDATA:", ddata);
+
+            // for(let studente of corso?.seguitoDa) {
+            //     let filler = {};
+            //     filler['nome'] = studente.nome;
+            //     filler['cognome'] = studente.cognome 
+            //     filler['natoA'] = studente.natoA;
+            //     filler['natoIl'] = studente.natoIl.toLocaleDateString("it-IT");
+            //     filler['codiceF'] = studente.codiceF;
+            //     filler['classe'] = studente.classe.classe;
+            //     filler['istituto'] = studente.classe.istituto;
+            //     filler['sezione'] = studente.classe.sezione;
+            //     filler['today'] = corso.dataTest.toLocaleDateString("it-IT");
+
+            //     let TEMPLATE_FILE;
+            //     if(corso.tipo == 'SPECIFICO')
+            //         TEMPLATE_FILE = PUBLIC_SICUREZZA_CORSO_SPECIFICO;
+            //     else
+            //         TEMPLATE_FILE = PUBLIC_SICUREZZA_CORSO_GENERICO;
+
+            //     const template = fs.readFileSync(
+            //         path.resolve(PUBLIC_SICUREZZA_TEMPLATES_DIR, TEMPLATE_FILE),
+            //         'binary'
+            //     );
+
+            //     const zip = new PizZip(template);
+			//     const doc = new Docxtemplater(zip, {
+            //         paragraphLoop: true,
+            //         linebreaks: true
+			//     });
+
+			//     doc.render(filler);
+            //     let buf = doc.getZip().generate({
+            //         type: 'nodebuffer',
+            //         compression: 'DEFLATE'
+            //     });
+
+            //     return_files.push({
+            //         file: JSON.stringify(buf),
+            //         name: `attestato_corso_${corso.tipo}_${studente.cognome}_${studente.nome}.docx`
+            //     });
+            //     logger.info(`Generato attestato corso sicurezza per ${studente.cognome}_${studente.nome}`);
+            // }       
+
+            return {files: return_files};
+		} catch (exception) {
+			catch_error_pdf(exception, 'la generazione', 804);
+		}
 	}
 };

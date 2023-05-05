@@ -9,10 +9,13 @@
 	import Select from 'svelte-select';
 	import * as yup from 'yup';
     import { Logger } from '$js/logger';
+    import { saveAs } from 'file-saver';
+    import { onMount } from 'svelte';
 
     let logger = new Logger("client");
 	export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
-	let stages = helper.data2arr(data.stages);
+	export let form; // Risposta del form dal server
+    let stages = helper.data2arr(data.stages);
     let aziende = helper.data2arr(data.companies);
     let utenti = helper.data2arr(data.utenti);
 	let classi = helper.data2arr(data.classi);
@@ -278,6 +281,25 @@
         
         stage_detail_modal.show();
     }
+
+    onMount(async () => { // Controlliamo che l'inserimento sia andato a buon fine, usiamo on mount per richiamare le funzioni del DOM
+        if (form != null) {
+            if (form.files != null) { // è stato richiesto la generazione di uno o più file
+                for(let doc of form.files) {
+                    const buffer = new Uint8Array(JSON.parse(doc.file).data); // Convertiamo la stringa in un oggetto che conterrà il nostro array di bytes che verrà poi convertito in Uint8Array, necessario all'oggetto Blob
+                    var blob = new Blob([buffer], { type: 'application/msword' });
+                    saveAs(blob, doc.name);
+                    await helper.delay(100); //chrome can download max 10 files at the time
+                }
+            } //else { // file è null quindi l'unico caso possibile è la violazione della chiave unique nel DB
+               // form_values = JSON.parse(localStorage.getItem('form')); // Riempiamo il modale
+               // helper.show_modal();
+            //}
+        } //else {
+        //     // non c'è risposta dal server, tutto è andato a buon fine
+        //     localStorage.removeItem('form'); //PROF: rimuoviamo il form dal localstorage
+        // }
+    });
 </script>
 
 <Table
@@ -303,6 +325,7 @@
 	on:update_start={start_update}
 	endpoint="pcto/stage"
     footer="Stage"
+    print={true}
     actions={true}
     custom_action_icon="eye"
     on:custom_action={show_stage_modal}

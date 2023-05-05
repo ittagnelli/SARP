@@ -186,3 +186,13 @@ export const ore_pcto = (inizio, fine) => {
     return ((new Date(fine) - new Date(inizio))/(60 * 60 * 1000));
 
 }
+
+//determina l'anno scolastico
+export const get_as = () => {
+    const n = new Date();
+    let year = n.getFullYear();
+    const month = n.getMonth()  + 1;
+    if(month >= 1 && month <= 8)
+        year--;
+    return year;
+}
