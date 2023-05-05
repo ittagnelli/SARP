@@ -1,3 +1,10 @@
+## v1.6.0 – 05 Maggio 2023
+- fix#279: Generazione documenti PCTO stage  
+- aggiunta funzionalità di generazione e stampa documenti convenzione studente e patto formativo
+- per ogni studente che partecipa ad un dato PCTO, il sistema genera in automattico tutti i documenti necessari
+- fix#296: aggiungere il campo #CI in PCTO azienda (#297)
+
+
 ## v1.5.0 – 02 Maggio 2023
 - `fix#291`: PCTO Stage tutor
 - aggiunto email e numero di telefono del tutor aziendale
