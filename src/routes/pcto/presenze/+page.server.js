@@ -192,7 +192,7 @@ export const actions = {
                         oraFine: new Date(1970,1 ,1, hh_fine, mm_fine),
                         svoltoDa: studente.id,
                         idPcto: +form_data.get('stage'),
-                        approvato: form_data.get('approvato') == "SI" ? true : false
+                        approvato: true
                     }
                 });	
             });
