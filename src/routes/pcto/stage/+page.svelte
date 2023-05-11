@@ -90,7 +90,7 @@
         tutor_email: yup
 			.string()
 			.matches(
-				/^$|^[a-z.-_]+@[a-z.-_]+\.[a-z]+$/,
+				/^$|^.*@.*$/,
 				'Email non valida'
 			),
 
