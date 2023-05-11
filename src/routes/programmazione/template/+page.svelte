@@ -5,7 +5,7 @@
 	import Table from '$lib/components/common/table.svelte';
 	import * as yup from 'yup';
 	export let data;
-
+	console.log(data);
 	/* Page properties */
 	$page_action_title = 'Aggiungi template';
 	$page_pre_title = 'Programma annuale';
@@ -129,6 +129,7 @@
 <Table
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
+		{ name: 'nome', type: 'string', display: 'nome', size: 50 },
 		{ name: 'materia', type: 'object', display: 'Materia', key: 'nome', size: 30 }
 	]}
 	page_size={10}
