@@ -186,3 +186,8 @@ export const filter_array_for_id = (array, key) => {
 	});
 	return filtered_array;																							
 };
+
+export const remove_at_index = (array, index) => {
+	array.splice(index, 1);
+	return array;
+}

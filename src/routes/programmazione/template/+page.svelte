@@ -1,11 +1,11 @@
 <script>
-	import { delay, wait_fade_finish } from '$js/helper.js';
+	import { delay, remove_at_index, wait_fade_finish } from '$js/helper.js';
 	import { page_action_title, page_title, page_pre_title, page_action_modal } from '$js/store';
 	import Programmazione from '$lib/components/common/programmazione.svelte';
 	import Table from '$lib/components/common/table.svelte';
 	import * as yup from 'yup';
 	export let data;
-	console.log(data);
+
 	/* Page properties */
 	$page_action_title = 'Aggiungi template';
 	$page_pre_title = 'Programma annuale';
@@ -122,7 +122,7 @@
 
 	function delete_libro(libro) {
 		const index = form_values.libri.indexOf(libro);
-		form_values.libri[index] = 'null';
+		form_values.libri = remove_at_index(form_values.libri, index);
 	}
 </script>
 
@@ -286,9 +286,6 @@
 							{#if errors.libri}
 								<span class="invalid-feedback">{errors.libri}</span>
 							{/if}
-							<!-- <button class="btn btn-primary mt-2" on:click={new_libro} type="button"
-								>Aggiungi un altro libro</button
-							> -->
 						</div>
 					</div>
 					<div class="row">
