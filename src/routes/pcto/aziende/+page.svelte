@@ -41,6 +41,7 @@
         indirizzo: "",      
         piva: "",
         telefono: "",
+        email_privacy: "",
         direttore_nome: "",
         direttore_natoA: "",
         direttore_natoIl: helper.convert_date(new Date()),
@@ -49,7 +50,8 @@
         idUtente: undefined,
         dataConvenzione: helper.convert_date(new Date()),
         dataProtocollo: helper.convert_date(new Date()),
-        istituto: "ITT"
+        istituto: "ITT",
+        firma_convenzione: 'NO'
     };
 
     onMount(() => { // Controlliamo che l'inserimento sia andato a buon fine, usiamo on mount per richiamare le funzioni del DOM
@@ -86,6 +88,14 @@
         telefono: yup
 		.string()
 		.matches(/^$|^[0-9]{3}\.[0-9]{3}\.[0-9]{2}\.[0-9]{2}$/, "Numero non valido [333.123.45.67]"),
+
+        email_privacy: yup
+			.string()
+            .nullable()
+			.matches(
+				/^$|^[a-z.-_]+@[a-z.-_]+\.[a-z]+$/,
+				'Email non valida'
+			),
 
         direttore_nome: yup
         .string()
@@ -130,6 +140,7 @@
 		form_values.indirizzo = azienda.indirizzo;
         form_values.piva = azienda.piva;
         form_values.telefono = azienda.telefono;
+        form_values.email_privacy = azienda.email_privacy;
         form_values.direttore_nome = azienda.direttore_nome;
         form_values.direttore_natoA = azienda.direttore_natoA;
         form_values.direttore_natoIl = helper.convert_date(azienda.direttore_natoIl);
@@ -139,6 +150,7 @@
 		form_values.dataConvenzione = helper.convert_date(azienda.dataConvenzione);
 		form_values.dataProtocollo = helper.convert_date(azienda.dataProtocollo);
         form_values.istituto = azienda.istituto;
+        form_values.firma_convenzione = azienda.firma_convenzione ? 'SI' : 'NO';
 	}
 
     async function cancel_action(){
@@ -159,7 +171,8 @@
                 idUtente: undefined,
                 dataConvenzione: helper.convert_date(new Date()),
                 dataProtocollo: helper.convert_date(new Date()),
-                istituto: "ITT"
+                istituto: "ITT",
+                firma_convenzione: 'NO'
             };
         }
     }
@@ -189,10 +202,11 @@
         { name: 'indirizzo', type: 'string', display: 'indirizzo', size: 30 },
         { name: 'piva', type: 'string', display: 'piva', size: 12 },
         { name: 'telefono', type: 'string', display: 'telefono', size: 14 },
-        { name: 'direttore_nome', type: 'string', display: 'direttore', size: 20 },
+        { name: 'direttore_nome', type: 'string', display: 'Legale Rappresentante', size: 20 },
 		{ name: 'dataConvenzione', type: 'date', display: 'Data Convenzione' },
 		{ name: 'dataProtocollo', type: 'date', display: 'Data Protocollo' },
-		{ name: 'istituto', type: 'string', display: 'Istituto', size: 10 }
+		{ name: 'istituto', type: 'string', display: 'Istituto', size: 10 },
+        { name: 'firma_convenzione', type: 'boolean', display: 'Documentazione'}
 	]}
 	rows={aziende}
 	page_size={11}
@@ -263,7 +277,7 @@
 						</div>
 					</div>
                     <div class="row">
-						<div class="col-lg-6">
+						<div class="col-lg-4">
                             <InputText
                                 label="P.IVA"
                                 name="piva"
@@ -272,7 +286,7 @@
                                 bind:val={form_values.piva}
                             />
 						</div>
-                        <div class="col-lg-6">
+                        <div class="col-lg-3">
                             <InputText
                                 label="Telefono"
                                 name="telefono"
@@ -281,11 +295,20 @@
                                 bind:val={form_values.telefono}
                             />
 						</div>
+                        <div class="col-lg-5">
+                            <InputText
+                                label="Email Privacy"
+                                name="email_privacy"
+                                {errors}
+                                placeholder="privacy@azienda.com"
+                                bind:val={form_values.email_privacy}
+                            />
+						</div>
 					</div>
                     <div class="row">
 						<div class="col-lg-3">
                             <InputText
-                                label="Direttore"
+                                label="Legale Rappresentante"
                                 name="direttore_nome"
                                 {errors}
                                 placeholder="Nome e Cognome"
@@ -375,6 +398,37 @@
 							</div>
 						</div>
 					</div>
+                    {#if helper.is_admin(data) == true}
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <div class="mb-3">
+                                <label class="form-label">Convenzione Firmata ?</label>
+                                <div class="form-selectgroup">
+                                    <label class="form-selectgroup-item">
+                                        <input
+                                            type="radio"
+                                            name="firma_convenzione"
+                                            value="SI"
+                                            class="form-selectgroup-input"
+                                            bind:group={form_values.firma_convenzione}
+                                        />
+                                        <span class="form-selectgroup-label">SI</span>
+                                    </label>
+                                    <label class="form-selectgroup-item">
+                                        <input
+                                            type="radio"
+                                            name="firma_convenzione"
+                                            value="NO"
+                                            class="form-selectgroup-input"
+                                            bind:group={form_values.firma_convenzione}
+                                        />
+                                        <span class="form-selectgroup-label">NO</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {/if}
 				</div>
 				<div class="modal-footer">
 					<a href="#" class="btn btn-danger" data-bs-dismiss="modal" on:click={cancel_action}>

@@ -86,13 +86,15 @@ export const actions = {
 					indirizzo: form_data.get('indirizzo'),
 					piva: form_data.get('piva'),
 					telefono: form_data.get('telefono'),
+                    email_privacy: form_data.get('email_privacy'),
 					direttore_nome: form_data.get('direttore_nome'),
 					direttore_natoA: form_data.get('direttore_natoA'),
 					direttore_natoIl: new Date(form_data.get('direttore_natoIl')),
 					direttore_codiceF: form_data.get('direttore_codiceF'),
 					dataConvenzione: new Date(form_data.get('dataConvenzione')),
 					dataProtocollo: new Date(form_data.get('dataProtocollo')),
-					istituto: form_data.get('istituto')
+					istituto: form_data.get('istituto'),
+                    firma_convenzione: form_data.get('firma_convenzione') == "SI" ? true : false
 				}
 			});
 		} catch (exception) {
@@ -122,13 +124,15 @@ export const actions = {
 					indirizzo: form_data.get('indirizzo'),
 					piva: form_data.get('piva'),
 					telefono: form_data.get('telefono'),
+                    email_privacy: form_data.get('email_privacy'),
 					direttore_nome: form_data.get('direttore_nome'),
 					direttore_natoA: form_data.get('direttore_natoA'),
 					direttore_natoIl: new Date(form_data.get('direttore_natoIl')),
 					direttore_codiceF: form_data.get('direttore_codiceF'),
 					dataConvenzione: new Date(form_data.get('dataConvenzione')),
 					dataProtocollo: new Date(form_data.get('dataProtocollo')),
-					istituto: form_data.get('istituto')
+					istituto: form_data.get('istituto'),
+                    firma_convenzione: form_data.get('firma_convenzione') == "SI" ? true : false
 				}
 			});
 		} catch (exception) {
@@ -169,8 +173,9 @@ export const actions = {
 				where: { id: +id }
 			});
 			//arricchisce l'oggetto
-			company['today'] = company['dataConvenzione'].toLocaleDateString();
-			company['direttore_natoIl'] = company['direttore_natoIl'].toLocaleDateString();
+            let dc = company['dataConvenzione']; //data convenzione
+			company['today'] = `${dc.getDate()}/${dc.getMonth()  + 1}/${dc.getFullYear()}`;
+            company['direttore_natoIl'] = company['direttore_natoIl'].toLocaleDateString();
 
 			const content = fs.readFileSync(
 				path.resolve(PUBLIC_PCTO_TEMPLATES_DIR, PUBLIC_PCTO_TEMPLATE_AZIENDE),

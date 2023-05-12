@@ -25,14 +25,14 @@
 					<div class="space-y-4">
                         <FaqSection title="1. SARP" number="1">
 							<Faq
-								show={true}
+								show={false}
 								number="1-1"
 								parent_number="1"
 								question="Cos'è e cosa significa SARP?"
 								answer={faq('faq1_1')}
 							/>
                             <Faq
-								show={true}
+								show={false}
 								number="1-2"
 								parent_number="1"
 								question="Come funziona SARP?"
@@ -41,7 +41,7 @@
 						</FaqSection>
 						<FaqSection title="2. Utenti" number="2">
 							<Faq
-								show={true}
+								show={false}
 								number="2-1"
 								parent_number="2"
 								question="Come posso segnalare un malfunzionamento, un suggerimento o una richiesta di modifica?"
@@ -50,30 +50,37 @@
 							<Faq
 								show={false}
 								number="2-2"
-								parent_number="1"
+								parent_number="2"
 								question="Posso effettuare il login con la mia email privata?"
 								answer={faq('faq2_2')}
 							/>
                             <Faq
 								show={false}
 								number="2-3"
-								parent_number="1"
+								parent_number="2"
 								question="Perchè non posso accedere a tutte le pagine?"
 								answer={faq('faq2_3')}
 							/>
 						</FaqSection>
 						<FaqSection title="3. PCTO" number="3">
 							<Faq
-								show={true}
+								show={false}
 								number="3-1"
 								parent_number="3"
 								question="Quali sono le principali funzioni dell'applicazione PCTO?"
 								answer={faq('faq3_1')}
 							/>
+                            <Faq
+								show={true}
+								number="3-2"
+								parent_number="3"
+								question="Come posso riportare le ore giornaliere svolte da uno stagista?"
+								answer={faq('faq3_2')}
+							/>
 						</FaqSection>
                         <FaqSection title="4. Tools" number="4">
 							<Faq
-								show={true}
+								show={false}
 								number="4-1"
 								parent_number="4"
 								question="Quali sono le principali funzioni dell'applicazione Convert to Print?"
@@ -82,7 +89,7 @@
 						</FaqSection>
                         <FaqSection title="5. Sicurezza sul Lavoro" number="5">
 							<Faq
-								show={true}
+								show={false}
 								number="5-1"
 								parent_number="5"
 								question="Quali sono le principali funzioni dell'applicazione Sicurezza sul Lavoro?"
@@ -91,7 +98,7 @@
 						</FaqSection>
 						<FaqSection title="0. Sviluppatori" number="0">
 							<Faq
-								show={true}
+								show={false}
 								number="0-1"
 								parent_number="0"
 								question="Posso contribuire al progetto?"

@@ -105,14 +105,12 @@ menu_valutazioni:
   view:
     - DEVELOPER
     - ADMIN
-    - TUTOR-AZIENDALE
     - TUTOR-SCOLASTICO
 
 menu_verifica_stato:
   view:
     - DEVELOPER
     - ADMIN
-    - TUTOR-AZIENDALE
     - TUTOR-SCOLASTICO
 
 changelog:
@@ -189,7 +187,6 @@ pcto_presenze:
     - ADMIN
     - TUTOR-AZIENDALE
     - TUTOR-SCOLASTICO
-    - STUDENTE
   read:
     - DEVELOPER
     - ADMIN
@@ -201,13 +198,11 @@ pcto_presenze:
     - ADMIN
     - TUTOR-AZIENDALE
     - TUTOR-SCOLASTICO
-    - STUDENTE
   delete:
     - DEVELOPER
     - ADMIN
     - TUTOR-AZIENDALE
     - TUTOR-SCOLASTICO
-    - STUDENTE
 
 pcto_valutazioni:
   create:

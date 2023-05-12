@@ -117,7 +117,7 @@
 	}
 
     .logo {
-        width: 400px;
+        width: 350px;
     }
 
 	.login {

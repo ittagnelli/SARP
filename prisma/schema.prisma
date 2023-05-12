@@ -1,4 +1,4 @@
-// v 0.16.2 2023-04-23
+// v 0.16.9 2023-05-05
 
 generator client {
     provider = "prisma-client-js"
@@ -37,6 +37,7 @@ model Utente {
     natoA                    String?
     natoIl                   DateTime?
     codiceF                  String?
+    cartaI                   String?
     email                    String             @unique
     telefono                 String?
     picture                  String?
@@ -164,6 +165,7 @@ model pcto_Azienda {
     indirizzo         String?
     piva              String?
     telefono          String?
+    email_privacy     String?
     direttore_nome    String?
     direttore_natoA   String?
     direttore_natoIl  DateTime?
@@ -173,6 +175,7 @@ model pcto_Azienda {
     dataProtocollo    DateTime    @default(now())
     istituto          String      @default("ITT")
     offre             pcto_Pcto[]
+    firma_convenzione Boolean     @default(false)
 }
 
 model pcto_Pcto {
@@ -183,6 +186,8 @@ model pcto_Pcto {
     titolo           String
     descrizione      String?
     tutor_aziendale  String?
+    tutor_telefono   String?
+    tutor_email      String?
     tutor_scolastico Utente?            @relation(name: "tutor", fields: [idTutor], references: [id])
     idTutor          Int?
     dataInizio       DateTime
@@ -197,6 +202,12 @@ model pcto_Pcto {
     anno_scolastico  Int?
     classe           Classe             @relation(fields: [idClasse], references: [id])
     idClasse         Int                @default(1)
+    firma_pcto       Boolean            @default(false)
+    task1            String?
+    task2            String?
+    task3            String?
+    task4            String?
+    attrezzature     String?
 }
 
 model programmazione_Template {

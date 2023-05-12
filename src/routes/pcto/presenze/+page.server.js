@@ -37,6 +37,7 @@ export async function load({ locals }) {
 		});
 
         const stages = await SARP.pcto_Pcto.findMany({
+            where: { firma_pcto: true},
 			orderBy: [{ titolo: 'asc' }],
 			include: {
 				offertoDa: true,
@@ -78,7 +79,7 @@ export const actions = {
 					oraFine: new Date(1970,1 ,1, hh_fine, mm_fine),
 					svoltoDa: +form_data.get('studente'),
 					idPcto: +form_data.get('stage'),
-                    approvato: form_data.get('approvato') == "SI" ? true : false
+                    approvato: true
 				}
 			});	
 		} catch (exception) {
@@ -114,7 +115,7 @@ export const actions = {
 					oraFine: new Date(1970,1 ,1, hh_fine, mm_fine),
 					svoltoDa: +form_data.get('studente'),
 					idPcto: +form_data.get('stage'),
-                    approvato: form_data.get('approvato') == "SI" ? true : false
+                    approvato: true
 				}
 			});
 
@@ -191,7 +192,7 @@ export const actions = {
                         oraFine: new Date(1970,1 ,1, hh_fine, mm_fine),
                         svoltoDa: studente.id,
                         idPcto: +form_data.get('stage'),
-                        approvato: form_data.get('approvato') == "SI" ? true : false
+                        approvato: true
                     }
                 });	
             });

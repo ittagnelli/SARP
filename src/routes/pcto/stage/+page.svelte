@@ -9,10 +9,13 @@
 	import Select from 'svelte-select';
 	import * as yup from 'yup';
     import { Logger } from '$js/logger';
+    import { saveAs } from 'file-saver';
+    import { onMount } from 'svelte';
 
     let logger = new Logger("client");
 	export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
-	let stages = helper.data2arr(data.stages);
+	export let form; // Risposta del form dal server
+    let stages = helper.data2arr(data.stages);
     let aziende = helper.data2arr(data.companies);
     let utenti = helper.data2arr(data.utenti);
 	let classi = helper.data2arr(data.classi);
@@ -57,12 +60,20 @@
 		descrizione: '',
         contabilizzato: 'NO',
 		tutor_aziendale: '',
+        tutor_email: '',
+        tutor_telefono: '',
         tutor_scolastico: 0,
 		dataInizio: helper.convert_date(new Date()),
 		dataFine: helper.convert_date(new Date()),
         durata_ore: 0,
         anno_scolastico: 0,
-        classe: 0
+        classe: 0,
+        firma_pcto: 'NO',
+        task1: '',
+        task2: '',
+        task3: '',
+        task4: '',
+        attrezzature: ''
 	};
 
 	// schema di validazione del form
@@ -75,7 +86,14 @@
         tutor_scolastico: yup
 		.number()
 		.min(1, 'Tutor Scolastico necessario'),
-		
+
+        tutor_email: yup
+			.string()
+			.matches(
+				/^$|^.*@.*$/,
+				'Email non valida'
+			),
+
 		titolo: yup
 		.string()
 		.required('Titolo PCTO necessatrio')
@@ -83,7 +101,13 @@
 
 		descrizione: yup
 		.string()
+        .required('Descrizione PCTO necessaria')
 		.max(500, "Descrizione troppo lunga. Max 500 caratteri"),
+
+        task1: yup
+        .string()
+        .nullable()
+        .required("Attività necessaria"),
 
         azienda: yup
 		.number()
@@ -136,13 +160,20 @@
 		form_values.descrizione = stage.descrizione;
         form_values.contabilizzato = stage.contabilizzato ? 'SI' : 'NO';
 		form_values.tutor_aziendale = stage.tutor_aziendale;
+        form_values.tutor_email = stage.tutor_email;
+        form_values.tutor_telefono = stage.tutor_telefono;
         form_values.tutor_scolastico = stage.idTutor;
 		form_values.dataInizio = helper.convert_date(stage.dataInizio);
 		form_values.dataFine = helper.convert_date(stage.dataFine);
         form_values.durata_ore = stage.durata_ore;
         form_values.anno_scolastico = stage.anno_scolastico;
         form_values.classe = stage.idClasse;
-        
+        form_values.firma_pcto = stage.firma_pcto ? 'SI' : 'NO';
+        form_values.task1 = stage.task1;
+        form_values.task2 = stage.task2;
+        form_values.task3 = stage.task3;
+        form_values.task4 = stage.task4;
+        form_values.attrezzature = stage.attrezzature;
 	}
 
 	async function cancel_action(){
@@ -156,10 +187,18 @@
 				descrizione: '',
                 contabilizzato: 'NO',
 				tutor_aziendale: '',
+                tutor_email: '',
+                tutor_telefono: '',
 				tutor_scolastico: 0,
 				dataInizio: helper.convert_date(new Date()),
 				dataFine: helper.convert_date(new Date()),
-                classe: 0
+                classe: 0,
+                firma_pcto: 'NO',
+                task1: '',
+                task2: '',
+                task3: '',
+                task4: '',
+                attrezzature: ''
 			};
 		}
 	}
@@ -245,6 +284,25 @@
         
         stage_detail_modal.show();
     }
+
+    onMount(async () => { // Controlliamo che l'inserimento sia andato a buon fine, usiamo on mount per richiamare le funzioni del DOM
+        if (form != null) {
+            if (form.files != null) { // è stato richiesto la generazione di uno o più file
+                for(let doc of form.files) {
+                    const buffer = new Uint8Array(JSON.parse(doc.file).data); // Convertiamo la stringa in un oggetto che conterrà il nostro array di bytes che verrà poi convertito in Uint8Array, necessario all'oggetto Blob
+                    var blob = new Blob([buffer], { type: 'application/msword' });
+                    saveAs(blob, doc.name);
+                    await helper.delay(100); //chrome can download max 10 files at the time
+                }
+            } //else { // file è null quindi l'unico caso possibile è la violazione della chiave unique nel DB
+               // form_values = JSON.parse(localStorage.getItem('form')); // Riempiamo il modale
+               // helper.show_modal();
+            //}
+        } //else {
+        //     // non c'è risposta dal server, tutto è andato a buon fine
+        //     localStorage.removeItem('form'); //PROF: rimuoviamo il form dal localstorage
+        // }
+    });
 </script>
 
 <Table
@@ -260,8 +318,9 @@
         { name: 'durata_ore', type: 'number', display: 'ore'},
 		{ name: 'dataInizio', type: 'date', display: 'Inizio' },
 		{ name: 'dataFine', type: 'date', display: 'Fine' },
-		{ name: 'svoltoDa', type: 'array', subtype: 'picture', key: 'picture', display: 'iscritti', size: 5 },
+		{ name: 'svoltoDa', type: 'array', subtype: 'picture', key: 'picture', display: 'iscritti', size: 3 },
         { name: 'contabilizzato', type: 'boolean', display: 'SIDI', search: true},
+        { name: 'firma_pcto', type: 'boolean', display: 'Doc', search: true}
 	]}
 	rows={stages}
 	page_size={6}
@@ -269,6 +328,7 @@
 	on:update_start={start_update}
 	endpoint="pcto/stage"
     footer="Stage"
+    print={true}
     actions={true}
     custom_action_icon="eye"
     on:custom_action={show_stage_modal}
@@ -305,7 +365,7 @@
 				</div>
 				<div class="modal-body">
 					<div class="row">
-						<div class="col-lg-4">
+						<div class="col-lg-6">
                             <!-- InputSelect component ha dei problemi (two way binding) non ancora risolti
                             che non permettono di usarlo qui -->
 							<div class="mb-3">
@@ -336,26 +396,17 @@
 								bind:val={form_values.dataFine}
 							/>
 						</div>
-                        <div class="col-lg-2">
-							<InputText
-								label="Ore Previste"
-								name="durata_ore"
-								{errors}
-								placeholder="40"
-								bind:val={form_values.durata_ore}
-							/>
-						</div>
 					</div>
 					<div class="row">
-						<div class="col-lg-4">
+						<!-- <div class="col-lg-4">
 							<InputText
 								label="Tutor Aziendale"
 								name="tutor_aziendale"
 								{errors}
-								placeholder="Tutor Aziendale"
+								placeholder="Cognome Nome"
 								bind:val={form_values.tutor_aziendale}
 							/>
-						</div>
+						</div> -->
                         <div class="col-lg-4">
                           	<div class="mb-3">
 								<div class="form-label select_text">Tutor Scolastico</div>
@@ -381,8 +432,49 @@
 							/>
 						</div>
                         <div class="col-lg-2">
+							<InputText
+								label="Ore Previste"
+								name="durata_ore"
+								{errors}
+								placeholder="40"
+								bind:val={form_values.durata_ore}
+							/>
+						</div>
+					</div>
+                    <div class="row">
+                        <div class="col-lg-4">
+							<InputText
+								label="Tutor Aziendale"
+								name="tutor_aziendale"
+								{errors}
+								placeholder="Cognome Nome"
+								bind:val={form_values.tutor_aziendale}
+							/>
+						</div> 
+                        <div class="col-lg-4">
+							<InputText
+								label="Tutor Telefono"
+								name="tutor_telefono"
+								{errors}
+								placeholder="Telefono"
+								bind:val={form_values.tutor_telefono}
+							/>
+						</div> 
+                        <div class="col-lg-4">
+							<InputText
+								label="Tutor Email"
+								name="tutor_email"
+								{errors}
+								placeholder="Email"
+								bind:val={form_values.tutor_email}
+							/>
+						</div> 
+                    </div>
+                    <!-- <div class="row">
+                        {#if helper.is_admin(data) == true}
+                        <div class="col-lg-6">
                             <div class="mb-3">
-                                <label class="form-label">Registrato</label>
+                                <label class="form-label">Registrato in SIDI</label>
                                 <div class="form-selectgroup">
                                     <label class="form-selectgroup-item">
                                         <input
@@ -407,7 +499,38 @@
                                 </div>
                             </div>
                         </div>
-					</div>
+                        <div class="col-lg-6">
+                            <div class="mb-3">
+                                <label class="form-label">Documenti PCTO  Firmati ?</label>
+                                <div class="form-selectgroup">
+                                    <label class="form-selectgroup-item">
+                                        <input
+                                            type="radio"
+                                            name="firma_pcto"
+                                            value="SI"
+                                            class="form-selectgroup-input"
+                                            bind:group={form_values.firma_pcto}
+                                        />
+                                        <span class="form-selectgroup-label">SI</span>
+                                    </label>
+                                    <label class="form-selectgroup-item">
+                                        <input
+                                            type="radio"
+                                            name="firma_pcto"
+                                            value="NO"
+                                            class="form-selectgroup-input"
+                                            bind:group={form_values.firma_pcto}
+                                        />
+                                        <span class="form-selectgroup-label">NO</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        {:else}
+                            <input type="hidden" name="contabilizzato" bind:value={form_values.contabilizzato} />
+                            <input type="hidden" name="firma_pcto" bind:value={form_values.firma_pcto} />
+                        {/if}
+                    </div> -->
                     <div class="row">
                         <div class="col-lg-12">
 							<InputText
@@ -426,10 +549,72 @@
                                 bind:val={form_values.descrizione}
                                 name="descrizione"
                                 placeholder="Descrizione PCTO..."
+                                rows={3}
                                 {errors}
                             />
+						</div>                        
+					</div>
+                    <div class="row">
+						<div class="col-lg-6">
+							<div class="mb-3">
+                                <InputText
+								label="Attività"
+								name="task1"
+								{errors}
+								placeholder="Attività PCTO"
+								bind:val={form_values.task1}
+							/>
+                            </div>
+						</div>
+                        <div class="col-lg-6">
+							<div class="mb-3">
+                                <InputText
+								label="Attività"
+								name="task2"
+								{errors}
+								placeholder="Attività PCTO"
+								bind:val={form_values.task2}
+							/>
+                            </div>
 						</div>
 					</div>
+                    <div class="row">
+						<div class="col-lg-6">
+							<div class="mb-3">
+                                <InputText
+								label="Attività"
+								name="task3"
+								{errors}
+								placeholder="Attività PCTO"
+								bind:val={form_values.task3}
+							/>
+                            </div>
+						</div>
+                        <div class="col-lg-6">
+							<div class="mb-3">
+                                <InputText
+								label="Attività"
+								name="task4"
+								{errors}
+								placeholder="Attività PCTO"
+								bind:val={form_values.task4}
+							/>
+                            </div>
+						</div>
+					</div>
+                    <div class="row">
+						<div class="col-lg-12">
+							<div class="mb-3">
+                                <InputText
+								label="Attrezzature"
+								name="attrezzature"
+								{errors}
+								placeholder="PC Portatile, Mouse"
+								bind:val={form_values.attrezzature}
+							/>
+                            </div>
+						</div>
+                    </div>
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="mb-3">
@@ -470,6 +655,67 @@
 						</div>
 					</div>
                     {/if}
+                    <div class="row">
+                        {#if helper.is_admin(data) == true}
+                        <div class="col-lg-6">
+                            <div class="mb-3">
+                                <label class="form-label">Registrato in SIDI</label>
+                                <div class="form-selectgroup">
+                                    <label class="form-selectgroup-item">
+                                        <input
+                                            type="radio"
+                                            name="contabilizzato"
+                                            value="SI"
+                                            class="form-selectgroup-input"
+                                            bind:group={form_values.contabilizzato}
+                                        />
+                                        <span class="form-selectgroup-label">SI</span>
+                                    </label>
+                                    <label class="form-selectgroup-item">
+                                        <input
+                                            type="radio"
+                                            name="contabilizzato"
+                                            value="NO"
+                                            class="form-selectgroup-input"
+                                            bind:group={form_values.contabilizzato}
+                                        />
+                                        <span class="form-selectgroup-label">NO</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="mb-3">
+                                <label class="form-label">Documenti PCTO  Firmati ?</label>
+                                <div class="form-selectgroup">
+                                    <label class="form-selectgroup-item">
+                                        <input
+                                            type="radio"
+                                            name="firma_pcto"
+                                            value="SI"
+                                            class="form-selectgroup-input"
+                                            bind:group={form_values.firma_pcto}
+                                        />
+                                        <span class="form-selectgroup-label">SI</span>
+                                    </label>
+                                    <label class="form-selectgroup-item">
+                                        <input
+                                            type="radio"
+                                            name="firma_pcto"
+                                            value="NO"
+                                            class="form-selectgroup-input"
+                                            bind:group={form_values.firma_pcto}
+                                        />
+                                        <span class="form-selectgroup-label">NO</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        {:else}
+                            <input type="hidden" name="contabilizzato" bind:value={form_values.contabilizzato} />
+                            <input type="hidden" name="firma_pcto" bind:value={form_values.firma_pcto} />
+                        {/if}
+                    </div>
 					<div class="modal-footer">
 						<a href="#" class="btn btn-danger" data-bs-dismiss="modal" on:click={cancel_action}>
 							<b>Cancel</b>

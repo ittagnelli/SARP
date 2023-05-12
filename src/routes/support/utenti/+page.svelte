@@ -48,6 +48,7 @@
         natoA: '',
         natoIl: '',
         codiceF: '',
+        cartaI: '',
 		email: '',
 		telefono: '',
 		bes_select: 'NO',
@@ -89,9 +90,9 @@
 		email: yup
 			.string()
 			.required('Email necessaria')
-			.matches(
-				/^[a-z]+\.[a-z]+@istitutoagnelli.it$/,
-				'Email non valida [nome.cognome@istitutoagnelli.it]'
+            .matches(
+				/^$|^.*@.*$/,
+				'Email non valida'
 			),
 
 		telefono: yup
@@ -126,6 +127,7 @@
         form_values.natoA = utente.natoA;
         form_values.natoIl = helper.convert_date(utente.natoIl);
         form_values.codiceF = utente.codiceF;
+        form_values.cartaI = utente.cartaI;
 		form_values.email = utente.email;
 		form_values.telefono = utente.telefono;
 		form_values.tipo = utente.tipo;
@@ -149,6 +151,7 @@
 				natoA: '',
 				natoIl: '',
 				codiceF: '',
+                cartaI: '',
 				email: '',
 				telefono: '',
 				bes_select: 'NO',
@@ -240,7 +243,7 @@
 						<div class="col-lg-2">
 							<InputText label="Cognome" name="cognome" placeholder="Cognome" bind:val={form_values.cognome} {errors} />
 						</div>
-                        <div class="col-lg-3">
+                        <div class="col-lg-2">
 							<InputText
 								label="Nato A"
 								name="natoA"
@@ -257,13 +260,22 @@
                                 bind:val={form_values.natoIl}
                             />
 						</div>
-                        <div class="col-lg-3">
+                        <div class="col-lg-2">
                             <InputText
                                 label="Codice Fiscale"
                                 name="codiceF"
                                 placeholder="LNSTVL69T28L219K"
                                 {errors}
                                 bind:val={form_values.codiceF}
+                            />
+                        </div>
+                        <div class="col-lg-2">
+                            <InputText
+                                label="Carta Identità"
+                                name="cartaI"
+                                placeholder="DS12345RF"
+                                {errors}
+                                bind:val={form_values.cartaI}
                             />
                         </div>
 					</div>

@@ -71,6 +71,11 @@ export const user_login = (data) => {
 	return data?.session?.login;
 };
 
+//restituisce cognome e nome utente
+export const user_name = (data) => {
+	return data?.session?.login?.cognome.concat(" ", data?.session?.login?.nome);
+};
+
 // restituisce il ruolo dell'utente
 export const user_ruolo = (data) => {
 	return data?.session?.login?.ruoli.map((ruolo) => ruolo.ruolo);
@@ -117,9 +122,15 @@ export const multi_user_where = (data) => {
 export const pcto_presenze_where = (data) => {
 	let clausola_where;
 
-	if (!is_admin(data)) clausola_where = { svoltoDa: user_id(data) };
-	else clausola_where = { id: { gt: 0 } };
-
+    if (!is_admin(data)) {
+        if(is_studente(data))
+            clausola_where = { svoltoDa: user_id(data) };
+        else if(is_tutor(data))
+            clausola_where = { creatoDa: user_id(data) };
+    } else {
+        clausola_where = { id: { gt: 0 } };
+    }
+    
 	return clausola_where;
 };
 
@@ -152,6 +163,15 @@ export const is_mobile = (request) => {
 /*
 	CLASSE SELECT HELPERS
 */
+
+export function findDeselectedItem(now_studenti, old_studenti) {
+	// loop through previous array
+	for (const studente of old_studenti) {
+		// look for same thing in new array
+		if (now_studenti.indexOf(studente) == -1) return studente;
+	}
+	return null;
+}
 
 export const db_to_select = (classi) => {
 	classi.forEach((classe) => {
@@ -191,3 +211,19 @@ export const remove_at_index = (array, index) => {
 	array.splice(index, 1);
 	return array;
 }
+
+//determina l'anno scolastico
+export const get_as = () => {
+    const n = new Date();
+    let year = n.getFullYear();
+    const month = n.getMonth()  + 1;
+    if(month >= 1 && month <= 8)
+        year--;
+    return year;
+}
+
+//genera uno uid univoco
+export const get_uid = () => {
+    return (new Date().valueOf() + (Math.ceil((Math.random() * 1000000)))).toString(36);
+}
+
