@@ -37,7 +37,7 @@ export const data2arr = (data) => {
 // redirige un utente non autenticato alla pagina di login
 export const route_protect = (locals) => {
 	if (!locals.session) {
-		throw redirect(302, '/login');
+		throw redirect(302, '/support/login');
 	}
 };
 
