@@ -119,7 +119,7 @@
 					<span class="input-group-text">
 						<a
 							href="#0"
-							on:click={() => new_sotto_argomento(i)}
+							on:click={() => new_sotto_argomento(index)}
 							class="link-secondary"
 							title="Clear search"
 							data-bs-toggle="tooltip"
