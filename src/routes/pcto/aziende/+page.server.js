@@ -173,8 +173,9 @@ export const actions = {
 				where: { id: +id }
 			});
 			//arricchisce l'oggetto
-			company['today'] = company['dataConvenzione'].toLocaleDateString();
-			company['direttore_natoIl'] = company['direttore_natoIl'].toLocaleDateString();
+            let dc = company['dataConvenzione']; //data convenzione
+			company['today'] = `${dc.getDate()}/${dc.getMonth()  + 1}/${dc.getFullYear()}`;
+            company['direttore_natoIl'] = company['direttore_natoIl'].toLocaleDateString();
 
 			const content = fs.readFileSync(
 				path.resolve(PUBLIC_PCTO_TEMPLATES_DIR, PUBLIC_PCTO_TEMPLATE_AZIENDE),
