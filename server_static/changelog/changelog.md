@@ -1,8 +1,16 @@
+## v1.6.4 – 13 Maggio 2023
+- `fix#307`: Corso sicurezza non può aggiugere studenti o classi (#308)
+- `fix#305`: formato data documento PCTO convenzione errato (#306)
+- `fix#302`: email tutor aziendale e utente non accettata (#303)
+- `fix#301`: Aggiungere gestione presenze in FAQ per tutor
+- `fix#299`: PCTO presenze bulk create non approvate (#300)
+
+
 ## v1.6.0 – 05 Maggio 2023
-- fix#279: Generazione documenti PCTO stage  
+- `fix#279`: Generazione documenti PCTO stage  
 - aggiunta funzionalità di generazione e stampa documenti convenzione studente e patto formativo
 - per ogni studente che partecipa ad un dato PCTO, il sistema genera in automattico tutti i documenti necessari
-- fix#296: aggiungere il campo #CI in PCTO azienda (#297)
+- `fix#296`: aggiungere il campo #CI in PCTO azienda (#297)
 
 
 ## v1.5.0 – 02 Maggio 2023
