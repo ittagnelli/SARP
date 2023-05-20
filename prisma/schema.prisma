@@ -1,15 +1,7 @@
-// v 0.16.9 2023-05-05
+// v 0.17.0 2023-05-18
 
 generator client {
     provider = "prisma-client-js"
-}
-
-generator erd {
-    provider                  = "prisma-erd-generator"
-    output                    = "./SARP_ERD.png"
-    theme                     = "neutral"
-    tableOnly                 = false
-    includeRelationFromFields = false
 }
 
 datasource db {
@@ -27,34 +19,35 @@ model Versione {
 }
 
 model Utente {
-    id                       Int                @id @default(autoincrement())
-    createdAt                DateTime           @default(now())
-    updatedAt                DateTime           @updatedAt
+    id                       Int                         @id @default(autoincrement())
+    createdAt                DateTime                    @default(now())
+    updatedAt                DateTime                    @updatedAt
     creatoDa                 Int
-    tipo                     String             @default("STUDENTE")
+    tipo                     String                      @default("STUDENTE")
     nome                     String
     cognome                  String
     natoA                    String?
     natoIl                   DateTime?
     codiceF                  String?
     cartaI                   String?
-    email                    String             @unique
+    email                    String                      @unique
     telefono                 String?
     picture                  String?
     bes                      Boolean?
-    can_login                Boolean            @default(false)
+    can_login                Boolean                     @default(false)
     istituto                 String?
     valuta                   pcto_Valutazione[]
+    valutatoPerPCTO          pcto_Valutazione_Studente[]
     presente                 pcto_Presenza[]
     stabilisce               pcto_Azienda[]
-    iscritto                 pcto_Pcto[]        @relation("iscritto")
+    iscritto                 pcto_Pcto[]                 @relation("iscritto")
     Session                  Session[]
     Ticket                   Ticket[]
     ruoli                    ruolo_Utente[]
     iscritto_corso_sicurezza sicurezza_Corso[]
-    classe                   Classe?            @relation(fields: [classeId], references: [id])
+    classe                   Classe?                     @relation(fields: [classeId], references: [id])
     classeId                 Int?
-    tutor_pcto               pcto_Pcto[]        @relation("tutor")
+    tutor_pcto               pcto_Pcto[]                 @relation("tutor")
     insegna_in               Insegnamenti[]
 }
 
@@ -177,35 +170,48 @@ model pcto_Azienda {
 }
 
 model pcto_Pcto {
-    id               Int                @id @default(autoincrement())
-    createdAt        DateTime           @default(now())
-    updatedAt        DateTime           @updatedAt
-    creatoDa         Int
-    titolo           String
-    descrizione      String?
-    tutor_aziendale  String?
-    tutor_telefono   String?
-    tutor_email      String?
-    tutor_scolastico Utente?            @relation(name: "tutor", fields: [idTutor], references: [id])
-    idTutor          Int?
-    dataInizio       DateTime
-    dataFine         DateTime
-    durata_ore       Int                @default(0)
-    offertoDa        pcto_Azienda       @relation(fields: [idAzienda], references: [id])
-    idAzienda        Int
-    valutatoDa       pcto_Valutazione[]
-    presenziatoDa    pcto_Presenza[]
-    svoltoDa         Utente[]           @relation("iscritto")
-    contabilizzato   Boolean            @default(false)
-    anno_scolastico  Int?
-    classe           Classe             @relation(fields: [idClasse], references: [id])
-    idClasse         Int                @default(1)
-    firma_pcto       Boolean            @default(false)
-    task1            String?
-    task2            String?
-    task3            String?
-    task4            String?
-    attrezzature     String?
+    id                  Int                         @id @default(autoincrement())
+    createdAt           DateTime                    @default(now())
+    updatedAt           DateTime                    @updatedAt
+    creatoDa            Int
+    titolo              String
+    descrizione         String?
+    tutor_aziendale     String?
+    tutor_telefono      String?
+    tutor_email         String?
+    tutor_scolastico    Utente?                     @relation(name: "tutor", fields: [idTutor], references: [id])
+    idTutor             Int?
+    dataInizio          DateTime
+    dataFine            DateTime
+    durata_ore          Int                         @default(0)
+    offertoDa           pcto_Azienda                @relation(fields: [idAzienda], references: [id])
+    idAzienda           Int
+    valutatoDa          pcto_Valutazione[]
+    valutazioneStudente pcto_Valutazione_Studente[]
+    presenziatoDa       pcto_Presenza[]
+    svoltoDa            Utente[]                    @relation("iscritto")
+    contabilizzato      Boolean                     @default(false)
+    anno_scolastico     Int?
+    classe              Classe                      @relation(fields: [idClasse], references: [id])
+    idClasse            Int                         @default(1)
+    firma_pcto          Boolean                     @default(false)
+    task1               String?
+    task2               String?
+    task3               String?
+    task4               String?
+    attrezzature        String?
+}
+
+model pcto_Valutazione_Studente {
+    id          Int       @id @default(autoincrement())
+    createdAt   DateTime  @default(now())
+    updatedAt   DateTime  @updatedAt
+    creatoDa    Int
+    pcto        pcto_Pcto @relation(fields: [idPcto], references: [id])
+    idPcto      Int
+    stagista    Utente    @relation(fields: [idStagista], references: [id])
+    idStagista  Int
+    valutazione String
 }
 
 model sicurezza_Corso {
