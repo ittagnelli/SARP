@@ -137,7 +137,7 @@
 	endpoint="programmazione/template"
 	footer="Presenze"
 	actions={true}
-	resource="pcto_presenze"
+	resource="programmazione_template"
 	modal_name={$page_action_modal}
 	on:update_start={start_update}
 />
