@@ -71,11 +71,18 @@
 								answer={faq('faq3_1')}
 							/>
                             <Faq
-								show={true}
+								show={false}
 								number="3-2"
 								parent_number="3"
 								question="Come posso riportare le ore giornaliere svolte da uno stagista?"
 								answer={faq('faq3_2')}
+							/>
+                            <Faq
+								show={true}
+								number="3-3"
+								parent_number="3"
+								question="Come posso valutare uno stagista?"
+								answer={faq('faq3_3')}
 							/>
 						</FaqSection>
                         <FaqSection title="4. Tools" number="4">

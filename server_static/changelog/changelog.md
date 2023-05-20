@@ -1,3 +1,10 @@
+## v1.7.0 – 20 Maggio 2023
+- `fix#309`: aggiungere valutazione PCTO studente (#310)    
+- il tutor aziendale può valutare gli studenti che hanno partecipato al PCTO di cui lui è tutor
+- il tutor scoladtrico può visionare le valutazioni degli studenti per cui è tutor scolastico
+- admin può eseguire tutte le operazioni
+- aggiunto sezione FAQ per la valutazione studente
+
 ## v1.6.4 – 13 Maggio 2023
 - `fix#307`: Corso sicurezza non può aggiugere studenti o classi (#308)
 - `fix#305`: formato data documento PCTO convenzione errato (#306)
