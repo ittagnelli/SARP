@@ -88,6 +88,10 @@ model Insegnamenti {
     idClasse  Int
     titolare  Boolean @default(false) //TRUE:docente principale  FALSE: compresenza o altro
     anno      Int //solo il primo dei due anni che compongolo l'anno scolastico
+    programma_primo_quadrimestre String?
+    programma_secondo_quadrimestre String?
+    programma_primo_quadrimestre_completo Boolean @default(false)
+    programma_secondo_quadrimestre_completo Boolean @default(false)
 }
 
 model Session {

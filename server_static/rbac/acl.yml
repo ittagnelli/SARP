@@ -31,6 +31,8 @@ menu_programmazione_template:
     - DEVELOPER
     - ADMIN
     - DOCENTE
+
+programmazione_template:
   delete:
     - DEVELOPER
     - ADMIN
@@ -53,6 +55,18 @@ menu_programmazione_docente:
     - DEVELOPER
     - ADMIN
     - DOCENTE
+
+programmazione_docente:
+  create:
+    - ADMIN
+    - DEVELOPER
+    - DOCENTE
+  read:
+    - DEVELOPER
+    - ADMIN
+    - DOCENTE
+  delete:
+    - ADMIN
 
 menu_programmazione_classe:
   view:

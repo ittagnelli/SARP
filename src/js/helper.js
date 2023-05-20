@@ -227,3 +227,4 @@ export const get_uid = () => {
     return (new Date().valueOf() + (Math.ceil((Math.random() * 1000000)))).toString(36);
 }
 
+export const is_primo_quadrimestre = () => new Date().getMonth() < 5 && new Date().getMonth() > 8;
