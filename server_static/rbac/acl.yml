@@ -121,6 +121,13 @@ menu_valutazioni:
     - ADMIN
     - TUTOR-SCOLASTICO
 
+menu_valutazione_studenti:
+  view:
+    - DEVELOPER
+    - ADMIN
+    - TUTOR-AZIENDALE
+    - TUTOR-SCOLASTICO
+
 menu_verifica_stato:
   view:
     - DEVELOPER
@@ -240,6 +247,25 @@ pcto_valutazioni:
     - ADMIN
     - TUTOR-AZIENDALE
     - STAGISTA
+
+pcto_valutazione_studenti:
+  create:
+    - DEVELOPER
+    - ADMIN
+    - TUTOR-AZIENDALE
+  read:
+    - DEVELOPER
+    - ADMIN
+    - TUTOR-AZIENDALE
+    - TUTOR-SCOLASTICO
+  update:
+    - DEVELOPER
+    - ADMIN
+    - TUTOR-AZIENDALE
+  delete:
+    - DEVELOPER
+    - ADMIN
+    - TUTOR-AZIENDALE
 
 sicurezza_corso:
   create:

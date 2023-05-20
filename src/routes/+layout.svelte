@@ -21,7 +21,8 @@
                 <NavSubItem resource="menu_aziende" text="Aziende" link="/pcto/aziende" />
                 <NavSubItem resource="menu_stage" text="Stage" link="/pcto/stage" />
                 <NavSubItem resource="menu_presenze" text="Presenze" link="/pcto/presenze" />
-                <NavSubItem resource="menu_valutazioni" text="Valutazioni" link="/pcto/valutazioni" />
+                <!-- <NavSubItem resource="menu_valutazioni" text="Valutazioni" link="/pcto/valutazioni" /> -->
+                <NavSubItem resource="menu_valutazione_studenti" text="Valutazione Studenti" link="/pcto/valutazione_studenti" />
                 <NavSubItem resource="menu_verifica_stato" text="Verifica Stato" link="/pcto/verifica_stato" />
             </NavMenu>
             <NavMenu resource="menu_programmazione" text="Programma Annuale" icon="list">

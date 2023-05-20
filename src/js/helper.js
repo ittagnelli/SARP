@@ -119,6 +119,28 @@ export const multi_user_where = (data) => {
 	return clausola_where;
 };
 
+export const pcto_valutazione_studenti_where = (data) => {
+	let clausola_where;
+
+	if (!is_admin(data)) clausola_where = { 
+        OR: [
+            { 
+                creatoDa: user_id(data)
+            },
+            {
+                pcto: {
+                    is: {
+                        idTutor: user_id(data),
+                    },
+                }
+            }
+        ]
+    };
+	else clausola_where = { id: { gt: 0 } };
+
+	return clausola_where;
+};
+
 export const pcto_presenze_where = (data) => {
 	let clausola_where;
 

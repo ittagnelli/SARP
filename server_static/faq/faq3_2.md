@@ -2,7 +2,7 @@ Il tutor aziendale è incaricato di registrare le ore di attività in azienda di
 
 Quest'operazione può essere svolta facilmente e velocemente tramite il portale SARP dell'Istituto Agnelli
 
-Dopo aver effettuato il login con le credenziali fornite dalla scuola, per registrare le ore si può seguire i seguenti passi:
+Dopo aver effettuato il login con le credenziali fornite dalla scuola, per registrare le ore si possono seguire i seguenti passi:
 
 ## 1- Accesso alla sezione Presenze
 
