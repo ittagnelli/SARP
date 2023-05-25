@@ -218,15 +218,13 @@ export const ore_pcto = (inizio, fine) => {
 }
 
 export const filter_array_for_id = (array, key) => {
-	let array_of_name = array.map(element => element[key].nome);
-	let filtered_set_name = new Set(array_of_name);
-	let filtered_array = Array.from(filtered_set_name).map((element, index) => {
-		return { 
-			nome: element,																	
-			id: array[index][key].id
-		}
-	});
-	return filtered_array;																							
+	let filtered_set_name = new Map();
+	array.forEach(element => {
+        if(!filtered_set_name.has(element[key].nome)) {
+            filtered_set_name.set(element[key].nome, element[key].id)
+        }
+    });
+    return Array.from(filtered_set_name);																						
 };
 
 export const remove_at_index = (array, index) => {

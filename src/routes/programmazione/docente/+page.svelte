@@ -4,16 +4,18 @@
 		get_modal,
 		is_primo_quadrimestre,
 		remove_at_index,
-		show_modal,
 		wait_fade_finish
 	} from '$js/helper.js';
+
 	import { page_action_title, page_title, page_pre_title, page_action_modal } from '$js/store';
 	import Programmazione from '$lib/components/common/programmazione.svelte';
 	import Table from '$lib/components/common/table.svelte';
 	import Alert from '$lib/components/common/alert.svelte';
 	import * as yup from 'yup';
 	export let data;
-	let classi = data.insegnamenti.map((insegnamento) => insegnamento.classe);
+
+    let insegnamenti = data.insegnamenti;
+    let classi = data.insegnamenti.map((insegnamento) => insegnamento.classe);
 	let materie = data.insegnamenti.map((insegnamento) => insegnamento.materia);
 
 	/* Page properties */
@@ -71,36 +73,30 @@
 
 	function start_update(e) {
 		modal_action = 'update';
-		form_values.insegnamenti_id = e.detail.id[2];
-
-		if (is_primo_quadrimestre()) form_values.template_id = e.detail.id[3];
-		else form_values.template_id = e.detail.id[4];
-
-		const current_insegnamento = data.insegnamenti.filter(
-			(insegnamento) => insegnamento.id == e.detail.id[2]
-		)[0];
-		console.log(current_insegnamento);
-
+        let insegnamento = insegnamenti.filter(i => i.id == e.detail.id)[0];
+        form_values.classe = insegnamento.idClasse;
+		form_values.materia = insegnamento.idMateria;
+        form_values.insegnamenti_id = insegnamento.id;
+        let template;
+        const current_insegnamento = insegnamento;
+	
 		if (is_primo_quadrimestre()) {
 			form_values.conferma = current_insegnamento.programma_primo_quadrimestre_completo
 				? 'SI'
 				: 'NO';
-			const template = JSON.parse(current_insegnamento.programma_secondo_quadrimestre);
-			form_values.primo_quadrimestre = template[0];
-			form_values.secondo_quadrimestre = template[1];
-			argomenti_primo_quadrimestre = template[0];
-			argomenti_secondo_quadrimestre = template[1];
+            template = JSON.parse(current_insegnamento.programma_primo_quadrimestre);
 		} else {
 			form_values.conferma = current_insegnamento.programma_secondo_quadrimestre_completo
 				? 'SI'
 				: 'NO';
-			const template = JSON.parse(current_insegnamento.programma_secondo_quadrimestre);
-			form_values.primo_quadrimestre = template[0];
-			form_values.secondo_quadrimestre = template[1];
-			argomenti_primo_quadrimestre = template[0];
-			argomenti_secondo_quadrimestre = template[1];
+            template = JSON.parse(current_insegnamento.programma_secondo_quadrimestre);
 		}
-
+        if(template) {
+            form_values.primo_quadrimestre = template[0];
+            form_values.secondo_quadrimestre = template[1];
+            argomenti_primo_quadrimestre = template[0];
+            argomenti_secondo_quadrimestre = template[1];
+        }
 		form_values.conferma_tmp = form_values.conferma;
 	}
 
@@ -165,17 +161,6 @@
 		form_values.libri = remove_at_index(form_values.libri, index);
 	}
 
-	function show_modal_programmazione(e) {
-		form_values.classe = e.detail.id[0];
-		form_values.materia = e.detail.id[1];
-		form_values.insegnamenti_id = e.detail.id[2];
-		console.log(classi);
-		console.log(form_values.classe);
-		const modal = get_modal($page_action_modal);
-		modal.show();
-		form_values.template_id;
-	}
-
 	function update_template() {
 		const template = data.templates.filter(
 			(template_from_function) => template_from_function.id == form_values.template_id
@@ -197,30 +182,38 @@
 <Table
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
-		{ name: 'classe', type: 'string', display: 'classe', size: 50 },
-		{ name: 'materia', type: 'object', display: 'materia', key: 'nome', size: 50 },
+		{ name: 'classe', type: 'object', key: 'classe', display: 'classe', size: 20 },
+		{ name: 'materia', type: 'object', display: 'materia', key: 'nome', size: 30 },
 		{
 			name: 'programma_primo_quadrimestre_presente',
 			type: 'boolean',
-			display: 'primo quadrimestre'
+			display: 'Q1p'
+		},
+        {
+			name: 'programma_primo_quadrimestre_completo',
+			type: 'boolean',
+			display: 'Q1c'
 		},
 		{
-			name: 'programma_secondo_quadrimestre_presente',
+			name: 'programma_secondo_quadrimestre_presente_',
 			type: 'boolean',
-			display: 'secondo quadrimestre'
+			display: 'Q2p'
+		},
+        {
+			name: 'programma_secondo_quadrimestre_completo',
+			type: 'boolean',
+			display: 'Q2c'
 		}
 	]}
 	page_size={10}
-	rows={classi}
+	rows={insegnamenti}
 	endpoint="programmazione/docente"
 	footer="Programmazione docente"
 	actions={true}
 	resource="programmazione_docente"
 	modal_name={$page_action_modal}
 	on:update_start={start_update}
-	custom_action_icon="plus"
-	on:custom_action={show_modal_programmazione}
-	check_quadrimestre={true}
+    trash={false}
 />
 
 <Alert

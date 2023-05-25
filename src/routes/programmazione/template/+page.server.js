@@ -1,7 +1,7 @@
 import { access_protect, filter_array_for_id, route_protect, user_id } from "$js/helper";
 import { PrismaDB } from "$js/prisma_db.js";
 
-const resource = "menu_programmazione_template";
+const resource = "programmazione_template";
 
 const SARP = new PrismaDB();
 
@@ -21,6 +21,7 @@ export async function load({ locals }) {
             classe: true
         }
     });
+    
     return {
         templates: await SARP.programmazione_Template.findMany({
             include: {

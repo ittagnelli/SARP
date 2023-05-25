@@ -1,6 +1,6 @@
 // @ts-ignore
 // @ts-ignore
-import { access_protect, filter_array_for_id, is_primo_quadrimestre, route_protect, user_id } from "$js/helper";
+import { access_protect, is_primo_quadrimestre, route_protect, user_id } from "$js/helper";
 import { PrismaDB } from "$js/prisma_db.js";
 
 const resource = "programmazione_docente";
@@ -27,15 +27,13 @@ export async function load({ locals }) {
 
     // Client side non funziona quindi lo faccio nel server
     insegnamenti.forEach(insegnamento => {
-        // @ts-ignore
-        insegnamento.classe.id = [insegnamento.idClasse, insegnamento.idMateria, insegnamento.id, insegnamento.idProgramma_primo_quadrimestre, insegnamento.idProgramma_secondo_quadrimestre]    // Since our table component can store only one id, we need to create an array with two id for classe + materia
-        // @ts-ignore
-        insegnamento.classe["materia"] = insegnamento.materia;
         insegnamento.classe.classe += " " + insegnamento.classe.sezione + " " + insegnamento.classe.istituto;
         // @ts-ignore
-        insegnamento.classe["programma_primo_quadrimestre_presente"] = insegnamento.programma_primo_quadrimestre != null;
+        insegnamento["programma_primo_quadrimestre_presente"] = insegnamento.programma_primo_quadrimestre != null;
         // @ts-ignore
-        insegnamento.classe["programma_secondo_quadrimestre_presente"] = insegnamento.programma_secondo_quadrimestre != null;
+        //bug, come minimo,  di magia nera voodo e tranasologia assieme
+        // se la proprietà si chiama programma_secondo_quadrimestre_presente l'icona si sposta a destra di 13 pixel
+        insegnamento["programma_secondo_quadrimestre_presente_"] = insegnamento.programma_secondo_quadrimestre != null;
     });
 
     return {
@@ -48,54 +46,7 @@ export async function load({ locals }) {
     };
 }
 
-
-
 export const actions = {
-    // @ts-ignore
-    create: async ({ request, locals }) => {
-        let action = 'create';
-
-        route_protect(locals);
-        access_protect(200, locals, action, resource);
-
-        const form = await request.formData();
-
-        const primo_quadrimestre = form.get("argomenti_primo_quadrimestre");
-        const secondo_quadrimestre = form.get("argomenti_secondo_quadrimestre");
-        const quadrimestri = [JSON.parse(primo_quadrimestre), JSON.parse(secondo_quadrimestre)];
-        
-        if (is_primo_quadrimestre()) {
-            await SARP.insegnamenti.update({
-                where: {
-                    id: parseInt(form.get("id"))
-                },
-                data: {
-                    programma_primo_quadrimestre_completo: form.get("conferma") === "SI",
-                    programma_primo_quadrimestre: JSON.stringify(quadrimestri)
-                }
-            });
-        } else {
-            await SARP.insegnamenti.update({
-                where: {
-                    id: parseInt(form.get("id"))
-                },
-                data: {
-                    programma_secondo_quadrimestre_completo: form.get("conferma") === "SI",
-                    programma_secondo_quadrimestre: JSON.stringify(quadrimestri)
-                }
-            });
-        }
-    },
-    // @ts-ignore
-    delete: async ({ request, locals }) => {
-        let action = 'delete';
-
-        route_protect(locals);
-        access_protect(403, locals, action, resource);
-
-        // DELETE shouldn't be implemented here
-    },
-    // @ts-ignore
     update: async ({ request, locals }) => {
         let action = 'update';
 
@@ -103,10 +54,8 @@ export const actions = {
         access_protect(200, locals, action, resource);
 
         const form = await request.formData();
-        console.log(form);
         const primo_quadrimestre = form.get("argomenti_primo_quadrimestre");
         const secondo_quadrimestre = form.get("argomenti_secondo_quadrimestre");
-
         const quadrimestri = [JSON.parse(primo_quadrimestre), JSON.parse(secondo_quadrimestre)];
 
         if (is_primo_quadrimestre()) {

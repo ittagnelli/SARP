@@ -200,7 +200,7 @@
 								bind:value={form_values.materia}
 							>
 								{#each data.materie as materia}
-									<option value={materia.id}>{materia.nome}</option>
+									<option value={materia[1]}>{materia[0]}</option>
 								{/each}
 							</select>
 							{#if errors.materia}

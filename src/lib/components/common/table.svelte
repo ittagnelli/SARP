@@ -1,7 +1,7 @@
 <script>
 // @ts-nocheck
 import { createEventDispatcher } from 'svelte';
-import { ellipses, user_id, is_admin,  has_grant, user_ruolo, get_modal, is_primo_quadrimestre } from '../../../js/helper';
+import { ellipses, user_id, is_admin,  has_grant, user_ruolo, get_modal } from '../../../js/helper';
 import { page } from '$app/stores';
 
 // dichiara le colonne della tabella
@@ -17,7 +17,7 @@ export let print;
 export let actions;
 export let custom_action_icon;
 export let resource;
-export let check_quadrimestre;
+export let trash = true;
 
 const dispatch = createEventDispatcher();
 const MAX_PAGES = 20; //massimo numero di pagine visualizzabili nella barra
@@ -270,28 +270,18 @@ function table_filter(col, type, key) {
                                             on:click={() => update_row(row.id)}
                                             >
                                             <icon class="ti ti-edit icon" />
-                                        </a>
-
-                                        {#if check_quadrimestre == null}
-                                            <!-- custom action icon -->
-                                            <button class="icon-button" name="custom-action" on:click={() => custom_action(row.id)}>
-                                                <icon class="ti ti-{custom_action_icon} icon" />
-                                            </button>
-                                        {:else if check_quadrimestre}
-                                            {#if !row.programma_primo_quadrimestre_presente || !row.programma_secondo_quadrimestre_presente}
-                                                {#if is_primo_quadrimestre() || !row.programma_secondo_quadrimestre_presente}
-                                                    <!-- custom action icon -->
-                                                    <button class="icon-button" name="custom-action" on:click={() => custom_action(row.id)}>
-                                                        <icon class="ti ti-{custom_action_icon} icon" />
-                                                    </button>
-                                                {/if}
-                                            {/if}
-                                        {/if}
+                                        </a>                                      
+                                        <!-- custom action icon -->
+                                        <button class="icon-button" name="custom-action" on:click={() => custom_action(row.id)}>
+                                            <icon class="ti ti-{custom_action_icon} icon" />
+                                        </button>
                                         <!-- delete action icon -->
                                         {#if (user_id($page.data) == row.creatoDa && has_grant(user_ruolo($page.data),'delete', resource)) || is_admin($page.data)}
-                                            <button class="icon-button" name="delete-action" on:click={() => start_delete(row.id)}>
-                                                <icon class="ti ti-trash icon" />
-                                            </button>
+                                            {#if trash}
+                                                <button class="icon-button" name="delete-action" on:click={() => start_delete(row.id)}>
+                                                    <icon class="ti ti-trash icon" />
+                                                </button>
+                                            {/if}
                                         {/if}
                                     </div>
                                 </td>

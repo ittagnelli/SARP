@@ -57,7 +57,7 @@ menu_programmazione_docente:
     - DOCENTE
 
 programmazione_docente:
-  create:
+  update:
     - ADMIN
     - DEVELOPER
     - DOCENTE
