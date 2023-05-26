@@ -33,7 +33,9 @@ export async function load({ locals }) {
 			include: {
 				presenza: true,
 				lavoraPer: true
-			}
+			},
+            skip: 0,
+            take: 200
 		});
 
         const stages = await SARP.pcto_Pcto.findMany({
@@ -44,9 +46,8 @@ export async function load({ locals }) {
 				svoltoDa: true
 			}
 		});
-	
-		// restituisco il risultato della query SQL
-		return {
+        
+        return {
 			presenze: presenze,
 			stages: stages,
             session: locals.session
