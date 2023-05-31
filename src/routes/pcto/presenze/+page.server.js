@@ -25,28 +25,63 @@ export async function load({ locals }) {
     route_protect(locals);
     access_protect(400, locals, action, resource);
    
+    //query with proper select reduce from 1.4MB to 384KB
+    //not bad!!!
     try {
 		// query SQL al DB per tutte le entry nella tabella todo
-		const presenze = await SARP.pcto_Presenza.findMany({
+	
+        const presenze = await SARP.pcto_Presenza.findMany({
 			orderBy: [{ id: 'desc' }],
 			where: pcto_presenze_where(locals), 
-			include: {
-				presenza: true,
-				lavoraPer: true
-			}
+			select: {
+                id: true,
+                svoltoDa: true,
+                creatoDa: true,
+                dataPresenza: true,
+                oraInizio: true,
+                oraFine: true,
+                approvato: true,
+                idPcto: true,
+                presenza: {
+                    select: {
+                        id: true,
+                        nome: true,
+                        cognome: true,
+                    }                        
+                },
+                lavoraPer: {
+                    select: {
+                        titolo: true,
+                        contabilizzato: true
+                    }
+                },
+            }
 		});
 
         const stages = await SARP.pcto_Pcto.findMany({
             where: { firma_pcto: true},
 			orderBy: [{ titolo: 'asc' }],
-			include: {
-				offertoDa: true,
-				svoltoDa: true
-			}
+			select: {
+                id: true,
+                titolo: true,
+                tutor_aziendale: true,
+                idTutor: true,
+                contabilizzato: true,
+                anno_scolastico: true,
+                svoltoDa: {
+                    select: {
+                        id: true,
+                        creatoDa: true,
+                        nome: true,
+                        cognome: true,
+                        istituto: true,
+                        classeId: true
+                    }
+                }     
+            }
 		});
-	
-		// restituisco il risultato della query SQL
-		return {
+        
+        return {
 			presenze: presenze,
 			stages: stages,
             session: locals.session
