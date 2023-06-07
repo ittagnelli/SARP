@@ -248,3 +248,10 @@ export const get_uid = () => {
 }
 
 export const is_primo_quadrimestre = () => new Date().getMonth() < 5 && new Date().getMonth() > 8;
+
+function replace_char_at(str, index, replacement) {
+	return str.substring(0, index) + replacement + str.substring(index + replacement.length);
+}
+export const upper_first_letter = (str) => {
+	return replace_char_at(str, 0, str[0].toUpperCase());
+} 

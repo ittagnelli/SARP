@@ -72,6 +72,16 @@ menu_programmazione_classe:
   view:
     - DEVELOPER
     - ADMIN
+
+programmazione_classe:
+  update:
+    - ADMIN
+    - DEVELOPER
+  read:
+    - DEVELOPER
+    - ADMIN
+  delete:
+    - ADMIN
     
 menu_tools:
   view:
