@@ -45,7 +45,6 @@
 
 	// schema di validazione del form
 	const form_schema = yup.object().shape({
-		nome: yup.string().min(1, 'Nome necessario'),
 		materia: yup.number().min(1, 'Materia necessaria'),
 		libri: yup.array().length(1, 'Libri necessari'),
 		primo_quadrimestre: yup.array().test((quadrimestre) => is_valid_quadrimestre(quadrimestre)),
@@ -105,50 +104,50 @@
 		argomenti_primo_quadrimestre_raw = JSON.stringify(argomenti_primo_quadrimestre);
 		// console.log(argomenti_primo_quadrimestre_raw)
 		argomenti_secondo_quadrimestre_raw = JSON.stringify(argomenti_secondo_quadrimestre);
-		// form_values.primo_quadrimestre = argomenti_primo_quadrimestre;
-		// form_values.secondo_quadrimestre = argomenti_secondo_quadrimestre;
-		// form_values.libri = form_values.libri.filter((libro) => libro.length > 0); // Se l'input è vuoto lo sanifichiamo
-		// try {
-		// 	// valida il form prima del submit
-		// 	await form_schema.validate(form_values, { abortEarly: false });
-		// 	errors = {};
-		// 	modal_form.submit();
-		// } catch (err) {
-		// 	errors = err.inner.reduce((acc, err) => {
-		// 		return { ...acc, [err.path]: err.message };
-		// 	}, {});
-		// 	if (form_values.libri.length == 0) form_values.libri = ['']; // Resettiamo il campo libri dopo il filter in caso non ci siano libri per far apparire almeno in input
-		// }
-		await delay(200);
-		modal_form.submit();
+		form_values.primo_quadrimestre = argomenti_primo_quadrimestre;
+		form_values.secondo_quadrimestre = argomenti_secondo_quadrimestre;
+		form_values.libri = form_values.libri.filter((libro) => libro.length > 0); // Se l'input è vuoto lo sanifichiamo
+		try {
+			// valida il form prima del submit
+			await form_schema.validate(form_values, { abortEarly: false });
+			errors = {};
+			modal_form.submit();
+		} catch (err) {
+			console.log(err);
+			errors = err.inner.reduce((acc, err) => {
+				return { ...acc, [err.path]: err.message };
+			}, {});
+			if (form_values.libri.length == 0) form_values.libri = ['']; // Resettiamo il campo libri dopo il filter in caso non ci siano libri per far apparire almeno in input
+		}
 	}
 
 	async function cancel_action() {
-		if (modal_action == 'update') {
-			await wait_fade_finish();
-			modal_action = 'create'; // Reset string
-			form_values = {
-				nome: '',
-				template_id: 0,
-				insegnamenti_id: 0,
-				materia: 0,
-				libri: [''], // Avoid a warning in handlesubmit
-				primo_quadrimestre: [],
-				secondo_quadrimestre: []
-			};
-			argomenti_primo_quadrimestre = [
-				{
-					titolo: '',
-					sotto_argomenti: ['']
-				}
-			];
-			argomenti_secondo_quadrimestre = [
-				{
-					titolo: '',
-					sotto_argomenti: ['']
-				}
-			];
-		}
+		await wait_fade_finish();
+		modal_action = 'create'; // Reset string
+		form_values = {
+			nome: '',
+			template_id: 0,
+			insegnamenti_id: 0,
+			materia: 0,
+			classe: 0,
+			libri: [''], // Avoid a warning in handlesubmit
+			primo_quadrimestre: [],
+			secondo_quadrimestre: [],
+			conferma: '',
+			conferma_tmp: ''
+		};
+		argomenti_primo_quadrimestre = [
+			{
+				titolo: '',
+				sotto_argomenti: ['']
+			}
+		];
+		argomenti_secondo_quadrimestre = [
+			{
+				titolo: '',
+				sotto_argomenti: ['']
+			}
+		];
 	}
 
 	function new_libro() {
