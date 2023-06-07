@@ -31,7 +31,9 @@
 		{ name: 'id', type: 'hidden', display: 'ID' },
         { name: 'classe', type: 'string', display: 'Classe', size: 50 },
 		{ name: 'programmazione_q1_completa', type: 'boolean', display: "Programmazione primo quadrimestre terminata" },
-		{ name: 'programmazione_q2_completa', type: 'boolean', display: "Programmazione secondo quadrimestre terminata" }
+		{ name: 'programmazione_q2_completa', type: 'boolean', display: "Programmazione secondo quadrimestre terminata" },
+		{ name: 'programmazione_completa', type: 'hidden', display: "Programmazione secondo quadrimestre terminata" }
+
 	]}
 	page_size={10}
 	rows={data.classi}
@@ -43,6 +45,6 @@
     trash={false}
     print={true}
     update={false}
-	print_filter={"programmazione_q1_completa"}
+	print_filter={"programmazione_completa"}
 />
 

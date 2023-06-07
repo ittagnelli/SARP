@@ -28,7 +28,8 @@ export async function load({ locals }) {
 		return {
 			...classe,
 			"programmazione_q1_completa": programma_q1_completo,
-			"programmazione_q2_completa": programma_q2_completo
+			"programmazione_q2_completa": programma_q2_completo,
+			"programmazione_completa": programma_q1_completo || programma_q2_completo
 		}
 	})
     return {
@@ -62,16 +63,32 @@ export const actions = {
 				}
 			})
 
-			const materie_programmi = insegnamenti.map(insegnamento => {
-				const programma = JSON.parse(insegnamento.programma_primo_quadrimestre);
-				const libri = programma[2].libri;	// Sappiamo che l'array è composto da:	Q1, Q2, Libri
-				return {
-					nome: insegnamento.materia.nome, 
-					libro: libri,
-					argomenti_q1: programma[0],
-					argomenti_q2: programma[1]
-				}
-			});
+			let materie_programmi = null;
+
+			if(is_primo_quadrimestre()){
+				materie_programmi = insegnamenti.map(insegnamento => {
+					const programma = JSON.parse(insegnamento.programma_primo_quadrimestre);
+					const libri = programma[2].libri;	// Sappiamo che l'array è composto da:	Q1, Q2, Libri
+					return {
+						nome: insegnamento.materia.nome, 
+						libro: libri,
+						argomenti_q1: programma[0],
+						argomenti_q2: programma[1]
+					}
+				});
+			} else {
+				materie_programmi = insegnamenti.map(insegnamento => {
+					const programma = JSON.parse(insegnamento.programma_secondo_quadrimestre);
+					const libri = programma[2].libri;	// Sappiamo che l'array è composto da:	Q1, Q2, Libri
+					return {
+						nome: insegnamento.materia.nome, 
+						libro: libri,
+						argomenti_q1: programma[0],
+						argomenti_q2: programma[1]
+					}
+				});
+			}
+
 
 			console.log(materie_programmi);
 			const docenti_name = insegnamenti.map(insegnamento => {
