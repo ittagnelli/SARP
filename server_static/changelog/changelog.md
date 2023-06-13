@@ -1,3 +1,10 @@
+## v1.7.2 – 13 Giugno 2023
+- `fix#319`: PCTO presenze non inseribili per 1 solo studente
+- `fix#311`: riduzione tabella PCTO presenze
+- `fix#313`: Reduce data dowloaded for presenze
+- optimed query by selecting only needed fields to reduce data downloaded
+
+
 ## v1.7.0 – 20 Maggio 2023
 - `fix#309`: aggiungere valutazione PCTO studente (#310)    
 - il tutor aziendale può valutare gli studenti che hanno partecipato al PCTO di cui lui è tutor
