@@ -95,6 +95,7 @@
             form_values.secondo_quadrimestre = template[1];
             argomenti_primo_quadrimestre = template[0];
             argomenti_secondo_quadrimestre = template[1];
+			form_values.libri = template[template.length - 1].libri.split(',');
         }
 		form_values.conferma_tmp = form_values.conferma;
 	}
