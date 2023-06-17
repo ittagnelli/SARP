@@ -31,8 +31,8 @@
 	const form_schema = yup.object().shape({
 		nome: yup.string().min(1, 'Nome necessario'),
 		materia: yup.number().min(1, 'Materia necessaria'),
-		libri: yup.array().length(1, 'Libri necessari'),
-		primo_quadrimestre: yup.array().test((quadrimestre) => is_valid_quadrimestre(quadrimestre)),
+		libri: yup.array().min(1, 'Libri necessari').of(yup.string().matches(/^[0-9A-Za-z-à-è-ì-ò-ù -(-)-\.]*$/)),
+        primo_quadrimestre: yup.array().test((quadrimestre) => is_valid_quadrimestre(quadrimestre)),
 		secondo_quadrimestre: yup.array().test((quadrimestre) => is_valid_quadrimestre(quadrimestre))
 	});
 
@@ -79,11 +79,13 @@
 			// valida il form prima del submit
 			await form_schema.validate(form_values, { abortEarly: false });
 			errors = {};
-			modal_form.submit();
+            modal_form.submit();
 		} catch (err) {
 			errors = err.inner.reduce((acc, err) => {
 				return { ...acc, [err.path]: err.message };
 			}, {});
+            console.log(errors)
+            console.log(errors['libri[0]'])
 			if (form_values.libri.length == 0) form_values.libri = ['']; // Resettiamo il campo libri dopo il filter in caso non ci siano libri per far apparire almeno in input
 		}
 	}
@@ -210,8 +212,8 @@
 					</div>
 					<div class="row">
 						<div class="col">
-							<div class="form-label select_text mt-3">Libro di testo</div>
-							{#each form_values.libri as libro}
+							<div class="form-label select_text mt-3">Libro di testo [caratteri ammessi: lettere, cifre, - . ()]</div>
+							{#each form_values.libri as libro,i}
 								{#if libro != 'null'}
 									<div class="input-group input-group-flat">
 										<input
@@ -219,7 +221,7 @@
 											class="form-control mt-2"
 											bind:value={libro}
 											id="libro"
-											class:is-invalid={errors.libri}
+											class:is-invalid={errors[`libri[${i}]`]}
 										/>
 										<span class="input-group-text">
 											<a
@@ -283,8 +285,8 @@
 								{/if}
 							{/each}
 							<input type="hidden" name="libri" bind:value={form_values.libri} />
-							{#if errors.libri}
-								<span class="invalid-feedback">{errors.libri}</span>
+							{#if errors['libri[0]']}
+								<span class="invalid-feedback">{errors['libri[0]']}</span>
 							{/if}
 						</div>
 					</div>
