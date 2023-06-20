@@ -42,8 +42,6 @@
             else
                 pcto_studenti = selected_stage[0].svoltoDa.filter(item => item.id == id_utente);
         }
-        if(pcto_studenti.length == 1)
-            form_values.studente = id_utente;
     }
 
 	//configura la pagina pre-titolo, titolo e nome del modale
@@ -195,7 +193,7 @@
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
         { name: 'creatoDa', type: 'hidden', display: 'creatoDa' },
-        { name: 'lavoraPer', type: 'object', key: 'titolo', display: 'pcto', size: 30, search: true },
+        { name: 'lavoraPer', type: 'object', key: 'titolo', display: 'pcto', size: 50, search: true },
         { name: 'presenza', type: 'object', key: 'full_name', display: 'studente', size: 30, search: true },
         { name: 'dataPresenza', type: 'date', display: 'data' },
         { name: 'oraInizio', type: 'time', display: 'entrata' },
@@ -272,7 +270,7 @@
                             <!-- InputSelect component ha dei problemi (two way binding) non ancora risolti
                             che non permettono di usarlo qui -->
 							<div class="mb-3">
-                                {#if pcto_studenti.length > 1}
+                                {#if pcto_studenti.length >= 1}
                                     <div class="form-label select_text">Studente</div>
                                     <select class="form-select" class:is-invalid="{errors.studente}" name="studente" bind:value={form_values.studente}>
                                         {#if modal_action == 'create' && helper.user_ruolo(data) != "STUDENTE"}
