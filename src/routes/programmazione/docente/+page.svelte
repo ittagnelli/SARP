@@ -261,26 +261,27 @@
 
 					<div class="modal-body">
 						<div class="row">
-							<div class="col">
-								<div class="form-label select_text">Template</div>
-								<select
-									class="form-select"
-									class:is-invalid={errors.template}
-									name="template"
-									bind:value={form_values.template_id}
-									on:change={update_template}
-								>
-									{#each data.templates as template}
-										{#if template.idMateria == form_values.materia}
-											<option value={template.id}>{template.nome}</option>
-										{/if}
-									{/each}
-								</select>
-								{#if errors.template}
-									<span class="invalid-feedback">{errors.template}</span>
-								{/if}
-							</div>
-
+							{#if modal_action == "create"}
+								<div class="col">
+									<div class="form-label select_text">Template</div>
+									<select
+										class="form-select"
+										class:is-invalid={errors.template}
+										name="template"
+										bind:value={form_values.template_id}
+										on:change={update_template}
+									>
+										{#each data.templates as template}
+											{#if template.idMateria == form_values.materia}
+												<option value={template.id}>{template.nome}</option>
+											{/if}
+										{/each}
+									</select>
+									{#if errors.template}
+										<span class="invalid-feedback">{errors.template}</span>
+									{/if}
+								</div>
+							{/if}
 							<div class="col">
 								<div class="form-label select_text">Materia</div>
 								<select
