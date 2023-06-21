@@ -141,8 +141,8 @@ async function update_kpi(
 	let pcto_n_convenzioni = await calculate_pcto_n_convenzioni();
 	let pcto_n_pcto_attivi = await calculate_pcto_n_pcto();
 	let pcto_n_studenti = await calculate_pcto_n_studenti();
-	let pcto_tot_ore_attivi = await calculate_pcto_ore_attivi();
-	let pcto_tot_ore = await calculate_pcto_ore();
+	let pcto_tot_ore_attivi = Math.round(await calculate_pcto_ore_attivi());
+	let pcto_tot_ore = Math.round(await calculate_pcto_ore());
 
 	console.log(`N. Utenti SARP = ${n_utenti}`);
 	console.log(`N. Convenzioni PCTO = ${pcto_n_convenzioni}`);

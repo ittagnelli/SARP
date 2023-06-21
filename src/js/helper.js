@@ -215,7 +215,21 @@ export const wait_fade_finish = async () => await delay(150); // Avoid graphic i
 
 export const ore_pcto = (inizio, fine) => {
     return ((new Date(fine) - new Date(inizio))/(60 * 60 * 1000));
+}
 
+export const filter_array_for_id = (array, key) => {
+	let filtered_set_name = new Map();
+	array.forEach(element => {
+        if(!filtered_set_name.has(element[key].nome)) {
+            filtered_set_name.set(element[key].nome, element[key].id)
+        }
+    });
+    return Array.from(filtered_set_name);																						
+};
+
+export const remove_at_index = (array, index) => {
+	array.splice(index, 1);
+	return array;
 }
 
 //determina l'anno scolastico
@@ -232,3 +246,13 @@ export const get_as = () => {
 export const get_uid = () => {
     return (new Date().valueOf() + (Math.ceil((Math.random() * 1000000)))).toString(36);
 }
+
+export const is_primo_quadrimestre = () => new Date().getMonth() < 5 && new Date().getMonth() > 8;
+
+function replace_char_at(str, index, replacement) {
+	return str.substring(0, index) + replacement + str.substring(index + replacement.length);
+}
+
+export const upper_first_letter = (str) => {
+	return replace_char_at(str, 0, str[0].toUpperCase());
+} 

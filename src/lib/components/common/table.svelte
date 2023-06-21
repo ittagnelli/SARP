@@ -17,6 +17,9 @@ export let print;
 export let actions;
 export let custom_action_icon;
 export let resource;
+export let trash = true;
+export let update = true;
+export let print_filter;    // Proprietà dell'oggetto che, se impostata su true farà vedere il tasto print
 
 const dispatch = createEventDispatcher();
 const MAX_PAGES = 20; //massimo numero di pagine visualizzabili nella barra
@@ -253,34 +256,45 @@ function table_filter(col, type, key) {
                                     <div class="action-container">
                                         <!-- print action icon -->
                                         {#if print == true}
-                                        <form id="form-pdf" method="POST" action={`/${endpoint}?/pdf`}>
-                                            <button class="icon-button" name="id" value={row.id}>
-                                                <icon class="ti ti-printer icon" />
-                                            </button>
-                                        </form>
+                                        {#if print_filter == null}
+                                            <form id="form-pdf" method="POST" action={`/${endpoint}?/pdf`}>
+                                                <button class="icon-button" name="id" value={row.id}>
+                                                    <icon class="ti ti-printer icon" />
+                                                </button>
+                                            </form>
+                                        {:else}
+                                            {#if row[print_filter] == true}
+                                                <form id="form-pdf" method="POST" action={`/${endpoint}?/pdf`}>
+                                                    <button class="icon-button" name="id" value={row.id}>
+                                                        <icon class="ti ti-printer icon" />
+                                                    </button>
+                                                </form>
+                                            {/if}
                                         {/if}
-
-                                        <!-- update action icon -->
-                                        <a
-                                            href="##"
-                                            class=""
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#{modal_name}"
-                                            on:click={() => update_row(row.id)}
-                                            >
-                                            <icon class="ti ti-edit icon" />
-                                        </a>
-
+                                        {/if}
+                                        {#if update}
+                                            <!-- update action icon -->
+                                            <a
+                                                href="##"
+                                                class=""
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#{modal_name}"
+                                                on:click={() => update_row(row.id)}
+                                                >
+                                                <icon class="ti ti-edit icon" />
+                                            </a>  
+                                        {/if}                                    
                                         <!-- custom action icon -->
                                         <button class="icon-button" name="custom-action" on:click={() => custom_action(row.id)}>
                                             <icon class="ti ti-{custom_action_icon} icon" />
                                         </button>
-                                        
                                         <!-- delete action icon -->
                                         {#if (user_id($page.data) == row.creatoDa && has_grant(user_ruolo($page.data),'delete', resource)) || is_admin($page.data)}
-                                            <button class="icon-button" name="delete-action" on:click={() => start_delete(row.id)}>
-                                                <icon class="ti ti-trash icon" />
-                                            </button>
+                                            {#if trash}
+                                                <button class="icon-button" name="delete-action" on:click={() => start_delete(row.id)}>
+                                                    <icon class="ti ti-trash icon" />
+                                                </button>
+                                            {/if}
                                         {/if}
                                     </div>
                                 </td>

@@ -20,6 +20,69 @@ menu_pcto:
     - TUTOR-SCOLASTICO
     - STUDENTE
 
+menu_programmazione:
+  view:
+    - DEVELOPER
+    - ADMIN
+    - DOCENTE
+
+menu_programmazione_template:
+  view:
+    - DEVELOPER
+    - ADMIN
+    - DOCENTE
+
+programmazione_template:
+  delete:
+    - DEVELOPER
+    - ADMIN
+    - DOCENTE
+  read:
+    - DEVELOPER
+    - ADMIN
+    - DOCENTE
+  create:
+    - DEVELOPER
+    - ADMIN
+    - DOCENTE
+  update:
+    - DEVELOPER
+    - ADMIN
+    - DOCENTE
+    
+menu_programmazione_docente:
+  view:
+    - DEVELOPER
+    - ADMIN
+    - DOCENTE
+
+programmazione_docente:
+  update:
+    - ADMIN
+    - DEVELOPER
+    - DOCENTE
+  read:
+    - DEVELOPER
+    - ADMIN
+    - DOCENTE
+  delete:
+    - ADMIN
+
+menu_programmazione_classe:
+  view:
+    - DEVELOPER
+    - ADMIN
+
+programmazione_classe:
+  update:
+    - ADMIN
+    - DEVELOPER
+  read:
+    - DEVELOPER
+    - ADMIN
+  delete:
+    - ADMIN
+    
 menu_tools:
   view:
     - ADMIN
