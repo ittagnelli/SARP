@@ -31,7 +31,7 @@ export async function load({ locals }) {
 		// query SQL al DB per tutte le entry nella tabella todo
 	
         const presenze = await SARP.pcto_Presenza.findMany({
-			orderBy: [{ id: 'desc' }],
+			orderBy: [{ dataPresenza: 'desc' }],
 			where: pcto_presenze_where(locals), 
 			select: {
                 id: true,
@@ -52,7 +52,12 @@ export async function load({ locals }) {
                 lavoraPer: {
                     select: {
                         titolo: true,
-                        contabilizzato: true
+                        contabilizzato: true,
+                        offertoDa: {
+                            select: {
+                                nome: true
+                            }
+                        }
                     }
                 },
             }
