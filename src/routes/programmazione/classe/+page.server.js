@@ -22,8 +22,8 @@ export async function load({ locals }) {
 
 	classi = classi.map(classe => {
 		const current_insegnamento = insegnamenti.filter(insegnamento => insegnamento.idClasse == classe.id)
-		const programma_q1_completo = current_insegnamento.filter(insegnamento => insegnamento.programma_primo_quadrimestre != null).length == current_insegnamento.length
-		const programma_q2_completo = current_insegnamento.filter(insegnamento => insegnamento.programma_secondo_quadrimestre != null).length == current_insegnamento.length
+		const programma_q1_completo = current_insegnamento.filter(insegnamento => insegnamento.programma_primo_quadrimestre_completo).length == current_insegnamento.length
+		const programma_q2_completo = current_insegnamento.filter(insegnamento => insegnamento.programma_secondo_quadrimestre_completo).length == current_insegnamento.length
 
 		return {
 			...classe,
