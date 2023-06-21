@@ -183,26 +183,26 @@
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
 		{ name: 'classe', type: 'object', key: 'classe', display: 'classe', size: 20 },
-		{ name: 'materia', type: 'object', display: 'materia', key: 'nome', size: 30 },
+		{ name: 'materia', type: 'object', display: 'materia', key: 'nome', size: 50 },
 		{
 			name: 'programma_primo_quadrimestre_presente',
 			type: 'boolean',
-			display: 'Q1p'
+			display: 'Q1 Presente'
 		},
         {
 			name: 'programma_primo_quadrimestre_completo',
 			type: 'boolean',
-			display: 'Q1c'
+			display: 'Q1 Completo'
 		},
 		{
 			name: 'programma_secondo_quadrimestre_presente_',
 			type: 'boolean',
-			display: 'Q2p'
+			display: 'Q2 Presente'
 		},
         {
 			name: 'programma_secondo_quadrimestre_completo',
 			type: 'boolean',
-			display: 'Q2c'
+			display: 'Q2 Completo'
 		}
 	]}
 	page_size={10}
