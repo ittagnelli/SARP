@@ -1,3 +1,7 @@
+## v2.0.1 – 30 Giugno 2023
+- Gli studenti possono visualizzare la propria valutazione PCTO
+- Gli studenti possono visualizzare la propria situazione PCTO
+  
 ## v2.0.0 – 27 Giugno 2023
 - `fix#326`: Select template non deve essere mostrato in update
   - Rimosso modale durante update

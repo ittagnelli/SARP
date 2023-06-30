@@ -137,12 +137,14 @@ menu_valutazione_studenti:
     - ADMIN
     - TUTOR-AZIENDALE
     - TUTOR-SCOLASTICO
+    - STUDENTE
 
 menu_verifica_stato:
   view:
     - DEVELOPER
     - ADMIN
     - TUTOR-SCOLASTICO
+    - STUDENTE
 
 changelog:
   read:
@@ -268,6 +270,7 @@ pcto_valutazione_studenti:
     - ADMIN
     - TUTOR-AZIENDALE
     - TUTOR-SCOLASTICO
+    - STUDENTE
   update:
     - DEVELOPER
     - ADMIN
@@ -297,6 +300,7 @@ verifica_stato:
     - ADMIN
     - TUTOR-AZIENDALE
     - TUTOR-SCOLASTICO
+    - STUDENTE
 
 convert_to_print:
   post:
