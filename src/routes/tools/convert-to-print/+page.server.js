@@ -22,9 +22,9 @@ function swap_extension(filename, ext) {
 
 function cleanup_uploaded(files) {
 	files.forEach((file) => {
-		fs.unlinkSync(`${PUBLIC_CONVERT_DIR}/${strip_spaces(file.name)}`); // Rimuovo i files caricati in questo form, ormai non servono più
-		if (['doc', 'docx'].includes(fextension(strip_spaces(file.name))))
-			fs.unlinkSync(swap_extension(`${PUBLIC_CONVERT_DIR}/${strip_spaces(file.name)}`, 'pdf'));
+		fs.unlinkSync(`${PUBLIC_CONVERT_DIR}/${strip_spaces(file)}`); // Rimuovo i files caricati in questo form, ormai non servono più
+		if (['doc', 'docx'].includes(fextension(strip_spaces(file))))
+			fs.unlinkSync(swap_extension(`${PUBLIC_CONVERT_DIR}/${strip_spaces(file)}`, 'pdf'));
 	});
 }
 
@@ -66,7 +66,7 @@ export const actions = {
 
         try {
 			if (!fs.existsSync(PUBLIC_CONVERT_DIR)) fs.mkdirSync(PUBLIC_CONVERT_DIR); // Se non esiste la cartella temporanea creala
-
+			let new_filesname = [];	// Array con i nuovi filename temporanei
 			for (const file of files) {
 				let file_name = file.name;
 				file_name  = strip_spaces(file_name);
@@ -80,7 +80,9 @@ export const actions = {
 						`Hai caricato un file non consentito. Puoi caricare solo .pdf, .doc e .docx`
 					);
 				}
-
+				file_name = random_name().concat('.').concat(extension); // Assegna un nuovo filename casuale per evitare filename con sostituzioni bash(Issue #331)
+				new_filesname.push(file_name);	// Salvo il nuovo filename per il cleanup
+				
 				fs.writeFileSync(
 					`${PUBLIC_CONVERT_DIR}/${file_name}`,
 					Buffer.from(await file.arrayBuffer())
@@ -104,7 +106,7 @@ export const actions = {
 			}
 			const file_name_of_merged_pdf = user_login(locals).cognome + '_' + random_name() + '.pdf'; // Generiamo un nome casuale per evitare sovrascritture
 
-			cleanup_uploaded(files); // Rimuovo i files caricati in questo form, ormai non servono più
+			cleanup_uploaded(new_filesname); // Rimuovo i files caricati in questo form, ormai non servono più
             
             autit_conversion(locals, `generato file ${file_name_of_merged_pdf}`);
 			return {
