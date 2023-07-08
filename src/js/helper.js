@@ -128,6 +128,9 @@ export const pcto_valutazione_studenti_where = (data) => {
                 creatoDa: user_id(data)
             },
             {
+                idStagista: user_id(data)
+            },
+            {
                 pcto: {
                     is: {
                         idTutor: user_id(data),

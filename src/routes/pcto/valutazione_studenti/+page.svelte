@@ -25,7 +25,10 @@
 	});
 
     //arricchisce oggetto
-    valutazioni.forEach(val => val.stagista['full_name'] = `${val.stagista['cognome']} ${val.stagista['nome']}`);
+    valutazioni.forEach(val => {
+        val.stagista['full_name'] = `${val.stagista['cognome']} ${val.stagista['nome']}`;
+        val['azienda'] = val.pcto.offertoDa.nome;
+    });
 
 	//converto le risposte da JSON a Oggetto
 	valutazioni.forEach((val) => {
@@ -124,8 +127,9 @@
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'id' },
         { name: 'creatoDa', type: 'hidden', display: 'creatoDa' },
-        { name: 'pcto', type: 'object', display: 'Stage', key: 'titolo', size: 30 },
-        { name: 'stagista', type: 'object', display: 'Stagista', key: 'full_name', size: 50 },
+        { name: 'pcto', type: 'object', display: 'Stage', key: 'titolo', size: 50 },
+        { name: 'azienda', type: 'string', display: 'Azienda', size: 50, search: true },
+        { name: 'stagista', type: 'object', display: 'Stagista', key: 'full_name', size: 30, search: true },
 		{ name: 'createdAt', type: 'date', display: 'data creazione' }
 	]}
 	rows={valutazioni}

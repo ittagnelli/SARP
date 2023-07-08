@@ -32,7 +32,11 @@ export async function load({ locals }) {
             where: pcto_valutazione_studenti_where(locals),
             include: {
                 stagista: true,
-                pcto: true
+                pcto: {
+                    include: {
+                        offertoDa: true
+                    }
+                }
             }
         });
 

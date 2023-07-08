@@ -1,3 +1,26 @@
+## v2.0.1 – 30 Giugno 2023
+- Gli studenti possono visualizzare la propria valutazione PCTO
+- Gli studenti possono visualizzare la propria situazione PCTO
+  
+## v2.0.0 – 27 Giugno 2023
+- `fix#326`: Select template non deve essere mostrato in update
+  - Rimosso modale durante update
+- `fix#322`: Programmazione classe completa solo con presenza programmazione docente bugSomething isn't working
+- `fix#323`: Programmazione annuale formato documento
+- `fix#324`: Programmazione Docente formattazione header tabella
+- `fix#183`: Creazione applicazione Programmazione Annuale
+  - creato  programmazione: template Introduce template support
+  - Aggiunto programmazione_docente
+    - code review e refactory di template e programmazione docente
+    - Aggiunto programmazione_classe feature
+    - fix issue #315: Programmazione Docente manca il libro
+    - fix issue #317: Programmazione Documento nome insegnante bugSomething isn't working
+    - fix#316: Programmazione documento nome materia
+    - fix#314: Template Programmazione errore libro
+- `fix#320`: PCTO Presenze non ordinate
+    - Ora le presenze sono ordinate per data in senso antri cronologico
+
+
 ## v1.7.2 – 13 Giugno 2023
 - `fix#319`: PCTO presenze non inseribili per 1 solo studente
 - `fix#311`: riduzione tabella PCTO presenze

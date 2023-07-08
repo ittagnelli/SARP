@@ -5,6 +5,7 @@
     import { Logger } from '$js/logger';
 
     let logger = new Logger("client");
+    export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
 
 	//configura la pagina pre-titolo, titolo e nome del modale
 	$page_pre_title = 'PCTO';
@@ -17,6 +18,14 @@
     let show_error_mex = false;
     let user_found = false;
     let pctos = [];
+    let tipo_utente = helper.user_tipo(data); 
+
+    //se studente faccio la query solo per lui e rimuovo il form di input
+    if(tipo_utente == "STUDENTE") {
+        nome = data.session.login.nome;
+        cognome = data.session.login.cognome;
+        verifica_studente();
+    }   
 
     function show_error_message() {
         setTimeout(() => {
@@ -119,6 +128,7 @@
 {/if}
 
 <!-- search bar -->
+{#if tipo_utente != "STUDENTE"}
 <div class="card">
     <div class="card-body">
         <div class="row">
@@ -158,6 +168,7 @@
         </div>
     </div>
 </div>
+{/if}
 
 {#if user_found}
     <div class="info-header">
