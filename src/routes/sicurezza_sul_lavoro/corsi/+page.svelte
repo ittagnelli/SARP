@@ -182,6 +182,43 @@
             }
     });
 
+    async function custom_action_handler(e) {
+        switch(e.detail.action) {
+            case 'view':
+                view_results(e.detail.row_id);
+                break;
+            case 'issue':
+                issue_test(e.detail.row_id);
+                break;
+        }
+    }
+
+    async function view_results(id) {
+        console.log("VIEW:", id)
+        const get_response = await fetch(`/sicurezza_sul_lavoro/corsi?corso=${id}`);
+        let res = await get_response.json();
+        console.log("GET RES:", res)
+
+    }
+
+    async function issue_test(id) {
+        console.log("ISSUE:", id)
+        const res = await fetch(`/sicurezza_sul_lavoro/corsi?corso=${id}`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/x-www-form-urlencoded'
+			},
+			body: JSON.stringify('x')
+		});
+
+		if (res.ok) {
+			console.log("POST RES:",res)
+		} else {
+			console.log("POST ERROR")
+		}
+
+    }
+
 </script>
 
 <Table
@@ -203,6 +240,8 @@
     actions={true}
     print={true}
     resource="sicurezza_corso"
+    custom_actions={[{action: 'view', icon: 'eye'}, {action: 'issue', icon:'send'}]}
+    on:custom_action={custom_action_handler}
 />
 
 <!-- Modal from Page action -->

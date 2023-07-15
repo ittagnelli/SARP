@@ -430,8 +430,8 @@ a {
 
 .action-container {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
+    grid-auto-flow: column;
     justify-content:space-around;
-    column-gap: 10px;
+    column-gap: 5px;
 }
 </style>
