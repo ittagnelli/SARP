@@ -1,3 +1,15 @@
+## v2.0.2 – 15 Luglio 2023
+- `fix#333`: multiple custom action in table (#336)
+- Now user can set as many custom action as needed
+- `fix#330`: filtro tabella limita risultato a 10 (#335)
+- rimossa limitazione a 10 entry durante il filtro tabella
+- `fix#329`: Pulsante "Valuta Stagista" su /pcto/valutazione_studenti (#334)
+- Lo stagista può solo visualizzare la sua valutazione, e non può ne modificarla ne aggiungerne una nuova
+- `fix#331`: Vulnerabilità grave in convert-to-print(shell execution)
+- In precedenza poteva esser caricato un file con una sostituzione bash per eseguire comandi caricando un semplice file docx
+- change dest dir of db_backup
+- add deploy_backup which backs up SARP dir and /nginx dir
+
 ## v2.0.1 – 30 Giugno 2023
 - Gli studenti possono visualizzare la propria valutazione PCTO
 - Gli studenti possono visualizzare la propria situazione PCTO
