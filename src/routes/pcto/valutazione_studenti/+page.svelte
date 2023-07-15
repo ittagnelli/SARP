@@ -4,10 +4,8 @@
 	import * as yup from 'yup';
 	import { Logger } from '$js/logger';
 	import { qna_db } from './qna_db';
-	// import { wait_fade_finish } from '$js/helper';
-    import * as helper from '$js/helper';
-	import { element } from 'svelte/internal';
-
+	import * as helper from '$js/helper';
+	
 	let logger = new Logger('client');
 	export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
 	let pcto = []; // alias per maggior leggibilità
@@ -48,7 +46,7 @@
 	//configura la pagina pre-titolo, titolo e nome del modale
 	$page_pre_title = 'PCTO';
 	$page_title = 'Valutazioni';
-	$page_action_title = 'Valuta Stagista';
+	$page_action_title = helper.is_studente(data) ? '': 'Valuta Stagista';
 	$page_action_modal = 'modal-add-azienda';
 
 	let modal_action = 'create';
@@ -390,7 +388,7 @@
 					<a href="#" class="btn btn-danger" data-bs-dismiss="modal" on:click={cancel_action}>
 						<b>Cancel</b>
 					</a>
-					<button class="btn btn-success ms-auto">
+					<button class="btn btn-success ms-auto" disabled={helper.is_studente(data)}>
 						<i class="ti ti-plus icon" />
 						{#if modal_action == 'create'}
 							<b>Crea Valutazione</b>
