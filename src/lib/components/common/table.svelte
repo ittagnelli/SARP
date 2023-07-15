@@ -16,7 +16,7 @@ export let endpoint; // Cosa visualizza la tabella?
 export let footer;
 export let print;
 export let actions;
-export let custom_actions;
+export let custom_actions = [];
 export let resource;
 export let trash = true;
 export let update = true;
