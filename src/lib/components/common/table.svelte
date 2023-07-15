@@ -10,6 +10,7 @@ import { page } from '$app/stores';
 export let columns;
 export let rows;
 export let page_size;
+let tmp_page_size = page_size; //memorizzo page_size durante la ricerca
 export let modal_name;
 export let endpoint; // Cosa visualizza la tabella?
 export let footer;
@@ -99,8 +100,6 @@ function start_delete(id) {
 }
 
 function table_filter(col, type, key) {
-    change_page(1);
-
     if(type != 'boolean') {
         let val = document.getElementById(`filter_${col}`).value;
         if(val.length == 0)
@@ -126,6 +125,13 @@ function table_filter(col, type, key) {
     }
     show_pagination = rows_filtered.length == rows_db.length;
     rows_paged = [...rows_filtered.slice(page_start, page_end)];
+    //if need to paginate the restore original page size
+    //else we are doing search so set page size to high number
+    if(show_pagination)
+        page_size = tmp_page_size;
+    else
+        page_size = 10000;
+    change_page(1);
 }
 
 </script>
