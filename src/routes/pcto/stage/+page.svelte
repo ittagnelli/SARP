@@ -266,23 +266,25 @@
     } 
 
     async function show_stage_modal(e) {
-        let stage_detail_modal = helper.get_modal('stage_detail_modal');
-        let stage_detail = e.detail.id;
-        let stage = stages.filter(stage => stage.id == stage_detail)[0];
+        if(e.detail.action == 'view') {
+            let stage_detail_modal = helper.get_modal('stage_detail_modal');
+            let stage_detail = e.detail.row_id;
+            let stage = stages.filter(stage => stage.id == stage_detail)[0];
 
-        stage_modal_values.pcto_id = stage.id;
-		stage_modal_values.azienda = stage.offertoDa.nome;
-		stage_modal_values.titolo = stage.titolo;
-		stage_modal_values.descrizione = stage.descrizione;
-        stage_modal_values.anno_scolastico = stage.anno_scolastico;
-		stage_modal_values.tutor_aziendale = stage.tutor_aziendale;
-        stage_modal_values.tutor_scolastico = stage.tutor_scolastico.full_name;
-		stage_modal_values.dataInizio = helper.convert_date(stage.dataInizio);
-		stage_modal_values.dataFine = helper.convert_date(stage.dataFine);
-        stage_modal_values.durata_ore = stage.durata_ore;
-        stage_modal_values.studenti = await query_ore_pcto(stage.id)
-        
-        stage_detail_modal.show();
+            stage_modal_values.pcto_id = stage.id;
+            stage_modal_values.azienda = stage.offertoDa.nome;
+            stage_modal_values.titolo = stage.titolo;
+            stage_modal_values.descrizione = stage.descrizione;
+            stage_modal_values.anno_scolastico = stage.anno_scolastico;
+            stage_modal_values.tutor_aziendale = stage.tutor_aziendale;
+            stage_modal_values.tutor_scolastico = stage.tutor_scolastico.full_name;
+            stage_modal_values.dataInizio = helper.convert_date(stage.dataInizio);
+            stage_modal_values.dataFine = helper.convert_date(stage.dataFine);
+            stage_modal_values.durata_ore = stage.durata_ore;
+            stage_modal_values.studenti = await query_ore_pcto(stage.id)
+            
+            stage_detail_modal.show();
+        }
     }
 
     onMount(async () => { // Controlliamo che l'inserimento sia andato a buon fine, usiamo on mount per richiamare le funzioni del DOM
@@ -330,7 +332,7 @@
     footer="Stage"
     print={true}
     actions={true}
-    custom_action_icon="eye"
+    custom_actions={[{action: 'view', icon:'eye'}]}
     on:custom_action={show_stage_modal}
     resource="pcto_stage"
 />

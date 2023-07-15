@@ -16,7 +16,7 @@ export let endpoint; // Cosa visualizza la tabella?
 export let footer;
 export let print;
 export let actions;
-export let custom_action_icon;
+export let custom_actions;
 export let resource;
 export let trash = true;
 export let update = true;
@@ -88,9 +88,10 @@ function update_row(id) {
     });
 }
 
-function custom_action(id) {
+function custom_action_handler(action, id) {
     dispatch('custom_action', {
-        id: id
+        action: action,
+        row_id: id
     });
 }
 
@@ -291,9 +292,11 @@ function table_filter(col, type, key) {
                                             </a>  
                                         {/if}                                    
                                         <!-- custom action icon -->
-                                        <button class="icon-button" name="custom-action" on:click={() => custom_action(row.id)}>
-                                            <icon class="ti ti-{custom_action_icon} icon" />
-                                        </button>
+                                        {#each custom_actions as action}
+                                            <button class="icon-button" on:click={() => custom_action_handler(action.action, row.id)}>
+                                                <icon class="ti ti-{action.icon} icon" />
+                                            </button>
+                                        {/each}
                                         <!-- delete action icon -->
                                         {#if (user_id($page.data) == row.creatoDa && has_grant(user_ruolo($page.data),'delete', resource)) || is_admin($page.data)}
                                             {#if trash}
@@ -426,9 +429,9 @@ a {
 }
 
 .action-container {
-    display: flex;
-    width: 6vw;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
     justify-content:space-around;
+    column-gap: 10px;
 }
-
 </style>
