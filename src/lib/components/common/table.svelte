@@ -11,16 +11,16 @@ export let columns;
 export let rows;
 export let page_size;
 let tmp_page_size = page_size; //memorizzo page_size durante la ricerca
-export let modal_name;
+export let modal_name = '';
 export let endpoint; // Cosa visualizza la tabella?
 export let footer;
-export let print;
-export let actions;
+export let print = false;
+export let actions = true;
 export let custom_actions = [];
 export let resource;
 export let trash = true;
 export let update = true;
-export let print_filter;    // Proprietà dell'oggetto che, se impostata su true farà vedere il tasto print
+export let print_filter = false;    // Proprietà dell'oggetto che, se impostata su true farà vedere il tasto print
 
 const dispatch = createEventDispatcher();
 const MAX_PAGES = 20; //massimo numero di pagine visualizzabili nella barra
@@ -430,8 +430,8 @@ a {
 
 .action-container {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
+    grid-auto-flow: column;
     justify-content:space-around;
-    column-gap: 10px;
+    column-gap: 5px;
 }
 </style>

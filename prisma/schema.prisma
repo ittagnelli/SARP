@@ -1,4 +1,4 @@
-// v 0.17.0 2023-05-18
+// v 0.18.0 2023-07-29
 
 generator client {
     provider = "prisma-client-js"
@@ -50,6 +50,7 @@ model Utente {
     tutor_pcto               pcto_Pcto[]                 @relation("tutor")
     insegna_in               Insegnamenti[]
     template                 programmazione_Template[]
+    quiz_sicurezza           sicurezza_Test[]
 }
 
 model Classe {
@@ -65,25 +66,25 @@ model Classe {
 }
 
 model Materia {
-    id           Int            @id @default(autoincrement())
-    nome         String         @unique
+    id           Int                       @id @default(autoincrement())
+    nome         String                    @unique
     insegnata_in Insegnamenti[]
     template     programmazione_Template[]
 }
 
 model Insegnamenti {
-    id        Int     @id @default(autoincrement())
-    docente   Utente  @relation(fields: [idDocente], references: [id])
-    idDocente Int
-    materia   Materia @relation(fields: [idMateria], references: [id])
-    idMateria Int
-    classe    Classe  @relation(fields: [idClasse], references: [id])
-    idClasse  Int
-    titolare  Boolean @default(false) //TRUE:docente principale  FALSE: compresenza o altro
-    anno      Int //solo il primo dei due anni che compongolo l'anno scolastico
-    programma_primo_quadrimestre String?
-    programma_secondo_quadrimestre String?
-    programma_primo_quadrimestre_completo Boolean @default(false)
+    id                                      Int     @id @default(autoincrement())
+    docente                                 Utente  @relation(fields: [idDocente], references: [id])
+    idDocente                               Int
+    materia                                 Materia @relation(fields: [idMateria], references: [id])
+    idMateria                               Int
+    classe                                  Classe  @relation(fields: [idClasse], references: [id])
+    idClasse                                Int
+    titolare                                Boolean @default(false) //TRUE:docente principale  FALSE: compresenza o altro
+    anno                                    Int //solo il primo dei due anni che compongolo l'anno scolastico
+    programma_primo_quadrimestre            String?
+    programma_secondo_quadrimestre          String?
+    programma_primo_quadrimestre_completo   Boolean @default(false)
     programma_secondo_quadrimestre_completo Boolean @default(false)
 }
 
@@ -224,26 +225,46 @@ model programmazione_Template {
     id        Int      @id @default(autoincrement())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-    docente   Utente  @relation(fields: [creatoDa], references: [id])
+    docente   Utente   @relation(fields: [creatoDa], references: [id])
     creatoDa  Int
     nome      String
     template  String
     libro     String
-    materia   Materia @relation(fields: [idMateria], references: [id])
+    materia   Materia  @relation(fields: [idMateria], references: [id])
     idMateria Int
 }
 
 model sicurezza_Corso {
-    id         Int       @id @default(autoincrement())
-    createdAt  DateTime  @default(now())
-    updatedAt  DateTime  @updatedAt
-    creatoDa   Int
-    titolo     String
-    dataInizio DateTime
-    dataFine   DateTime
-    dataTest   DateTime?
-    tipo       String
-    seguitoDa  Utente[]
+    id            Int              @id @default(autoincrement())
+    createdAt     DateTime         @default(now())
+    updatedAt     DateTime         @updatedAt
+    creatoDa      Int
+    titolo        String
+    dataInizio    DateTime
+    dataFine      DateTime
+    dataTest      DateTime?
+    tipo          String
+    somministrato Boolean          @default(false)
+    seguitoDa     Utente[]
+    quiz          sicurezza_Test[]
+}
+
+model sicurezza_Test {
+    id        Int             @id @default(autoincrement())
+    createdAt DateTime        @default(now())
+    updatedAt DateTime        @default(now()) @updatedAt
+    creatoDa  Int
+    tipo      String
+    svolto    Boolean         @default(false)
+    superato  Boolean         @default(false)
+    domande   String?
+    risposte  String?
+    punti     Int             @default(0)
+    punti_max Int             @default(0)
+    studente  Utente          @relation(fields: [svoltoDa], references: [id])
+    svoltoDa  Int
+    corso     sicurezza_Corso @relation(fields: [idCorso], references: [id])
+    idCorso   Int
 }
 
 model kpi_Stats {

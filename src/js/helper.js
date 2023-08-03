@@ -119,6 +119,16 @@ export const multi_user_where = (data) => {
 	return clausola_where;
 };
 
+// restituisce una clausola di ricerca per utente ADMIN e non specifica per i test di sicurezza
+export const multi_user_sicurezza_where = (data) => {
+	let clausola_where;
+
+	if (!is_admin(data)) clausola_where = { svoltoDa: user_id(data) };
+	else clausola_where = { id: { gt: 0 } };
+
+	return clausola_where;
+};
+
 export const pcto_valutazione_studenti_where = (data) => {
 	let clausola_where;
 
