@@ -6,7 +6,6 @@ import PizZip from 'pizzip';
 import Docxtemplater from 'docxtemplater';
 import fs from 'fs';
 import path from 'path';
-import { redirect, fail, error } from '@sveltejs/kit';
 import { PUBLIC_SICUREZZA_TEMPLATES_DIR, PUBLIC_SICUREZZA_CORSO_GENERICO, PUBLIC_SICUREZZA_CORSO_SPECIFICO } from '$env/static/public';
 
 

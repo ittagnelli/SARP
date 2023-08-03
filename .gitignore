@@ -35,3 +35,22 @@ utils/scripts/*.txt
 
 *.xlsx
 *.xls
+
+src/routes/sicurezza_sul_lavoro/test/qna_generico_db.js
+src/routes/sicurezza_sul_lavoro/test/qna_specifico_db.js
+
+
+
+
+DOCKER.README.txt
+cypress/examples/
+cypress/support/commands.ts
+prisma/SARP*
+static/img/users/
+tests/
+utils/scripts/2022_materie_classi_docenti.xlsx.ORIG
+utils/scripts/PICTURES/
+utils/scripts/prisma_tester.js
+utils/scripts/update_img.js
+
+

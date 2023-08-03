@@ -99,11 +99,18 @@ menu_sicurezza_lavoro:
   view:
     - ADMIN
     - TUTOR-SICUREZZA
+    - STUDENTE
 
 menu_sicurezza_corsi:
   view:
     - ADMIN
     - TUTOR-SICUREZZA
+
+menu_sicurezza_test:
+  view:
+    - ADMIN
+    - TUTOR-SICUREZZA
+    - STUDENTE
 
 menu_aziende:
   view:
@@ -294,6 +301,16 @@ sicurezza_corso:
     - ADMIN
     - TUTOR-SICUREZZA
 
+sicurezza_test:
+  create:
+    - ADMIN
+    - TUTOR-SICUREZZA
+    - STUDENTE
+  read:
+    - ADMIN
+    - TUTOR-SICUREZZA
+    - STUDENTE
+  
 verifica_stato:
   get:
     - DEVELOPER

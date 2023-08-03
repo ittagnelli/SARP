@@ -17,7 +17,6 @@
     export let form; // Risposta del form dal server
 	let corsi = helper.data2arr(data.corsi);
 
-    // let aziende = helper.data2arr(data.companies);
     let tipi_corso = ['GENERICO', 'SPECIFICO'];
     let utenti = helper.data2arr(data.utenti);
 	let classi = helper.data2arr(data.classi);
@@ -38,7 +37,7 @@
 		if (modal_action == 'create') seguitoDa = [];
 	}
 
-	//configura la pagina pre-titolo, titolo e nome del modale
+    //configura la pagina pre-titolo, titolo e nome del modale
 	$page_pre_title = 'Sicurezza sul Lavoro';
 	$page_title = 'Corsi';
 	$page_action_title = 'Aggiungi corso';
@@ -184,41 +183,50 @@
 
     async function custom_action_handler(e) {
         switch(e.detail.action) {
-            case 'view':
-                view_results(e.detail.row_id);
-                break;
+            // case 'view':
+            //     view_results(e.detail.row_id);
+            //     break;
             case 'issue':
                 issue_test(e.detail.row_id);
                 break;
         }
     }
 
-    async function view_results(id) {
-        console.log("VIEW:", id)
-        const get_response = await fetch(`/sicurezza_sul_lavoro/corsi?corso=${id}`);
-        let res = await get_response.json();
-        console.log("GET RES:", res)
+    // async function view_results(id) {
+    //     console.log("VIEW:", id)
+    //     const get_response = await fetch(`/sicurezza_sul_lavoro/test?corso=${id}`);
+    //     let res = await get_response.json();
+    //     console.log("GET RES:", res)
 
-    }
+    // }
 
     async function issue_test(id) {
-        console.log("ISSUE:", id)
-        const res = await fetch(`/sicurezza_sul_lavoro/corsi?corso=${id}`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/x-www-form-urlencoded'
-			},
-			body: JSON.stringify('x')
-		});
+        let corso = corsi.filter(c => c.id == id)[0];
+        let studenti = corso.seguitoDa.map(s => s.id);
+        
+        if(!corso.somministrato) {
+            const res = await fetch(`/sicurezza_sul_lavoro/test`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    corso: id,
+                    type: corso.tipo,
+                    studenti: studenti
+                })
+            });
 
-		if (res.ok) {
-			console.log("POST RES:",res)
-		} else {
-			console.log("POST ERROR")
-		}
-
+            if (res.ok) {
+                console.log("POST RES:",res);
+                location.reload();
+            } else {
+                console.log("POST ERROR")
+            }
+        } else {
+            console.log("IL CORSO è gia somministrato");
+        }
     }
-
 </script>
 
 <Table
@@ -228,7 +236,8 @@
         { name: 'tipo', type: 'string', display: 'tipo', size: 20, search: true },
         { name: 'dataInizio', type: 'date', display: 'Inizio' },
 		{ name: 'dataFine', type: 'date', display: 'Fine' },
-        { name: 'dataTest', type: 'date', display: 'Test' },	
+        { name: 'dataTest', type: 'date', display: 'Test' },
+        { name: 'somministrato', type: 'boolean', display: 'somministrato', search: true},
 		{ name: 'seguitoDa', type: 'array', subtype: 'picture', key: 'picture', display: 'iscritti', size: 5 }
 	]}
 	rows={corsi}
@@ -240,9 +249,11 @@
     actions={true}
     print={true}
     resource="sicurezza_corso"
-    custom_actions={[{action: 'view', icon: 'eye'}, {action: 'issue', icon:'send'}]}
+    custom_actions={[{action: 'issue', icon:'checklist'}]}
     on:custom_action={custom_action_handler}
 />
+<!-- custom_actions={[{action: 'view', icon: 'eye'}, {action: 'issue', icon:'checklist'}]} -->
+
 
 <!-- Modal from Page action -->
 <div
