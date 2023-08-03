@@ -4,6 +4,7 @@ import { PUBLIC_ADMIN_ROLE } from '$env/static/public';
 import { RBAC } from './rbac';
 import { Logger } from './logger';
 import { browser } from '$app/environment';
+import { mb_type, mb_color, mb_title, mb_message, mb_show } from '$js/store';
 
 // Istanzia il logger in funzione di dove viene chiamato
 let logger = browser ? new Logger('client') : new Logger('server');
@@ -269,3 +270,30 @@ function replace_char_at(str, index, replacement) {
 export const upper_first_letter = (str) => {
 	return replace_char_at(str, 0, str[0].toUpperCase());
 } 
+
+//handle display of a MessageBox
+export const mbox_show = (type, title, message, delay) => {
+    function type2color() {
+        let color;
+        switch(type) {
+            case 'success':
+                color = '#00C949';
+                break;
+            case 'warning':
+                color = '#FF4E00';
+                break;
+            case 'danger':
+                color = '#EF0030';
+                break;
+        }
+        return color;
+    }
+
+    mb_type.set(type);
+    mb_color.set(type2color()); 
+    mb_title.set(title);
+    mb_message.set(message);
+    mb_show.set(true);
+    
+    setTimeout(() => mb_show.set(false), delay);
+}
