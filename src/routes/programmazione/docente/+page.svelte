@@ -123,7 +123,7 @@
 	}
 
 	async function cancel_action() {
-		await wait_fade_finish();
+		await wait_fade_finish(150);
 		modal_action = 'create'; // Reset string
 		form_values = {
 			nome: '',

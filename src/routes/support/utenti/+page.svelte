@@ -140,7 +140,7 @@
 
 	async function cancel_action(){
 		if(modal_action == 'update'){
-			await helper.wait_fade_finish();
+			await helper.wait_fade_finish(150);
 			modal_action = 'create';	// Reset model string
 			form_values = {	// Reset form values
 				user_id: 0,
