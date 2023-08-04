@@ -3,14 +3,41 @@
 	import { page_action_title, page_title, page_pre_title, page_action_modal } from '$js/store';
 	import Programmazione from '$lib/components/common/programmazione.svelte';
 	import Table from '$lib/components/common/table.svelte';
+    import MessageBox from '$lib/components/common/message_box.svelte';
+    import { onMount } from 'svelte';
 	import * as yup from 'yup';
+    import * as helper from '../../../js/helper';
 	export let data;
+    export let form;
 
 	/* Page properties */
 	$page_action_title = 'Aggiungi template';
 	$page_pre_title = 'Programma annuale';
 	$page_title = 'Template';
 	$page_action_modal = 'modal-template';
+
+    onMount(() => { 
+        if (form != null && form.status == 'ok') {
+            switch(form.action) {
+                case 'create':
+                    helper.mbox_show(
+                        'success',
+                        'Conferma',
+                        'Template creato correttamente',
+                        3000
+                    );
+                    break;
+                case 'update':
+                    helper.mbox_show(
+                        'success',
+                        'Conferma',
+                        'Template aggiornato correttamente',
+                        3000
+                    );
+                    break;
+            }
+        }
+    });
 
 	/* Page form model */
 	let modal_form;
@@ -128,6 +155,8 @@
 	}
 </script>
 
+<MessageBox />
+
 <Table
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
@@ -139,6 +168,8 @@
 	endpoint="programmazione/template"
 	footer="Presenze"
 	actions={true}
+    print={false}
+    print_filter={false}
 	resource="programmazione_template"
 	modal_name={$page_action_modal}
 	on:update_start={start_update}

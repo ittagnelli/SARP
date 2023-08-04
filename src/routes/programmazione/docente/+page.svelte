@@ -4,15 +4,20 @@
 		get_modal,
 		is_primo_quadrimestre,
 		remove_at_index,
-		wait_fade_finish
+		wait_fade_finish,
+        mbox_show
 	} from '$js/helper.js';
 
 	import { page_action_title, page_title, page_pre_title, page_action_modal } from '$js/store';
 	import Programmazione from '$lib/components/common/programmazione.svelte';
 	import Table from '$lib/components/common/table.svelte';
 	import Alert from '$lib/components/common/alert.svelte';
+    import MessageBox from '$lib/components/common/message_box.svelte';
+    import { onMount } from 'svelte';
+
 	import * as yup from 'yup';
 	export let data;
+    export let form;
 
     let insegnamenti = data.insegnamenti;
     let classi = data.insegnamenti.map((insegnamento) => insegnamento.classe);
@@ -23,6 +28,17 @@
 	$page_pre_title = 'Programma annuale';
 	$page_title = 'Programmazione docente';
 	$page_action_modal = 'modal-template';
+
+    onMount(() => { 
+        if (form != null && form.status == 'ok') {
+            mbox_show(
+                'success',
+                'Conferma',
+                'Programmazione aggiornata correttamente',
+                3000
+            );            
+        }
+    });
 
 	/* Page form model */
 	let modal_form;
@@ -70,40 +86,51 @@
 	let argomenti_primo_quadrimestre_raw = '';
 	let argomenti_secondo_quadrimestre_raw = '';
 
-	function start_update(e) {
+	async function start_update(e) {
 		modal_action = 'update';
         let insegnamento = insegnamenti.filter(i => i.id == e.detail.id)[0];
-        form_values.classe = insegnamento.idClasse;
-		form_values.materia = insegnamento.idMateria;
-        form_values.insegnamenti_id = insegnamento.id;
-        let template;
-        const current_insegnamento = insegnamento;
-	
-		if (is_primo_quadrimestre()) {
-			form_values.conferma = current_insegnamento.programma_primo_quadrimestre_completo
-				? 'SI'
-				: 'NO';
-            template = JSON.parse(current_insegnamento.programma_primo_quadrimestre);
-		} else {
-			form_values.conferma = current_insegnamento.programma_secondo_quadrimestre_completo
-				? 'SI'
-				: 'NO';
-            template = JSON.parse(current_insegnamento.programma_secondo_quadrimestre);
-		}
-        if(template) {
-            form_values.primo_quadrimestre = template[0];
-            form_values.secondo_quadrimestre = template[1];
-            argomenti_primo_quadrimestre = template[0];
-            argomenti_secondo_quadrimestre = template[1];
-			form_values.libri = template[template.length - 1].libri.split(',');
+
+        if(!insegnamento.programma_secondo_quadrimestre_completo) {
+            form_values.classe = insegnamento.idClasse;
+            form_values.materia = insegnamento.idMateria;
+            form_values.insegnamenti_id = insegnamento.id;
+            let template;
+            const current_insegnamento = insegnamento;
+        
+            if (is_primo_quadrimestre()) {
+                form_values.conferma = current_insegnamento.programma_primo_quadrimestre_completo
+                    ? 'SI'
+                    : 'NO';
+                template = JSON.parse(current_insegnamento.programma_primo_quadrimestre);
+            } else {
+                form_values.conferma = current_insegnamento.programma_secondo_quadrimestre_completo
+                    ? 'SI'
+                    : 'NO';
+                template = JSON.parse(current_insegnamento.programma_secondo_quadrimestre);
+            }
+            if(template) {
+                form_values.primo_quadrimestre = template[0];
+                form_values.secondo_quadrimestre = template[1];
+                argomenti_primo_quadrimestre = template[0];
+                argomenti_secondo_quadrimestre = template[1];
+                form_values.libri = template[template.length - 1].libri.split(',');
+            }
+            form_values.conferma_tmp = form_values.conferma;
+        } else {
+            await wait_fade_finish(500);
+            const btn = document.getElementById('btn-cancel');
+            btn.click();
+            mbox_show(
+                'warning',
+                'Attenzione',
+                'Non puoi modificare una programmazione completata',
+                3000
+            );
         }
-		form_values.conferma_tmp = form_values.conferma;
 	}
 
 	async function handleSubmit() {
-		// console.log(argomenti_primo_quadrimestre)
 		argomenti_primo_quadrimestre_raw = JSON.stringify(argomenti_primo_quadrimestre);
-		// console.log(argomenti_primo_quadrimestre_raw)
 		argomenti_secondo_quadrimestre_raw = JSON.stringify(argomenti_secondo_quadrimestre);
 		form_values.primo_quadrimestre = argomenti_primo_quadrimestre;
 		form_values.secondo_quadrimestre = argomenti_secondo_quadrimestre;
@@ -179,6 +206,8 @@
 	}
 </script>
 
+<MessageBox />
+
 <Table
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
@@ -210,6 +239,8 @@
 	endpoint="programmazione/docente"
 	footer="Programmazione docente"
 	actions={true}
+    print={false}
+    print_filter={false}
 	resource="programmazione_docente"
 	modal_name={$page_action_modal}
 	on:update_start={start_update}
@@ -251,6 +282,7 @@
 							<h5 class="modal-title">Aggiorna programma</h5>
 						{/if}
 						<button
+                            id="btn-cancel"
 							type="button"
 							class="btn-close"
 							data-bs-dismiss="modal"
@@ -261,7 +293,7 @@
 
 					<div class="modal-body">
 						<div class="row">
-							{#if modal_action == "create"}
+							<!-- {#if modal_action == "create"} -->
 								<div class="col">
 									<div class="form-label select_text">Template</div>
 									<select
@@ -281,7 +313,7 @@
 										<span class="invalid-feedback">{errors.template}</span>
 									{/if}
 								</div>
-							{/if}
+							<!-- {/if} -->
 							<div class="col">
 								<div class="form-label select_text">Materia</div>
 								<select

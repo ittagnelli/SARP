@@ -81,6 +81,7 @@ export const actions = {
                 }
             });
         }
+        return {action: action, status: 'ok'};
     }
 
 }

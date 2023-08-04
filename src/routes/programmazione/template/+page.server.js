@@ -54,6 +54,8 @@ export const actions = {
                 nome: form.get("nome")?.toString()
             }
         });
+
+        return {action: action, status: 'ok'};
     },
     delete: async ({ request, locals }) => {
         let action = 'delete';
@@ -93,6 +95,8 @@ export const actions = {
                 id: parseInt(form.get("id"))
             }
         });
+
+        return {action: action, status: 'ok'};
     }
 
 }
