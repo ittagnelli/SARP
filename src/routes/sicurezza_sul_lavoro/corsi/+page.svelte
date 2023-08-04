@@ -146,7 +146,6 @@
 	}
 
 	async function handleSubmit() {
-        console.log("FORM VALUES:", form_values)
         try {
 			// valida il form prima del submit
 			await form_schema.validate(form_values, { abortEarly: false });

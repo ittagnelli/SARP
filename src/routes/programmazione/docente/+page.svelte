@@ -4,15 +4,20 @@
 		get_modal,
 		is_primo_quadrimestre,
 		remove_at_index,
-		wait_fade_finish
+		wait_fade_finish,
+        mbox_show
 	} from '$js/helper.js';
 
 	import { page_action_title, page_title, page_pre_title, page_action_modal } from '$js/store';
 	import Programmazione from '$lib/components/common/programmazione.svelte';
 	import Table from '$lib/components/common/table.svelte';
 	import Alert from '$lib/components/common/alert.svelte';
+    import MessageBox from '$lib/components/common/message_box.svelte';
+    import { onMount } from 'svelte';
+
 	import * as yup from 'yup';
 	export let data;
+    export let form;
 
     let insegnamenti = data.insegnamenti;
     let classi = data.insegnamenti.map((insegnamento) => insegnamento.classe);
@@ -23,6 +28,17 @@
 	$page_pre_title = 'Programma annuale';
 	$page_title = 'Programmazione docente';
 	$page_action_modal = 'modal-template';
+
+    onMount(() => { 
+        if (form != null && form.status == 'ok') {
+            mbox_show(
+                'success',
+                'Conferma',
+                'Programmazione aggiornata correttamente',
+                3000
+            );            
+        }
+    });
 
 	/* Page form model */
 	let modal_form;
@@ -70,40 +86,51 @@
 	let argomenti_primo_quadrimestre_raw = '';
 	let argomenti_secondo_quadrimestre_raw = '';
 
-	function start_update(e) {
+	async function start_update(e) {
 		modal_action = 'update';
         let insegnamento = insegnamenti.filter(i => i.id == e.detail.id)[0];
-        form_values.classe = insegnamento.idClasse;
-		form_values.materia = insegnamento.idMateria;
-        form_values.insegnamenti_id = insegnamento.id;
-        let template;
-        const current_insegnamento = insegnamento;
-	
-		if (is_primo_quadrimestre()) {
-			form_values.conferma = current_insegnamento.programma_primo_quadrimestre_completo
-				? 'SI'
-				: 'NO';
-            template = JSON.parse(current_insegnamento.programma_primo_quadrimestre);
-		} else {
-			form_values.conferma = current_insegnamento.programma_secondo_quadrimestre_completo
-				? 'SI'
-				: 'NO';
-            template = JSON.parse(current_insegnamento.programma_secondo_quadrimestre);
-		}
-        if(template) {
-            form_values.primo_quadrimestre = template[0];
-            form_values.secondo_quadrimestre = template[1];
-            argomenti_primo_quadrimestre = template[0];
-            argomenti_secondo_quadrimestre = template[1];
-			form_values.libri = template[template.length - 1].libri.split(',');
+
+        if(!insegnamento.programma_secondo_quadrimestre_completo) {
+            form_values.classe = insegnamento.idClasse;
+            form_values.materia = insegnamento.idMateria;
+            form_values.insegnamenti_id = insegnamento.id;
+            let template;
+            const current_insegnamento = insegnamento;
+        
+            if (is_primo_quadrimestre()) {
+                form_values.conferma = current_insegnamento.programma_primo_quadrimestre_completo
+                    ? 'SI'
+                    : 'NO';
+                template = JSON.parse(current_insegnamento.programma_primo_quadrimestre);
+            } else {
+                form_values.conferma = current_insegnamento.programma_secondo_quadrimestre_completo
+                    ? 'SI'
+                    : 'NO';
+                template = JSON.parse(current_insegnamento.programma_secondo_quadrimestre);
+            }
+            if(template) {
+                form_values.primo_quadrimestre = template[0];
+                form_values.secondo_quadrimestre = template[1];
+                argomenti_primo_quadrimestre = template[0];
+                argomenti_secondo_quadrimestre = template[1];
+                form_values.libri = template[template.length - 1].libri.split(',');
+            }
+            form_values.conferma_tmp = form_values.conferma;
+        } else {
+            await wait_fade_finish(500);
+            const btn = document.getElementById('btn-cancel');
+            btn.click();
+            mbox_show(
+                'warning',
+                'Attenzione',
+                'Non puoi modificare una programmazione completata',
+                3000
+            );
         }
-		form_values.conferma_tmp = form_values.conferma;
 	}
 
 	async function handleSubmit() {
-		// console.log(argomenti_primo_quadrimestre)
 		argomenti_primo_quadrimestre_raw = JSON.stringify(argomenti_primo_quadrimestre);
-		// console.log(argomenti_primo_quadrimestre_raw)
 		argomenti_secondo_quadrimestre_raw = JSON.stringify(argomenti_secondo_quadrimestre);
 		form_values.primo_quadrimestre = argomenti_primo_quadrimestre;
 		form_values.secondo_quadrimestre = argomenti_secondo_quadrimestre;
@@ -179,6 +206,8 @@
 	}
 </script>
 
+<MessageBox />
+
 <Table
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
@@ -210,15 +239,12 @@
 	endpoint="programmazione/docente"
 	footer="Programmazione docente"
 	actions={true}
+    print={false}
+    print_filter={false}
 	resource="programmazione_docente"
 	modal_name={$page_action_modal}
 	on:update_start={start_update}
     trash={false}
-/>
-
-<Alert
-	title="Impossibile modificare il programma"
-	text="Non è più possibile modificare il programma"
 />
 
 <!-- Modal from Page action -->
@@ -229,269 +255,266 @@
 	role="dialog"
 	aria-hidden="true"
 >
-	{#if modal_action == 'update' && form_values.conferma == 'SI'}
-		{get_modal('alert_modal').show()}
-	{:else}
-		<form
-			method="POST"
-			action="?/{modal_action}"
-			on:submit|preventDefault={handleSubmit}
-			bind:this={modal_form}
-		>
-			<input type="hidden" name="id" bind:value={form_values.insegnamenti_id} />
-			<input type="hidden" name="classe" bind:value={form_values.classe} />
+    <form
+        method="POST"
+        action="?/{modal_action}"
+        on:submit|preventDefault={handleSubmit}
+        bind:this={modal_form}
+    >
+        <input type="hidden" name="id" bind:value={form_values.insegnamenti_id} />
+        <input type="hidden" name="classe" bind:value={form_values.classe} />
 
-			<!-- <input type="hidden" name="id_template" bind:value={form_values.template_id}/> -->
-			<div class="modal-dialog modal-lg" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						{#if modal_action == 'create'}
-							<h5 class="modal-title">Nuovo programma</h5>
-						{:else}
-							<h5 class="modal-title">Aggiorna programma</h5>
-						{/if}
-						<button
-							type="button"
-							class="btn-close"
-							data-bs-dismiss="modal"
-							aria-label="Close"
-							on:click={cancel_action}
-						/>
-					</div>
+        <!-- <input type="hidden" name="id_template" bind:value={form_values.template_id}/> -->
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    {#if modal_action == 'create'}
+                        <h5 class="modal-title">Nuovo programma</h5>
+                    {:else}
+                        <h5 class="modal-title">Aggiorna programma</h5>
+                    {/if}
+                    <button
+                        id="btn-cancel"
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                        on:click={cancel_action}
+                    />
+                </div>
 
-					<div class="modal-body">
-						<div class="row">
-							{#if modal_action == "create"}
-								<div class="col">
-									<div class="form-label select_text">Template</div>
-									<select
-										class="form-select"
-										class:is-invalid={errors.template}
-										name="template"
-										bind:value={form_values.template_id}
-										on:change={update_template}
-									>
-										{#each data.templates as template}
-											{#if template.idMateria == form_values.materia}
-												<option value={template.id}>{template.nome}</option>
-											{/if}
-										{/each}
-									</select>
-									{#if errors.template}
-										<span class="invalid-feedback">{errors.template}</span>
-									{/if}
-								</div>
-							{/if}
-							<div class="col">
-								<div class="form-label select_text">Materia</div>
-								<select
-									class="form-select disabled"
-									name="materia"
-									bind:value={form_values.materia}
-								>
-									{#each materie as materia}
-										<option value={materia.id}>{materia.nome}</option>
-									{/each}
-								</select>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col">
-								<div class="form-label select_text mt-3">Classe</div>
-								<select
-									class="form-select mt-3 disabled"
-									name="classe"
-									bind:value={form_values.classe}
-								>
-									{#each classi as classe}
-										<option value={classe.id[0]}>{classe.classe}</option>
-									{/each}
-								</select>
-							</div>
-							<div class="col">
-								<div class="form-label select_text mt-3">Libro di testo</div>
-								{#each form_values.libri as libro}
-									{#if libro != 'null'}
-										<div class="input-group input-group-flat">
-											<input
-												type="text"
-												class="form-control mt-2"
-												bind:value={libro}
-												id="libro"
-												class:is-invalid={errors.libri}
-											/>
-											<span class="input-group-text">
-												<a
-													href="#0"
-													on:click={new_libro}
-													class="link-secondary"
-													title="Clear search"
-													data-bs-toggle="tooltip"
-													><!-- Download SVG icon from http://tabler-icons.io/i/x -->
-													<svg
-														xmlns="http://www.w3.org/2000/svg"
-														class="icon icon-tabler icon-tabler-plus"
-														width="24"
-														height="24"
-														viewBox="0 0 24 24"
-														stroke-width="2"
-														stroke="currentColor"
-														fill="none"
-														stroke-linecap="round"
-														stroke-linejoin="round"
-													>
-														<path stroke="none" d="M0 0h24v24H0z" fill="none" />
-														<path d="M12 5l0 14" />
-														<path d="M5 12l14 0" />
-													</svg>
-												</a>
-												<a
-													href="#0"
-													class="link-secondary"
-													title="Clear search"
-													data-bs-toggle="tooltip"
-													on:click={() => delete_libro(libro)}
-													><!-- Download SVG icon from http://tabler-icons.io/i/x -->
-													<svg
-														xmlns="http://www.w3.org/2000/svg"
-														class="icon icon-tabler icon-tabler-trash-filled"
-														width="24"
-														height="24"
-														viewBox="0 0 24 24"
-														stroke-width="2"
-														stroke="currentColor"
-														fill="none"
-														stroke-linecap="round"
-														stroke-linejoin="round"
-													>
-														<path stroke="none" d="M0 0h24v24H0z" fill="none" />
-														<path
-															d="M20 6a1 1 0 0 1 .117 1.993l-.117 .007h-.081l-.919 11a3 3 0 0 1 -2.824 2.995l-.176 .005h-8c-1.598 0 -2.904 -1.249 -2.992 -2.75l-.005 -.167l-.923 -11.083h-.08a1 1 0 0 1 -.117 -1.993l.117 -.007h16z"
-															stroke-width="0"
-															fill="currentColor"
-														/>
-														<path
-															d="M14 2a2 2 0 0 1 2 2a1 1 0 0 1 -1.993 .117l-.007 -.117h-4l-.007 .117a1 1 0 0 1 -1.993 -.117a2 2 0 0 1 1.85 -1.995l.15 -.005h4z"
-															stroke-width="0"
-															fill="currentColor"
-														/>
-													</svg>
-												</a>
-											</span>
-										</div>
-									{/if}
-								{/each}
-								<input type="hidden" name="libri" bind:value={form_values.libri} />
-								{#if errors.libri}
-									<span class="invalid-feedback">{errors.libri}</span>
-								{/if}
-							</div>
-						</div>
-						<div class="row">
-							<div class="col">
-								<div
-									class="form-label select_text mt-3 fs-3"
-									class:is-invalid={errors.primo_quadrimestre}
-								>
-									1 Quadrimestre
-								</div>
-								{#if errors.primo_quadrimestre}
-									<span class="invalid-feedback">Creare almeno un argomento e sotto argomento</span>
-								{/if}
-								<div>
-									<Programmazione bind:argomenti={argomenti_primo_quadrimestre} />
-									<input
-										type="hidden"
-										name="argomenti_primo_quadrimestre"
-										bind:value={argomenti_primo_quadrimestre_raw}
-									/>
-								</div>
-							</div>
-							<div class="col">
-								<div
-									class="form-label select_text mt-3 fs-3"
-									class:is-invalid={errors.secondo_quadrimestre}
-								>
-									2 Quadrimestre
-								</div>
-								{#if errors.secondo_quadrimestre}
-									<span class="invalid-feedback">Creare almeno un argomento e sotto argomento</span>
-								{/if}
-								<div>
-									<Programmazione bind:argomenti={argomenti_secondo_quadrimestre} />
-									<input
-										type="hidden"
-										name="argomenti_secondo_quadrimestre"
-										bind:value={argomenti_secondo_quadrimestre_raw}
-									/>
-								</div>
-							</div>
-							<br />
-						</div>
-						<div class="col pt-2">
-							<br />
-							<label class="form-label">Programmazione completa</label>
-							<div class="form-selectgroup">
-								<label class="form-selectgroup-item">
-									{#if modal_action != 'update'}
-										<input
-											type="radio"
-											name="conferma"
-											value="SI"
-											class="form-selectgroup-input"
-											bind:group={form_values.conferma}
-										/>
-									{:else}
-										<input
-											type="radio"
-											name="conferma"
-											value="SI"
-											class="form-selectgroup-input"
-											bind:group={form_values.conferma_tmp}
-										/>
-									{/if}
-									<span class="form-selectgroup-label">SI</span>
-								</label>
-								<label class="form-selectgroup-item">
-									{#if modal_action != 'update'}
-										<input
-											type="radio"
-											name="conferma"
-											value="NO"
-											class="form-selectgroup-input"
-											bind:group={form_values.conferma}
-										/>
-									{:else}
-										<input
-											type="radio"
-											name="conferma"
-											value="NO"
-											class="form-selectgroup-input"
-											bind:group={form_values.conferma_tmp}
-										/>
-									{/if}
-									<span class="form-selectgroup-label">NO</span>
-								</label>
-							</div>
-						</div>
-					</div>
-					<div class="modal-footer">
-						<a href="#" class="btn btn-danger" data-bs-dismiss="modal" on:click={cancel_action}>
-							<b>Cancel</b>
-						</a>
-						<button class="btn btn-success ms-auto">
-							<i class="ti ti-plus icon" />
-							{#if modal_action == 'create'}
-								<b>Aggiungi programmazione</b>
-							{:else}
-								<b>Aggiorna programmazione</b>
-							{/if}
-						</button>
-					</div>
-				</div>
-			</div>
-		</form>
-	{/if}
+                <div class="modal-body">
+                    <div class="row">
+                        <!-- {#if modal_action == "create"} -->
+                            <div class="col">
+                                <div class="form-label select_text">Template</div>
+                                <select
+                                    class="form-select"
+                                    class:is-invalid={errors.template}
+                                    name="template"
+                                    bind:value={form_values.template_id}
+                                    on:change={update_template}
+                                >
+                                    {#each data.templates as template}
+                                        {#if template.idMateria == form_values.materia}
+                                            <option value={template.id}>{template.nome}</option>
+                                        {/if}
+                                    {/each}
+                                </select>
+                                {#if errors.template}
+                                    <span class="invalid-feedback">{errors.template}</span>
+                                {/if}
+                            </div>
+                        <!-- {/if} -->
+                        <div class="col">
+                            <div class="form-label select_text">Materia</div>
+                            <select
+                                class="form-select disabled"
+                                name="materia"
+                                bind:value={form_values.materia}
+                            >
+                                {#each materie as materia}
+                                    <option value={materia.id}>{materia.nome}</option>
+                                {/each}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-label select_text mt-3">Classe</div>
+                            <select
+                                class="form-select mt-3 disabled"
+                                name="classe"
+                                bind:value={form_values.classe}
+                            >
+                                {#each classi as classe}
+                                    <option value={classe.id[0]}>{classe.classe}</option>
+                                {/each}
+                            </select>
+                        </div>
+                        <div class="col">
+                            <div class="form-label select_text mt-3">Libro di testo</div>
+                            {#each form_values.libri as libro}
+                                {#if libro != 'null'}
+                                    <div class="input-group input-group-flat">
+                                        <input
+                                            type="text"
+                                            class="form-control mt-2"
+                                            bind:value={libro}
+                                            id="libro"
+                                            class:is-invalid={errors.libri}
+                                        />
+                                        <span class="input-group-text">
+                                            <a
+                                                href="#0"
+                                                on:click={new_libro}
+                                                class="link-secondary"
+                                                title="Clear search"
+                                                data-bs-toggle="tooltip"
+                                                ><!-- Download SVG icon from http://tabler-icons.io/i/x -->
+                                                <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    class="icon icon-tabler icon-tabler-plus"
+                                                    width="24"
+                                                    height="24"
+                                                    viewBox="0 0 24 24"
+                                                    stroke-width="2"
+                                                    stroke="currentColor"
+                                                    fill="none"
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                >
+                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                    <path d="M12 5l0 14" />
+                                                    <path d="M5 12l14 0" />
+                                                </svg>
+                                            </a>
+                                            <a
+                                                href="#0"
+                                                class="link-secondary"
+                                                title="Clear search"
+                                                data-bs-toggle="tooltip"
+                                                on:click={() => delete_libro(libro)}
+                                                ><!-- Download SVG icon from http://tabler-icons.io/i/x -->
+                                                <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    class="icon icon-tabler icon-tabler-trash-filled"
+                                                    width="24"
+                                                    height="24"
+                                                    viewBox="0 0 24 24"
+                                                    stroke-width="2"
+                                                    stroke="currentColor"
+                                                    fill="none"
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                >
+                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                    <path
+                                                        d="M20 6a1 1 0 0 1 .117 1.993l-.117 .007h-.081l-.919 11a3 3 0 0 1 -2.824 2.995l-.176 .005h-8c-1.598 0 -2.904 -1.249 -2.992 -2.75l-.005 -.167l-.923 -11.083h-.08a1 1 0 0 1 -.117 -1.993l.117 -.007h16z"
+                                                        stroke-width="0"
+                                                        fill="currentColor"
+                                                    />
+                                                    <path
+                                                        d="M14 2a2 2 0 0 1 2 2a1 1 0 0 1 -1.993 .117l-.007 -.117h-4l-.007 .117a1 1 0 0 1 -1.993 -.117a2 2 0 0 1 1.85 -1.995l.15 -.005h4z"
+                                                        stroke-width="0"
+                                                        fill="currentColor"
+                                                    />
+                                                </svg>
+                                            </a>
+                                        </span>
+                                    </div>
+                                {/if}
+                            {/each}
+                            <input type="hidden" name="libri" bind:value={form_values.libri} />
+                            {#if errors.libri}
+                                <span class="invalid-feedback">{errors.libri}</span>
+                            {/if}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div
+                                class="form-label select_text mt-3 fs-3"
+                                class:is-invalid={errors.primo_quadrimestre}
+                            >
+                                1 Quadrimestre
+                            </div>
+                            {#if errors.primo_quadrimestre}
+                                <span class="invalid-feedback">Creare almeno un argomento e sotto argomento</span>
+                            {/if}
+                            <div>
+                                <Programmazione bind:argomenti={argomenti_primo_quadrimestre} />
+                                <input
+                                    type="hidden"
+                                    name="argomenti_primo_quadrimestre"
+                                    bind:value={argomenti_primo_quadrimestre_raw}
+                                />
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div
+                                class="form-label select_text mt-3 fs-3"
+                                class:is-invalid={errors.secondo_quadrimestre}
+                            >
+                                2 Quadrimestre
+                            </div>
+                            {#if errors.secondo_quadrimestre}
+                                <span class="invalid-feedback">Creare almeno un argomento e sotto argomento</span>
+                            {/if}
+                            <div>
+                                <Programmazione bind:argomenti={argomenti_secondo_quadrimestre} />
+                                <input
+                                    type="hidden"
+                                    name="argomenti_secondo_quadrimestre"
+                                    bind:value={argomenti_secondo_quadrimestre_raw}
+                                />
+                            </div>
+                        </div>
+                        <br />
+                    </div>
+                    <div class="col pt-2">
+                        <br />
+                        <label class="form-label">Programmazione completa</label>
+                        <div class="form-selectgroup">
+                            <label class="form-selectgroup-item">
+                                {#if modal_action != 'update'}
+                                    <input
+                                        type="radio"
+                                        name="conferma"
+                                        value="SI"
+                                        class="form-selectgroup-input"
+                                        bind:group={form_values.conferma}
+                                    />
+                                {:else}
+                                    <input
+                                        type="radio"
+                                        name="conferma"
+                                        value="SI"
+                                        class="form-selectgroup-input"
+                                        bind:group={form_values.conferma_tmp}
+                                    />
+                                {/if}
+                                <span class="form-selectgroup-label">SI</span>
+                            </label>
+                            <label class="form-selectgroup-item">
+                                {#if modal_action != 'update'}
+                                    <input
+                                        type="radio"
+                                        name="conferma"
+                                        value="NO"
+                                        class="form-selectgroup-input"
+                                        bind:group={form_values.conferma}
+                                    />
+                                {:else}
+                                    <input
+                                        type="radio"
+                                        name="conferma"
+                                        value="NO"
+                                        class="form-selectgroup-input"
+                                        bind:group={form_values.conferma_tmp}
+                                    />
+                                {/if}
+                                <span class="form-selectgroup-label">NO</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-danger" data-bs-dismiss="modal" on:click={cancel_action}>
+                        <b>Cancel</b>
+                    </a>
+                    <button class="btn btn-success ms-auto">
+                        <i class="ti ti-plus icon" />
+                        {#if modal_action == 'create'}
+                            <b>Aggiungi programmazione</b>
+                        {:else}
+                            <b>Aggiorna programmazione</b>
+                        {/if}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
 </div>
 
 <style>
