@@ -178,7 +178,7 @@
 
 	async function cancel_action(){
 		if(modal_action == "update"){
-			await helper.wait_fade_finish();
+			await helper.wait_fade_finish(150);
 			modal_action = 'create';	// Reset modal string
 			form_values = {	// Reset modal form
 				pcto_id: 0,

@@ -225,7 +225,7 @@ export function delay(msec) {
 	});
 }
 
-export const wait_fade_finish = async () => await delay(150); // Avoid graphic issue, wait for the finish of modal closing animation. 150 ms from Tabler css
+export const wait_fade_finish = async (d) => await delay(d); // Avoid graphic issue, wait for the finish of modal closing animation. 150 ms from Tabler css
 
 export const ore_pcto = (inizio, fine) => {
     return ((new Date(fine) - new Date(inizio))/(60 * 60 * 1000));
@@ -272,28 +272,31 @@ export const upper_first_letter = (str) => {
 } 
 
 //handle display of a MessageBox
-export const mbox_show = (type, title, message, delay) => {
-    function type2color() {
-        let color;
-        switch(type) {
-            case 'success':
-                color = '#00C949';
-                break;
-            case 'warning':
-                color = '#FF4E00';
-                break;
-            case 'danger':
-                color = '#EF0030';
-                break;
-        }
-        return color;
-    }
+export const mbox_show = (type, title, message, delay, cb) => {
+	function type2color() {
+		let color;
+		switch (type) {
+			case 'success':
+				color = '#00C949';
+				break;
+			case 'warning':
+				color = '#FF4E00';
+				break;
+			case 'danger':
+				color = '#EF0030';
+				break;
+		}
+		return color;
+	}
 
-    mb_type.set(type);
-    mb_color.set(type2color()); 
-    mb_title.set(title);
-    mb_message.set(message);
-    mb_show.set(true);
-    
-    setTimeout(() => mb_show.set(false), delay);
-}
+	mb_type.set(type);
+	mb_color.set(type2color());
+	mb_title.set(title);
+	mb_message.set(message);
+	mb_show.set(true);
+
+	setTimeout(() => {
+		mb_show.set(false);
+        if(cb) cb();
+	}, delay);
+};

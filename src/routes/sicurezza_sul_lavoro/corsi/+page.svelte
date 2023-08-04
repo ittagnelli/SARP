@@ -11,6 +11,7 @@
     import { Logger } from '../../../js/logger';
     import { onMount } from 'svelte';
     import { saveAs } from 'file-saver';
+    import MessageBox from '$lib/components/common/message_box.svelte';
     
     let logger = new Logger("client");
 	export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
@@ -77,17 +78,30 @@
 		form_values.corso_id = e.detail.id;
 		//cerca l'azienda da fare update
 		let corso = corsi.filter((item) => item.id == form_values.corso_id)[0];
-		corso.seguitoDa.forEach((utente) => {
-			utente['label'] = utente.cognome.concat(' ', utente.nome);
-			utente['value'] = utente.id;
-		});
-		seguitoDa = corso.seguitoDa;
+        if(!corso.somministrato) {
+            corso.seguitoDa.forEach((utente) => {
+                utente['label'] = utente.cognome.concat(' ', utente.nome);
+                utente['value'] = utente.id;
+            });
+            seguitoDa = corso.seguitoDa;
 
-		form_values.titolo = corso.titolo;
-		form_values.tipo = corso.tipo;
-		form_values.dataInizio = helper.convert_date(corso.dataInizio);
-		form_values.dataFine = helper.convert_date(corso.dataFine);
-        form_values.dataTest = helper.convert_date(corso.dataTest);
+            form_values.titolo = corso.titolo;
+            form_values.tipo = corso.tipo;
+            form_values.dataInizio = helper.convert_date(corso.dataInizio);
+            form_values.dataFine = helper.convert_date(corso.dataFine);
+            form_values.dataTest = helper.convert_date(corso.dataTest);
+        } else {
+            //very dirty trick, I will change when I will find a better solution
+            await helper.wait_fade_finish(500);
+            const btn = document.getElementById('btn-cancel');
+            btn.click();
+            helper.mbox_show(
+                'warning',
+                'Attenzione',
+                'Non puoi modificare un corso con test già somministrati',
+                3000
+            );
+        }
 	}
 
 	function handleSelect(event) {
@@ -109,7 +123,6 @@
 						classi_iscritte = classi_iscritte;
 					}
 				}
-
 			}
 			old_studenti = user_selected;
         }else {
@@ -149,7 +162,7 @@
 
 	async function cancel_action(){
 		if(modal_action == 'update'){
-			await helper.wait_fade_finish();
+			await helper.wait_fade_finish(150);
 			modal_action = 'create';
 			form_values = {
 				corso_id: 0,
@@ -218,16 +231,33 @@
             });
 
             if (res.ok) {
-                console.log("POST RES:",res);
-                location.reload();
+                helper.mbox_show(
+                    'success',
+                    'Conferma',
+                    'I test per questo corso sono stati somministrati correttamente',
+                    3000,
+                    () => location.reload()
+                );
             } else {
-                console.log("POST ERROR")
+                helper.mbox_show(
+                    'danger',
+                    `Errore [${res.status} - ${res.statusText}]`,
+                    'Non è stato possibile somministrare i test per questo corso.',
+                    3000
+                );
             }
         } else {
-            console.log("IL CORSO è gia somministrato");
+            helper.mbox_show(
+                'warning',
+                'Attenzione',
+                'I test per questo corso sono già stati somministrati',
+                3000
+            );
         }
     }
 </script>
+
+<MessageBox/>
 
 <Table
 	columns={[
@@ -281,7 +311,7 @@
 					{:else}
 						<h5 class="modal-title">Aggiorna Corso</h5>
 					{/if}
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" on:click={cancel_action}/>
+					<button id="btn-cancel" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" on:click={cancel_action}/>
 				</div>
 				<div class="modal-body">
 					<div class="row">
