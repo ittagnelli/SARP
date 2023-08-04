@@ -3,7 +3,8 @@
 	import Table from '$lib/components/common/table.svelte';
     import * as helper from '../../../js/helper';
     import { Logger } from '../../../js/logger';
-   
+    import MessageBox from '$lib/components/common/message_box.svelte';
+
     let logger = new Logger("client");
 	export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
    
@@ -29,19 +30,7 @@
     let custom_icon = helper.is_studente(data) ? 'checklist' : 'copy';
 
 	async function handleSubmit() {
-        console.log("HANDLE SUBIT DEL TEST");
         modal_form.submit();
-        // try {
-		// 	// valida il form prima del submit
-		// 	await form_schema.validate(form_values, { abortEarly: false });
-		// 	errors = {};
-		// 	modal_form.submit();
-		// } catch (err) {
-		// 	errors = err.inner.reduce((acc, err) => {
-		// 		return { ...acc, [err.path]: err.message };
-		// 	}, {});
-		// 	logger.error(`Errori nella validazione del form corso sicurezza. Oggetto: ${JSON.stringify(form_values)} -- Errore: ${JSON.stringify(errors)}`);
-		// }
 	}
 
     async function custom_action_handler(e) {
@@ -52,31 +41,57 @@
                 let test_run_modal = helper.get_modal('modal-run-test-generico');
                 test_run_modal.show();
             } else {
-                console.log("TEST GIA SVOLTO E COMPLETATO");
+                helper.mbox_show(
+                    'warning',
+                    'Attenzione',
+                    'Non è possibile rieseguire un test che è già  stato svolto e completato',
+                    3000
+                );
             }
         } else if(e.detail.action == 'run' && helper.is_admin(data)) {
-            let studente = current_test.svoltoDa;
-            const res = await fetch(`/sicurezza_sul_lavoro/test`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    corso: current_test.corso.id,
-                    type: current_test.tipo,
-                    studenti: [studente]
-                })
-            });
-            
-            if (res.ok) {
-                //invalidate not working
-                location.reload();
+            if (current_test.superato) {
+                helper.mbox_show(
+                    'warning',
+                    'Attenzione',
+                    'Non è possibile somministrate un test già superato',
+                    3000
+                );
             } else {
-                console.log("ERROR")
+                let studente = current_test.svoltoDa;
+                const res = await fetch(`/sicurezza_sul_lavoro/test`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        corso: current_test.corso.id,
+                        type: current_test.tipo,
+                        studenti: [studente]
+                    })
+                });
+                
+                if (res.ok) {
+                    helper.mbox_show(
+                        'success',
+                        'Conferma',
+                        'Il test per questo studente è stato somministrato correttamente',
+                        3000,
+                        () => location.reload()
+                    );
+                } else {
+                    helper.mbox_show(
+                        'danger',
+                        `Errore [${res.status} - ${res.statusText}]`,
+                        'Non è stato possibile somministrare il test per questo studente.',
+                        3000
+                    );
+                }
             }
         }
     }
 </script>
+
+<MessageBox />
 
 <Table
 	columns={[
