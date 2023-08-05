@@ -6,6 +6,7 @@
 	import * as helper from '$js/helper';
 	import * as yup from 'yup';
 	import { Logger } from '$js/logger';
+    import { onMount } from 'svelte';
 
 	let logger = new Logger('client');
 	export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
@@ -21,6 +22,10 @@
 	let modal_action = 'create';
 	let modal_form; // entry point del form nel modale
 	let errors = {}; //traccia gli errori di validazione del form
+
+    onMount(() => {
+        helper.init_tippy();
+    });
 
 	// campi del form
 	// quest'oggetto deve contenere tutti i valori presenti nel form per
@@ -131,7 +136,7 @@
                                                         class:is-invalid="{errors.applicazione_select}"
                                                         bind:group={form_values.applicazione_select}
 													/>
-													<span class="form-selectgroup-label">
+													<span class="form-selectgroup-label" data-tippy-content="Riporta un problema o un'idea relativa ad un ambito generico di SARP">
 														<i class="ti ti-home" />
 														SARP
 													</span>
@@ -147,7 +152,7 @@
                                                         bind:group={form_values.applicazione_select}
 														checked
 													/>
-													<span class="form-selectgroup-label">
+													<span class="form-selectgroup-label"  data-tippy-content="Riporta un problema o un'idea relativa alla sezione PCTO">
 														<i class="ti ti-building-factory-2" />
 														PCTO
 													</span>
@@ -160,7 +165,7 @@
 									</div>
 									<div class="col-md-8">
 										<InputText
-											label="Titolo Segnalazione"
+											label="Titolo Segnalazione (problema o suggerimento)"
 											name="titolo"
 											{errors}
 											placeholder=""
@@ -171,7 +176,7 @@
 								<div class="row row-cards">
 									<div class="col-md-12">
 										<InputArea
-											label="Descrizione segnalazione"
+											label="Descrizione segnalazione (cerca di essere il più preciso e dettagliato possibile)"
 											bind:val={form_values.descrizione}
 											name="descrizione"
 											rows="12"

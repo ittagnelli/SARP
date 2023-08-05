@@ -332,7 +332,10 @@
     footer="Stage"
     print={true}
     actions={true}
-    custom_actions={[{action: 'view', icon:'eye'}]}
+    print_tip="Stampa convenzione per tutti gli studenti"
+    update_tip="Aggiorna stage"
+    trash_tip="Rimuovi stage"
+    custom_actions={[{action: 'view', icon:'eye', tip: 'Visualizza stato studenti'}]}
     on:custom_action={show_stage_modal}
     resource="pcto_stage"
 />

@@ -208,6 +208,8 @@
 	endpoint="pcto/presenze"
     footer="Presenze"
     actions={show_actions}
+    update_tip="Aggiorna presenza studente"
+    trash_tip="Rimuovi presenza"
     resource="pcto_presenze"
 />
 {:else}

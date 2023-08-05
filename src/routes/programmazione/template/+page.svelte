@@ -170,6 +170,8 @@
 	actions={true}
     print={false}
     print_filter={false}
+    update_tip="Aggiorna template programmazione"
+    trash_tip="Rimuovi template programmazione"
 	resource="programmazione_template"
 	modal_name={$page_action_modal}
 	on:update_start={start_update}

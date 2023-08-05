@@ -202,6 +202,8 @@
 	footer="Utenti"
     endpoint="support/utenti"
 	actions={true}
+    update_tip="Aggiorna anagrafica utente"
+    trash_tip="Rimuovi anagrafica utente"
     resource="utenti"
 />
 
