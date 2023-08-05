@@ -241,6 +241,7 @@
 	actions={true}
     print={false}
     print_filter={false}
+    update_tip="Creo o aggiorna programmazione per il quadrimestre in corso"
 	resource="programmazione_docente"
 	modal_name={$page_action_modal}
 	on:update_start={start_update}

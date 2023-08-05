@@ -138,6 +138,8 @@
     footer="Valutazioni"
 	print={false}
     actions={true}
+    update_tip="Aggiorna valutazione stagista"
+    trash_tip="Rimuovi valutazione stagista"
     resource="pcto_valutazione_studenti"
 />
 

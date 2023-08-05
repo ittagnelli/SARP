@@ -45,6 +45,7 @@
     trash={false}
     print={true}
     update={false}
+    print_tip="Stampa programmazione per la classe selezionata"
 	print_filter={"programmazione_completa"}
 />
 

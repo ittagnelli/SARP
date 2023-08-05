@@ -216,6 +216,9 @@
     footer="Aziende"
     print={true}
     actions={true}
+    print_tip="Stampa documento convenzione"
+    update_tip="Aggiorna convenzione"
+    trash_tip="Rimuovi convenzione"
     resource="pcto_aziende"
 />
 
