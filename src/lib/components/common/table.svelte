@@ -1,8 +1,9 @@
 <script>
 // @ts-nocheck
 import { createEventDispatcher } from 'svelte';
-import { ellipses, user_id, is_admin,  has_grant, user_ruolo, get_modal } from '../../../js/helper';
+import { ellipses, user_id, is_admin,  has_grant, user_ruolo, get_modal, init_tippy } from '../../../js/helper';
 import { page } from '$app/stores';
+import { onMount } from 'svelte';
 
 // dichiara le colonne della tabella
 // il nome di ogni colonna deve coincidere esattamente con il nome
@@ -21,6 +22,9 @@ export let resource;
 export let trash = true;
 export let update = true;
 export let print_filter;    // Proprietà dell'oggetto che, se impostata su true farà vedere il tasto print
+export let print_tip = 'stampa';
+export let update_tip = 'update';
+export let trash_tip = 'rimuovi';
 
 const dispatch = createEventDispatcher();
 const MAX_PAGES = 20; //massimo numero di pagine visualizzabili nella barra
@@ -134,6 +138,10 @@ function table_filter(col, type, key) {
         page_size = 10000;
     change_page(1);
 }
+
+onMount(async () => { 
+    init_tippy();
+});
 
 </script>
 
@@ -265,14 +273,14 @@ function table_filter(col, type, key) {
                                         {#if print == true}
                                         {#if print_filter == null}
                                             <form id="form-pdf" method="POST" action={`/${endpoint}?/pdf`}>
-                                                <button class="icon-button" name="id" value={row.id}>
+                                                <button class="icon-button" name="id" value={row.id} data-tippy-content="{print_tip}">
                                                     <icon class="ti ti-printer icon" />
                                                 </button>
                                             </form>
                                         {:else}
                                             {#if row[print_filter] == true}
                                                 <form id="form-pdf" method="POST" action={`/${endpoint}?/pdf`}>
-                                                    <button class="icon-button" name="id" value={row.id}>
+                                                    <button class="icon-button" name="id" value={row.id} data-tippy-content="{print_tip}">
                                                         <icon class="ti ti-printer icon" />
                                                     </button>
                                                 </form>
@@ -287,20 +295,21 @@ function table_filter(col, type, key) {
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#{modal_name}"
                                                 on:click={() => update_row(row.id)}
+                                                data-tippy-content={update_tip}
                                                 >
                                                 <icon class="ti ti-edit icon" />
                                             </a>  
                                         {/if}                                    
                                         <!-- custom action icon -->
                                         {#each custom_actions as action}
-                                            <button class="icon-button" on:click={() => custom_action_handler(action.action, row.id)}>
+                                            <button class="icon-button" on:click={() => custom_action_handler(action.action, row.id)} data-tippy-content="{action.tip}">
                                                 <icon class="ti ti-{action.icon} icon" />
                                             </button>
                                         {/each}
                                         <!-- delete action icon -->
                                         {#if (user_id($page.data) == row.creatoDa && has_grant(user_ruolo($page.data),'delete', resource)) || is_admin($page.data)}
                                             {#if trash}
-                                                <button class="icon-button" name="delete-action" on:click={() => start_delete(row.id)}>
+                                                <button class="icon-button" name="delete-action" on:click={() => start_delete(row.id)} data-tippy-content={trash_tip}>
                                                     <icon class="ti ti-trash icon" />
                                                 </button>
                                             {/if}
@@ -326,7 +335,7 @@ function table_filter(col, type, key) {
         {#if rows.length > page_size}
         <ul class="pagination m-0 ms-auto">
             <li class="page-item" class:disabled={current_page == 1}>
-                <a class="page-link" href="##" on:click={prev_page}>
+                <a class="page-link" href="##" on:click={prev_page} data-tippy-content="Pagina precedente">
                     <i class="ti ti-chevron-left icon" />
                     prev
                 </a>
@@ -338,7 +347,7 @@ function table_filter(col, type, key) {
                     </li>
                 {/if}
             {/each}
-            <li class="page-item" class:disabled={current_page == num_pages}>
+            <li class="page-item" class:disabled={current_page == num_pages} data-tippy-content="Pagina successiva">
                 <a class="page-link" href="##" on:click={next_page}>
                     next
                     <i class="ti ti-chevron-right icon" />

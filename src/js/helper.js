@@ -306,5 +306,11 @@ export const mbox_show = (type, title, message, delay, cb) => {
 export const init_tippy =  () => {
     tippy('[data-tippy-content]', {
         arrow:true,
+        duration: 800,
+        hideOnClick: true,
+        trigger: 'mouseenter',
+        onShow(instance) {
+            setTimeout(() => instance.hide(), 1000)
+          },
     });
 }

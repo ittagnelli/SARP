@@ -175,22 +175,23 @@
 	}
 
     onMount(async () => { // Controlliamo che l'inserimento sia andato a buon fine, usiamo on mount per richiamare le funzioni del DOM
+        helper.init_tippy();
         if (form != null) {
-                if (form.files != null) { // è stato richiesto la generazione di uno o più file
-                    for(let doc of form.files) {
-                        const buffer = new Uint8Array(JSON.parse(doc.file).data); // Convertiamo la stringa in un oggetto che conterrà il nostro array di bytes che verrà poi convertito in Uint8Array, necessario all'oggetto Blob
-                        var blob = new Blob([buffer], { type: 'application/msword' });
-                        saveAs(blob, doc.name);
-                        await helper.delay(100); //chrome can download max 10 files at the time
-                    }
-                } else { // file è null quindi l'unico caso possibile è la violazione della chiave unique nel DB
-                    form_values = JSON.parse(localStorage.getItem('form')); // Riempiamo il modale
-                    helper.show_modal();
+            if (form.files != null) { // è stato richiesto la generazione di uno o più file
+                for(let doc of form.files) {
+                    const buffer = new Uint8Array(JSON.parse(doc.file).data); // Convertiamo la stringa in un oggetto che conterrà il nostro array di bytes che verrà poi convertito in Uint8Array, necessario all'oggetto Blob
+                    var blob = new Blob([buffer], { type: 'application/msword' });
+                    saveAs(blob, doc.name);
+                    await helper.delay(100); //chrome can download max 10 files at the time
                 }
-            } else {
-                // non c'è risposta dal server, tutto è andato a buon fine
-                localStorage.removeItem('form'); //PROF: rimuoviamo il form dal localstorage
+            } else { // file è null quindi l'unico caso possibile è la violazione della chiave unique nel DB
+                form_values = JSON.parse(localStorage.getItem('form')); // Riempiamo il modale
+                helper.show_modal();
             }
+        } else {
+            // non c'è risposta dal server, tutto è andato a buon fine
+            localStorage.removeItem('form'); //PROF: rimuoviamo il form dal localstorage
+        }
     });
 
     async function custom_action_handler(e) {
@@ -277,8 +278,11 @@
     footer="Corsi di Sicurezza"
     actions={true}
     print={true}
+    print_tip="Stampa attestato del corso"
+    update_tip="Aggiorna corso"
+    trash_tip="Rimuovi corso"
     resource="sicurezza_corso"
-    custom_actions={[{action: 'issue', icon:'checklist'}]}
+    custom_actions={[{action: 'issue', icon:'checklist', tip: 'Somministra test agli studenti'}]}
     on:custom_action={custom_action_handler}
 />
 <!-- custom_actions={[{action: 'view', icon: 'eye'}, {action: 'issue', icon:'checklist'}]} -->
