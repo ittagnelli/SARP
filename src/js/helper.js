@@ -5,6 +5,8 @@ import { RBAC } from './rbac';
 import { Logger } from './logger';
 import { browser } from '$app/environment';
 import { mb_type, mb_color, mb_title, mb_message, mb_show } from '$js/store';
+import tippy from 'tippy.js';
+import 'tippy.js/dist/tippy.css'; 
 
 // Istanzia il logger in funzione di dove viene chiamato
 let logger = browser ? new Logger('client') : new Logger('server');
@@ -300,3 +302,9 @@ export const mbox_show = (type, title, message, delay, cb) => {
         if(cb) cb();
 	}, delay);
 };
+
+export const init_tippy =  () => {
+    tippy('[data-tippy-content]', {
+        arrow:true,
+    });
+}
