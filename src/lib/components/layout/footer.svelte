@@ -1,6 +1,12 @@
 <script>
 	import { invalidateAll } from '$app/navigation';
-	export let version;
+    import * as helper from '../../../js/helper';
+    import { onMount } from 'svelte';
+    export let version;
+
+    onMount(async () => { // Controlliamo che l'inserimento sia andato a buon fine, usiamo on mount per richiamare le funzioni del DOM
+        helper.init_tippy();
+    });
 
 	async function logout() {
 		const res = await fetch('/support/logout', {
@@ -24,16 +30,16 @@
 						<a href="./docs/index.html" class="link-secondary">Documentazione</a>
 					</li> -->
 					<li class="list-inline-item">
-						<a href="/support/faq" class="link-secondary">FAQ</a>
+						<a href="/support/faq" class="link-secondary" data-tippy-content="Leggi le risposte alle domande più frequenti">FAQ</a>
 					</li>
 					<li class="list-inline-item">
-						<a href="/support/ticket" class="link-secondary">Segnala un problema</a>
+						<a href="/support/ticket" class="link-secondary" data-tippy-content="Informa gli sviluppatori per eventuali problemi o suggerimenti">Segnala un problema</a>
 					</li>
                     <li class="list-inline-item">
-						<a href="/support/changelog" class="link-secondary">Changelog</a>
+						<a href="/support/changelog" class="link-secondary" data-tippy-content="Storico dei cambiamenti in SARP">Changelog</a>
 					</li>
                     <li class="list-inline-item" on:click={() => logout()}>
-						<a href="#" class="link-secondary">Log Out</a>
+						<a href="#" class="link-secondary" data-tippy-content="Chiudi la sessione di lavoro">Log Out</a>
 					</li>
 				</ul>
 			</div>

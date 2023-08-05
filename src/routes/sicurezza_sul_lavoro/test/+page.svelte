@@ -4,6 +4,7 @@
     import * as helper from '../../../js/helper';
     import { Logger } from '../../../js/logger';
     import MessageBox from '$lib/components/common/message_box.svelte';
+    import { onMount } from 'svelte';
 
     let logger = new Logger("client");
 	export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
@@ -28,10 +29,15 @@
 
     //scelgo la custom_icon in funzione del tipo di utente
     let custom_icon = helper.is_studente(data) ? 'checklist' : 'copy';
-
-	async function handleSubmit() {
+    let custom_tip = helper.is_studente(data) ? 'Esegui il test' : 'Somministra corso allo studente';
+	
+    async function handleSubmit() {
         modal_form.submit();
 	}
+
+    onMount(async () => { // Controlliamo che l'inserimento sia andato a buon fine, usiamo on mount per richiamare le funzioni del DOM
+        helper.init_tippy();
+    });
 
     async function custom_action_handler(e) {
         current_test = test.filter(t => t.id == e.detail.row_id)[0];
@@ -110,7 +116,7 @@
     actions={true}
     update={false}
     trash={false}
-    custom_actions={[{action: 'run', icon: custom_icon}]}
+    custom_actions={[{action: 'run', icon: custom_icon, tip: custom_tip}]}
     on:custom_action={custom_action_handler}
 	endpoint="sicurezza_sul_lavoro/test"
     footer="Test di Sicurezza"
