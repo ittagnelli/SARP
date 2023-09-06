@@ -2,6 +2,7 @@
 // @ts-ignore
 import { access_protect, is_primo_quadrimestre, route_protect, user_id } from "$js/helper";
 import { PrismaDB } from "$js/prisma_db.js";
+import { multi_user_field_where } from '$js/helper.js';
 
 const resource = "programmazione_docente";
 
@@ -16,9 +17,7 @@ export async function load({ locals }) {
     SARP.set_session(locals);
 
     let insegnamenti = await SARP.insegnamenti.findMany({
-        where: {
-            idDocente: user_id(locals)  // Vogliamo solo le materie dell'utente loggato
-        },
+        where: multi_user_field_where('idDocente', locals),
         include: {
             materia: true,
             classe: true

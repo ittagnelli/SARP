@@ -1,5 +1,6 @@
 import { access_protect, filter_array_for_id, route_protect, user_id } from "$js/helper";
 import { PrismaDB } from "$js/prisma_db.js";
+import { multi_user_field_where } from '$js/helper.js'
 
 const resource = "programmazione_template";
 
@@ -11,11 +12,9 @@ export async function load({ locals }) {
     route_protect(locals);
     access_protect(200, locals, action, resource);
     SARP.set_session(locals);
-
+   
     let insegnamenti = await SARP.insegnamenti.findMany({
-        where: {
-            idDocente: user_id(locals)  // Vogliamo solo le materie dell'utente loggato
-        },
+        where: multi_user_field_where('idDocente', locals), 
         include: {
             materia: true,
             classe: true
@@ -24,15 +23,14 @@ export async function load({ locals }) {
     
     return {
         templates: await SARP.programmazione_Template.findMany({
-            where: {
-                creatoDa: user_id(locals)  // Vogliamo solo le materie dell'utente loggato
-            },
+            where: multi_user_field_where('creatoDa', locals),
             include: {
                 materia: true
             }
         }),
         materie: filter_array_for_id(insegnamenti, "materia")
     };
+
 }
 
 

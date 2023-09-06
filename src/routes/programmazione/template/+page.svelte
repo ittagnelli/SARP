@@ -160,6 +160,7 @@
 <Table
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
+        { name: 'creatoDa', type: 'hidden', display: 'creatoDa' },
 		{ name: 'nome', type: 'string', display: 'nome', size: 50 },
 		{ name: 'materia', type: 'object', display: 'Materia', key: 'nome', size: 30 }
 	]}
@@ -171,6 +172,7 @@
     print={false}
     print_filter={false}
     update_tip="Aggiorna template programmazione"
+    trash={true}
     trash_tip="Rimuovi template programmazione"
 	resource="programmazione_template"
 	modal_name={$page_action_modal}

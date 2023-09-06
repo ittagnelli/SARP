@@ -196,10 +196,8 @@
 		const template = data.templates.filter(
 			(template_from_function) => template_from_function.id == form_values.template_id
 		)[0];
-        console.log("LIBRI:", template.libro)
 		form_values.libri = template.libro.split(',');
-        console.log("LIBRI:", form_values.libri)
-		
+        
 		if (form_values.libri.length > 1) {
 			// ESTHETIC: Remove last book that is empty if more than one are present in array
 			form_values.libri.pop();
@@ -218,7 +216,7 @@
 <Table
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
-		{ name: 'classe', type: 'object', key: 'classe', display: 'classe', size: 20 },
+		{ name: 'classe', type: 'object', key: 'classe', display: 'classe', size: 20, search: true },
 		{ name: 'materia', type: 'object', display: 'materia', key: 'nome', size: 50 },
 		{
 			name: 'programma_primo_quadrimestre_presente',
@@ -228,7 +226,8 @@
         {
 			name: 'programma_primo_quadrimestre_completo',
 			type: 'boolean',
-			display: 'Q1 Completo'
+			display: 'Q1 Completo',
+            search: true
 		},
 		{
 			name: 'programma_secondo_quadrimestre_presente_',
@@ -238,7 +237,8 @@
         {
 			name: 'programma_secondo_quadrimestre_completo',
 			type: 'boolean',
-			display: 'Q2 Completo'
+			display: 'Q2 Completo',
+            search: true
 		}
 	]}
 	page_size={10}
