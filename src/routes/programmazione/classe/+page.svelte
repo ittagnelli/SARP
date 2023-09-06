@@ -21,7 +21,7 @@
 		}
     });
 
-    data.classi.forEach(classe => classe.classe = `${classe?.classe} ${classe?.istituto} ${classe?.sezione}`);
+    data.classi.forEach(classe => classe.classe_name = `${classe?.classe} ${classe?.istituto} ${classe?.sezione}`);
     data.classi = data.classi.slice(1, data.classi.length);	// Rimuovo classe 0
 </script>
 
@@ -29,9 +29,9 @@
 <Table
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
-        { name: 'classe', type: 'string', display: 'Classe', size: 50 },
-		{ name: 'programmazione_q1_completa', type: 'boolean', display: "Programmazione primo quadrimestre terminata" },
-		{ name: 'programmazione_q2_completa', type: 'boolean', display: "Programmazione secondo quadrimestre terminata" },
+        { name: 'classe_name', type: 'string', display: 'Classe', size: 50, search: true },
+		{ name: 'programmazione_q1_completa', type: 'boolean', display: "Programmazione primo quadrimestre terminata", search: true },
+		{ name: 'programmazione_q2_completa', type: 'boolean', display: "Programmazione secondo quadrimestre terminata", search: true },
 		{ name: 'programmazione_completa', type: 'hidden', display: "Programmazione secondo quadrimestre terminata" }
 
 	]}

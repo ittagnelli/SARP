@@ -263,7 +263,13 @@ export const get_uid = () => {
     return (new Date().valueOf() + (Math.ceil((Math.random() * 1000000)))).toString(36);
 }
 
-export const is_primo_quadrimestre = () => new Date().getMonth() < 5 && new Date().getMonth() > 8;
+// primo quadrimestre: agosto-dicembre
+// secondo quadrimestre: gennaio-luglio
+export const is_primo_quadrimestre = () => {
+    let month = new Date().getMonth() + 1; 
+
+    return !(month >=1 && month <=7);
+}
 
 function replace_char_at(str, index, replacement) {
 	return str.substring(0, index) + replacement + str.substring(index + replacement.length);

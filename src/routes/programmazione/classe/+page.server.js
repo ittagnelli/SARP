@@ -22,8 +22,15 @@ export async function load({ locals }) {
 
 	classi = classi.map(classe => {
 		const current_insegnamento = insegnamenti.filter(insegnamento => insegnamento.idClasse == classe.id)
-		const programma_q1_completo = current_insegnamento.filter(insegnamento => insegnamento.programma_primo_quadrimestre_completo).length == current_insegnamento.length
-		const programma_q2_completo = current_insegnamento.filter(insegnamento => insegnamento.programma_secondo_quadrimestre_completo).length == current_insegnamento.length
+		// per default il programma non è completo
+        let programma_q1_completo = false;
+        let programma_q2_completo = false;
+
+        // se c'e' un insegnamento determiniamo se è completo o no
+        if(current_insegnamento.length != 0) {
+            programma_q1_completo = current_insegnamento.filter(insegnamento => insegnamento.programma_primo_quadrimestre_completo).length == current_insegnamento.length
+		    programma_q2_completo = current_insegnamento.filter(insegnamento => insegnamento.programma_secondo_quadrimestre_completo).length == current_insegnamento.length
+        }
 
 		return {
 			...classe,
@@ -70,7 +77,8 @@ export const actions = {
 					const programma = JSON.parse(insegnamento.programma_primo_quadrimestre);
 					const libri = programma[2].libri;	// Sappiamo che l'array è composto da:	Q1, Q2, Libri
 					return {
-						nome: insegnamento.materia.nome, 
+						nome: insegnamento.materia.nome,
+                        professore: upper_first_letter(insegnamento.docente.nome).concat(" ").concat(upper_first_letter(insegnamento.docente.cognome)), 
 						libro: libri,
 						argomenti_q1: programma[0],
 						argomenti_q2: programma[1]
@@ -90,8 +98,6 @@ export const actions = {
 				});
 			}
 
-
-			console.log(materie_programmi);
 			const docenti_name = insegnamenti.map(insegnamento => {
 				return {
 					materia: insegnamento.materia.nome,

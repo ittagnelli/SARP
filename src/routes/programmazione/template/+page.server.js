@@ -24,6 +24,9 @@ export async function load({ locals }) {
     
     return {
         templates: await SARP.programmazione_Template.findMany({
+            where: {
+                creatoDa: user_id(locals)  // Vogliamo solo le materie dell'utente loggato
+            },
             include: {
                 materia: true
             }
