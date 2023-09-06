@@ -96,7 +96,7 @@ export const actions = {
 				return {
 					materia: insegnamento.materia.nome,
 					docente: `${upper_first_letter(insegnamento.docente.nome)} ${upper_first_letter(insegnamento.docente.cognome)}`,
-					classroom: "TODO"
+					classroom: insegnamento.code_classroom
 				}
 			});
 

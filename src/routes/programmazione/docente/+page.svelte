@@ -12,6 +12,7 @@
 	import Programmazione from '$lib/components/common/programmazione.svelte';
 	import Table from '$lib/components/common/table.svelte';
 	import Alert from '$lib/components/common/alert.svelte';
+    import InputText from '$lib/components/modal/input_text.svelte';
     import MessageBox from '$lib/components/common/message_box.svelte';
     import { onMount } from 'svelte';
 
@@ -48,6 +49,7 @@
 		insegnamenti_id: 0,
 		materia: 0,
 		classe: 0,
+        code_classroom: '',
 		libri: [''], // Avoid a warning in handlesubmit
 		primo_quadrimestre: [],
 		secondo_quadrimestre: [],
@@ -64,7 +66,8 @@
 		materia: yup.number().min(1, 'Materia necessaria'),
 		libri: yup.array().length(1, 'Libri necessari'),
 		primo_quadrimestre: yup.array().test((quadrimestre) => is_valid_quadrimestre(quadrimestre)),
-		secondo_quadrimestre: yup.array().test((quadrimestre) => is_valid_quadrimestre(quadrimestre))
+		secondo_quadrimestre: yup.array().test((quadrimestre) => is_valid_quadrimestre(quadrimestre)),
+        code_classroom: yup.string().length(7).required('Codice Classroom necessario')
 	});
 
 	let modal_action = 'create';
@@ -94,6 +97,7 @@
             form_values.classe = insegnamento.idClasse;
             form_values.materia = insegnamento.idMateria;
             form_values.insegnamenti_id = insegnamento.id;
+            form_values.code_classroom = insegnamento.code_classroom;
             let template;
             const current_insegnamento = insegnamento;
         
@@ -192,7 +196,10 @@
 		const template = data.templates.filter(
 			(template_from_function) => template_from_function.id == form_values.template_id
 		)[0];
+        console.log("LIBRI:", template.libro)
 		form_values.libri = template.libro.split(',');
+        console.log("LIBRI:", form_values.libri)
+		
 		if (form_values.libri.length > 1) {
 			// ESTHETIC: Remove last book that is empty if more than one are present in array
 			form_values.libri.pop();
@@ -321,7 +328,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col">
+                        <div class="col-lg">
                             <div class="form-label select_text mt-3">Classe</div>
                             <select
                                 class="form-select mt-3 disabled"
@@ -333,6 +340,22 @@
                                 {/each}
                             </select>
                         </div>
+                        <div class="col-lg">
+                            <div class="form-label select_text mt-3">Codice Classroom</div>
+                            <input
+                                type="text"
+                                class="form-control mt-3"
+                                class:is-invalid="{errors['code_classroom']}"
+                                name="code_classroom"
+                                placeholder="abc123def"
+                                bind:value={form_values.code_classroom}
+                            />
+                            {#if errors['code_classroom']}
+                                <span class="invalid-feedback">{errors['code_classroom']}</span>
+                            {/if}
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="col">
                             <div class="form-label select_text mt-3">Libro di testo</div>
                             {#each form_values.libri as libro}

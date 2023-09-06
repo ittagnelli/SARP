@@ -67,7 +67,8 @@ export const actions = {
                 },
                 data: {
                     programma_primo_quadrimestre_completo: form.get("conferma") === "SI",
-                    programma_primo_quadrimestre: JSON.stringify(quadrimestri)
+                    programma_primo_quadrimestre: JSON.stringify(quadrimestri),
+                    code_classroom: form.get('code_classroom')
                 }
             });
         } else {
@@ -77,7 +78,8 @@ export const actions = {
                 },
                 data: {
                     programma_secondo_quadrimestre_completo: form.get("conferma") === "SI",
-                    programma_secondo_quadrimestre: JSON.stringify(quadrimestri)
+                    programma_secondo_quadrimestre: JSON.stringify(quadrimestri),
+                    code_classroom: form.get('code_classroom')
                 }
             });
         }
