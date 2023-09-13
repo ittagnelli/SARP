@@ -58,7 +58,7 @@
 	const form_schema = yup.object().shape({
 		nome: yup.string().min(1, 'Nome necessario'),
 		materia: yup.number().min(1, 'Materia necessaria'),
-		libri: yup.array().min(1, 'Libri necessari').of(yup.string().matches(/^[0-9A-Za-z-à-è-ì-ò-ù -(-)-\.]*$/)),
+		libri: yup.string().min(1, 'Libri necessari'),	// L'array, sotto forma di stringa, deve essere almeno di un 1 carattere
         primo_quadrimestre: yup.array().test((quadrimestre) => is_valid_quadrimestre(quadrimestre)),
 		secondo_quadrimestre: yup.array().test((quadrimestre) => is_valid_quadrimestre(quadrimestre))
 	});
@@ -87,9 +87,10 @@
 		modal_action = 'update';
 		form_values.template_id = e.detail.id;
 		const template = data.templates.filter((template) => template.id == form_values.template_id)[0];
+		console.log(template);
 		form_values.nome = template.nome;
 		form_values.materia = template.materia.id;
-		form_values.libri = template.libro.split(',');
+		form_values.libri = template.libro.split('~');
 		form_values.primo_quadrimestre = JSON.parse(template.template)[0];
 		form_values.secondo_quadrimestre = JSON.parse(template.template)[1];
 		argomenti_primo_quadrimestre = JSON.parse(template.template)[0];
@@ -101,18 +102,25 @@
 		argomenti_secondo_quadrimestre_raw = JSON.stringify(argomenti_secondo_quadrimestre);
 		form_values.primo_quadrimestre = argomenti_primo_quadrimestre;
 		form_values.secondo_quadrimestre = argomenti_secondo_quadrimestre;
-		form_values.libri = form_values.libri.filter((libro) => libro.length > 0); // Se l'input è vuoto lo sanifichiamo
+		// Cambiamo la virgola in tilde, questo perchè lato server
+		// riceviamo una array in stringa e a quel livello non sappiamo distinguere
+		// la virgola dell'utente e quella dell'array
+		// Inoltre non possiamo farla prima del submit perchè per qualche ragione,
+		// la richiesta viene fatta prima che il metodo join abbia finito
+		// @ts-ignore
+		form_values.libri = form_values.libri.filter((libro) => libro.length > 0).join('~'); // Se l'input è vuoto lo sanifichiamo
 		try {
 			// valida il form prima del submit
 			await form_schema.validate(form_values, { abortEarly: false });
 			errors = {};
             modal_form.submit();
 		} catch (err) {
+			form_values.libri = form_values.libri.split('~');   // Recupera il vecchio array in caso ci siano errori
 			errors = err.inner.reduce((acc, err) => {
 				return { ...acc, [err.path]: err.message };
 			}, {});
             console.log(errors)
-            console.log(errors['libri[0]'])
+            console.log(errors['libri'])
 			if (form_values.libri.length == 0) form_values.libri = ['']; // Resettiamo il campo libri dopo il filter in caso non ci siano libri per far apparire almeno in input
 		}
 	}
@@ -247,7 +255,7 @@
 					</div>
 					<div class="row">
 						<div class="col">
-							<div class="form-label select_text mt-3">Libro di testo [caratteri ammessi: lettere, cifre, - . ()]</div>
+							<div class="form-label select_text mt-3">Libro di testo</div>
 							{#each form_values.libri as libro,i}
 								{#if libro != 'null'}
 									<div class="input-group input-group-flat">
@@ -256,7 +264,7 @@
 											class="form-control mt-2"
 											bind:value={libro}
 											id="libro"
-											class:is-invalid={errors[`libri[${i}]`]}
+											class:is-invalid={errors[`libri`]}
 										/>
 										<span class="input-group-text">
 											<a
@@ -320,8 +328,8 @@
 								{/if}
 							{/each}
 							<input type="hidden" name="libri" bind:value={form_values.libri} />
-							{#if errors['libri[0]']}
-								<span class="invalid-feedback">{errors['libri[0]']}</span>
+							{#if errors['libri']}
+								<span class="invalid-feedback">{errors['libri']}</span>
 							{/if}
 						</div>
 					</div>

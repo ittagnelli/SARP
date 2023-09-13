@@ -51,7 +51,7 @@ export const actions = {
                 creatoDa: user_id(locals),
                 idMateria: parseInt(form.get("materia")),
                 template: JSON.stringify(quadrimestri),
-                libro: form.get("libri"),
+                libro: form.get("libri"), // Convertiamo la stringa in array e poi usiamo la tilde come separatore
                 nome: form.get("nome")?.toString()
             }
         });
@@ -83,7 +83,7 @@ export const actions = {
         const primo_quadrimestre = form.get("argomenti_primo_quadrimestre");
         const secondo_quadrimestre = form.get("argomenti_secondo_quadrimestre");
         const quadrimestri = [JSON.parse(primo_quadrimestre), JSON.parse(secondo_quadrimestre)];
-
+        
         await SARP.programmazione_Template.update({
             data: {
                 idMateria: parseInt(form.get("materia")),
