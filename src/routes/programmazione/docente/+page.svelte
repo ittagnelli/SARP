@@ -65,7 +65,7 @@
 	// schema di validazione del form
 	const form_schema = yup.object().shape({
 		materia: yup.number().min(1, 'Materia necessaria'),
-		libri: yup.array().min(1, 'Libri necessari'),	// L'array, sotto forma di stringa, deve essere almeno di un 1 carattere
+		libri: yup.array().min(1, 'Libri necessari'),	
 		primo_quadrimestre: yup.array().test((quadrimestre) => is_valid_quadrimestre(quadrimestre)),
 		secondo_quadrimestre: yup.array().test((quadrimestre) => is_valid_quadrimestre(quadrimestre)),
         code_classroom: yup.string().length(7).required('Codice Classroom necessario')
