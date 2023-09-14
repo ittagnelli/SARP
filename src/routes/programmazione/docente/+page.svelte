@@ -204,6 +204,11 @@
 		const template = data.templates.filter(
 			(template_from_function) => template_from_function.id == form_values.template_id
 		)[0];
+        if (form_values.libri.length > 1) {
+            // ESTHETIC: Remove last book that is empty if more than one are present in array
+			form_values.libri.pop();
+			form_values.libri = form_values.libri;
+		}
 		form_values.libri = template.libro.split('~');
 		const template_raw = JSON.parse(template.template);
 		argomenti_primo_quadrimestre = template_raw[0];
