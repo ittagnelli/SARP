@@ -331,7 +331,7 @@
 								class="form-label select_text mt-3 fs-3"
 								class:is-invalid={errors.primo_quadrimestre}
 							>
-								1 Quadrimestre
+								Trimestre
 							</div>
 							{#if errors.primo_quadrimestre}
 								<span class="invalid-feedback">Creare almeno un argomento e sotto argomento</span>
@@ -350,7 +350,7 @@
 								class="form-label select_text mt-3 fs-3"
 								class:is-invalid={errors.secondo_quadrimestre}
 							>
-								2 Quadrimestre
+								Pentamestre
 							</div>
 							{#if errors.secondo_quadrimestre}
 								<span class="invalid-feedback">Creare almeno un argomento e sotto argomento</span>
