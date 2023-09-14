@@ -222,23 +222,23 @@
 		{
 			name: 'programma_primo_quadrimestre_presente',
 			type: 'boolean',
-			display: 'Q1 Presente'
+			display: 'Trimestre Presente'
 		},
         {
 			name: 'programma_primo_quadrimestre_completo',
 			type: 'boolean',
-			display: 'Q1 Completo',
+			display: 'Trimestre Completo',
             search: true
 		},
 		{
 			name: 'programma_secondo_quadrimestre_presente_',
 			type: 'boolean',
-			display: 'Q2 Presente'
+			display: 'Pentamestre Presente'
 		},
         {
 			name: 'programma_secondo_quadrimestre_completo',
 			type: 'boolean',
-			display: 'Q2 Completo',
+			display: 'Pentamestre Completo',
             search: true
 		}
 	]}
@@ -442,7 +442,7 @@
                                 class="form-label select_text mt-3 fs-3"
                                 class:is-invalid={errors.primo_quadrimestre}
                             >
-                                1 Quadrimestre
+                                Trimestre
                             </div>
                             {#if errors.primo_quadrimestre}
                                 <span class="invalid-feedback">Creare almeno un argomento e sotto argomento</span>
@@ -461,7 +461,7 @@
                                 class="form-label select_text mt-3 fs-3"
                                 class:is-invalid={errors.secondo_quadrimestre}
                             >
-                                2 Quadrimestre
+                                Pentamestre
                             </div>
                             {#if errors.secondo_quadrimestre}
                                 <span class="invalid-feedback">Creare almeno un argomento e sotto argomento</span>

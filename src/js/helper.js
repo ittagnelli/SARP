@@ -273,8 +273,8 @@ export const get_uid = () => {
     return (new Date().valueOf() + (Math.ceil((Math.random() * 1000000)))).toString(36);
 }
 
-// primo quadrimestre: agosto-dicembre
-// secondo quadrimestre: gennaio-luglio
+// trimestre: agosto-dicembre
+// pentamestre: gennaio-luglio
 export const is_primo_quadrimestre = () => {
     let month = new Date().getMonth() + 1; 
 
@@ -329,4 +329,38 @@ export const init_tippy =  () => {
             setTimeout(() => instance.hide(), 1000)
           },
     });
+}
+
+//we define a new tag @pageBreak which add a page break in a docx template rendition except last iteration in a loop
+export const custom_tags_parser = (tag, meta) => {
+    if (tag === "pageBreak") {
+        return {
+            get(scope, context) {
+                const totalLength =
+                    context.scopePathLength[
+                        context.scopePathLength.length - 1
+                    ];
+                const index =
+                    context.scopePathItem[
+                        context.scopePathItem.length - 1
+                    ];
+                const isLast = index === totalLength - 1;
+                if (!isLast) {
+                    return '<w:p> <w:r> <w:br w:type="page"/> </w:r> </w:p>';
+                } else {
+                    return "";
+                }
+            },
+        }
+    } else {
+        return {
+            get: function (scope, context) {
+                if (tag === ".") {
+                    return scope;
+                } else {
+                    return scope[tag];
+                }
+            },
+        };
+    }
 }
