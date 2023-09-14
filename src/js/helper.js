@@ -273,8 +273,8 @@ export const get_uid = () => {
     return (new Date().valueOf() + (Math.ceil((Math.random() * 1000000)))).toString(36);
 }
 
-// primo quadrimestre: agosto-dicembre
-// secondo quadrimestre: gennaio-luglio
+// trimestre: agosto-dicembre
+// pentamestre: gennaio-luglio
 export const is_primo_quadrimestre = () => {
     let month = new Date().getMonth() + 1; 
 
