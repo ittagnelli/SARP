@@ -1,5 +1,5 @@
 import { PUBLIC_PROGRAMMAZIONE_ANNUALE_TEMPLATE, PUBLIC_PROGRAMMAZIONE_ANNUALE_TEMPLATES_DIR } from "$env/static/public";
-import { access_protect, is_primo_quadrimestre, route_protect, upper_first_letter, user_id } from "$js/helper";
+import { access_protect, is_primo_quadrimestre, route_protect, upper_first_letter, user_id, custom_tags_parser } from "$js/helper";
 import { PrismaDB } from "$js/prisma_db.js";
 import path from 'path';
 import fs from 'fs';
@@ -130,10 +130,11 @@ export const actions = {
 
 			const doc = new Docxtemplater(zip, {
 				paragraphLoop: true,
-				linebreaks: true
+				linebreaks: true,
+                parser: custom_tags_parser
 			});
-
-			doc.render(docx_programmazione_template);
+            
+            doc.render(docx_programmazione_template);
 
 			buf = doc.getZip().generate({
 				type: 'nodebuffer',
