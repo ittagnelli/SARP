@@ -24,7 +24,7 @@
     let classi = data.insegnamenti.map((insegnamento) => insegnamento.classe);
 	let materie = data.insegnamenti.map((insegnamento) => insegnamento.materia);
 
-	/* Page properties */
+    /* Page properties */
 	$page_action_title = '';
 	$page_pre_title = 'Programma annuale';
 	$page_title = 'Programmazione docente';
@@ -343,7 +343,7 @@
                                 bind:value={form_values.classe}
                             >
                                 {#each classi as classe}
-                                    <option value={classe.id[0]}>{classe.classe}</option>
+                                    <option value={classe.id}>{classe.classe}</option>
                                 {/each}
                             </select>
                         </div>
