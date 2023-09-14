@@ -76,12 +76,14 @@ export const actions = {
 				materie_programmi = insegnamenti.map(insegnamento => {
 					const programma = JSON.parse(insegnamento.programma_primo_quadrimestre);
 					const libri = programma[2].libri;	// Sappiamo che l'array è composto da:	Q1, Q2, Libri
+					const note = programma[2].note;
 					return {
 						nome: insegnamento.materia.nome,
                         professore: upper_first_letter(insegnamento.docente.nome).concat(" ").concat(upper_first_letter(insegnamento.docente.cognome)), 
 						libro: libri,
 						argomenti_q1: programma[0],
-						argomenti_q2: programma[1]
+						argomenti_q2: programma[1],
+						note: note
 					}
 				});
 			} else {
@@ -118,7 +120,7 @@ export const actions = {
 				classe: `${classe?.classe} ${classe?.istituto} ${classe?.sezione}`,
 				docenti: docenti_name,
 				studenti: studenti_name,
-				materie: materie_programmi
+				materie: materie_programmi,
 			}
 
 			const content = fs.readFileSync(
