@@ -51,6 +51,7 @@
 		classe: 0,
         code_classroom: '',
 		libri: [''], // Avoid a warning in handlesubmit
+        libri_raw: "",  // Tilde-based libri array
 		primo_quadrimestre: [],
 		secondo_quadrimestre: [],
 		conferma: '',
@@ -64,7 +65,7 @@
 	// schema di validazione del form
 	const form_schema = yup.object().shape({
 		materia: yup.number().min(1, 'Materia necessaria'),
-		libri: yup.array().length(1, 'Libri necessari'),
+		libri: yup.array().min(1, 'Libri necessari'),	
 		primo_quadrimestre: yup.array().test((quadrimestre) => is_valid_quadrimestre(quadrimestre)),
 		secondo_quadrimestre: yup.array().test((quadrimestre) => is_valid_quadrimestre(quadrimestre)),
         code_classroom: yup.string().length(7).required('Codice Classroom necessario')
@@ -117,7 +118,7 @@
                 form_values.secondo_quadrimestre = template[1];
                 argomenti_primo_quadrimestre = template[0];
                 argomenti_secondo_quadrimestre = template[1];
-                form_values.libri = template[template.length - 1].libri.split(',');
+                form_values.libri = template[template.length - 1].libri.split('~');
             }
             form_values.conferma_tmp = form_values.conferma;
         } else {
@@ -138,7 +139,13 @@
 		argomenti_secondo_quadrimestre_raw = JSON.stringify(argomenti_secondo_quadrimestre);
 		form_values.primo_quadrimestre = argomenti_primo_quadrimestre;
 		form_values.secondo_quadrimestre = argomenti_secondo_quadrimestre;
-		form_values.libri = form_values.libri.filter((libro) => libro.length > 0); // Se l'input è vuoto lo sanifichiamo
+		form_values.libri = form_values.libri.filter((libro) => libro.length > 0); // Se l'input è vuoto lo sanifichiamo  
+		// Cambiamo la virgola in tilde, questo perchè lato server
+		// riceviamo una array in stringa e a quel livello non sappiamo distinguere
+		// la virgola dell'utente e quella dell'array
+		// Inoltre non possiamo farla prima del submit perchè per qualche ragione,
+		// la richiesta viene fatta prima che il metodo join abbia finito
+        form_values.libri_raw = form_values.libri.join('~');
 		try {
 			// valida il form prima del submit
 			await form_schema.validate(form_values, { abortEarly: false });
@@ -163,6 +170,7 @@
 			materia: 0,
 			classe: 0,
 			libri: [''], // Avoid a warning in handlesubmit
+            libri_raw: "",
 			primo_quadrimestre: [],
 			secondo_quadrimestre: [],
 			conferma: '',
@@ -196,13 +204,12 @@
 		const template = data.templates.filter(
 			(template_from_function) => template_from_function.id == form_values.template_id
 		)[0];
-		form_values.libri = template.libro.split(',');
-        
-		if (form_values.libri.length > 1) {
-			// ESTHETIC: Remove last book that is empty if more than one are present in array
+        if (form_values.libri.length > 1) {
+            // ESTHETIC: Remove last book that is empty if more than one are present in array
 			form_values.libri.pop();
 			form_values.libri = form_values.libri;
 		}
+		form_values.libri = template.libro.split('~');
 		const template_raw = JSON.parse(template.template);
 		argomenti_primo_quadrimestre = template_raw[0];
 		argomenti_secondo_quadrimestre = template_raw[1];
@@ -429,7 +436,7 @@
                                     </div>
                                 {/if}
                             {/each}
-                            <input type="hidden" name="libri" bind:value={form_values.libri} />
+                            <input type="hidden" name="libri" bind:value={form_values.libri_raw} />
                             {#if errors.libri}
                                 <span class="invalid-feedback">{errors.libri}</span>
                             {/if}
