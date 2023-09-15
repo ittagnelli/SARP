@@ -233,6 +233,7 @@ model programmazione_Template {
     libro     String
     materia   Materia  @relation(fields: [idMateria], references: [id])
     idMateria Int
+    note      String? // Note aggiuntive a disposizione dell'insegnante
 }
 
 model sicurezza_Corso {
