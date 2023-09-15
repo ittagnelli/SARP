@@ -83,7 +83,7 @@ export const actions = {
 						libro: libri,
 						argomenti_q1: programma[0],
 						argomenti_q2: programma[1],
-						note: note
+						note: note == null ? "" : note	// Evitiamo di scrivere undefined nel documento
 					}
 				});
 			} else {
