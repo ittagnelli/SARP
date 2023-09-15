@@ -4,7 +4,7 @@
 	/**
 	 * @param {number} index
 	 */
-	function new_sotto_argomento(index, index_sotto_argomento) {
+	function new_sotto_argomento(index) {
 		argomenti[index].sotto_argomenti.push({
 			sotto_argomento_text: '',
 			sotto_sotto_argomenti: ['']
@@ -148,7 +148,7 @@
 						<span class="input-group-text">
 							<a
 								href="#0"
-								on:click={() => new_sotto_argomento(index, i)}
+								on:click={() => new_sotto_argomento(index)}
 								class="link-secondary"
 								title="Clear search"
 								data-bs-toggle="tooltip"
