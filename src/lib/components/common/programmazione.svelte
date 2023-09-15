@@ -4,8 +4,8 @@
 	/**
 	 * @param {number} index
 	 */
-	function new_sotto_argomento(index) {
-		argomenti[index].sotto_argomenti.push({
+	function new_sotto_argomento(index, current_index) {
+		argomenti[index].sotto_argomenti.splice(current_index + 1, 0, {
 			sotto_argomento_text: '',
 			sotto_sotto_argomenti: ['']
 		});
@@ -45,8 +45,8 @@
 		if (e.key == 'Enter') e.preventDefault();
 	}
 
-	function add_sotto_sotto_argomento(index, index_sotto_argomento) {
-		argomenti[index].sotto_argomenti[index_sotto_argomento].sotto_sotto_argomenti.push('');
+	function add_sotto_sotto_argomento(index, index_sotto_argomento, current_index) {
+		argomenti[index].sotto_argomenti[index_sotto_argomento].sotto_sotto_argomenti.splice(current_index + 1, 0, "");
 		argomenti = argomenti;
 	}
 
@@ -148,7 +148,7 @@
 						<span class="input-group-text">
 							<a
 								href="#0"
-								on:click={() => new_sotto_argomento(index)}
+								on:click={() => new_sotto_argomento(index, i)}
 								class="link-secondary"
 								title="Clear search"
 								data-bs-toggle="tooltip"
@@ -220,7 +220,7 @@
 						<span class="input-group-text">
 							<a
 								href="#0"
-								on:click={() => add_sotto_sotto_argomento(index, i)}
+								on:click={() => add_sotto_sotto_argomento(index, i, j)}
 								class="link-secondary"
 								title="Clear search"
 								data-bs-toggle="tooltip"
