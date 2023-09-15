@@ -89,7 +89,6 @@
 		modal_action = 'update';
 		form_values.template_id = e.detail.id;
 		const template = data.templates.filter((template) => template.id == form_values.template_id)[0];
-		console.log(template);
 		form_values.nome = template.nome;
 		form_values.materia = template.materia.id;
 		form_values.note = template.note;
@@ -165,6 +164,38 @@
 		const index = form_values.libri.indexOf(libro);
 		form_values.libri = remove_at_index(form_values.libri, index);
 	}
+
+    async function custom_action_handler(e) {
+        switch(e.detail.action) {
+            case 'duplicate':
+                const res = await fetch(`/programmazione/template`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(e.detail.row_id)
+                });
+                
+                if (res.ok) {
+                    helper.mbox_show(
+                        'success',
+                        'Conferma',
+                        'Template Programmazione duplicato correttamente',
+                        3000,
+                        () => location.reload()
+                    );
+                } else {
+                    helper.mbox_show(
+                        'danger',
+                        `Errore [${res.status} - ${res.statusText}]`,
+                        'Non è stato possibile duplicare il template selezionato.',
+                        3000
+                    );
+                }
+                break;
+        }
+    }
+    
 </script>
 
 <MessageBox />
@@ -189,6 +220,8 @@
 	resource="programmazione_template"
 	modal_name={$page_action_modal}
 	on:update_start={start_update}
+    custom_actions={[{action: 'duplicate', icon:'copy', tip: 'Duplica Template Programmazione'}]}
+    on:custom_action={custom_action_handler}
 />
 
 <!-- Modal from Page action -->
