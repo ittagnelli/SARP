@@ -52,7 +52,8 @@ export const actions = {
                 idMateria: parseInt(form.get("materia")),
                 template: JSON.stringify(quadrimestri),
                 libro: form.get("libri"),
-                nome: form.get("nome")?.toString()
+                nome: form.get("nome")?.toString(),
+                note: form.get("note")?.toString()
             }
         });
 
@@ -90,7 +91,8 @@ export const actions = {
                 template: JSON.stringify(quadrimestri),
                 libro: form.get("libri"),
                 updatedAt: new Date(),
-                nome: form.get("nome")?.toString()
+                nome: form.get("nome")?.toString(),
+                note: form.get("note")?.toString()
             },
             where: {
                 id: parseInt(form.get("id"))

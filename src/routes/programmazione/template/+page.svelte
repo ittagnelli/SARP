@@ -45,7 +45,8 @@
 		nome: '',
 		template_id: 0,
 		materia: 0,
-		libri: [''], // Avoid a warning in handlesubmit,
+		libri: [''], // Avoid a warning in handlesubmit
+		note: "",
 		libri_raw: "",
 		primo_quadrimestre: [],
 		secondo_quadrimestre: []
@@ -91,6 +92,7 @@
 		console.log(template);
 		form_values.nome = template.nome;
 		form_values.materia = template.materia.id;
+		form_values.note = template.note;
 		form_values.libri = template.libro.split('~');
 		form_values.primo_quadrimestre = JSON.parse(template.template)[0];
 		form_values.secondo_quadrimestre = JSON.parse(template.template)[1];
@@ -134,6 +136,7 @@
 				template_id: 0,
 				materia: 0,
 				libri: [''], // Avoid a warning in handlesubmit
+				note: "",
 				libri_raw: "",
 				primo_quadrimestre: [],
 				secondo_quadrimestre: []
@@ -332,6 +335,21 @@
 							{#if errors['libri']}
 								<span class="invalid-feedback">{errors['libri']}</span>
 							{/if}
+						</div>
+					</div>
+					<div class="row">
+						<div class="col">
+							<div class="form-label select_text mt-3">Note</div>
+							<div class="input-group input-group-flat">
+								<!-- Il bind non è necessario però potrebbe servirci in futuro -->
+								<textarea
+									rows="3"
+									class="form-control mt-2"
+									id="note"
+									name="note"
+									bind:value={form_values.note}
+								/>
+							</div>
 						</div>
 					</div>
 					<div class="row">

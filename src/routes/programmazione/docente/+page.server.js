@@ -57,7 +57,8 @@ export const actions = {
         const secondo_quadrimestre = form.get("argomenti_secondo_quadrimestre");
         const quadrimestri = [JSON.parse(primo_quadrimestre), JSON.parse(secondo_quadrimestre)];
         quadrimestri.push({ // Aggiungo i libri
-            libri: form.get("libri")
+            libri: form.get("libri"),
+            note: form.get("note")
         })
         if (is_primo_quadrimestre()) {
             await SARP.insegnamenti.update({

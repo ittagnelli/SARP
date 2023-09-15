@@ -51,7 +51,8 @@
 		classe: 0,
         code_classroom: '',
 		libri: [''], // Avoid a warning in handlesubmit
-        libri_raw: "",  // Tilde-based libri array
+        	note: "",
+        	libri_raw: "",  // Tilde-based libri array
 		primo_quadrimestre: [],
 		secondo_quadrimestre: [],
 		conferma: '',
@@ -118,6 +119,7 @@
                 form_values.secondo_quadrimestre = template[1];
                 argomenti_primo_quadrimestre = template[0];
                 argomenti_secondo_quadrimestre = template[1];
+                form_values.note = template[template.length - 1].note;
                 form_values.libri = template[template.length - 1].libri.split('~');
             }
             form_values.conferma_tmp = form_values.conferma;
@@ -209,6 +211,7 @@
 			form_values.libri.pop();
 			form_values.libri = form_values.libri;
 		}
+        	form_values.note = template.note;
 		form_values.libri = template.libro.split('~');
 		const template_raw = JSON.parse(template.template);
 		argomenti_primo_quadrimestre = template_raw[0];
@@ -442,6 +445,21 @@
                             {/if}
                         </div>
                     </div>
+                    <div class="row">
+						<div class="col">
+							<div class="form-label select_text mt-3">Note</div>
+							<div class="input-group input-group-flat">
+								<!-- Il bind non è necessario però potrebbe servirci in futuro -->
+								<textarea
+                                    rows="3"
+									class="form-control mt-2"
+									id="note"
+									name="note"
+									bind:value={form_values.note}
+								/>
+							</div>
+						</div>
+					</div>
                     <div class="row">
                         <div class="col">
                             <div
