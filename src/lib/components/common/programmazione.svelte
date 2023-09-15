@@ -32,6 +32,10 @@
 		argomenti.splice(index, 1);
 		argomenti = argomenti;
 	}
+
+    function prevent_enter(e) {
+        if(e.key == 'Enter') e.preventDefault();
+    }
 </script>
 
 <div>
@@ -40,11 +44,13 @@
 			<!--Per estetica aggiungiamo 1 all'indice-->
 			<div class="form-label">Argomento {index + 1}</div>
 			<div class="input-group input-group-flat">
-				<input
-					type="text"
+                <textarea   
 					class="form-control"
 					bind:value={argomento.titolo}
 					placeholder="Titolo argomento"
+                    maxlength=128
+                    rows=2
+                    on:keydown={prevent_enter}
 				/>
 				<span class="input-group-text">
 					<a
@@ -109,12 +115,14 @@
 			</div>
 			{#each argomento.sotto_argomenti as sotto_argomento, i}
 				<div class="input-group input-group-flat">
-					<input
-						type="text"
+                    <textarea
 						class="form-control"
 						bind:value={sotto_argomento}
 						style="margin-left: 1em; margin-top: 1em"
 						placeholder="Sotto argomento"
+                        rows=2
+                        maxlength=512
+                        on:keydown={prevent_enter}
 					/>
 					<span class="input-group-text">
 						<a
