@@ -280,7 +280,7 @@
         <input type="hidden" name="classe" bind:value={form_values.classe} />
 
         <!-- <input type="hidden" name="id_template" bind:value={form_values.template_id}/> -->
-        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     {#if modal_action == 'create'}
