@@ -242,7 +242,6 @@
 									<path d="M5 12l14 0" />
 								</svg>
 							</a>
-						</span>
 						{#if j > 0}
 							<a
 								href="#0"
@@ -277,6 +276,7 @@
 								</svg>
 							</a>
 						{/if}
+						</span>
 					</div>
 				{/each}
 			{/each}
