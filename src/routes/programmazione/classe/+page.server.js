@@ -75,6 +75,7 @@ export const actions = {
 			if(is_primo_quadrimestre()){
 				materie_programmi = insegnamenti.map(insegnamento => {
 					const programma = JSON.parse(insegnamento.programma_primo_quadrimestre);
+					console.log(programma)
 					const libri = programma[2].libri;	// Sappiamo che l'array è composto da:	Q1, Q2, Libri
 					return {
 						nome: insegnamento.materia.nome,
