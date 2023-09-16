@@ -70,7 +70,7 @@
                     test: (value) => {
                         //test against this format: 
                         // Cognome N.,Titolo,Casa Editrice, Anno Edizione (es: Boscaini M.,Imparare a programmare,Apogeo,2023)
-                        return /^[A-Z][a-z]* [A-Z].,[A-Z][a-z0-9 -]*,[A-Z][a-z0-9 -]*,20[0-9][0-9]$/.test(value);
+                        return /^[A-Z][A-Za-z]* [A-Z].,[A-Z][A-Za-z0-9 -]*,[A-Z][A-Za-z0-9 -]*,[1-2][0-9][0-9][0-9]$/.test(value);
                     }
                 })
             ),
