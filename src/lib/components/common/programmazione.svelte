@@ -15,8 +15,8 @@
 	/**
 	 * @param {number} index
 	 */
-	function remove_sotto_argomento(index, index_sotto_argomento, index_to_remove) {
-		argomenti[index].sotto_argomenti[index_sotto_argomento].sotto_argomento_text.splice(index, 1);
+	function remove_sotto_argomento(index, index_to_remove) {
+		argomenti[index].sotto_argomenti.splice(index_to_remove, 1);
 		argomenti = argomenti;
 	}
 
@@ -176,7 +176,7 @@
 									class="link-secondary"
 									title="Clear search"
 									data-bs-toggle="tooltip"
-									on:click={() => remove_sotto_argomento(index, i, k)}
+									on:click={() => remove_sotto_argomento(index, i)}
 									><!-- Download SVG icon from http://tabler-icons.io/i/x -->
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
