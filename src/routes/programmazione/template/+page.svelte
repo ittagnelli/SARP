@@ -114,15 +114,66 @@
 		form_values.libri = template.libro.split('~');
 		form_values.primo_quadrimestre = JSON.parse(template.template)[0];
 		form_values.secondo_quadrimestre = JSON.parse(template.template)[1];
-		argomenti_primo_quadrimestre = JSON.parse(template.template)[0];
-		argomenti_secondo_quadrimestre = JSON.parse(template.template)[1];
+		
+		// Se i sotto_sotto_argomenti sono vuoti ne aggiungiamo uno vuoto così l'insegnante può aggiungerne
+		form_values.primo_quadrimestre = form_values.primo_quadrimestre.map(programma_quadrimestre => {
+			return {
+				titolo: programma_quadrimestre.titolo,
+				sotto_argomenti: programma_quadrimestre.sotto_argomenti.map(programma => {
+				return {
+					sotto_argomento_text: programma.sotto_argomento_text,
+					sotto_sotto_argomenti: programma.sotto_sotto_argomenti.length >= 1 ? programma.sotto_sotto_argomenti : [""]
+				};	
+				})
+			}
+		});
+		form_values.secondo_quadrimestre = form_values.secondo_quadrimestre.map(programma_quadrimestre => {
+			return {
+				titolo: programma_quadrimestre.titolo,
+				sotto_argomenti: programma_quadrimestre.sotto_argomenti.map(programma => {
+				return {
+					sotto_argomento_text: programma.sotto_argomento_text,
+					sotto_sotto_argomenti: programma.sotto_sotto_argomenti.length >= 1 ? programma.sotto_sotto_argomenti : [""]
+				};	
+				})
+			}
+		});
+
+		argomenti_primo_quadrimestre = form_values.primo_quadrimestre;
+		argomenti_secondo_quadrimestre = form_values.secondo_quadrimestre;
+
 	}
 
 	async function handleSubmit() {
-		argomenti_primo_quadrimestre_raw = JSON.stringify(argomenti_primo_quadrimestre);
-		argomenti_secondo_quadrimestre_raw = JSON.stringify(argomenti_secondo_quadrimestre);
 		form_values.primo_quadrimestre = argomenti_primo_quadrimestre;
 		form_values.secondo_quadrimestre = argomenti_secondo_quadrimestre;
+		
+		// Se il sotto_sotto_argomento è vuoto salviamo un array vuoto per evitare spazi vuoti nel docx. Lo facciamo client-side per risparmiare qualche risorsa sul server.
+		form_values.primo_quadrimestre = form_values.primo_quadrimestre.map(programma_quadrimestre => {
+			return {
+				titolo: programma_quadrimestre.titolo,
+				sotto_argomenti: programma_quadrimestre.sotto_argomenti.map(programma => {
+					return {
+						sotto_argomento_text: programma.sotto_argomento_text,
+						sotto_sotto_argomenti: programma.sotto_sotto_argomenti.length >= 1 && programma.sotto_sotto_argomenti[0] != "" ? programma.sotto_sotto_argomenti : []
+					};	
+				})
+			}
+		});
+		form_values.secondo_quadrimestre = form_values.secondo_quadrimestre.map(programma_quadrimestre => {
+			return {
+				titolo: programma_quadrimestre.titolo,
+				sotto_argomenti: programma_quadrimestre.sotto_argomenti.map(programma => {
+					return {
+						sotto_argomento_text: programma.sotto_argomento_text,
+						sotto_sotto_argomenti: programma.sotto_sotto_argomenti.length >= 1 && programma.sotto_sotto_argomenti[0] != "" ? programma.sotto_sotto_argomenti : []
+					};	
+				})
+			}
+		});
+		argomenti_primo_quadrimestre_raw = JSON.stringify(form_values.primo_quadrimestre);
+		argomenti_secondo_quadrimestre_raw = JSON.stringify(form_values.secondo_quadrimestre);
+
 		form_values.libri = form_values.libri.filter((libro) => libro.length > 0); // Se l'input è vuoto lo sanifichiamo
 		// Cambiamo la virgola in tilde, questo perchè lato server
 		// riceviamo una array in stringa e a quel livello non sappiamo distinguere
@@ -134,13 +185,13 @@
 			// valida il form prima del submit
 			await form_schema.validate(form_values, { abortEarly: false });
 			errors = {};
-            modal_form.submit();
+            		modal_form.submit();
 		} catch (err) {
 			errors = err.inner.reduce((acc, err) => {
 				return { ...acc, [err.path]: err.message };
 			}, {});
-            console.log(errors)
-            console.log(errors['libri'])
+        	        console.log(errors)
+	            	console.log(errors['libri'])
 			if (form_values.libri.length == 0) form_values.libri = ['']; // Resettiamo il campo libri dopo il filter in caso non ci siano libri per far apparire almeno in input
 		}
 	}

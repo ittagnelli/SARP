@@ -146,10 +146,33 @@
                 template = JSON.parse(current_insegnamento.programma_secondo_quadrimestre);
             }
             if(template) {
-                form_values.primo_quadrimestre = template[0];
-                form_values.secondo_quadrimestre = template[1];
-                argomenti_primo_quadrimestre = template[0];
-                argomenti_secondo_quadrimestre = template[1];
+	    	// Se i sotto_sotto_argomenti sono vuoti ne aggiungiamo uno vuoto così l'insegnante può aggiungerne 
+		form_values.primo_quadrimestre = template[0].map(programma_quadrimestre => {
+			return {
+				titolo: programma_quadrimestre.titolo,
+				sotto_argomenti: programma_quadrimestre.sotto_argomenti.map(programma => {
+				return {
+					sotto_argomento_text: programma.sotto_argomento_text,
+					sotto_sotto_argomenti: programma.sotto_sotto_argomenti.length >= 1 ? programma.sotto_sotto_argomenti : [""]
+				};	
+				})
+			}
+		});
+		form_values.secondo_quadrimestre = template[1].map(programma_quadrimestre => {
+			return {
+				titolo: programma_quadrimestre.titolo,
+				sotto_argomenti: programma_quadrimestre.sotto_argomenti.map(programma => {
+				return {
+					sotto_argomento_text: programma.sotto_argomento_text,
+					sotto_sotto_argomenti: programma.sotto_sotto_argomenti.length >= 1 ? programma.sotto_sotto_argomenti : [""]
+				};	
+				})
+			}
+		});
+
+		argomenti_primo_quadrimestre = form_values.primo_quadrimestre;
+		argomenti_secondo_quadrimestre = form_values.secondo_quadrimestre;
+
                 form_values.note = template[template.length - 1].note;
                 form_values.libri = template[template.length - 1].libri.split('~');
             }
@@ -168,17 +191,42 @@
 	}
 
 	async function handleSubmit() {
-		argomenti_primo_quadrimestre_raw = JSON.stringify(argomenti_primo_quadrimestre);
-		argomenti_secondo_quadrimestre_raw = JSON.stringify(argomenti_secondo_quadrimestre);
 		form_values.primo_quadrimestre = argomenti_primo_quadrimestre;
 		form_values.secondo_quadrimestre = argomenti_secondo_quadrimestre;
+		
+		// Se il sotto_sotto_argomento è vuoto salviamo un array vuoto per evitare spazi vuoti nel docx. Lo facciamo client-side per risparmiare qualche risorsa sul server.
+		form_values.primo_quadrimestre = form_values.primo_quadrimestre.map(programma_quadrimestre => {
+			return {
+				titolo: programma_quadrimestre.titolo,
+				sotto_argomenti: programma_quadrimestre.sotto_argomenti.map(programma => {
+				return {
+					sotto_argomento_text: programma.sotto_argomento_text,
+					sotto_sotto_argomenti: programma.sotto_sotto_argomenti.length >= 1 && programma.sotto_sotto_argomenti[0] != "" ? programma.sotto_sotto_argomenti : []
+				};	
+				})
+			}
+		});
+		form_values.secondo_quadrimestre = form_values.secondo_quadrimestre.map(programma_quadrimestre => {
+			return {
+				titolo: programma_quadrimestre.titolo,
+				sotto_argomenti: programma_quadrimestre.sotto_argomenti.map(programma => {
+				return {
+					sotto_argomento_text: programma.sotto_argomento_text,
+					sotto_sotto_argomenti: programma.sotto_sotto_argomenti.length >= 1 && programma.sotto_sotto_argomenti[0] != "" ? programma.sotto_sotto_argomenti : []
+				};	
+				})
+			}
+		});
+		argomenti_primo_quadrimestre_raw = JSON.stringify(form_values.primo_quadrimestre);
+		argomenti_secondo_quadrimestre_raw = JSON.stringify(form_values.secondo_quadrimestre);
+
 		form_values.libri = form_values.libri.filter((libro) => libro.length > 0); // Se l'input è vuoto lo sanifichiamo  
 		// Cambiamo la virgola in tilde, questo perchè lato server
 		// riceviamo una array in stringa e a quel livello non sappiamo distinguere
 		// la virgola dell'utente e quella dell'array
 		// Inoltre non possiamo farla prima del submit perchè per qualche ragione,
 		// la richiesta viene fatta prima che il metodo join abbia finito
-        form_values.libri_raw = form_values.libri.join('~');
+        	form_values.libri_raw = form_values.libri.join('~');
 		try {
 			// valida il form prima del submit
 			await form_schema.validate(form_values, { abortEarly: false });
@@ -251,8 +299,32 @@
         	form_values.note = template.note;
 		form_values.libri = template.libro.split('~');
 		const template_raw = JSON.parse(template.template);
-		argomenti_primo_quadrimestre = template_raw[0];
-		argomenti_secondo_quadrimestre = template_raw[1];
+		
+		// Se i sotto_sotto_argomenti sono vuoti ne aggiungiamo uno vuoto così l'insegnante può aggiungerne
+		argomenti_primo_quadrimestre = template_raw[0].map(programma_quadrimestre => {
+			return {
+				titolo: programma_quadrimestre.titolo,
+				sotto_argomenti: programma_quadrimestre.sotto_argomenti.map(programma => {
+				return {
+					sotto_argomento_text: programma.sotto_argomento_text,
+					sotto_sotto_argomenti: programma.sotto_sotto_argomenti.length >= 1 ? programma.sotto_sotto_argomenti : [""]
+				};	
+				})
+			}
+		});
+		argomenti_secondo_quadrimestre = template_raw[1].map(programma_quadrimestre => {
+			return {
+				titolo: programma_quadrimestre.titolo,
+				sotto_argomenti: programma_quadrimestre.sotto_argomenti.map(programma => {
+				return {
+					sotto_argomento_text: programma.sotto_argomento_text,
+					sotto_sotto_argomenti: programma.sotto_sotto_argomenti.length >= 1 ? programma.sotto_sotto_argomenti : [""]
+				};	
+				})
+			}
+		});
+
+
 		argomenti_primo_quadrimestre_raw = JSON.stringify(argomenti_primo_quadrimestre);
 		argomenti_secondo_quadrimestre_raw = JSON.stringify(argomenti_secondo_quadrimestre);
 	}
