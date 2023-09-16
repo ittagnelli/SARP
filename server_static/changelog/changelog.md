@@ -1,4 +1,4 @@
-## v2.1.0 – 16 Settembre 2023
+## v3.0.0 – 16 Settembre 2023
 - `fix#379`: Don't render empty sotto_sotto_argomenti (#384)
 - `fix#376`: Make remove sotto argomento works in latest changes (#383)
 - `fix#380`: Validazione titolo libro errata (#382)
