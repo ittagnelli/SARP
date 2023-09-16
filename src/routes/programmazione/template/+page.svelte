@@ -46,7 +46,7 @@
 		template_id: 0,
 		materia: 0,
 		libri: [''], // Avoid a warning in handlesubmit
-		note: "",
+        note: "",
 		libri_raw: "",
 		primo_quadrimestre: [],
 		secondo_quadrimestre: []
@@ -60,7 +60,20 @@
 	const form_schema = yup.object().shape({
 		nome: yup.string().min(1, 'Nome necessario'),
 		materia: yup.number().min(1, 'Materia necessaria'),
-		libri: yup.array().min(1, 'Libri necessari'),	
+        libri: yup.array()
+            .min(1, 'Libri necessari')
+            .of(
+                yup.string().required("Libro Necessario")
+                .test({
+                    name:'formato-libro',
+                    message: 'Formato Libro non valido',
+                    test: (value) => {
+                        //test against this format: 
+                        // Cognome N.,Titolo,Casa Editrice, Anno Edizione (es: Boscaini M.,Imparare a programmare,Apogeo,2023)
+                        return /^[A-Z][a-z]* [A-Z].,[A-Z][a-z0-9 -]*,[A-Z][a-z0-9 -]*,20[0-9][0-9]$/.test(value);
+                    }
+                })
+            ),
         primo_quadrimestre: yup.array().test((quadrimestre) => is_valid_quadrimestre(quadrimestre)),
 		secondo_quadrimestre: yup.array().test((quadrimestre) => is_valid_quadrimestre(quadrimestre))
 	});
@@ -306,14 +319,15 @@
 						<div class="col">
 							<div class="form-label select_text mt-3">Libro di testo</div>
 							{#each form_values.libri as libro,i}
-								{#if libro != 'null'}
+                                {#if libro != 'null'}
 									<div class="input-group input-group-flat">
 										<input
 											type="text"
 											class="form-control mt-2"
 											bind:value={libro}
 											id="libro"
-											class:is-invalid={errors[`libri`]}
+											class:is-invalid={Object.keys(errors)[0] && Object.keys(errors)[0].startsWith('libri')}
+                                            placeholder="Cognome N.,Titolo,Casa Editrice, Anno Edizione (es: Boscaini M.,Imparare a programmare,Apogeo,2023)"
 										/>
 										<span class="input-group-text">
 											<a
@@ -377,9 +391,9 @@
 								{/if}
 							{/each}
 							<input type="hidden" name="libri" bind:value={form_values.libri_raw} />
-							{#if errors['libri']}
-								<span class="invalid-feedback">{errors['libri']}</span>
-							{/if}
+                            {#if Object.keys(errors)[0] && Object.keys(errors)[0].startsWith('libri')}
+                                <span class="custom-invalid-feedback">{errors[Object.keys(errors)[0]]}</span>
+                            {/if}
 						</div>
 					</div>
 					<div class="row">
@@ -455,3 +469,14 @@
 		</div>
 	</form>
 </div>
+
+<style>
+    /* workaround, for some reason 
+    style of Libro error box keep display:none */
+    .custom-invalid-feedback {
+        width: 100%;
+        margin-top: 0.25rem;
+        font-size: 85.714285%;
+        color: #d63939;
+    }
+</style>
