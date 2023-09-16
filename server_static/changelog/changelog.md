@@ -1,3 +1,74 @@
+## v2.1.0 – 16 Settembre 2023
+- `fix#379`: Don't render empty sotto_sotto_argomenti (#384)
+- `fix#376`: Make remove sotto argomento works in latest changes (#383)
+- `fix#380`: Validazione titolo libro errata (#382)
+- modificata regex per accettare anni tra 1000 e 29999
+- modificata regex per accettare lettere maiuscole ovunque
+- `fix#378`: Programmazione docente non deve essere modificabile dopo il completamento (#381)
+- Ora ADMIN può resettare lo stato della programmazione docenti
+- Utente non può editare programmazione dopo che è completa
+- `fix#374`: Programmazione Docente template cleanup (#375)
+- `fix#355`:Formato Libro fisso in programmazione docente (#373)    
+- Il formato del libro è il seguente:
+  - Cognome N.,Titolo,Casa Editrice, Anno Edizione (es: Boscaini M.,Imparare a programmare,Apogeo,2023)
+- `fix#363`: Aggiunta argomenti intermedi in Programmazione Docente
+- Add create new arg at specified level
+- `fix#356`: 3 Livelli di argomenti in Programmazione Docente
+- Add sotto-sotto livello in programmazione dell'anno
+- Fix esthetic bug in input box
+- `fix#357`: Duplicazione Template Programmazione (#370)
+- `fix#358`: Sezione Note Programmazione Docente  (#367)
+- Add note in programmazione e template
+- `fix#361`: Campi più ampi in Programmazione Docente (#369)    
+- campo titolo max 128 caratteri no enter
+- campo sottoargomento max 512 caratteri no enter
+- `fix#353`: Classe non selezionata in programmazione docente (#368)
+- `fix#362`: Cambio carattere separatore in Programmazione Docente  (#364)
+- programmazione: Use tilde as separator for books
+- Track tilde-based array in another variable
+- This fix some graphical bugs
+-  Add esthetic 
+- `fix#359`:Da Quadrimestre a Periodo in Programmazione Docente
+- passaggio a trimestre e pentamestre
+- `fix#360`: Page Blank dopo ogni materia in Programmazione Docente (#365)
+- aggiornato template con nuovo tag pageBreak
+- creato nuovo custom tag @pageBreak per aggiungere un pagebreak
+- creato custom tag parser per aggiungere pagebreak in un loop tranne che all'ultima iterazione
+- risolti vari bug logici in programmazione docente
+- risolti vari bug logici e di visualizzazione
+- aggiunto codice classroom a programmazione docente
+- `fix#342`: Tooltip per programmazione annuale (#351)
+- aggiunti tooltip alla sezione programmazione annuale
+- aggiunti tooltip a tutte le sezioni di SARP
+- `fix#341`:Tooltip per sicurezza lavoro
+- aggiunti tool tip alla sezione sicurezza lavoro
+- aggiunti tooltip al layout generale
+- sostituito componente Tooltip con tippy.js per maggior flessibilità
+- `fix#340`: MessageBox per programmazione annuale
+- aggiunti MessageBox per la sezione programmazione annuale template e docenti
+- rimosso vecchio componente Alert e sostituito con MessageBox per essere omogeneo con le altre pagine
+- `fix#348`: Programmazione Docente non può selezionare il template
+- `fix#339`: MessageBox per sicurezza lavoro
+- MessageBox vengono visualizzati sia per la sezione corsi che per test
+- Admin e utente vedono messaggi differenti in funzione dello stato specifico
+- aggiunta call back a MessageBox
+- Alla rimozione del MessageBox è possibile (opzionale) eseguire una call back
+- modificata funzione helper per attendere la completa visualizzazione del modale
+- resa la funzione parametrica siccome modali diversi hanno tempi diversi
+- `fix#338`: Tooltip informativi (#346)
+- Aggiunto componente Tooltip
+- `fix#337`: Alert Messages (#345)
+- Aggiunto componente MessageBox per visualizzare messaggi di tipo success, warning e danger
+- Il messaggio ha un titolo ed un testo
+- Il messaggio scompare automaticamente con un delay configurabile
+- `fix#304`: Sviluppo applicazione test corsi sicurezza
+- aggiunto possibilità di somministrare i test di sicurezza online
+- gli studenti possono eseguire il test di sicurezza online
+- il test viene automaticamente corretto
+- il test viene automaticamente valutato
+- il professore può re-assegnare specifici test di sicurezza in caso di fallimento
+- il test viene generato con domande in ordine casuale per ogni singolo studente
+
 ## v2.0.2 – 15 Luglio 2023
 - `fix#333`: multiple custom action in table (#336)
 - Now user can set as many custom action as needed
@@ -492,7 +563,7 @@
 - Profmancusoa/feature/view aziende
 - `fix #15`: Navbar non permette più voci di sottomenu e sottosotto menu
 - first run di prettier sui sorgenti
-- aggiunto husky per fare la formattazione automatica prima di ogni commit
+- aggiunto husky per fare la formattazione automatica prima di ogni 
 - aggiornato .prettierignore per rimuovere le directory con file statici o non da formattare
 - refactor della navbar a componenti
 - added updated ER diagram, jpg and source file
@@ -513,4 +584,4 @@
 <br>
 
 
-## v0.0.0 – 26 Settembre 2022 – primo commit
+## v0.0.0 – 26 Settembre 2022 – primo 
