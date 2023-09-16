@@ -31,7 +31,7 @@
                     helper.mbox_show(
                         'success',
                         'Conferma',
-                        'Template aggiornato correttamente',
+                       'Template aggiornato correttamente',
                         3000
                     );
                     break;
@@ -71,13 +71,19 @@
 	let argomenti_primo_quadrimestre = [
 		{
 			titolo: '',
-			sotto_argomenti: ['']
+			sotto_argomenti: [{
+				sotto_argomento_text: '',
+				sotto_sotto_argomenti: ['']
+			}]
 		}
 	];
 	let argomenti_secondo_quadrimestre = [
 		{
 			titolo: '',
-			sotto_argomenti: ['']
+			sotto_argomenti: [{
+				sotto_argomento_text: '',
+				sotto_sotto_argomenti: ['']
+			}]
 		}
 	];
 
@@ -143,13 +149,19 @@
 			argomenti_primo_quadrimestre = [
 				{
 					titolo: '',
-					sotto_argomenti: ['']
+					sotto_argomenti: [{
+						sotto_argomento_text: '',
+						sotto_sotto_argomenti: ['']
+					}]
 				}
 			];
 			argomenti_secondo_quadrimestre = [
 				{
 					titolo: '',
-					sotto_argomenti: ['']
+					sotto_argomenti: [{
+						sotto_argomento_text: '',
+						sotto_sotto_argomenti: ['']
+					}]
 				}
 			];
 		}
