@@ -5,7 +5,8 @@
 		is_primo_quadrimestre,
 		remove_at_index,
 		wait_fade_finish,
-        mbox_show
+        mbox_show,
+        is_admin
 	} from '$js/helper.js';
 
 	import { page_action_title, page_title, page_pre_title, page_action_modal } from '$js/store';
@@ -114,7 +115,18 @@
 		modal_action = 'update';
         let insegnamento = insegnamenti.filter(i => i.id == e.detail.id)[0];
 
-        if(!insegnamento.programma_secondo_quadrimestre_completo) {
+        //if ADMIN can always edit programmazione
+        //if USER then can only edit if not completed
+        let periodo_completo;
+        if(is_admin(data)) 
+            periodo_completo = false;
+        else {
+            if (is_primo_quadrimestre())
+                periodo_completo = insegnamento.programma_primo_quadrimestre_completo
+            else
+                periodo_completo = insegnamento.programma_secondo_quadrimestre_completo;
+        }
+        if(!periodo_completo) {
             form_values.classe = insegnamento.idClasse;
             form_values.materia = insegnamento.idMateria;
             form_values.insegnamenti_id = insegnamento.id;
