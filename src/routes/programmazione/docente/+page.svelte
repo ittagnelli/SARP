@@ -39,7 +39,8 @@
                 'Programmazione aggiornata correttamente',
                 3000
             );            
-        } else {
+        } else if (form != null) {
+            console.log("FORM:", form)
             const buffer = new Uint8Array(JSON.parse(form.file).data); // Convertiamo la stringa in un oggetto che conterrà il nostro array di bytes che verrà poi convertito in Uint8Array, necessario all'oggetto Blob
             var blob = new Blob([buffer], { type: 'application/msword' });
             saveAs(blob, form.nome_documento);        
