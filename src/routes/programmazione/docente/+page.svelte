@@ -16,7 +16,7 @@
     import InputText from '$lib/components/modal/input_text.svelte';
     import MessageBox from '$lib/components/common/message_box.svelte';
     import { onMount } from 'svelte';
-
+    import { saveAs } from 'file-saver';
 	import * as yup from 'yup';
 	export let data;
     export let form;
@@ -39,6 +39,10 @@
                 'Programmazione aggiornata correttamente',
                 3000
             );            
+        } else {
+            const buffer = new Uint8Array(JSON.parse(form.file).data); // Convertiamo la stringa in un oggetto che conterrà il nostro array di bytes che verrà poi convertito in Uint8Array, necessario all'oggetto Blob
+            var blob = new Blob([buffer], { type: 'application/msword' });
+            saveAs(blob, form.nome_documento);        
         }
     });
 
@@ -365,8 +369,9 @@
 	endpoint="programmazione/docente"
 	footer="Programmazione docente"
 	actions={true}
-    print={false}
-    print_filter={false}
+    print={true}
+    print_filter={is_primo_quadrimestre() ? "programma_primo_quadrimestre_presente" : "programma_secondo_quadrimestre_presente"}
+    print_tip="Visualizza programmazione per la materia selezionata"
     update_tip="Creo o aggiorna programmazione per il quadrimestre in corso"
 	resource="programmazione_docente"
 	modal_name={$page_action_modal}

@@ -1,8 +1,13 @@
 // @ts-ignore
 // @ts-ignore
-import { access_protect, is_primo_quadrimestre, route_protect, user_id } from "$js/helper";
 import { PrismaDB } from "$js/prisma_db.js";
-import { multi_user_field_where } from '$js/helper.js';
+import { PUBLIC_PCTO_TEMPLATE_CONVENZIONE_STUDENTE, PUBLIC_PROGRAMMAZIONE_ANNUALE_TEMPLATE, PUBLIC_PROGRAMMAZIONE_ANNUALE_TEMPLATES_DIR } from "$env/static/public";
+import { multi_user_field_where, access_protect, is_primo_quadrimestre, route_protect, upper_first_letter, user_id, custom_tags_parser } from "$js/helper";
+import path from 'path';
+import fs from 'fs';
+import PizZip from "pizzip";
+import Docxtemplater from "docxtemplater";
+
 
 const resource = "programmazione_docente";
 
@@ -84,6 +89,108 @@ export const actions = {
             });
         }
         return {action: action, status: 'ok'};
-    }
+    },
+    pdf: async ({ cookies, request }) => {
+		let buf;
+		try {
+			const form_data = await request.formData();
+			const id = form_data.get('id');
+            let materie_programmi = null;
 
+			let insegnamenti = await SARP.insegnamenti.findMany({
+				where: { id: +id },
+				include: {
+					docente: true,
+					materia: true
+				}
+			})
+
+            // preleva la classe dal DB
+			let classe = await SARP.classe.findUnique({
+				where: { id: +insegnamenti[0].idClasse },
+				include: {
+					insegnamenti: true,
+					iscritti: true
+				}
+			});
+
+			if(is_primo_quadrimestre()){
+				materie_programmi = insegnamenti.map(insegnamento => {
+					const programma = JSON.parse(insegnamento.programma_primo_quadrimestre);
+					const libri = programma[2].libri;	// Sappiamo che l'array è composto da:	Q1, Q2, Libri
+					const note = programma[2].note;
+					return {
+						nome: insegnamento.materia.nome,
+                        professore: upper_first_letter(insegnamento.docente.nome).concat(" ").concat(upper_first_letter(insegnamento.docente.cognome)), 
+						libro: libri,
+						argomenti_q1: programma[0],
+						argomenti_q2: programma[1],
+						note: note == null ? "" : note	// Evitiamo di scrivere undefined nel documento
+					}
+				});
+			} else {
+				materie_programmi = insegnamenti.map(insegnamento => {
+					const programma = JSON.parse(insegnamento.programma_secondo_quadrimestre);
+					const libri = programma[2].libri;	// Sappiamo che l'array è composto da:	Q1, Q2, Libri
+					return {
+						nome: insegnamento.materia.nome, 
+						professore: upper_first_letter(insegnamento.docente.nome).concat(" ").concat(upper_first_letter(insegnamento.docente.cognome)),
+						libro: libri,
+						argomenti_q1: programma[0],
+						argomenti_q2: programma[1]
+					}
+				});
+			}
+
+			const docenti_name = insegnamenti.map(insegnamento => {
+				return {
+					materia: insegnamento.materia.nome,
+					docente: `${upper_first_letter(insegnamento.docente.nome)} ${upper_first_letter(insegnamento.docente.cognome)}`,
+					classroom: insegnamento.code_classroom
+				}
+			});
+
+			const studenti_name = classe?.iscritti.map((studente, index )=> {
+				return {
+					id: index + 1,
+					cognome: upper_first_letter(studente.cognome),
+					nome: upper_first_letter(studente.nome)
+				}
+			})
+
+            let docx_programmazione_template = {
+				classe: `${classe?.classe} ${classe?.istituto} ${classe?.sezione}`,
+				docenti: docenti_name,
+				studenti: studenti_name,
+				materie: materie_programmi,
+			}
+
+			const content = fs.readFileSync(
+				path.resolve(PUBLIC_PROGRAMMAZIONE_ANNUALE_TEMPLATES_DIR, PUBLIC_PROGRAMMAZIONE_ANNUALE_TEMPLATE),
+				'binary'
+			);
+
+			const zip = new PizZip(content);
+
+			const doc = new Docxtemplater(zip, {
+				paragraphLoop: true,
+				linebreaks: true,
+                parser: custom_tags_parser
+			});
+            
+            doc.render(docx_programmazione_template);
+
+			buf = doc.getZip().generate({
+				type: 'nodebuffer',
+				compression: 'DEFLATE'
+			});
+
+            return {
+				file: JSON.stringify(buf), // Convertiamo il buffer in stringa sennò sveltekit va in errore
+				nome_documento: `Programmazione-${docx_programmazione_template.classe.replace(' ', '_')}.docx`
+			};
+		} catch (exception) {
+			console.log(exception)
+		}
+	}
 }
