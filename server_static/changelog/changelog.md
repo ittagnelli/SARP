@@ -1,3 +1,7 @@
+## v3.1.0 – 17 Settembre 2023
+- `fix#385`: Il docente può generare e visionare la programmazione docente in word 
+
+
 ## v3.0.0 – 16 Settembre 2023
 - `fix#379`: Don't render empty sotto_sotto_argomenti (#384)
 - `fix#376`: Make remove sotto argomento works in latest changes (#383)
