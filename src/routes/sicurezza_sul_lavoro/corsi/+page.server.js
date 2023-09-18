@@ -190,6 +190,8 @@ export const actions = {
                 filler['istituto'] = studente.classe.istituto;
                 filler['sezione'] = studente.classe.sezione;
                 filler['today'] = corso.dataTest.toLocaleDateString("it-IT");
+                filler['dataInizio'] = corso?.dataInizio.toLocaleDateString("it-IT");
+                filler['dataFine'] = corso?.dataFine.toLocaleDateString("it-IT");                
 
                 let TEMPLATE_FILE;
                 if(corso.tipo == 'SPECIFICO')
