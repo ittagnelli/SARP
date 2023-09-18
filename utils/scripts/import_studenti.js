@@ -238,7 +238,7 @@ function xsl_to_xslx(filename) {
 
 function handle_filename() {
     if (process.argv[2] == null) {
-        console.log("Benvenuto in SARP Excel to Prisma Parser! Uso: node excel_to_prisma.js FILENAME")
+        console.log("Benvenuto in SARP Excel to Prisma Parser! Uso: node import_studenti.js FILENAME")
         process.exit(255);
     } else {
         const filename = process.argv[2];
