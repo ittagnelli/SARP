@@ -12,7 +12,7 @@
     import { onMount } from 'svelte';
     import { saveAs } from 'file-saver';
     import MessageBox from '$lib/components/common/message_box.svelte';
-    
+
     let logger = new Logger("client");
 	export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
     export let form; // Risposta del form dal server
@@ -23,6 +23,8 @@
 	let classi = helper.data2arr(data.classi);
 	let classi_iscritte = [];
 	let old_studenti = [];
+    let form_presenze; 
+    let idCorso;
 
 	classi = helper.db_to_select(classi);
 
@@ -200,7 +202,16 @@
             //     view_results(e.detail.row_id);
             //     break;
             case 'issue':
-                issue_test(e.detail.row_id);
+                //issue_test(e.detail.row_id);
+                helper.mbox_show(
+                'warning',
+                'Attenzione',
+                'Al momento la somministrazione dei test non è disponibile',
+                3000
+            );
+                break;
+            case 'presenze':
+                print_presenze(e.detail.row_id);
                 break;
         }
     }
@@ -255,6 +266,15 @@
             );
         }
     }
+
+    async function print_presenze(id) {
+        // let corso = corsi.filter(c => c.id == id)[0];
+        // let studenti = corso.seguitoDa.map(s => s.id);
+        // set the id of the classes to print
+        // send the hidden form
+        idCorso.value = id;
+        form_presenze.submit();
+    }
 </script>
 
 <MessageBox/>
@@ -282,7 +302,7 @@
     update_tip="Aggiorna corso"
     trash_tip="Rimuovi corso"
     resource="sicurezza_corso"
-    custom_actions={[{action: 'issue', icon:'checklist', tip: 'Somministra test agli studenti'}]}
+    custom_actions={[{action: 'issue', icon:'checklist', tip: 'Somministra test agli studenti'}, {action: 'presenze', icon:'users', tip: 'Stampa modulo presenze'}]}
     on:custom_action={custom_action_handler}
 />
 <!-- custom_actions={[{action: 'view', icon: 'eye'}, {action: 'issue', icon:'checklist'}]} -->
@@ -419,3 +439,9 @@
 		</div>
 	</form>
 </div>
+
+<!-- huge workaround since due to a bug in undici cannot send formData with POST
+so having an hidden form used to trigger the backend action to generate document creation -->
+<form bind:this={form_presenze} id="form-presenze" method="POST" action={'/sicurezza_sul_lavoro/corsi?/pdf_presenze'}>
+    <input bind:this={idCorso} type="hidden" id="idCorso" name="idCorso" value=0 />
+</form>
