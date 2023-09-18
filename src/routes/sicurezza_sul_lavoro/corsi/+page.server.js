@@ -6,7 +6,11 @@ import PizZip from 'pizzip';
 import Docxtemplater from 'docxtemplater';
 import fs from 'fs';
 import path from 'path';
-import { PUBLIC_SICUREZZA_TEMPLATES_DIR, PUBLIC_SICUREZZA_CORSO_GENERICO, PUBLIC_SICUREZZA_CORSO_SPECIFICO } from '$env/static/public';
+import { PUBLIC_SICUREZZA_TEMPLATES_DIR, 
+         PUBLIC_SICUREZZA_CORSO_GENERICO, 
+         PUBLIC_SICUREZZA_CORSO_SPECIFICO,
+         PUBLIC_SICUREZZA_PRESENZE_GENERICO,
+         PUBLIC_SICUREZZA_PRESENZE_SPECIFICO } from '$env/static/public';
 
 
 let logger = new Logger("server"); //instanzia il logger
@@ -222,6 +226,72 @@ export const actions = {
                 });
                 logger.info(`Generato attestato corso sicurezza per ${studente.cognome}_${studente.nome}`);
             }       
+
+            return {files: return_files};
+		} catch (exception) {
+			catch_error_pdf(exception, 'la generazione', 804);
+		}
+	},
+
+    pdf_presenze: async ({ cookies, request }) => {
+		try {
+            const form_data = await request.formData();
+            const idCorso = form_data.get('idCorso');
+            let return_files = [];
+
+			// // preleva il corso dal DB
+			let corso = await SARP.sicurezza_Corso.findUnique({
+				where: { id: +idCorso },
+                include: {
+                    seguitoDa: {
+                        include: {
+                            classe: true
+                        }
+                    } 
+                }
+			});
+
+            let filler = {};
+            filler['classe'] = corso?.seguitoDa[0].classe.classe;
+            filler['istituto'] = corso?.seguitoDa[0].classe.istituto;
+            filler['sezione'] = corso?.seguitoDa[0].classe.sezione;
+            filler['studenti'] = corso?.seguitoDa;
+
+            // add student index
+            corso?.seguitoDa.map((studente, idx) => {
+                studente['idx'] = idx + 1;
+                return studente;
+            });
+
+            let TEMPLATE_FILE;
+            if(corso?.tipo == 'SPECIFICO')
+                TEMPLATE_FILE = PUBLIC_SICUREZZA_PRESENZE_SPECIFICO;
+            else
+                TEMPLATE_FILE = PUBLIC_SICUREZZA_PRESENZE_GENERICO;
+
+            const template = fs.readFileSync(
+                path.resolve(PUBLIC_SICUREZZA_TEMPLATES_DIR, TEMPLATE_FILE),
+                'binary'
+            );
+
+            const zip = new PizZip(template);
+            const doc = new Docxtemplater(zip, {
+                paragraphLoop: true,
+                linebreaks: true
+            });
+
+            console.log("FILLER:", filler)
+            doc.render(filler);
+            let buf = doc.getZip().generate({
+                type: 'nodebuffer',
+                compression: 'DEFLATE'
+            });
+
+            return_files.push({
+                file: JSON.stringify(buf),
+                name: `registro_presenze_${corso?.tipo}.docx`
+            });
+            logger.info('Generato registro presenze');  
 
             return {files: return_files};
 		} catch (exception) {
