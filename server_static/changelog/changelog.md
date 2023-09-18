@@ -1,3 +1,10 @@
+## v3.2.0 – 18 Settembre 2023
+- `fix#391`: Implementare stampa modulo presenze corsi sicurezza (#393)
+- `fix#390`: Aggiornamento template attestato corsi sicurezza  (#392)
+- `fix#388`: Import studenti as 2023-2024
+- creato script per disabilitare studenti delle 5 dell'anno precedente
+- preparato file per import studenti as 2023-2024
+
 ## v3.1.0 – 17 Settembre 2023
 - `fix#385`: Il docente può generare e visionare la programmazione docente in word 
 
