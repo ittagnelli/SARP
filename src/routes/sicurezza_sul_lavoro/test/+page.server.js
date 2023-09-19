@@ -2,8 +2,8 @@ import { PrismaDB } from '../../../js/prisma_db';
 import { route_protect, multi_user_sicurezza_where, raise_error, access_protect  } from '../../../js/helper';
 import { Logger } from '../../../js/logger';
 import { PrismaClientValidationError } from '@prisma/client/runtime';
-import { qna_specifico_db } from './qna_specifico_db';
-import { qna_generico_db } from './qna_generico_db';
+import { qna_generico_db_str } from './qna_generico_db';
+import { qna_specifico_db_str } from './qna_specifico_db';
 import { PUBLIC_POINT_MIN_GENERICO } from '$env/static/public';
 import { PUBLIC_POINT_MIN_SPECIFICO } from '$env/static/public';
 
@@ -50,10 +50,13 @@ export async function load({ locals }) {
 }
 
 function quiz_n_questions(type) {
-    if(type == 'GENERICO')
+    if(type == 'GENERICO') {
+        const qna_generico_db = JSON.parse(qna_generico_db_str);
         return {q_end: qna_generico_db.length, qna_db: qna_generico_db};
-    else
+    } else {
+        const qna_specifico_db = JSON.parse(qna_specifico_db_str);
         return {q_end: qna_specifico_db.length, qna_db: qna_specifico_db};
+    }
 }
 
 function correct_answers(q_end, form_data, qna_db) {

@@ -202,13 +202,7 @@
             //     view_results(e.detail.row_id);
             //     break;
             case 'issue':
-                //issue_test(e.detail.row_id);
-                helper.mbox_show(
-                'warning',
-                'Attenzione',
-                'Al momento la somministrazione dei test non è disponibile',
-                3000
-            );
+                issue_test(e.detail.row_id);
                 break;
             case 'presenze':
                 print_presenze(e.detail.row_id);
