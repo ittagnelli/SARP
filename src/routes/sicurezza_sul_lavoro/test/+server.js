@@ -2,8 +2,8 @@ import { json } from '@sveltejs/kit';
 import { PrismaDB } from '$js/prisma_db';
 import { route_protect, raise_error, user_id } from '$js/helper';
 import { PrismaClientValidationError } from '@prisma/client/runtime';
-import { qna_generico_db } from './qna_generico_db.js';
-import { qna_specifico_db } from './qna_specifico_db.js';
+import { qna_generico_db_str } from './qna_generico_db.js';
+import { qna_specifico_db_str } from './qna_specifico_db.js';
 import { Logger } from '$js/logger';
 
 let logger = new Logger("server"); //instanzia il logger
@@ -31,15 +31,18 @@ async function generate_scrambled_questions(type) {
     let questions;
     
     //deep copy the right qna set and remove the correct answer
-    if(type == 'GENERICO')
+    if(type == 'GENERICO') {
+        const qna_generico_db = JSON.parse(qna_generico_db_str);
         questions = qna_generico_db.map(qna => { delete qna.answer; return qna});
-    else
+    } else {
+        const qna_specifico_db = JSON.parse(qna_specifico_db_str);
         questions = qna_specifico_db.map(qna => { delete qna.answer; return qna});
+    }
 
     //shuffle the questions array
     questions = questions.sort(() => 0.5 - Math.random());
 
-    return questions;
+    return {questions: questions, n_questions: questions.length};
 }       
 
 // crea un test di sicurezza per ogni studente di un dato corso
@@ -50,14 +53,13 @@ export async function POST({ request, url, locals }) {
     SARP.set_session(locals); // passa la sessione all'audit
     try {
         json_data.studenti.forEach(async studente => {
-            const questions = await generate_scrambled_questions(json_data.type);
-
+            const { questions, n_questions } = await generate_scrambled_questions(json_data.type);
             await SARP.sicurezza_Test.create({
                 data: {
                     creatoDa: user_id(locals),
                     tipo: json_data.type,
                     domande: JSON.stringify(questions),
-                    punti_max: json_data.type == 'GENERICO' ? qna_generico_db.length : qna_specifico_db.length,
+                    punti_max: n_questions,
                     svoltoDa: studente,
                     idCorso: json_data.corso
                 }

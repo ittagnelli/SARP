@@ -1,3 +1,7 @@
+## v3.3.0 – 18 Settembre 2023
+- `fix#352`: Errore valutazione test sicurezza
+- ora i test di sicurezza sono valutati correttamente
+  
 ## v3.2.0 – 18 Settembre 2023
 - `fix#391`: Implementare stampa modulo presenze corsi sicurezza (#393)
 - `fix#390`: Aggiornamento template attestato corsi sicurezza  (#392)
