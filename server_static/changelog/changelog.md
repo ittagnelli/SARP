@@ -1,3 +1,11 @@
+## v3.3.2 – 20 Settembre 2023
+- `fix#397`:Rilassare regex libro di testo in programmazione annuale (#399)
+- support fino ad un max di 3 autori
+- supporto a spazi in casa editrice e titolo
+- `fix#395`: Distanziare icone più e cestino in programmazione docente (#398)
+- aggiunto colorazione icon
+- update tooltip icone
+
 ## v3.3.0 – 18 Settembre 2023
 - `fix#352`: Errore valutazione test sicurezza
 - ora i test di sicurezza sono valutati correttamente
