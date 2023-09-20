@@ -82,7 +82,8 @@
                     test: (value) => {
                         //test against this format: 
                         // Cognome N.,Titolo,Casa Editrice, Anno Edizione (es: Boscaini M.,Imparare a programmare,Apogeo,2023)
-                        return /^[A-Z][A-Za-z]* [A-Z].,[A-Z][A-Za-z0-9 -]*,[A-Z][A-Za-z0-9 -]*,[1-2][0-9][0-9][0-9]$/.test(value);
+                        // return /^[A-Z][A-Z a-z]* [A-Z].,[A-Z][A-Za-z0-9 -.]*,[A-Z][A-Za-z0-9 -.]*,[1-2][0-9][0-9][0-9]$/.test(value);
+                        return /^([A-Z][A-Za-z ]+ [A-Z]\.,){1,3}[A-Z][A-Za-z -]+,[A-Z][A-Za-z -]+,[1-2][0-9]{3}$/.test(value);
                     }
                 })
             ),
@@ -482,7 +483,7 @@
                     </div>
                     <div class="row">
                         <div class="col">
-                            <div class="form-label select_text mt-3">Libro di testo</div>
+                            <div class="form-label select_text mt-3">Libro di testo [Cognome N.,(max 3 autori)Titolo,Casa Editrice, Anno Edizione (es: De Giovanni M.,Imparare a programmare - progettare,De Agostini Editore,2023)]</div>
                             {#each form_values.libri as libro}
                                 {#if libro != 'null'}
                                     <div class="input-group input-group-flat">
@@ -492,7 +493,6 @@
                                             bind:value={libro}
                                             id="libro"
                                             class:is-invalid={Object.keys(errors)[0] && Object.keys(errors)[0].startsWith('libri')}
-                                            placeholder="Cognome N.,Titolo,Casa Editrice, Anno Edizione (es: Boscaini M.,Imparare a programmare,Apogeo,2023)"
                                         />
                                         <span class="input-group-text">
                                             <a
