@@ -68,7 +68,7 @@
 				<textarea
 					class="form-control"
 					bind:value={argomento.titolo}
-					placeholder="Titolo argomento"
+					placeholder="Argomento"
 					maxlength="128"
 					rows="2"
 					on:keydown={prevent_enter}
@@ -77,13 +77,13 @@
 					<a
 						href="#0"
 						class="link-secondary"
-						title="Clear search"
+						title="Aggiungi argomento"
 						data-bs-toggle="tooltip"
 						on:click={() => new_argomento()}
 						><!-- Download SVG icon from http://tabler-icons.io/i/x -->
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
-							class="icon icon-tabler icon-tabler-plus"
+							class="icon icon-tabler icon-tabler-plus add-icon"
 							width="24"
 							height="24"
 							viewBox="0 0 24 24"
@@ -101,14 +101,14 @@
 					{#if index > 0}
 						<a
 							href="#"
-							class="link-secondary"
-							title="Clear search"
+							class="link-secondary spacer"
+							title="Rimuovi argomento"
 							data-bs-toggle="tooltip"
 							on:click={() => remove_argomento(index)}
 							><!-- Download SVG icon from http://tabler-icons.io/i/x -->
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
-								class="icon icon-tabler icon-tabler-trash-filled"
+								class="icon icon-tabler icon-tabler-trash-filled del-icon"
 								width="24"
 								height="24"
 								viewBox="0 0 24 24"
@@ -150,12 +150,12 @@
 								href="#0"
 								on:click={() => new_sotto_argomento(index, i)}
 								class="link-secondary"
-								title="Clear search"
+								title="Aggiungi sotto argomento"
 								data-bs-toggle="tooltip"
 								><!-- Download SVG icon from http://tabler-icons.io/i/x -->
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
-									class="icon icon-tabler icon-tabler-plus"
+									class="icon icon-tabler icon-tabler-plus add-icon"
 									width="24"
 									height="24"
 									viewBox="0 0 24 24"
@@ -173,14 +173,14 @@
 							{#if i > 0}
 								<a
 									href="#0"
-									class="link-secondary"
-									title="Clear search"
+									class="link-secondary spacer"
+									title="Rimuovi sotto argomento"
 									data-bs-toggle="tooltip"
 									on:click={() => remove_sotto_argomento(index, i)}
 									><!-- Download SVG icon from http://tabler-icons.io/i/x -->
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
-										class="icon icon-tabler icon-tabler-trash-filled"
+										class="icon icon-tabler icon-tabler-trash-filled del-icon"
 										width="24"
 										height="24"
 										viewBox="0 0 24 24"
@@ -222,12 +222,12 @@
 								href="#0"
 								on:click={() => add_sotto_sotto_argomento(index, i, j)}
 								class="link-secondary"
-								title="Clear search"
+								title="Aggiungi sotto sotto argomento"
 								data-bs-toggle="tooltip"
 								><!-- Download SVG icon from http://tabler-icons.io/i/x -->
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
-									class="icon icon-tabler icon-tabler-plus"
+									class="icon icon-tabler icon-tabler-plus add-icon"
 									width="24"
 									height="24"
 									viewBox="0 0 24 24"
@@ -245,14 +245,14 @@
 						{#if j > 0}
 							<a
 								href="#0"
-								class="link-secondary"
-								title="Clear search"
+								class="link-secondary spacer"
+								title="Rimuovi sotto sotto argomento"
 								data-bs-toggle="tooltip"
 								on:click={() => remove_sotto_sotto_argomento(index, i, j)}
 								><!-- Download SVG icon from http://tabler-icons.io/i/x -->
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
-									class="icon icon-tabler icon-tabler-trash-filled"
+									class="icon icon-tabler icon-tabler-trash-filled del-icon"
 									width="24"
 									height="24"
 									viewBox="0 0 24 24"
@@ -283,3 +283,20 @@
 		</div>
 	{/each}
 </div>
+
+<style>
+    .add-icon {
+        color: green;
+        font-weight: bolder;
+    }
+
+    .del-icon {
+        color: red;
+        font-weight: bolder;
+    }
+
+    .spacer {
+        padding-left: 20px;
+    }
+
+</style>
