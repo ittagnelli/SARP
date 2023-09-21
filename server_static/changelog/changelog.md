@@ -1,3 +1,8 @@
+## v3.3.4 – 21 Settembre 2023
+- `fix#396`: Output libri di testo in template da rivedere
+- previene inserimento di ENTER in note per evitare formattazioni non controllate
+- quick fix on libro regex
+
 ## v3.3.2 – 20 Settembre 2023
 - `fix#397`:Rilassare regex libro di testo in programmazione annuale (#399)
 - support fino ad un max di 3 autori

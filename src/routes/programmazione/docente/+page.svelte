@@ -89,7 +89,7 @@
             ),
 		primo_quadrimestre: yup.array().test((quadrimestre) => is_valid_quadrimestre(quadrimestre)),
 		secondo_quadrimestre: yup.array().test((quadrimestre) => is_valid_quadrimestre(quadrimestre)),
-        code_classroom: yup.string().length(7).required('Codice Classroom necessario')
+        code_classroom: yup.string().length(7).required('Codice Classroom necessario'),
 	});
 
 	let modal_action = 'create';
@@ -236,7 +236,7 @@
 		try {
 			// valida il form prima del submit
 			await form_schema.validate(form_values, { abortEarly: false });
-			errors = {};
+            errors = {};
 			modal_form.submit();
 		} catch (err) {
 			console.log(err);
@@ -334,6 +334,10 @@
 		argomenti_primo_quadrimestre_raw = JSON.stringify(argomenti_primo_quadrimestre);
 		argomenti_secondo_quadrimestre_raw = JSON.stringify(argomenti_secondo_quadrimestre);
 	}
+
+    function prevent_enter(key) {
+        if(key.key == 'Enter') key.preventDefault();
+    }
 </script>
 
 <MessageBox />
@@ -572,6 +576,7 @@
 									id="note"
 									name="note"
 									bind:value={form_values.note}
+                                    on:keydown={prevent_enter}
 								/>
 							</div>
 						</div>

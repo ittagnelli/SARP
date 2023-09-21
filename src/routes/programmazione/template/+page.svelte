@@ -273,6 +273,9 @@
         }
     }
     
+    function prevent_enter(key) {
+        if(key.key == 'Enter') key.preventDefault();
+    }
 </script>
 
 <MessageBox />
@@ -458,6 +461,7 @@
 									id="note"
 									name="note"
 									bind:value={form_values.note}
+                                    on:keydown={prevent_enter}
 								/>
 							</div>
 						</div>
