@@ -2,6 +2,7 @@ import readXlsxFile from 'read-excel-file/node';
 import { PrismaClient } from '@prisma/client';
 import fs from 'fs';
 import { execSync } from 'child_process';
+import { exit } from 'process';
 
 const prisma = new PrismaClient(); // Inizializzo il client di SARP
 
@@ -83,7 +84,11 @@ async function main(filename) {
                 }
             });
         } else {
-            console.log("ERROR:", row); 
+            console.log("ERROR:", row);
+            console.log("DOCENTE:", Docente);
+            console.log("CLASSE:", Classe);
+            console.log("MATERIA:", Materia);
+            exit(1);
         }
     });
 }
