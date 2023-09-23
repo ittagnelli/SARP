@@ -55,40 +55,44 @@ async function main(filename) {
 
 
     rows.slice(1).forEach(async (row) => {
-        let [cognome, materia, as, classe, istituto, sezione, titolare, compresenza] = row;
+        let [cognome, materia, as, classe, istituto, sezione, titolare, compresenza, dainserire] = row;
         let Docente = find_docente(docenti, cognome);
         let Classe = find_classe(classi, classe, istituto, sezione);
         let Materia = find_materia(materie, materia);
         
-        if(Docente && Classe && Materia) {
-            let Insegnamento = find_insegnamento(insegnamenti, Docente.id, Materia.id, Classe.id, as);
-            await prisma.insegnamenti.upsert({
-                create: {
-                    
+        if(dainserire == 'X') {
+            if(Docente && Classe && Materia) {
+                let Insegnamento = find_insegnamento(insegnamenti, Docente.id, Materia.id, Classe.id, as);
+                await prisma.insegnamenti.upsert({
+                    create: {
+                        
+                            idDocente: Docente.id ,
+                            idMateria: Materia.id ,
+                            idClasse:  Classe.id,
+                            titolare: is_titolare(titolare),
+                            anno: as
+                        
+                    },
+                    update: {
                         idDocente: Docente.id ,
                         idMateria: Materia.id ,
                         idClasse:  Classe.id,
                         titolare: is_titolare(titolare),
                         anno: as
-                    
-                },
-                update: {
-                    idDocente: Docente.id ,
-                    idMateria: Materia.id ,
-                    idClasse:  Classe.id,
-                    titolare: is_titolare(titolare),
-                    anno: as
-                },
-                where: {
-                    id: Insegnamento ? Insegnamento.id : 0
-                }
-            });
-        } else {
-            console.log("ERROR:", row);
-            console.log("DOCENTE:", Docente);
-            console.log("CLASSE:", Classe);
-            console.log("MATERIA:", Materia);
-            exit(1);
+                    },
+                    where: {
+                        id: Insegnamento ? Insegnamento.id : 0
+                    }
+                });
+                console.log(`Inserito Insegnamento: ${Docente.cognome} - ${Classe.classe} ${Classe.istituto} ${Classe.sezione} - ${Materia.nome}`);
+            } else {
+                console.log("ERROR:", row);
+                console.log("DOCENTE:", Docente);
+                console.log("CLASSE:", Classe);
+                console.log("MATERIA:", Materia);
+                exit(1);
+        } } else {
+            console.log(`Saltato Insegnamento: ${Docente.cognome} - ${Classe.classe} ${Classe.istituto} ${Classe.sezione} - ${Materia.nome}`);
         }
     });
 }
