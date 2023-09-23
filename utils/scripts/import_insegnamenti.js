@@ -84,7 +84,7 @@ async function main(filename) {
                         id: Insegnamento ? Insegnamento.id : 0
                     }
                 });
-                console.log(`Inserito Insegnamento: ${Docente.cognome} - ${Classe.classe} ${Classe.istituto} ${Classe.sezione} - ${Materia.nome}`);
+                console.log(`Inserito Insegnamento: ${Docente?.cognome} - ${Classe?.classe} ${Classe?.istituto} ${Classe?.sezione} - ${Materia?.nome}`);
             } else {
                 console.log("ERROR:", row);
                 console.log("DOCENTE:", Docente);
@@ -92,7 +92,7 @@ async function main(filename) {
                 console.log("MATERIA:", Materia);
                 exit(1);
         } } else {
-            console.log(`Saltato Insegnamento: ${Docente.cognome} - ${Classe.classe} ${Classe.istituto} ${Classe.sezione} - ${Materia.nome}`);
+            console.log(`Saltato Insegnamento: ${Docente?.cognome} - ${Classe.classe} ${Classe?.istituto} ${Classe?.sezione} - ${Materia?.nome}`);
         }
     });
 }
