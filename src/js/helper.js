@@ -364,3 +364,7 @@ export const custom_tags_parser = (tag, meta) => {
         };
     }
 }
+
+export const sanitize_text_form = (text) => {
+	return text.replace(/\\\\\\n/g, '').replace(/\\\\n/g, '').replace(/\\n/g, '');
+}
