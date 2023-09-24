@@ -123,6 +123,7 @@ export const actions = {
 						nome: insegnamento.materia.nome,
                         professore: upper_first_letter(insegnamento.docente.nome).concat(" ").concat(upper_first_letter(insegnamento.docente.cognome)), 
 						libri: libri,
+                        hasLibri: libri.length > 0,
 						argomenti_q1: programma[0],
 						argomenti_q2: programma[1],
                         note: note,
