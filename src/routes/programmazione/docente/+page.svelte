@@ -74,17 +74,16 @@
 	const form_schema = yup.object().shape({
 		materia: yup.number().min(1, 'Materia necessaria'),
 		libri: yup.array()
-            .min(1, 'Libri necessari')
             .of(
-                yup.string().required("Libro Necessario")
+                yup.string()
                 .test({
                     name:'formato-libro',
                     message: 'Formato Libro non valido',
                     test: (value) => {
                         //test against this format: 
                         // Cognome N.,Titolo,Casa Editrice, Anno Edizione (es: Boscaini M.,Imparare a programmare,Apogeo,2023)
-                        // return /^[A-Z][A-Z a-z]* [A-Z].,[A-Z][A-Za-z0-9 -.]*,[A-Z][A-Za-z0-9 -.]*,[1-2][0-9][0-9][0-9]$/.test(value);
-                        return /^([A-Z][A-Za-z ]+ [A-Z]\.,){1,3}[A-Z][0-9A-Za-z -]+,[A-Z][0-9A-Za-z -]+,[1-2][0-9]{3}$/.test(value);
+                        //return /^([A-Z][A-Za-z ]+ [A-Z]\.,){1,3}[A-Z][0-9A-Za-z -]+,[A-Z][0-9A-Za-z -]+,[1-2][0-9]{3}$/.test(value);
+                        return /^([A-Z][A-Za-z' ]+ [A-Z]\.,){1,3}[A-Z][0-9A-Za-z-+'"&\/()\[\] ]+,[A-Z][0-9A-Za-z-+'"&\/()\[\] ]+,[1-2][0-9]{3}$/.test(value);
                     }
                 })
             ),
@@ -481,7 +480,7 @@
                                 class="form-control mt-3"
                                 class:is-invalid="{errors['code_classroom']}"
                                 name="code_classroom"
-                                placeholder="abc123def"
+                                placeholder="abc123def oppure -------"
                                 bind:value={form_values.code_classroom}
                             />
                             {#if errors['code_classroom']}
