@@ -1,3 +1,16 @@
+## v3.4.0 – 24 Settembre 2023
+- `fix#401`: Remove newline in form
+- `fix#403`:Libro di testo non obbligatorio in programmazione e (#404)    
+- modificato template e regex per rendere il libro opzionale
+- `fix#402`: Apostrofo non permesso nel libro di testo in programmazione (#405)
+- aggiunto supporto a caratteri speciali ',(),[],/,&
+- handle missing Docente
+- aggiunge insegnamento selettivamente dainserire=true ('X' in excel)
+- improved import_insegnamenti with debug
+- `fix#396`: Output libri di testo in template da rivedere (#400)    
+- previene inserimento di ENTER in note per evitare formattazioni non controllate
+-quick fix on libro regex
+
 ## v3.3.4 – 21 Settembre 2023
 - `fix#396`: Output libri di testo in template da rivedere
 - previene inserimento di ENTER in note per evitare formattazioni non controllate
