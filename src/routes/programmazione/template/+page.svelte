@@ -145,6 +145,8 @@
 	}
 
 	async function handleSubmit() {
+		form_values.nome = helper.sanitize_text_form(form_values.nome);
+		form_values.note = helper.sanitize_text_form(form_values.note);
 		form_values.primo_quadrimestre = argomenti_primo_quadrimestre;
 		form_values.secondo_quadrimestre = argomenti_secondo_quadrimestre;
 		
@@ -171,16 +173,17 @@
 				})
 			}
 		});
-		argomenti_primo_quadrimestre_raw = JSON.stringify(form_values.primo_quadrimestre);
-		argomenti_secondo_quadrimestre_raw = JSON.stringify(form_values.secondo_quadrimestre);
+		argomenti_primo_quadrimestre_raw = helper.sanitize_text_form(JSON.stringify(form_values.primo_quadrimestre));
+		argomenti_secondo_quadrimestre_raw = helper.sanitize_text_form(JSON.stringify(form_values.secondo_quadrimestre));
 
 		form_values.libri = form_values.libri.filter((libro) => libro.length > 0); // Se l'input è vuoto lo sanifichiamo
+
 		// Cambiamo la virgola in tilde, questo perchè lato server
 		// riceviamo una array in stringa e a quel livello non sappiamo distinguere
 		// la virgola dell'utente e quella dell'array
 		// Inoltre non possiamo farla prima del submit perchè per qualche ragione,
 		// la richiesta viene fatta prima che il metodo join abbia finito
-		form_values.libri_raw = form_values.libri.join('~');
+		form_values.libri_raw = helper.sanitize_text_form(form_values.libri.join('~'));
 		try {
 			// valida il form prima del submit
 			await form_schema.validate(form_values, { abortEarly: false });
