@@ -61,9 +61,8 @@
 		nome: yup.string().min(1, 'Nome necessario'),
 		materia: yup.number().min(1, 'Materia necessaria'),
         libri: yup.array()
-            .min(1, 'Libri necessari')
             .of(
-                yup.string().required("Libro Necessario")
+                yup.string()
                 .test({
                     name:'formato-libro',
                     message: 'Formato Libro non valido',
