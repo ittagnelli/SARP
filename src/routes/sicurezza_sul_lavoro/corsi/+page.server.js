@@ -255,11 +255,14 @@ export const actions = {
             filler['classe'] = corso?.seguitoDa[0].classe.classe;
             filler['istituto'] = corso?.seguitoDa[0].classe.istituto;
             filler['sezione'] = corso?.seguitoDa[0].classe.sezione;
-            filler['studenti'] = corso?.seguitoDa;
+            filler['studenti'] =  corso?.seguitoDa.sort((a,b) => a.cognome <= b.cognome ? -1:1); //ordina per cognome
 
             // add student index
             corso?.seguitoDa.map((studente, idx) => {
                 studente['idx'] = idx + 1;
+                //First Letter upper case
+                studente.nome = studente.nome.split(' ').map(str => {return str.charAt(0).toUpperCase() + str.slice(1);}).join(' ');
+                studente.cognome = studente.cognome.split(' ').map(str => {return str.charAt(0).toUpperCase() + str.slice(1);}).join(' ');
                 return studente;
             });
 
@@ -280,7 +283,6 @@ export const actions = {
                 linebreaks: true
             });
 
-            console.log("FILLER:", filler)
             doc.render(filler);
             let buf = doc.getZip().generate({
                 type: 'nodebuffer',
