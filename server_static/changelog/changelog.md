@@ -1,3 +1,11 @@
+## v3.4.3 – 25 Settembre 2023
+- `fix#e410`: Registro presenze sicurezza non in ordine alfabetico
+- Ordine alfabetico crescente
+- Lettere iniziale di nome e cognome maiuscole
+- quick fix to print book for trimestre and not only for pentamestre
+- `fix#408`:Formato Libro - rilassare regex al massimo (#409)    
+- tutti i caratteri ammessi
+
 ## v3.4.0 – 24 Settembre 2023
 - `fix#401`: Remove newline in form
 - `fix#403`:Libro di testo non obbligatorio in programmazione e (#404)    
