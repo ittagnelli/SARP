@@ -1,3 +1,8 @@
+## v3.4.4 – 28 Settembre 2023
+- `fix#`: Studenti in programmazione non ordinati enhancement
+- aggiunto script per disabilitare utenti SARP
+- rimossi studenti non più presenti nelle classi per a.s. 2023
+
 ## v3.4.3 – 25 Settembre 2023
 - `fix#e410`: Registro presenze sicurezza non in ordine alfabetico
 - Ordine alfabetico crescente

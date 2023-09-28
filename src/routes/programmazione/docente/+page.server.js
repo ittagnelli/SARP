@@ -2,7 +2,7 @@
 // @ts-ignore
 import { PrismaDB } from "$js/prisma_db.js";
 import { PUBLIC_PCTO_TEMPLATE_CONVENZIONE_STUDENTE, PUBLIC_PROGRAMMAZIONE_ANNUALE_TEMPLATE, PUBLIC_PROGRAMMAZIONE_ANNUALE_TEMPLATES_DIR } from "$env/static/public";
-import { multi_user_field_where, access_protect, is_primo_quadrimestre, route_protect, upper_first_letter, user_id, custom_tags_parser } from "$js/helper";
+import { multi_user_field_where, access_protect, is_primo_quadrimestre, route_protect, upper_first_letter, titlecase, custom_tags_parser } from "$js/helper";
 import path from 'path';
 import fs from 'fs';
 import PizZip from "pizzip";
@@ -158,16 +158,16 @@ export const actions = {
 			const studenti_name = classe?.iscritti.map((studente, index )=> {
 				return {
 					id: index + 1,
-					cognome: upper_first_letter(studente.cognome),
-					nome: upper_first_letter(studente.nome)
+                    cognome: titlecase(studente.cognome),
+                    nome: titlecase(studente.nome)
 				}
 			})
 
             let docx_programmazione_template = {
 				classe: `${classe?.classe} ${classe?.istituto} ${classe?.sezione}`,
 				docenti: docenti_name,
-				studenti: studenti_name,
-				materie: materie_programmi,
+				studenti: studenti_name?.sort((a,b) => a.cognome <= b.cognome ? -1:1), //ordina per cognome
+                materie: materie_programmi,
 			}
 
 			const content = fs.readFileSync(
