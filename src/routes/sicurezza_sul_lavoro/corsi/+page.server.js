@@ -1,5 +1,5 @@
 import { PrismaDB } from '../../../js/prisma_db';
-import { route_protect, user_id, multi_user_where, raise_error, access_protect  } from '../../../js/helper';
+import { route_protect, user_id, multi_user_where, raise_error, access_protect, titlecase  } from '../../../js/helper';
 import { Logger } from '../../../js/logger';
 import { PrismaClientValidationError } from '@prisma/client/runtime';
 import PizZip from 'pizzip';
@@ -260,9 +260,8 @@ export const actions = {
             // add student index
             corso?.seguitoDa.map((studente, idx) => {
                 studente['idx'] = idx + 1;
-                //First Letter upper case
-                studente.nome = studente.nome.split(' ').map(str => {return str.charAt(0).toUpperCase() + str.slice(1);}).join(' ');
-                studente.cognome = studente.cognome.split(' ').map(str => {return str.charAt(0).toUpperCase() + str.slice(1);}).join(' ');
+                studente.nome = titlecase(studente.nome);
+                studente.cognome = titlecase(studente.cognome);
                 return studente;
             });
 

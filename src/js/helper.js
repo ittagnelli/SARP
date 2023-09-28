@@ -368,3 +368,14 @@ export const custom_tags_parser = (tag, meta) => {
 export const sanitize_text_form = (text) => {
 	return text.replace(/\\\\\\n/g, '').replace(/\\\\n/g, '').replace(/\\n/g, '');
 }
+
+
+export const titlecase = (string) => {
+    // https://en.wikipedia.org/wiki/Title_case
+    return string.
+           split(' ').
+           map(str => {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+           }).
+           join(' ');
+}
