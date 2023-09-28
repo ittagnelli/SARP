@@ -113,19 +113,19 @@ export const actions = {
 				}
 			});
 
-			const studenti_name = classe?.iscritti.map((studente, index )=> {
+            const studenti_name = classe?.iscritti?.sort((a,b) => a.cognome <= b.cognome ? -1:1).map((studente, index )=> {
 				return {
 					id: index + 1,
-					cognome: titlecase(studente.cognome),
+                    cognome: titlecase(studente.cognome),
                     nome: titlecase(studente.nome)
 				}
 			})
 
-			let docx_programmazione_template = {
+            let docx_programmazione_template = {
 				classe: `${classe?.classe} ${classe?.istituto} ${classe?.sezione}`,
 				docenti: docenti_name,
-				studenti: studenti_name?.sort((a,b) => a.cognome <= b.cognome ? -1:1), //ordina per cognome
-				materie: materie_programmi,
+				studenti: studenti_name,
+                materie: materie_programmi,
 			}
 
 			const content = fs.readFileSync(
