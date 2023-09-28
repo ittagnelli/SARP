@@ -154,8 +154,8 @@ export const actions = {
 					classroom: insegnamento.code_classroom
 				}
 			});
-
-			const studenti_name = classe?.iscritti.map((studente, index )=> {
+            
+            const studenti_name = classe?.iscritti?.sort((a,b) => a.cognome <= b.cognome ? -1:1).map((studente, index )=> {
 				return {
 					id: index + 1,
                     cognome: titlecase(studente.cognome),
@@ -166,7 +166,7 @@ export const actions = {
             let docx_programmazione_template = {
 				classe: `${classe?.classe} ${classe?.istituto} ${classe?.sezione}`,
 				docenti: docenti_name,
-				studenti: studenti_name?.sort((a,b) => a.cognome <= b.cognome ? -1:1), //ordina per cognome
+				studenti: studenti_name,
                 materie: materie_programmi,
 			}
 

@@ -1,3 +1,6 @@
+## v3.4.5 – 28 Settembre 2023
+- `fix#414`: Lista studenti id non ordinati in programmazione
+
 ## v3.4.4 – 28 Settembre 2023
 - `fix#`: Studenti in programmazione non ordinati enhancement
 - aggiunto script per disabilitare utenti SARP
