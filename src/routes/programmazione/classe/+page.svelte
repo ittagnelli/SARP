@@ -30,8 +30,8 @@
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
         { name: 'classe_name', type: 'string', display: 'Classe', size: 50, search: true },
-		{ name: 'programmazione_q1_completa', type: 'boolean', display: "Programmazione trimestre terminata", search: true },
-		{ name: 'programmazione_q2_completa', type: 'boolean', display: "Programmazione pentamestre terminata", search: true },
+		{ name: 'programmazione_q1_completa', type: 'boolean', display: "Programmazione inizio anno terminata", search: true },
+		{ name: 'programmazione_q2_completa', type: 'boolean', display: "Programmazione fine anno terminata", search: true },
 		{ name: 'programmazione_completa', type: 'hidden', display: "Programmazione  terminata" }
 
 	]}

@@ -354,23 +354,25 @@
 		{
 			name: 'programma_primo_quadrimestre_presente',
 			type: 'boolean',
-			display: 'Trimestre Presente'
+			display: 'Programmazione Inizio Anno Presente',
+            search: true
 		},
         {
 			name: 'programma_primo_quadrimestre_completo',
 			type: 'boolean',
-			display: 'Trimestre Completo',
+			display: 'Programmazione Inizio Anno Completa',
             search: true
 		},
 		{
 			name: 'programma_secondo_quadrimestre_presente_',
 			type: 'boolean',
-			display: 'Pentamestre Presente'
+			display: 'Programmazione Fine Anno Presente',
+            search: true
 		},
         {
 			name: 'programma_secondo_quadrimestre_completo',
 			type: 'boolean',
-			display: 'Pentamestre Completo',
+			display: 'Programmazione Fine Anno Completa',
             search: true
 		}
 	]}
