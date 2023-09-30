@@ -18,30 +18,24 @@ function catch_error(exception, code) {
     raise_error(500, code, `Errore irreversibile nella duplicazione del template. TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`);
 }
       
-// duplica un template programmazione annuale
-export async function POST({ request, url, locals }) {
+//Get all DOCENTI
+export async function GET({ request, url, locals }) {
     route_protect(locals);
     SARP.set_session(locals); // passa la sessione all'audit
 
-    const json_data = await request.json();  
+    // const json_data = await request.json();  
     try {
-        const template = await SARP.programmazione_Template.findUnique({
-            where: { id: +json_data },
-        });
-        
-        await SARP.programmazione_Template.create({
-            data: {
-                creatoDa: user_id(locals),
-                idMateria: template.idMateria,
-                template: template.template,
-                libro: template.libro,
-                nome: `${template.nome}-DUP`,
-                note: template.note
+        const docenti = await SARP.Utente.findMany({
+            where: { tipo: 'DOCENTE' },
+            select: {
+                id: true,
+                nome: true,
+                cognome: true
             }
         });
+        
+        return json(docenti);
     } catch (exception) {
-        catch_error(exception, 1101);
+        catch_error(exception, 1501);
     }
-
-    return json('ok');
 }

@@ -10,6 +10,10 @@
 	export let data;
     export let form;
 
+    let docenti_share = [];
+    let docente_share = 0;
+    let share_template_id
+  
 	/* Page properties */
 	$page_action_title = 'Aggiungi template';
 	$page_pre_title = 'Programma annuale';
@@ -35,12 +39,21 @@
                         3000
                     );
                     break;
+                case 'share':
+                    helper.mbox_show(
+                        'success',
+                        'Conferma',
+                       'Template condiviso correttamente',
+                        3000
+                    );
+                    break;
             }
         }
     });
 
 	/* Page form model */
 	let modal_form;
+    let modal_share_form;
 	let form_values = {
 		nome: '',
 		template_id: 0,
@@ -194,10 +207,25 @@
 			errors = err.inner.reduce((acc, err) => {
 				return { ...acc, [err.path]: err.message };
 			}, {});
-        	        console.log(errors)
-	            	console.log(errors['libri'])
+        	
+            console.log(errors)
+	        console.log(errors['libri'])
 			if (form_values.libri.length == 0) form_values.libri = ['']; // Resettiamo il campo libri dopo il filter in caso non ci siano libri per far apparire almeno in input
 		}
+	}
+
+    async function handleSubmitShare() {
+		try {
+            errors = {};
+            if(docente_share == 0) {
+                errors = {share: 'Docente obbligatorio'};
+                throw yup.ValidationError;
+            } else {
+                modal_share_form.submit();
+            }
+        } catch(err) {
+            console.log(errors);
+        }
 	}
 
 	async function cancel_action() {
@@ -248,31 +276,15 @@
     async function custom_action_handler(e) {
         switch(e.detail.action) {
             case 'duplicate':
-                const res = await fetch(`/programmazione/template`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(e.detail.row_id)
-                });
+                let template_duplicate_modal = helper.get_modal('template_duplicate_modal');    
+                share_template_id = e.detail.row_id;
                 
-                if (res.ok) {
-                    helper.mbox_show(
-                        'success',
-                        'Conferma',
-                        'Template Programmazione duplicato correttamente',
-                        3000,
-                        () => location.reload()
-                    );
-                } else {
-                    helper.mbox_show(
-                        'danger',
-                        `Errore [${res.status} - ${res.statusText}]`,
-                        'Non è stato possibile duplicare il template selezionato.',
-                        3000
-                    );
+                if(docenti_share.length == 0) {
+                    const res = await fetch(`/programmazione/template`);
+                    docenti_share = await res.json();
                 }
-                break;
+                template_duplicate_modal.show();
+            break;
         }
     }
     
@@ -321,9 +333,7 @@
 		on:submit|preventDefault={handleSubmit}
 		bind:this={modal_form}
 	>
-		{#if modal_action == 'update'}
-			<input type="hidden" name="id" bind:value={form_values.template_id} />
-		{/if}
+		<input type="hidden" name="id" bind:value={form_values.template_id} />
 		<div class="modal-dialog modal-xl" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -527,6 +537,61 @@
 		</div>
 	</form>
 </div>
+
+<div
+	class="modal modal-blur fade"
+	id="template_duplicate_modal"
+	tabindex="-1"
+	role="dialog"
+	aria-hidden="true"
+>
+    <form
+    method="POST"
+    action="?/share"
+    on:submit|preventDefault={handleSubmitShare}
+    bind:this={modal_share_form}
+    >
+    <input type="hidden" name="template" bind:value={share_template_id} />
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                    <h5 class="modal-title">Duplica e Condividi Template Programmazione</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" />
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col">
+                        <div class="form-label select_text">Docente con cui condividere il template selezionato</div>
+                        <select
+                            class="form-select"
+                            class:is-invalid={errors.share}
+                            name="docente"
+                            bind:value={docente_share}
+                        >
+                            {#each docenti_share as docente}
+                                <option value={docente.id}>{docente.cognome} {docente.nome}</option>
+                            {/each}
+                        </select>
+                        {#if errors.share}
+                            <span class="invalid-feedback">{errors.share}</span>
+                        {/if}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="btn btn-danger" data-bs-dismiss="modal" on:click={cancel_action}>
+                    <b>Cancel</b>
+                </a>
+                <button class="btn btn-success ms-auto">
+                    <i class="ti ti-plus icon" />
+                        <b>Condividi Template</b>
+                </button>
+            </div>
+        </div>
+    </div>
+    </form>
+</div>
+
 
 <style>
     /* workaround, for some reason 

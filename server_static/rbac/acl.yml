@@ -49,6 +49,10 @@ programmazione_template:
     - DEVELOPER
     - ADMIN
     - DOCENTE
+  share:
+    - DEVELOPER
+    - ADMIN
+    - DOCENTE
     
 menu_programmazione_docente:
   view:
