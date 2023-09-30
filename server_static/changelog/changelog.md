@@ -1,3 +1,8 @@
+## v3.5.0 – 30 Settembre 2023
+- `fix#418`: Aggiornare template programmazione con frase finale su valutazione (#419)
+- `fix#416`: Possibilità di duplicare un template per un altro docente (#417)    
+- un docente può duplicare un template per se stesso o per un altro docente
+
 ## v3.4.5 – 28 Settembre 2023
 - `fix#414`: Lista studenti id non ordinati in programmazione
 
