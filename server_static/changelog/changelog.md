@@ -1,3 +1,9 @@
+## v3.6.0 – 02 Ottobre 2023
+- `fix#420`: Condivione template impossibile in alcuni scenari (#421)
+- il docente ora può condividere un template solo con docenti della stessa materia
+- quick fix: cambio nome colonne in programmazione
+- update of deploy.sh script to properly cleanup environment
+
 ## v3.5.0 – 30 Settembre 2023
 - `fix#418`: Aggiornare template programmazione con frase finale su valutazione (#419)
 - `fix#416`: Possibilità di duplicare un template per un altro docente (#417)    
