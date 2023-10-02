@@ -278,11 +278,9 @@
             case 'duplicate':
                 let template_duplicate_modal = helper.get_modal('template_duplicate_modal');    
                 share_template_id = e.detail.row_id;
-                
-                if(docenti_share.length == 0) {
-                    const res = await fetch(`/programmazione/template`);
-                    docenti_share = await res.json();
-                }
+                let template_materia = data.templates?.filter(t => t.id == share_template_id)[0].idMateria;
+                const res = await fetch('/programmazione/template?' + new URLSearchParams({idMateria: String(template_materia)}));
+                docenti_share = await res.json();
                 template_duplicate_modal.show();
             break;
         }
