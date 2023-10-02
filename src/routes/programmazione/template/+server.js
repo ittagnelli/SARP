@@ -17,23 +17,32 @@ function catch_error(exception, code) {
     }
     raise_error(500, code, `Errore irreversibile nella duplicazione del template. TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`);
 }
-      
-//Get all DOCENTI
+
+//Get all DOCENTI with same materia as the template to share
 export async function GET({ request, url, locals }) {
     route_protect(locals);
     SARP.set_session(locals); // passa la sessione all'audit
+    const idMateria = url.searchParams.get('idMateria'); 
 
-    // const json_data = await request.json();  
     try {
-        const docenti = await SARP.Utente.findMany({
-            where: { tipo: 'DOCENTE' },
+        let insegnamenti = (await SARP.Insegnamenti.groupBy({
+            by: ['idDocente'],
+            where: {idMateria: +idMateria},
+        })).map(i => {
+            return i.idDocente;
+        });
+
+        const docenti = await SARP.utente.findMany({
+            where: {
+                id: {in: insegnamenti}
+            },
             select: {
                 id: true,
                 nome: true,
                 cognome: true
-            }
+            },
+            orderBy: [{ cognome: 'asc' }]
         });
-        
         return json(docenti);
     } catch (exception) {
         catch_error(exception, 1501);
