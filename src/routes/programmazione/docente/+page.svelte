@@ -350,8 +350,9 @@
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
 		{ name: 'classe', type: 'object', key: 'classe', display: 'classe', size: 20, search: true },
-		{ name: 'materia', type: 'object', display: 'materia', key: 'nome', size: 50 },
-		{
+		{ name: 'materia', type: 'object', display: 'materia', key: 'nome', size: 50, search: true },
+        { name: 'docente', type: 'object', display: 'Docente', key: 'cognome', size: 50, search: true },
+        {
 			name: 'programma_primo_quadrimestre_presente',
 			type: 'boolean',
 			display: 'Programmazione Inizio Anno Presente',

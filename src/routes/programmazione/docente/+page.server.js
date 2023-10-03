@@ -25,7 +25,19 @@ export async function load({ locals }) {
         where: multi_user_field_where('idDocente', locals),
         include: {
             materia: true,
-            classe: true
+            classe: {
+                select: {
+                    id: true,
+                    classe: true,
+                    istituto: true,
+                    sezione: true
+                }
+            },
+            docente: {
+                select: {
+                    cognome: true,
+                }
+            }
         }
     });
 

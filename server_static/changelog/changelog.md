@@ -1,3 +1,6 @@
+## v3.6.1 – 03 Ottobre 2023
+- `fix#422`:Tabella programmazione docente visualizzare docente materia 
+  
 ## v3.6.0 – 02 Ottobre 2023
 - `fix#420`: Condivione template impossibile in alcuni scenari (#421)
 - il docente ora può condividere un template solo con docenti della stessa materia
