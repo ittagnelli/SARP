@@ -21,8 +21,11 @@ export async function load({ locals }) {
     access_protect(200, locals, action, resource);
     SARP.set_session(locals);
 
+    let where_search = multi_user_field_where('idDocente', locals);
+    where_search['titolare'] = true;   
+
     let insegnamenti = await SARP.insegnamenti.findMany({
-        where: multi_user_field_where('idDocente', locals),
+        where: where_search,
         include: {
             materia: true,
             classe: {
@@ -31,15 +34,20 @@ export async function load({ locals }) {
                     classe: true,
                     istituto: true,
                     sezione: true
-                }
+                },
             },
             docente: {
                 select: {
                     cognome: true,
                 }
             }
-        }
-    });
+        },
+        orderBy: [
+            {classe: {istituto: 'asc'}},
+            {classe: {sezione: 'asc'}},
+            {classe: {classe: 'asc'}},
+        ]
+    })
 
     // Client side non funziona quindi lo faccio nel server
     insegnamenti.forEach(insegnamento => {
