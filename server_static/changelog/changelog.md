@@ -1,3 +1,6 @@
+## v3.6.2 – 06 Ottobre 2023
+- `fix#424`:Programmazione docente solo per titolare
+
 ## v3.6.1 – 03 Ottobre 2023
 - `fix#422`:Tabella programmazione docente visualizzare docente materia 
   
