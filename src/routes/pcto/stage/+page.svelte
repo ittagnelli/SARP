@@ -19,6 +19,8 @@
     let aziende = helper.data2arr(data.companies);
     let utenti = helper.data2arr(data.utenti);
 	let classi = helper.data2arr(data.classi);
+    let classi_iscritte = [];
+    let seguitoDa = [];
 
 	classi = helper.db_to_select(classi);
 
@@ -67,7 +69,6 @@
 		dataFine: helper.convert_date(new Date()),
         durata_ore: 0,
         anno_scolastico: 0,
-        classe: 0,
         firma_pcto: 'NO',
         task1: '',
         task2: '',
@@ -119,11 +120,7 @@
 
         durata_ore: yup
         .number()
-        .min(2, 'Ore previste necessarie'),
-
-        classe: yup
-        .number()
-        .min(2, 'Classe obbligatoria')
+        .min(2, 'Ore previste necessarie')
 	});
 
     let stage_modal_values = {
@@ -147,13 +144,15 @@
 		form_values.pcto_id = e.detail.id;
 		//cerca l'azienda da fare update
 		let stage = stages.filter((item) => item.id == form_values.pcto_id)[0];
-
+        
         form_values.azienda = stage.offertoDa.id;
-		stage.svoltoDa.forEach((utente) => {
+        stage.svoltoDa.forEach((utente) => {
 			utente['label'] = utente.cognome.concat(' ', utente.nome);
 			utente['value'] = utente.id;
 		});
-		svoltoDa = stage.svoltoDa;
+    
+		seguitoDa = stage.svoltoDa; 
+        svoltoDa = stage.svoltoDa;
         svoltoDa.forEach(item => svolto.push(item.id));
 
 		form_values.titolo = stage.titolo;
@@ -167,7 +166,6 @@
 		form_values.dataFine = helper.convert_date(stage.dataFine);
         form_values.durata_ore = stage.durata_ore;
         form_values.anno_scolastico = stage.anno_scolastico;
-        form_values.classe = stage.idClasse;
         form_values.firma_pcto = stage.firma_pcto ? 'SI' : 'NO';
         form_values.task1 = stage.task1;
         form_values.task2 = stage.task2;
@@ -192,7 +190,6 @@
 				tutor_scolastico: 0,
 				dataInizio: helper.convert_date(new Date()),
 				dataFine: helper.convert_date(new Date()),
-                classe: 0,
                 firma_pcto: 'NO',
                 task1: '',
                 task2: '',
@@ -203,7 +200,7 @@
 		}
 	}
 
-    function handleSelect(event) {
+    function handleSelect_studenti(event) {
 		let user_selected = event.detail;
         svolto = [];
         if(user_selected) {
@@ -212,19 +209,22 @@
             });
 		}
 	}
-    
+
     function handleSelect_classi(event) {
-        // classe_iscritta = form_values.classe;
-		svoltoDa = [];
-        svolto = [];
-
-        let utenti_partecipanti = utenti.filter((utente) => {
-                return utente.classeId == form_values.classe;
-            });
-        svoltoDa = [...svoltoDa, ...utenti_partecipanti];
-        svoltoDa.forEach(item => svolto.push(item.id));
+		let classe_selected = event.detail;
+		if(classe_selected == null)
+			seguitoDa = [];
+		if(classe_selected){
+			classi_iscritte = classe_selected;
+			classe_selected.forEach((item) => {
+				let utenti_partecipanti = utenti.filter((utente) => {
+					return utente.classeId == item.id;
+				});
+				seguitoDa = [...seguitoDa, ...utenti_partecipanti];
+			});
+		}
 	}
-
+    
 	async function handleSubmit() {
 		try {
 			// valida il form prima del submit
@@ -235,6 +235,7 @@
 			errors = err.inner.reduce((acc, err) => {
 				return { ...acc, [err.path]: err.message };
 			}, {});
+            console.log(errors)
 			logger.error(`Errori nella validazione del form stage. Oggetto: ${JSON.stringify(form_values)} -- Errore: ${JSON.stringify(errors)}`);
 		}
 	}
@@ -243,7 +244,7 @@
         // query endpoint per ricavare leggere tutte le ore di questo PCTO
         const get_response = await fetch(`/pcto/stage?pcto=${pcto_id}`);
         let presenze = await get_response.json();
-
+        
         //processo il risultato della query
         let studenti_presenze = new Map();
         presenze.forEach(presenza => {
@@ -252,7 +253,7 @@
                     picture: presenza.presenza.picture,
                     nome: presenza.presenza.nome,
                     cognome: presenza.presenza.cognome,
-                    istituto: presenza.presenza.istituto,
+                    classe: `${presenza.presenza.classe.classe} ${presenza.presenza.classe.istituto} ${presenza.presenza.classe.sezione}`,
                     ore: helper.ore_pcto(presenza.oraInizio, presenza.oraFine)
                 });
             } else {
@@ -296,14 +297,8 @@
                     saveAs(blob, doc.name);
                     await helper.delay(100); //chrome can download max 10 files at the time
                 }
-            } //else { // file è null quindi l'unico caso possibile è la violazione della chiave unique nel DB
-               // form_values = JSON.parse(localStorage.getItem('form')); // Riempiamo il modale
-               // helper.show_modal();
-            //}
-        } //else {
-        //     // non c'è risposta dal server, tutto è andato a buon fine
-        //     localStorage.removeItem('form'); //PROF: rimuoviamo il form dal localstorage
-        // }
+            } 
+        }
     });
 </script>
 
@@ -403,15 +398,6 @@
 						</div>
 					</div>
 					<div class="row">
-						<!-- <div class="col-lg-4">
-							<InputText
-								label="Tutor Aziendale"
-								name="tutor_aziendale"
-								{errors}
-								placeholder="Cognome Nome"
-								bind:val={form_values.tutor_aziendale}
-							/>
-						</div> -->
                         <div class="col-lg-4">
                           	<div class="mb-3">
 								<div class="form-label select_text">Tutor Scolastico</div>
@@ -475,67 +461,6 @@
 							/>
 						</div> 
                     </div>
-                    <!-- <div class="row">
-                        {#if helper.is_admin(data) == true}
-                        <div class="col-lg-6">
-                            <div class="mb-3">
-                                <label class="form-label">Registrato in SIDI</label>
-                                <div class="form-selectgroup">
-                                    <label class="form-selectgroup-item">
-                                        <input
-                                            type="radio"
-                                            name="contabilizzato"
-                                            value="SI"
-                                            class="form-selectgroup-input"
-                                            bind:group={form_values.contabilizzato}
-                                        />
-                                        <span class="form-selectgroup-label">SI</span>
-                                    </label>
-                                    <label class="form-selectgroup-item">
-                                        <input
-                                            type="radio"
-                                            name="contabilizzato"
-                                            value="NO"
-                                            class="form-selectgroup-input"
-                                            bind:group={form_values.contabilizzato}
-                                        />
-                                        <span class="form-selectgroup-label">NO</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="mb-3">
-                                <label class="form-label">Documenti PCTO  Firmati ?</label>
-                                <div class="form-selectgroup">
-                                    <label class="form-selectgroup-item">
-                                        <input
-                                            type="radio"
-                                            name="firma_pcto"
-                                            value="SI"
-                                            class="form-selectgroup-input"
-                                            bind:group={form_values.firma_pcto}
-                                        />
-                                        <span class="form-selectgroup-label">SI</span>
-                                    </label>
-                                    <label class="form-selectgroup-item">
-                                        <input
-                                            type="radio"
-                                            name="firma_pcto"
-                                            value="NO"
-                                            class="form-selectgroup-input"
-                                            bind:group={form_values.firma_pcto}
-                                        />
-                                        <span class="form-selectgroup-label">NO</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        {:else}
-                            <input type="hidden" name="contabilizzato" bind:value={form_values.contabilizzato} />
-                            <input type="hidden" name="firma_pcto" bind:value={form_values.firma_pcto} />
-                        {/if}
-                    </div> -->
                     <div class="row">
                         <div class="col-lg-12">
 							<InputText
@@ -621,45 +546,37 @@
 						</div>
                     </div>
                     <div class="row">
-                        <div class="col-lg-12">
-                            <div class="mb-3">
-								<div class="form-label select_text">Classe</div>
-                                <select 
-                                    class="form-select" 
-                                    class:is-invalid="{errors.classe}" 
-                                    name="classe" 
-                                    bind:value={form_values.classe}
-                                    on:change="{() => handleSelect_classi()}"
-                                >
-                                    {#each classi as classe}
-                                        <option value={classe.id}>{classe.label}</option>
-                                    {/each}
-                                </select>
-                                {#if errors.classe}
-                                    <span class="invalid-feedback">{errors.classe}</span>
-                                {/if}	
-							</div>
-
-                        </div>
-                    </div>
-					{#if form_values.classe > 1}
-                    <div class="row">
 						<div class="col-lg-12">
 							<div class="mb-3">
-								<label class="form-label">Studenti Iscritti</label>
+								<label class="form-label">Studenti</label>
 								<Select
 									class="form-select"
 									name="utenti"
-									items={utenti.filter(utente => utente.tipo == "STUDENTE" && utente.classeId == form_values.classe)}
-									value={svoltoDa}
+									items={utenti}
+									bind:value={seguitoDa}
 									isMulti={true}
-                                    placeholder="Selezione gli studenti..."
-									on:select={handleSelect}
+									placeholder="Selezione gli studenti..."
+									on:select={handleSelect_studenti}
 								/>
 							</div>
 						</div>
 					</div>
-                    {/if}
+                    <div class="row">
+						<div class="col-lg-12">
+							<div class="mb-3">
+								<label class="form-label">Classi Iscritte</label>
+								<Select
+									class="form-select"
+									name="utenti"
+									items={classi}
+									value={classi_iscritte}
+									isMulti={true}
+									placeholder="Selezione gli studenti..."
+									on:select={handleSelect_classi}
+								/>
+							</div>
+						</div>
+					</div>
                     <div class="row">
                         {#if helper.is_admin(data) == true}
                         <div class="col-lg-6">
@@ -860,7 +777,7 @@
                                 <tr>
                                   <th>Foto</th>
                                   <th>Studente</th>
-                                  <th>Istituto</th>
+                                  <th>Classe</th>
                                   <th>Ore</th>
                                 </tr>
                               </thead>
@@ -871,7 +788,7 @@
                                             <span class="avatar avatar-sm" style="background-image: url({studente.picture})"></span>
                                         </td>
                                         <td>{studente.cognome} {studente.nome}</td>
-                                        <td>{studente.istituto}</td>
+                                        <td>{studente.classe}</td>
                                         <td>{studente.ore}/{stage_modal_values.durata_ore}</td>
                                     </tr>
                                 {/each}

@@ -201,7 +201,7 @@ model pcto_Pcto {
     contabilizzato      Boolean                     @default(false)
     anno_scolastico     Int?
     classe              Classe                      @relation(fields: [idClasse], references: [id])
-    idClasse            Int                         @default(1)
+    idClasse            Int                         @default(1) //for historical reason - do not remove
     firma_pcto          Boolean                     @default(false)
     task1               String?
     task2               String?
