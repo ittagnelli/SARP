@@ -31,7 +31,11 @@ export async function GET({ request, url, locals }) {
                 approvato: true
             },
             include: {
-                presenza: true
+                presenza: {
+                    include: {
+                        classe: true
+                    }
+                }
             }
         });
 

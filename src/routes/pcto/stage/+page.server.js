@@ -85,7 +85,8 @@ export async function load({ locals }) {
         });
 
         const utenti = await SARP.Utente.findMany({
-            orderBy: [{ id: 'desc' }],
+            where: {tipo: 'STUDENTE'},
+            orderBy: [{ cognome: 'asc' }],
             include: {ruoli: true}
         });
 
@@ -137,7 +138,6 @@ export const actions = {
                     dataFine: new Date(form_data.get('dataFine')),
                     durata_ore: +form_data.get('durata_ore'),
                     idAzienda: +form_data.get('azienda'),
-                    idClasse: +form_data.get('classe'),
                     svoltoDa: {
                         connect: ids
                     },
@@ -186,7 +186,6 @@ export const actions = {
                     dataFine: new Date(form_data.get('dataFine')),
                     durata_ore: +form_data.get('durata_ore'),
                     idAzienda: +form_data.get('azienda'),
-                    idClasse: +form_data.get('classe'),
                     svoltoDa: {
                         set: ids
                     },
