@@ -1,3 +1,10 @@
+## v3.7.0 – 07 Ottobre 2023
+- `fix#407`: Possibilità di creare PCTO misti tra studenti di classi diverse (#426)    
+- Ora è possibile aver eun PCTO formato da studenti di classi diverse
+- Aggiornato visualizzazione stato studenti in stage e aggiunto campo classe
+- Rimossi docenti dalla lista di studenti che possono partecipare al PCTO
+
+
 ## v3.6.2 – 06 Ottobre 2023
 - `fix#424`:Programmazione docente solo per titolare
 
