@@ -552,7 +552,7 @@
 								<Select
 									class="form-select"
 									name="utenti"
-									items={utenti}
+									items={utenti.filter(u => u.tipo == 'STUDENTE')}
 									bind:value={seguitoDa}
 									isMulti={true}
 									placeholder="Selezione gli studenti..."

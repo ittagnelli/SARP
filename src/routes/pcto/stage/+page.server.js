@@ -85,7 +85,6 @@ export async function load({ locals }) {
         });
 
         const utenti = await SARP.Utente.findMany({
-            where: {tipo: 'STUDENTE'},
             orderBy: [{ cognome: 'asc' }],
             include: {ruoli: true}
         });
