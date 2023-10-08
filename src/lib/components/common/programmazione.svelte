@@ -41,9 +41,44 @@
 		argomenti = argomenti;
 	}
 
-	function prevent_enter(e) {
-		if (e.key == 'Enter') e.preventDefault();
+    const text_validation_str = `
+    1234567890
+    ABCDEFGHIJKLMNOPQRSTUVXYWZ
+    abcdefghijklmnopqrstuvxywz
+    |!"£$%&/()=?^é*ç°;:_<>
+    'ìè+ùòà,.-
+    []@#{}~
+    `;
+
+    const text_validation_special_key = [
+        'Backspace',
+        'Delete',
+        'ArrowLeft',
+        'ArrowRight'
+    ];
+
+    function is_valid_typed_char(c) {
+        return is_valid_char(c.key) || c.key == '\\';
+    }
+
+    function is_valid_char(c) {
+        return (
+            text_validation_str.includes(c) ||
+            text_validation_special_key.includes(c)
+        );
+    }
+	function validate_key(e) {
+        if (!is_valid_typed_char(e)) e.preventDefault();
 	}
+
+    function validate_paste(text) {
+        let valid = true;
+
+        text.split('').forEach(c => {
+            if (!is_valid_char(c)) valid = false;
+        });
+        return valid ? text : 'Inseriti caratteri non validi';
+    }
 
 	function add_sotto_sotto_argomento(index, index_sotto_argomento, current_index) {
 		argomenti[index].sotto_argomenti[index_sotto_argomento].sotto_sotto_argomenti.splice(current_index + 1, 0, "");
@@ -71,7 +106,8 @@
 					placeholder="Argomento"
 					maxlength="128"
 					rows="2"
-					on:keydown={prevent_enter}
+					on:keydown={validate_key}
+                    on:paste={() => setTimeout(() => argomento.titolo = validate_paste(argomento.titolo), 2)}
 				/>
 				<span class="input-group-text">
 					<a
@@ -143,7 +179,8 @@
 							placeholder="Sotto argomento"
 							rows="2"
 							maxlength="512"
-							on:keydown={prevent_enter}
+							on:keydown={validate_key}
+                            on:paste={() => setTimeout(() => sotto_argomento.sotto_argomento_text = validate_paste(sotto_argomento.sotto_argomento_text), 2)}
 						/>
 						<span class="input-group-text">
 							<a
@@ -215,7 +252,8 @@
 							placeholder="Sotto sotto argomento"
 							rows="2"
 							maxlength="512"
-							on:keydown={prevent_enter}
+							on:keydown={validate_key}
+                            on:paste={() => setTimeout(() => sotto_argomento.sotto_sotto_argomenti[j] = validate_paste(sotto_argomento.sotto_sotto_argomenti[j]), 2)}
 						/>
 						<span class="input-group-text">
 							<a
