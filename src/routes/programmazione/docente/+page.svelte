@@ -41,8 +41,7 @@
                 3000
             );            
         } else if (form != null) {
-            console.log("FORM:", form)
-            const buffer = new Uint8Array(JSON.parse(form.file).data); // Convertiamo la stringa in un oggetto che conterrà il nostro array di bytes che verrà poi convertito in Uint8Array, necessario all'oggetto Blob
+             const buffer = new Uint8Array(JSON.parse(form.file).data); // Convertiamo la stringa in un oggetto che conterrà il nostro array di bytes che verrà poi convertito in Uint8Array, necessario all'oggetto Blob
             var blob = new Blob([buffer], { type: 'application/msword' });
             saveAs(blob, form.nome_documento);        
         }
@@ -56,7 +55,7 @@
 		insegnamenti_id: 0,
 		materia: 0,
 		classe: 0,
-        code_classroom: '',
+        code_classroom: 'xxx',
 		libri: [''], // Avoid a warning in handlesubmit
         	note: "",
         	libri_raw: "",  // Tilde-based libri array
@@ -90,7 +89,7 @@
             ),
 		primo_quadrimestre: yup.array().test((quadrimestre) => is_valid_quadrimestre(quadrimestre)),
 		secondo_quadrimestre: yup.array().test((quadrimestre) => is_valid_quadrimestre(quadrimestre)),
-        code_classroom: yup.string().length(7).required('Codice Classroom necessario'),
+        code_classroom: yup.string().nullable().length(7).required('Codice Classroom necessario'),
 	});
 
 	let modal_action = 'create';
@@ -243,7 +242,6 @@
             errors = {};
 			modal_form.submit();
 		} catch (err) {
-			console.log(err);
 			errors = err.inner.reduce((acc, err) => {
 				return { ...acc, [err.path]: err.message };
 			}, {});

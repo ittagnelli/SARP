@@ -7,6 +7,7 @@ import { browser } from '$app/environment';
 import { mb_type, mb_color, mb_title, mb_message, mb_show } from '$js/store';
 import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css'; 
+import log from 'framework7-cli/utils/log';
 
 // Istanzia il logger in funzione di dove viene chiamato
 let logger = browser ? new Logger('client') : new Logger('server');
@@ -366,7 +367,7 @@ export const custom_tags_parser = (tag, meta) => {
 }
 
 export const sanitize_text_form = (text) => {
-	return text.replace(/\\\\\\n/g, '').replace(/\\\\n/g, '').replace(/\\n/g, '');
+    return text ? text.replace(/\\\\\\n/g, '').replace(/\\\\n/g, '').replace(/\\n/g, '') : text;
 }
 
 
