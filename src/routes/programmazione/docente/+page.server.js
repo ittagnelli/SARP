@@ -143,7 +143,7 @@ export const actions = {
 						nome: insegnamento.materia.nome,
                         professore: upper_first_letter(insegnamento.docente.nome).concat(" ").concat(upper_first_letter(insegnamento.docente.cognome)), 
 						libri: libri,
-                        hasLibri: libri.length > 0,
+                        hasLibri: libri.length > 0 && libri[0]!= '',
 						argomenti_q1: programma[0],
 						argomenti_q2: programma[1],
                         note: note,
@@ -158,7 +158,7 @@ export const actions = {
 						nome: insegnamento.materia.nome, 
 						professore: upper_first_letter(insegnamento.docente.nome).concat(" ").concat(upper_first_letter(insegnamento.docente.cognome)),
 						libri: libri,
-                        hasLibri: libri.length > 0,
+                        hasLibri: libri.length > 0 && libri[0]!= '',
 						argomenti_q1: programma[0],
 						argomenti_q2: programma[1],
                         note: note,
@@ -183,6 +183,7 @@ export const actions = {
 				}
 			})
 
+            console.log(materie_programmi)
             let docx_programmazione_template = {
 				classe: `${classe?.classe} ${classe?.istituto} ${classe?.sezione}`,
 				docenti: docenti_name,
