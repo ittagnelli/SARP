@@ -207,9 +207,6 @@
 			errors = err.inner.reduce((acc, err) => {
 				return { ...acc, [err.path]: err.message };
 			}, {});
-        	
-            console.log(errors)
-	        console.log(errors['libri'])
 			if (form_values.libri.length == 0) form_values.libri = ['']; // Resettiamo il campo libri dopo il filter in caso non ci siano libri per far apparire almeno in input
 		}
 	}
