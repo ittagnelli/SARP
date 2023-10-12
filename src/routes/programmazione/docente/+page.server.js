@@ -134,6 +134,9 @@ export const actions = {
 				}
 			});
 
+            //Educazione Civica nel primo trimestre non presenta un programma ma solo una frase fissa
+            //mentre nel pentamestre è una materia normale
+            //aggiunto il flag render per flessibilità futura 
 			if(is_primo_quadrimestre()){
 				materie_programmi = insegnamenti.map(insegnamento => {
 					const programma = JSON.parse(insegnamento.programma_primo_quadrimestre);
@@ -147,7 +150,8 @@ export const actions = {
 						argomenti_q1: programma[0],
 						argomenti_q2: programma[1],
                         note: note,
-                        hasNote: note.length > 0 
+                        hasNote: note.length > 0,
+                        render: insegnamento.materia.nome != 'Educazione Civica' 
                     }
 				});
 			} else {
@@ -162,7 +166,8 @@ export const actions = {
 						argomenti_q1: programma[0],
 						argomenti_q2: programma[1],
                         note: note,
-                        hasNote: note.length > 0 
+                        hasNote: note.length > 0,
+                        render: true
 					}
 				});
 			}
@@ -183,7 +188,6 @@ export const actions = {
 				}
 			})
 
-            console.log(materie_programmi)
             let docx_programmazione_template = {
 				classe: `${classe?.classe} ${classe?.istituto} ${classe?.sezione}`,
 				docenti: docenti_name,
