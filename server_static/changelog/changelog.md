@@ -1,3 +1,15 @@
+## v3.8.0 – 12 Ottobre 2023
+- `fix#428`: Educazione civica solo nel programma di fine anno (#433)
+- `fix#427`: errore di battitura in PCTO presenze
+- `fix#249`: Codice Classrom mancata segnalazione errore in caso di campo vuoto (#432)
+- `fix#430`: Libro vuoto appare in documento finale (#431)
+- prevent inserting and cut and paste invalid chars
+- user can only insert valid ASCII chars
+- fix issue with filter on PCTO utenti
+- tutor was removed as filtered only by STUDENTE
+- moved the filter from backend to front-end
+
+
 ## v3.7.0 – 07 Ottobre 2023
 - `fix#407`: Possibilità di creare PCTO misti tra studenti di classi diverse (#426)    
 - Ora è possibile aver eun PCTO formato da studenti di classi diverse
