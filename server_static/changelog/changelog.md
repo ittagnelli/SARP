@@ -1,3 +1,7 @@
+## v3.8.1 – 29 Ottobre 2023
+- `fix#434`: Documento programmazione classe senza programmi
+- Ordinate le materie nei documenti di programmazione in ordine alfabetico
+ 
 ## v3.8.0 – 12 Ottobre 2023
 - `fix#428`: Educazione civica solo nel programma di fine anno (#433)
 - `fix#427`: errore di battitura in PCTO presenze

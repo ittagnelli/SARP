@@ -1,5 +1,5 @@
 import { PUBLIC_PROGRAMMAZIONE_ANNUALE_TEMPLATE, PUBLIC_PROGRAMMAZIONE_ANNUALE_TEMPLATES_DIR } from "$env/static/public";
-import { access_protect, is_primo_quadrimestre, route_protect, upper_first_letter, titlecase, custom_tags_parser } from "$js/helper";
+import { access_protect, is_primo_quadrimestre, route_protect, upper_first_letter, titlecase, custom_tags_parser, sort_strings } from "$js/helper";
 import { PrismaDB } from "$js/prisma_db.js";
 import path from 'path';
 import fs from 'fs';
@@ -50,6 +50,7 @@ export const actions = {
 		try {
 			const form_data = await request.formData();
 			const id = form_data.get('id');
+            let materie_programmi = null;
 
 			// preleva la classe dal DB
 			let classe = await SARP.classe.findUnique({
@@ -65,13 +66,17 @@ export const actions = {
 					idClasse: classe?.id
 				},
 				include: {
-					docente: true,
+                    docente: true,
 					materia: true
 				}
 			})
 
-			let materie_programmi = null;
-
+            //sort by materia
+            insegnamenti.sort((a,b) => sort_strings(a.materia.nome, b.materia.nome));
+            
+            //Educazione Civica nel primo trimestre non presenta un programma ma solo una frase fissa
+            //mentre nel pentamestre è una materia normale
+            //aggiunto il flag render per flessibilità futura 
 			if(is_primo_quadrimestre()){
 				materie_programmi = insegnamenti.map(insegnamento => {
 					const programma = JSON.parse(insegnamento.programma_primo_quadrimestre);
@@ -85,7 +90,8 @@ export const actions = {
 						argomenti_q1: programma[0],
 						argomenti_q2: programma[1],
 						note: note,
-                        hasNote: note.length > 0 
+                        hasNote: note.length > 0,
+                        render: insegnamento.materia.nome != 'Educazione Civica' 
 					}
 				});
 			} else {
@@ -100,7 +106,8 @@ export const actions = {
 						argomenti_q1: programma[0],
 						argomenti_q2: programma[1],
                         note: note,
-                        hasNote: note.length > 0 
+                        hasNote: note.length > 0,
+                        render: true
 					}
 				});
 			}
