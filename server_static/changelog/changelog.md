@@ -1,3 +1,6 @@
+## v3.8.2 – 30 Ottobre 2023
+- `fix#436`: Programmazione classe completa non aggiornata 
+
 ## v3.8.1 – 29 Ottobre 2023
 - `fix#434`: Documento programmazione classe senza programmi
 - Ordinate le materie nei documenti di programmazione in ordine alfabetico

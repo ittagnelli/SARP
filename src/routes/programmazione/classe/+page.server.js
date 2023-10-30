@@ -16,13 +16,18 @@ export async function load({ locals }) {
     route_protect(locals);
     access_protect(200, locals, action, resource);
     SARP.set_session(locals);
-	const insegnamenti = await SARP.insegnamenti.findMany({});
+    
+	const insegnamenti = await SARP.insegnamenti.findMany({
+        where: {
+            titolare: true
+        }
+    });
 
 	let classi = await SARP.classe.findMany({});
 
 	classi = classi.map(classe => {
 		const current_insegnamento = insegnamenti.filter(insegnamento => insegnamento.idClasse == classe.id)
-		// per default il programma non è completo
+        // per default il programma non è completo
         let programma_q1_completo = false;
         let programma_q2_completo = false;
 
