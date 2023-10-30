@@ -68,7 +68,8 @@ export const actions = {
 			
 			let insegnamenti = await SARP.insegnamenti.findMany({
 				where: {
-					idClasse: classe?.id
+					idClasse: classe?.id,
+                    titolare: true
 				},
 				include: {
                     docente: true,
