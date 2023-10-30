@@ -1,5 +1,7 @@
-## v3.8.2 – 30 Ottobre 2023
+## v3.8.3 – 30 Ottobre 2023
 - `fix#436`: Programmazione classe completa non aggiornata 
+- quick fix: programmazione classe non stampa
+- aggiunto filtro per titolare:true
 
 ## v3.8.1 – 29 Ottobre 2023
 - `fix#434`: Documento programmazione classe senza programmi
