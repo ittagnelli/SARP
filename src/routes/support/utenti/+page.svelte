@@ -300,7 +300,7 @@
 								{errors}
 							/>
 						</div>
-						<div class="col-lg-3">
+						<div class="col-lg-2">
 							<div class="mb-3">
 								<div class="form-label select_text">Tipo</div>
 								<select
@@ -336,7 +336,7 @@
 								{/if}
 							</div>
 						</div>
-                        <div class="col-lg-2">
+                        <div class="col-lg-3">
 							<div class="mb-3">
 								<label class="form-label">Istituto</label>
 								<div class="form-selectgroup">
@@ -359,6 +359,16 @@
 											bind:group={form_values.istituto_select}
 										/>
 										<span class="form-selectgroup-label">LICEO</span>
+									</label>
+                                    <label class="form-selectgroup-item">
+										<input
+											type="radio"
+											name="istituto"
+											value="MEDIE"
+											class="form-selectgroup-input"
+											bind:group={form_values.istituto_select}
+										/>
+										<span class="form-selectgroup-label">MEDIE</span>
 									</label>
 								</div>
 							</div>
