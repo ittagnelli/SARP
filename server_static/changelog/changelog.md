@@ -1,3 +1,8 @@
+## v3.9.0 – 02Novembre 2023
+- `fix#437`: Aggiunta Istituto Medie    
+- `fix#438`: Caricamento docenti Medie a sistema tramite script automatico
+
+
 ## v3.8.3 – 30 Ottobre 2023
 - `fix#436`: Programmazione classe completa non aggiornata 
 - quick fix: programmazione classe non stampa
