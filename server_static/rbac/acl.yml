@@ -104,6 +104,7 @@ menu_sicurezza_lavoro:
     - ADMIN
     - TUTOR-SICUREZZA
     - STUDENTE
+    - DOCENTE
 
 menu_sicurezza_corsi:
   view:
@@ -115,6 +116,7 @@ menu_sicurezza_test:
     - ADMIN
     - TUTOR-SICUREZZA
     - STUDENTE
+    - DOCENTE
 
 menu_aziende:
   view:
@@ -310,10 +312,12 @@ sicurezza_test:
     - ADMIN
     - TUTOR-SICUREZZA
     - STUDENTE
+    - DOCENTE
   read:
     - ADMIN
     - TUTOR-SICUREZZA
     - STUDENTE
+    - DOCENTE
   
 verifica_stato:
   get:

@@ -1,3 +1,6 @@
+## v3.11.0 – 08 Dicembre 2023
+- `fix#445`: Assegnazione test sicurezza a docente 
+- 
 ## v3.10.0 – 08 Dicembre 2023
 - `fix#442`: Assegnazione automatica convenzione azienda 
 

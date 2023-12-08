@@ -386,7 +386,7 @@
 					<div class="row">
 						<div class="col-lg-12">
 							<div class="mb-3">
-								<label class="form-label">Studenti</label>
+								<label class="form-label">Studenti / Docenti</label>
 								<Select
 									class="form-select"
 									name="utenti"
@@ -402,7 +402,7 @@
 					<div class="row">
 						<div class="col-lg-12">
 							<div class="mb-3">
-								<label class="form-label">Classi Iscritte</label>
+								<label class="form-label">Classi</label>
 								<Select
 									class="form-select"
 									name="utenti"
