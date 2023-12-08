@@ -3,7 +3,8 @@
     export let label;
     export let name;
     export let placeholder;
-    export let errors; 
+    export let errors;
+    export let readonly = false;
 </script>
 
 <div class="mb-3">
@@ -14,6 +15,7 @@
         class:is-invalid="{errors[name]}"
         name="{name}"
         placeholder="{placeholder}"
+        readonly="{readonly}"
         bind:value={val}
     />
     {#if errors[name]}

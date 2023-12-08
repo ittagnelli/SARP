@@ -18,6 +18,8 @@
 
     // inizializzo la lista delle aziende con il risultato della query SQL
     let aziende = helper.data2arr(data.aziende); // alias per maggior leggibilità
+    let last_id_convenzione = helper.data2arr(data.last_id_convenzione)[0];
+    let new_id_convenzione = calc_new_id_convenzione(last_id_convenzione.idConvenzione);
     
 	//configura la pagina pre-titolo, titolo e nome del modale
 	$page_pre_title = 'PCTO';
@@ -46,7 +48,7 @@
         direttore_natoA: "",
         direttore_natoIl: helper.convert_date(new Date()),
         direttore_codiceF: "",
-        idConvenzione: "",
+        idConvenzione: new_id_convenzione,
         idUtente: undefined,
         dataConvenzione: helper.convert_date(new Date()),
         dataProtocollo: helper.convert_date(new Date()),
@@ -128,6 +130,15 @@
         .date()
         .min(new Date(2016, 1, 1), "Data antecedente al 01/01/2016")
     });
+
+    function calc_new_id_convenzione(id_convenzione) {
+        let year = id_convenzione.split('/')[0];
+        let serial =  id_convenzione.split('/')[1];
+        let current_year = year.substring(0, 2);
+        let as = String(helper.get_as()).substring(2, 4);
+
+        return current_year == as ? `${year}/${+serial + 1}` : `${as}${+as + 1}/1`;
+    }
 
     async function start_update(e) {
 		modal_action = 'update';
@@ -255,6 +266,7 @@
                             name="idConvenzione"
                             {errors}
                             placeholder="2223/01"
+                            readonly={true}
                             bind:val={form_values.idConvenzione}
                         />
 						</div>

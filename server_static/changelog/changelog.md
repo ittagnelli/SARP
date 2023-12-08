@@ -1,5 +1,8 @@
-## v3.9.0 – 02Novembre 2023
-- `fix#437`: Aggiunta Istituto Medie    
+## v3.10.0 – 08 Dicembre 2023
+- `fix#442`: Assegnazione automatica convenzione azienda 
+
+## v3.9.0 – 02 Novembre 2023
+- `fix#437`: Aggiunta Istituto Medien       
 - `fix#438`: Caricamento docenti Medie a sistema tramite script automatico
 
 
