@@ -105,8 +105,17 @@ export const is_tutor = (data) => {
             );
 };
 
+export const is_tutor_sicurezza = (data) => {
+	return user_ruolo(data).includes('TUTOR-SICUREZZA');
+};
+
+
 export const is_studente = (data) => {
 	return user_ruolo(data).includes('STUDENTE');
+};
+
+export const is_docente = (data) => {
+	return user_ruolo(data).includes('DOCENTE');
 };
 
 export const is_dev = (data) => {
@@ -137,7 +146,7 @@ export const multi_user_field_where = (field, data) => {
 export const multi_user_sicurezza_where = (data) => {
 	let clausola_where;
 
-	if (!is_admin(data)) clausola_where = { svoltoDa: user_id(data) };
+	if (!is_admin(data) && !is_tutor_sicurezza(data)) clausola_where = { svoltoDa: user_id(data) };
 	else clausola_where = { id: { gt: 0 } };
 
 	return clausola_where;

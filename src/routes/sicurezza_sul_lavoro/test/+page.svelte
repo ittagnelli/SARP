@@ -28,8 +28,8 @@
 	let errors = {}; //traccia gli errori di validazione del form
 
     //scelgo la custom_icon in funzione del tipo di utente
-    let custom_icon = helper.is_studente(data) ? 'checklist' : 'copy';
-    let custom_tip = helper.is_studente(data) ? 'Esegui il test' : 'Somministra corso allo studente';
+    let custom_icon = helper.is_studente(data) || (helper.is_docente(data) && !helper.is_tutor_sicurezza(data))  ? 'checklist' : 'copy';
+    let custom_tip = helper.is_studente(data) || (helper.is_docente(data) && !helper.is_tutor_sicurezza(data)) ? 'Esegui il test' : 'Somministra corso allo studente';
 	
     async function handleSubmit() {
         modal_form.submit();
@@ -41,7 +41,7 @@
 
     async function custom_action_handler(e) {
         current_test = test.filter(t => t.id == e.detail.row_id)[0];
-        if(e.detail.action == 'run' && helper.is_studente(data)) {
+        if(e.detail.action == 'run' && (helper.is_studente(data) || (helper.is_docente(data) && !helper.is_tutor_sicurezza(data)))) {
             if(!current_test.svolto) {
                 can_render = true;
                 let test_run_modal = helper.get_modal('modal-run-test-generico');
@@ -54,7 +54,7 @@
                     3000
                 );
             }
-        } else if(e.detail.action == 'run' && helper.is_admin(data)) {
+        } else if(e.detail.action == 'run' && (helper.is_admin(data) || helper.is_tutor_sicurezza(data))) {
             if (current_test.superato) {
                 helper.mbox_show(
                     'warning',
