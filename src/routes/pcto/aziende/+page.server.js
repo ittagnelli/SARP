@@ -59,8 +59,20 @@ export async function load({ locals }) {
 			where: multi_user_where(locals)
 		});
 
+        const last_id_convenzione = await SARP.pcto_Azienda.findMany({
+			orderBy: [{ idConvenzione: 'desc' }],
+            take: 1,
+            select: {
+                idConvenzione: true
+            }
+		});
+
+
 		// restituisco il risultato della query SQL
-		return { aziende: companies };
+		return { 
+            aziende: companies,
+            last_id_convenzione: last_id_convenzione
+        };
 	} catch (exception) {
 		catch_error(exception, 'la ricerca', 200);
 	}
