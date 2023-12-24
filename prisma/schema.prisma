@@ -1,4 +1,4 @@
-// v 0.19.0 2023-09-06
+// v 0.20.0 2023-12-09
 
 generator client {
     provider = "prisma-client-js"
@@ -45,12 +45,13 @@ model Utente {
     Ticket                   Ticket[]
     ruoli                    ruolo_Utente[]
     iscritto_corso_sicurezza sicurezza_Corso[]
-    classe                   Classe?                     @relation(fields: [classeId], references: [id])
+    classe                   Classe?                     @relation(fields: [classeId], references: [id], name: "iscritto")
     classeId                 Int?
     tutor_pcto               pcto_Pcto[]                 @relation("tutor")
     insegna_in               Insegnamenti[]
     template                 programmazione_Template[]
     quiz_sicurezza           sicurezza_Test[]
+    coordina                 Classe[]                    @relation("coordinatore")
 }
 
 model Classe {
@@ -60,9 +61,11 @@ model Classe {
     classe       String
     istituto     String
     sezione      String
-    iscritti     Utente[]
+    iscritti     Utente[]       @relation("iscritto")
     insegnamenti Insegnamenti[]
     pcto_Pcto    pcto_Pcto[]
+    coordinatore Utente?        @relation(fields: [coordinatoreId], references: [id], name: "coordinatore")
+    coordinatoreId Int?
 }
 
 model Materia {
