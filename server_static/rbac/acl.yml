@@ -1,7 +1,7 @@
 ---
 # v1.0 2023-01-17
 
-# menu reources don't have CRUD acl but just view
+# menu resources don't have CRUD acl but just view
 menu_home:
   view:
     - '*'
@@ -11,6 +11,11 @@ menu_utenti:
     - DEVELOPER
     - ADMIN
     - TUTOR-SICUREZZA
+
+menu_classi:
+  view:
+    - DEVELOPER
+    - ADMIN
 
 menu_pcto:
   view:
@@ -190,6 +195,20 @@ utenti:
     - DEVELOPER
     - ADMIN
     - TUTOR-SICUREZZA
+
+classi:
+  create:
+    - DEVELOPER
+    - ADMIN
+  read:
+    - DEVELOPER
+    - ADMIN
+  update:
+    - DEVELOPER
+    - ADMIN
+  delete:
+    - DEVELOPER
+    - ADMIN
 
 pcto_aziende:
   create:
