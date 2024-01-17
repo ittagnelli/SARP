@@ -12,13 +12,13 @@
     <input
         type="text"
         class="form-control"
-        class:is-invalid="{errors[name]}"
+        class:is-invalid="{errors && errors[name]}"
         name="{name}"
         placeholder="{placeholder}"
         readonly="{readonly}"
         bind:value={val}
     />
-    {#if errors[name]}
+    {#if errors && errors[name]}
         <span class="invalid-feedback">{errors[name]}</span>
     {/if}
 </div>
