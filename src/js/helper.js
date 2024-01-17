@@ -7,7 +7,6 @@ import { browser } from '$app/environment';
 import { mb_type, mb_color, mb_title, mb_message, mb_show } from '$js/store';
 import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css'; 
-import log from 'framework7-cli/utils/log';
 
 // Istanzia il logger in funzione di dove viene chiamato
 let logger = browser ? new Logger('client') : new Logger('server');
