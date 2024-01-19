@@ -302,9 +302,12 @@ onMount(async () => {
                                         {/if}                                    
                                         <!-- custom action icon -->
                                         {#each custom_actions as action}
+                                            <!-- we can conditionally show a custom icon based on a boolean column -->
+                                            {#if !('condition' in action) || ('condition' in action && row[action.condition])}    
                                             <button class="icon-button" on:click={() => custom_action_handler(action.action, row.id)} data-tippy-content="{action.tip}">
                                                 <icon class="ti ti-{action.icon} icon" />
                                             </button>
+                                            {/if}
                                         {/each}
                                         <!-- delete action icon -->
                                         {#if (user_id($page.data) == row.creatoDa && has_grant(user_ruolo($page.data),'delete', resource)) || is_admin($page.data)}
