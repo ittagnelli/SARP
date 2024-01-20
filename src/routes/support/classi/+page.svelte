@@ -75,10 +75,10 @@
 <Table
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
-		{ name: 'classe', type: 'string', display: 'Classe', size: 4 },
-        { name: 'istituto', type: 'string', display: 'Istituto', size: 6 },
-        { name: 'sezione', type: 'string', display: 'Sezione', size: 5 },
-        { name: 'coordinatore', type: 'object', key: 'cognome', display: 'Tutor', size: 20 },
+		{ name: 'classe', type: 'string', display: 'Classe', size: 4, search: true },
+        { name: 'istituto', type: 'string', display: 'Istituto', size: 6, search: true },
+        { name: 'sezione', type: 'string', display: 'Sezione', size: 5, search: true },
+        { name: 'coordinatore', type: 'object', key: 'cognome', display: 'Tutor', size: 20, search: true },
         
 	]}
 	rows={classi}
