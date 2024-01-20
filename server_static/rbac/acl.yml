@@ -25,6 +25,25 @@ menu_pcto:
     - TUTOR-SCOLASTICO
     - STUDENTE
 
+menu_pdp:
+  view:
+    - ADMIN
+    - DOCENTE
+    - TUTOR-CLASSE
+
+menu_griglia_osservativa:
+  view:
+    - ADMIN
+    - TUTOR-CLASSE
+
+pdp_griglia_osservativa:
+  read:
+    - ADMIN
+    - TUTOR-CLASSE
+  update:
+    - ADMIN
+    - TUTOR-CLASSE
+
 menu_programmazione:
   view:
     - DEVELOPER
