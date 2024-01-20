@@ -1,6 +1,19 @@
+## v4.0.0 – 20 Gennaio 2024
+- `fix#443`: Griglia valutazione per studenti PDP
+- aggiunta prima versione dell'applicazione PDP
+- aggiunto campo griglia_valutazione a Utente e relativa migrazione prisma
+- aggiunta la possibilità di filtrare una custom_icon in base allo stato di una colonna booleana
+- add filter to classi view
+- fix MODULE_NOT_FOUND when running vite server
+- `fix#448`: GUI per gestione classi, coordinatore e insegnamenti
+- aggiunto modale per inserimento tutor di classe
+- aggiunto ruolo TUTOR-CLASSE
+- `fix#451`: aggiunte firme per gli attestati di formazione generica e specifica
+- `fix#447`: Aggiunta coordinatore per ogni classe nel DB
+
 ## v3.11.0 – 08 Dicembre 2023
 - `fix#445`: Assegnazione test sicurezza a docente 
-- 
+ 
 ## v3.10.0 – 08 Dicembre 2023
 - `fix#442`: Assegnazione automatica convenzione azienda 
 
