@@ -27,6 +27,7 @@
             </NavMenu>
             <NavMenu resource="menu_pdp" text="PDP" icon="building-factory-2">
                 <NavSubItem resource="menu_griglia_osservativa" text="Griglia Osservativa" link="/pdp/griglia_osservativa" />
+                <NavSubItem resource="menu_genera_pdp" text="Genera PDP" link="/pdp/genera_pdp" />
             </NavMenu>
             <NavMenu resource="menu_programmazione" text="Programma Annuale" icon="list">
 				<NavSubItem resource="menu_programmazione_template" text="Template Docente" link="/programmazione/template" />

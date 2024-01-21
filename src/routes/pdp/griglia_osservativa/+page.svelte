@@ -71,6 +71,7 @@
 	footer="Studenti"
     endpoint="pdp/griglia_osservativa"
 	actions={true}
+    trash={false}
     update_tip="Aggiorna Griglia Osservativa"
     resource="studenti"
 />
