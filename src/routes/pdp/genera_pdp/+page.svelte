@@ -19,15 +19,15 @@
     let studenti = helper.data2arr(data.studenti);
     let pdps = build_pdp_obj(studenti);
 
-    console.log(pdps)
+    // console.log(pdps)
 
 
 	onMount(async () => { // Controlliamo che l'inserimento sia andato a buon fine, usiamo on mount per richiamare le funzioni del DOM
-        // if (form != null) {
-		// 	const buffer = new Uint8Array(JSON.parse(form.file).data); // Convertiamo la stringa in un oggetto che conterrà il nostro array di bytes che verrà poi convertito in Uint8Array, necessario all'oggetto Blob
-        //     var blob = new Blob([buffer], { type: 'application/msword' });
-        //     saveAs(blob, form.nome_documento);        
-		// }
+        if (form != null) {
+			const buffer = new Uint8Array(JSON.parse(form.file).data); // Convertiamo la stringa in un oggetto che conterrà il nostro array di bytes che verrà poi convertito in Uint8Array, necessario all'oggetto Blob
+            var blob = new Blob([buffer], { type: 'application/msword' });
+            saveAs(blob, form.nome_documento);        
+		}
     });
 
     // data.classi.forEach(classe => classe.classe_name = `${classe?.classe} ${classe?.istituto} ${classe?.sezione}`);
@@ -86,3 +86,5 @@
     print_filter={"can_print"}
 />
 
+
+<!-- print_filter={"can_print"} -->

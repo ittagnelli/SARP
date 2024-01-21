@@ -1,4 +1,4 @@
-import { PUBLIC_PROGRAMMAZIONE_ANNUALE_TEMPLATE, PUBLIC_PROGRAMMAZIONE_ANNUALE_TEMPLATES_DIR } from "$env/static/public";
+import { PUBLIC_PDP_TEMPLATES_DIR, PUBLIC_PDP_TEMPLATE } from "$env/static/public";
 import { access_protect, raise_error, is_primo_quadrimestre, route_protect, upper_first_letter, titlecase, custom_tags_parser, sort_strings, get_as } from "$js/helper";
 import { PrismaDB } from "$js/prisma_db.js";
 import path from 'path';
@@ -21,6 +21,15 @@ function catch_error(exception, type, code) {
         logger.error(exception.stack);
     }
     raise_error(500, code, `Errore irreversibile durante ${type} del PDP. TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`);    // TIMESTAMP ci serve per capire l'errore all'interno del log
+}
+
+function catch_error_pdf(exception, type, code) {
+	logger.error(JSON.stringify(exception)); //PROF: error è un oggetto ma serve qualcosa di più complicato. per il momento lascialo così. ho gia risolto in hooks nella versione 9.0
+	raise_error(
+		500,
+		code,
+		`${type} TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`
+	);
 }
 
 export async function load({ locals }) {
@@ -82,125 +91,120 @@ export async function load({ locals }) {
     }
 }
 
-// export const actions = {
-//     pdf: async ({ cookies, request }) => {
-// 		let buf;
-// 		try {
-// 			const form_data = await request.formData();
-// 			const id = form_data.get('id');
-//             let materie_programmi = null;
+//format the answer for 4 columns grid
+function format_grid1_4(grid) {
+    grid.map((q) => {
+        q.answers.forEach((a) => {
+            q[`ans_${a.aid}`] = a.aid == q.answer ? 'X' : ''; 
+        })
+    });
 
-// 			// preleva la classe dal DB
-// 			let classe = await SARP.classe.findUnique({
-// 				where: { id: +id },
-// 				include: {
-// 					insegnamenti: true,
-// 					iscritti: true
-// 				}
-// 			});
-			
-// 			let insegnamenti = await SARP.insegnamenti.findMany({
-// 				where: {
-// 					idClasse: classe?.id,
-//                     titolare: true
-// 				},
-// 				include: {
-//                     docente: true,
-// 					materia: true
-// 				}
-// 			})
+    return grid;
+}
 
-//             //sort by materia
-//             insegnamenti.sort((a,b) => sort_strings(a.materia.nome, b.materia.nome));
+//format the answer for SI/NO questions
+function format_grid5(grid) {
+    grid.map((q) => {
+        q['ans'] = q.answer == 'a' ? 'SI' : 'NO'; 
+    });
+
+    return grid;
+}
+
+export const actions = {
+    pdf: async ({ cookies, request }) => {
+		let buf;
+		try {
+			const form_data = await request.formData();
+			const student_id = form_data.get('id');
             
-//             //Educazione Civica nel primo trimestre non presenta un programma ma solo una frase fissa
-//             //mentre nel pentamestre è una materia normale
-//             //aggiunto il flag render per flessibilità futura 
-// 			if(is_primo_quadrimestre()){
-// 				materie_programmi = insegnamenti.map(insegnamento => {
-// 					const programma = JSON.parse(insegnamento.programma_primo_quadrimestre);
-// 					const libri = programma[2].libri.split('~'); // Sappiamo che l'array è composto da:	Q1, Q2, Libri
-// 					const note = programma[2].note;
-// 					return {
-// 						nome: insegnamento.materia.nome,
-//                         professore: upper_first_letter(insegnamento.docente.nome).concat(" ").concat(upper_first_letter(insegnamento.docente.cognome)), 
-// 						libri: libri,
-//                         hasLibri: libri.length > 0 && libri[0]!= '',
-// 						argomenti_q1: programma[0],
-// 						argomenti_q2: programma[1],
-// 						note: note,
-//                         hasNote: note.length > 0,
-//                         render: insegnamento.materia.nome != 'Educazione Civica' 
-// 					}
-// 				});
-// 			} else {
-// 				materie_programmi = insegnamenti.map(insegnamento => {
-// 					const programma = JSON.parse(insegnamento.programma_secondo_quadrimestre);
-// 					const libri = programma[2].libri.split('~'); // Sappiamo che l'array è composto da:	Q1, Q2, Libri
-// 					return {
-// 						nome: insegnamento.materia.nome, 
-// 						professore: upper_first_letter(insegnamento.docente.nome).concat(" ").concat(upper_first_letter(insegnamento.docente.cognome)),
-// 						libri: libri,
-//                         hasLibri: libri.length > 0 && libri[0]!= '',
-// 						argomenti_q1: programma[0],
-// 						argomenti_q2: programma[1],
-//                         note: note,
-//                         hasNote: note.length > 0,
-//                         render: true
-// 					}
-// 				});
-// 			}
+			// preleva la griglia osservativa per lo studente
+            const studente = await SARP.Utente.findUnique({
+                where: { id: +student_id }          
+            });
 
-// 			const docenti_name = insegnamenti.map(insegnamento => {
-// 				return {
-// 					materia: insegnamento.materia.nome,
-// 					docente: `${upper_first_letter(insegnamento.docente.nome)} ${upper_first_letter(insegnamento.docente.cognome)}`,
-// 					classroom: insegnamento.code_classroom
-// 				}
-// 			});
+            // let _griglia_valutazione = [
+            //     {
+            //         qid: 1,
+            //         question: 'Manifesta difficoltà di lettura/scrittura',
+            //         answers: [
+            //             { aid: 'a', answer: 'Mai' },
+            //             { aid: 'b', answer: 'Talvolta' },
+            //             { aid: 'c', answer: 'Spesso' },
+            //             { aid: 'd', answer: 'Sempre' },
+            //         ],
+            //         answer: 'a'
+            //     },
+            //     {
+            //         qid: 2,
+            //         question: 'Manifesta difficoltà di comprensione del testo',
+            //         answers: [
+            //             { aid: 'a', answer: 'Mai' },
+            //             { aid: 'b', answer: 'Talvolta' },
+            //             { aid: 'c', answer: 'Spesso' },
+            //             { aid: 'd', answer: 'Sempre' },
+            //         ],
+            //         answer: 'a'
+            //     },
 
-//             const studenti_name = classe?.iscritti?.sort((a,b) => a.cognome <= b.cognome ? -1:1).map((studente, index )=> {
-// 				return {
-// 					id: index + 1,
-//                     cognome: titlecase(studente.cognome),
-//                     nome: titlecase(studente.nome)
-// 				}
-// 			})
-
-//             let docx_programmazione_template = {
-// 				classe: `${classe?.classe} ${classe?.istituto} ${classe?.sezione}`,
-// 				docenti: docenti_name,
-// 				studenti: studenti_name,
-//                 materie: materie_programmi,
-// 			}
-
-// 			const content = fs.readFileSync(
-// 				path.resolve(PUBLIC_PROGRAMMAZIONE_ANNUALE_TEMPLATES_DIR, PUBLIC_PROGRAMMAZIONE_ANNUALE_TEMPLATE),
-// 				'binary'
-// 			);
-
-// 			const zip = new PizZip(content);
-
-// 			const doc = new Docxtemplater(zip, {
-// 				paragraphLoop: true,
-// 				linebreaks: true,
-//                 parser: custom_tags_parser
-// 			});
+            //prpeare the valutazione grids
+            let valutazione = JSON.parse(studente.griglia_valutazione);
+            let griglia1 = valutazione.slice(0, 20);
+            let griglia2 = valutazione.slice(20, 23);
+            let griglia3 = valutazione.slice(23, 28);
+            let griglia4 = valutazione.slice(28, 32);
+            let griglia5 = valutazione.slice(32);
             
-//             doc.render(docx_programmazione_template);
+            //set an X to the right answer column
+            griglia1 = format_grid1_4(griglia1);
+            griglia2 = format_grid1_4(griglia2);
+            griglia3 = format_grid1_4(griglia3);
+            griglia4 = format_grid1_4(griglia4);
+            griglia5 = format_grid5(griglia5);
+            
+        
 
-// 			buf = doc.getZip().generate({
-// 				type: 'nodebuffer',
-// 				compression: 'DEFLATE'
-// 			});
+            console.log(valutazione)
 
-// 			return {
-// 				file: JSON.stringify(buf), // Convertiamo il buffer in stringa sennò sveltekit va in errore
-// 				nome_documento: `Programmazione-${docx_programmazione_template.classe.replace(' ', '_')}.docx`
-// 			};
-// 		} catch (exception) {
-// 			console.log(exception)
-// 			//catch_error_pdf(exception, 'la generazione', 204);
-// 		}
-// 	}
-// }
+            //prepare the object to render the template
+            let renderer = {};
+            renderer['nome'] = studente.nome;
+            renderer['cognome'] = studente.cognome 
+            renderer['griglia1'] = griglia1;
+            renderer['griglia2'] = griglia2;
+            renderer['griglia3'] = griglia3;
+            renderer['griglia4'] = griglia4;
+            renderer['griglia5'] = griglia5;
+
+
+            console.log(renderer)
+
+			const content = fs.readFileSync(
+				path.resolve(PUBLIC_PDP_TEMPLATES_DIR, PUBLIC_PDP_TEMPLATE),
+				'binary'
+			);
+
+			const zip = new PizZip(content);
+
+			const doc = new Docxtemplater(zip, {
+				paragraphLoop: true,
+				linebreaks: true
+			});
+            
+            doc.render(renderer);
+    
+			buf = doc.getZip().generate({
+				type: 'nodebuffer',
+				compression: 'DEFLATE'
+			});
+
+			return {
+				file: JSON.stringify(buf), // Convertiamo il buffer in stringa sennò sveltekit va in errore
+				// nome_documento: `PDP-${docx_programmazione_template.classe.replace(' ', '_')}.docx`
+                nome_documento: 'PDP.docx'
+			};
+		} catch (exception) {
+			catch_error_pdf(exception, 'la generazione', 204);
+		}
+	}
+}
