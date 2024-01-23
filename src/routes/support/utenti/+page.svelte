@@ -46,6 +46,7 @@
 		nome: '',
 		cognome: '',
         natoA: '',
+		provincia: '',
         natoIl: '',
         codiceF: '',
         cartaI: '',
@@ -77,6 +78,11 @@
             .string()
             .nullable()
             .matches(/^$|^[a-zA-Z à-è-ì-ò-ù]{3,30}$/, "Luogo di nascita non valido"),
+
+		provincia: yup
+            .string()
+            .nullable()
+            .length(2, "Provincia non valida"),
 
         natoIl: yup
             .date()
@@ -125,6 +131,7 @@
 		form_values.nome = utente.nome;
 		form_values.cognome = utente.cognome;
         form_values.natoA = utente.natoA;
+		form_values.provincia = utente.provincia;
         form_values.natoIl = helper.convert_date(utente.natoIl);
         form_values.codiceF = utente.codiceF;
         form_values.cartaI = utente.cartaI;
@@ -149,6 +156,7 @@
 				nome: '',
 				cognome: '',
 				natoA: '',
+				provincia: '',
 				natoIl: '',
 				codiceF: '',
                 cartaI: '',
@@ -239,10 +247,10 @@
 						<ModalError msg={form.error_mex} />
 					{/if}
 					<div class="row">
-						<div class="col-lg-2">
+						<div class="col-lg-3">
 							<InputText label="Nome" name="nome" placeholder="Nome" bind:val={form_values.nome} {errors} />
 						</div>
-						<div class="col-lg-2">
+						<div class="col-lg-3">
 							<InputText label="Cognome" name="cognome" placeholder="Cognome" bind:val={form_values.cognome} {errors} />
 						</div>
                         <div class="col-lg-2">
@@ -254,6 +262,15 @@
 								{errors}
 							/>
 						</div>
+						<div class="col-lg-2">
+							<InputText
+								label="Provincia"
+								name="provincia"
+								placeholder="Provincia"
+								bind:val={form_values.provincia}
+								{errors}
+							/>
+						</div>
                         <div class="col-lg-2">
                             <InputDate
                                 label="Nato Il"
@@ -262,7 +279,9 @@
                                 bind:val={form_values.natoIl}
                             />
 						</div>
-                        <div class="col-lg-2">
+					</div>
+					<div class="row">
+                        <div class="col-lg-3">
                             <InputText
                                 label="Codice Fiscale"
                                 name="codiceF"
@@ -271,7 +290,7 @@
                                 bind:val={form_values.codiceF}
                             />
                         </div>
-                        <div class="col-lg-2">
+                        <div class="col-lg-3">
                             <InputText
                                 label="Carta Identità"
                                 name="cartaI"
@@ -280,9 +299,7 @@
                                 bind:val={form_values.cartaI}
                             />
                         </div>
-					</div>
-					<div class="row">
-                        <div class="col-lg-3">
+						<div class="col-lg-3">
 							<InputText
 								label="Email"
 								name="email"
@@ -291,7 +308,7 @@
 								{errors}
 							/>
 						</div>
-						<div class="col-lg-2">
+						<div class="col-lg-3">
 							<InputText
 								label="Telefono"
 								name="telefono"
@@ -300,6 +317,8 @@
 								{errors}
 							/>
 						</div>
+					</div>
+					<div class="row">
 						<div class="col-lg-2">
 							<div class="mb-3">
 								<div class="form-label select_text">Tipo</div>
