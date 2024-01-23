@@ -52,7 +52,7 @@ model Utente {
     insegna_in               Insegnamenti[]
     template                 programmazione_Template[]
     quiz_sicurezza           sicurezza_Test[]
-    coordina                 Classe[]                    @relation("coordinatore"),
+    coordina                 Classe[]                    @relation("coordinatore")
     griglia_valutazione      String?
 }
 
