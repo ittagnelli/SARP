@@ -1,4 +1,4 @@
-// v 0.20.1 2024-01-17
+// v 0.20.0 2023-12-09
 
 generator client {
     provider = "prisma-client-js"
@@ -27,6 +27,7 @@ model Utente {
     nome                     String
     cognome                  String
     natoA                    String?
+    provincia                String?
     natoIl                   DateTime?
     codiceF                  String?
     cartaI                   String?
@@ -52,7 +53,6 @@ model Utente {
     template                 programmazione_Template[]
     quiz_sicurezza           sicurezza_Test[]
     coordina                 Classe[]                    @relation("coordinatore")
-    griglia_valutazione      String?
 }
 
 model Classe {
