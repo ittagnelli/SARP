@@ -44,6 +44,18 @@ pdp_griglia_osservativa:
     - ADMIN
     - TUTOR-CLASSE
 
+menu_genera_pdp:
+  view:
+    - ADMIN
+
+genera_pdp:
+  update:
+    - ADMIN
+  read:
+    - ADMIN
+  delete:
+    - ADMIN
+
 menu_programmazione:
   view:
     - DEVELOPER

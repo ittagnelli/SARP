@@ -6,7 +6,7 @@ import { PrismaClientValidationError } from '@prisma/client/runtime';
 
 let logger = new Logger("server"); //instanzia il logger
 const SARP = new PrismaDB(); //Istanzia il client SARP DB
-let resource = "utenti"; // definisco il nome della risorsa di questo endpoint
+let resource = "pdp_griglia_osservativa"; // definisco il nome della risorsa di questo endpoint
 
 // @ts-ignore
 function catch_error(exception, type, code) {
