@@ -31,11 +31,31 @@ menu_pdp:
     - DOCENTE
     - TUTOR-CLASSE
 
+menu_pdp_template:
+  view:
+    - ADMIN
+    - DOCENTE
+
+
 menu_griglia_osservativa:
   view:
     - ADMIN
     - TUTOR-CLASSE
 
+pdp_template:
+  read:
+    - ADMIN
+    - DOCENTE
+  create:
+    - ADMIN
+    - DOCENTE
+  update:
+    - ADMIN
+    - DOCENTE
+  delete:
+    - ADMIN
+    - DOCENTE
+  
 pdp_griglia_osservativa:
   read:
     - ADMIN
