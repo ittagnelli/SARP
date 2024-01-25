@@ -54,6 +54,7 @@ model Utente {
     quiz_sicurezza           sicurezza_Test[]
     coordina                 Classe[]                    @relation("coordinatore")
     griglia_valutazione      String?
+    pdp_Template             pdp_Template[]
 }
 
 model Classe {
@@ -239,6 +240,20 @@ model programmazione_Template {
     materia   Materia  @relation(fields: [idMateria], references: [id])
     idMateria Int
     note      String? // Note aggiuntive a disposizione dell'insegnante
+}
+
+model pdp_Template {
+    id            Int      @id @default(autoincrement())
+    createdAt     DateTime @default(now())
+    updatedAt     DateTime @updatedAt
+    docente       Utente   @relation(fields: [creatoDa], references: [id])
+    creatoDa      Int
+    nome          String
+    dispensative  String
+    compensative  String
+    valutazione   String
+    altro         String?
+    note          String? // Note aggiuntive a disposizione dell'insegnante
 }
 
 model sicurezza_Corso {
