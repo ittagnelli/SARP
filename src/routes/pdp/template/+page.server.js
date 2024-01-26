@@ -36,7 +36,7 @@ export async function load({ locals }) {
             templates: pdp_templates
         }
     } catch (exception) {
-        catch_error(exception, 2101);
+        catch_error(exception, 2501);
     }
 }
 
@@ -49,25 +49,52 @@ export const actions = {
 
         try {
             const form = await request.formData();
-            const primo_quadrimestre = form.get("argomenti_primo_quadrimestre");
-            const secondo_quadrimestre = form.get("argomenti_secondo_quadrimestre");
-            const quadrimestri = [JSON.parse(primo_quadrimestre), JSON.parse(secondo_quadrimestre)];
 
-            await SARP.programmazione_Template.create({
+            await SARP.pdp_Template.create({
                 data: {
                     creatoDa: user_id(locals),
-                    idMateria: parseInt(form.get("materia")),
-                    template: JSON.stringify(quadrimestri),
-                    libro: form.get("libri"),
-                    nome: form.get("nome")?.toString(),
+                    nome: form.get("nome"),
+                    dispensative: form.get("dispensative"),
+                    compensative: form.get("compensative"),
+                    valutazione: form.get("valutative"),
+                    altro: form.get("altro")?.toString(),
                     note: form.get("note")?.toString()
                 }
             });
 
             return {action: action, status: 'ok'};
         } catch (exception) {
-            catch_error(exception, 2102);
+            catch_error(exception, 2502);
         }
+    },
+    update: async ({ request, locals }) => {
+        let action = 'update';
+
+        route_protect(locals);
+        access_protect(200, locals, action, resource);
+
+        try {
+            const form = await request.formData();	
+
+            await SARP.pdp_Template.update({
+                data: {
+                    creatoDa: user_id(locals),
+                    nome: form.get("nome"),
+                    dispensative: form.get("dispensative"),
+                    compensative: form.get("compensative"),
+                    valutazione: form.get("valutative"),
+                    altro: form.get("altro")?.toString(),
+                    note: form.get("note")?.toString()
+                },
+                where: {
+                    id: parseInt(form.get("id"))
+                }
+            });
+
+            return {action: action, status: 'ok'};
+        } catch (exception) {
+            catch_error(exception, 2503);
+        } 
     },
     delete: async ({ request, locals }) => {
         let action = 'delete';
@@ -79,44 +106,13 @@ export const actions = {
             const form_data = await request.formData();
             const id = form_data.get('id');
 
-            await SARP.programmazione_Template.delete({
+            await SARP.pdp_Template.delete({
                 where: {
                     id: parseInt(id)
                 }
             });
         } catch (exception) {
-            catch_error(exception, 2103);
+            catch_error(exception, 2504);
         }
     },
-    update: async ({ request, locals }) => {
-        let action = 'update';
-
-        route_protect(locals);
-        access_protect(200, locals, action, resource);
-
-        try {
-            const form = await request.formData();	
-            const primo_quadrimestre = form.get("argomenti_primo_quadrimestre");
-            const secondo_quadrimestre = form.get("argomenti_secondo_quadrimestre");
-            const quadrimestri = [JSON.parse(primo_quadrimestre), JSON.parse(secondo_quadrimestre)];
-
-            await SARP.programmazione_Template.update({
-                data: {
-                    idMateria: parseInt(form.get("materia")),
-                    template: JSON.stringify(quadrimestri),
-                    libro: form.get("libri"),
-                    updatedAt: new Date(),
-                    nome: form.get("nome")?.toString(),
-                    note: form.get("note")?.toString()
-                },
-                where: {
-                    id: parseInt(form.get("id"))
-                }
-            });
-
-            return {action: action, status: 'ok'};
-        } catch (exception) {
-            catch_error(exception, 2104);
-        } 
-    }
 }

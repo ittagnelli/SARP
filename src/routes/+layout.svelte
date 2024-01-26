@@ -25,7 +25,7 @@
                 <NavSubItem resource="menu_valutazione_studenti" text="Valutazione Studenti" link="/pcto/valutazione_studenti" />
                 <NavSubItem resource="menu_verifica_stato" text="Verifica Stato" link="/pcto/verifica_stato" />
             </NavMenu>
-            <NavMenu resource="menu_pdp" text="PDP" icon="building-factory-2">
+            <NavMenu resource="menu_pdp" text="PDP" icon="certificate">
                 <NavSubItem resource="menu_pdp_template" text="Template Docente" link="/pdp/template" />
                 <NavSubItem resource="menu_griglia_osservativa" text="Griglia Osservativa" link="/pdp/griglia_osservativa" />
                 <NavSubItem resource="menu_genera_pdp" text="Genera PDP" link="/pdp/genera_pdp" />
