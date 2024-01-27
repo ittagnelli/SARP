@@ -36,12 +36,6 @@ menu_pdp_template:
     - ADMIN
     - DOCENTE
 
-
-menu_griglia_osservativa:
-  view:
-    - ADMIN
-    - TUTOR-CLASSE
-
 pdp_template:
   read:
     - ADMIN
@@ -56,6 +50,11 @@ pdp_template:
     - ADMIN
     - DOCENTE
   
+menu_griglia_osservativa:
+  view:
+    - ADMIN
+    - TUTOR-CLASSE
+
 pdp_griglia_osservativa:
   read:
     - ADMIN
@@ -63,6 +62,21 @@ pdp_griglia_osservativa:
   update:
     - ADMIN
     - TUTOR-CLASSE
+
+menu_pdp_docente:
+  view:
+    - ADMIN
+    - DOCENTE
+
+pdp_docente:
+  read:
+    - ADMIN
+    - DOCENTE
+  update:
+    - ADMIN
+    - DOCENTE
+  delete:
+    - ADMIN
 
 menu_genera_pdp:
   view:

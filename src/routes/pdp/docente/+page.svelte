@@ -1,71 +1,64 @@
 <script>
-	import { wait_fade_finish } from '$js/helper.js';
+	import * as helper from '$js/helper.js';
 	import { page_action_title, page_title, page_pre_title, page_action_modal } from '$js/store';
 	import Table from '$lib/components/common/table.svelte';
     import MessageBox from '$lib/components/common/message_box.svelte';
     import { onMount } from 'svelte';
+    import { saveAs } from 'file-saver';
 	import * as yup from 'yup';
-    import * as helper from '../../../js/helper';
-	import { misure_dispensative } from './dispensative';
-    import { misure_compensative } from './compensative';
-    import { misure_valutative } from './valutative';
+    import { misure_dispensative } from '../template/dispensative.js'
+    import { misure_compensative } from '../template/compensative.js';
+    import { misure_valutative } from '../template/valutative.js';
 
-    export let data;
+	export let data;
     export let form;
 
-	/* Page properties */
-	$page_action_title = 'Aggiungi template';
-	$page_pre_title = 'PDP annuale';
-	$page_title = 'Template';
-	$page_action_modal = 'modal-template';
+    let pdp = helper.data2arr(data.pdp);
+    //add field for easier table visualization
+    pdp.forEach(p => {
+        p['studente_col'] = `${p.studente.cognome} ${p.studente.nome}`;
+        p['classe_col'] = `${p.insegnamento.classe.classe} ${p.insegnamento.classe.istituto} ${p.insegnamento.classe.sezione}`;
+        p['materia_col'] = p.insegnamento.materia.nome;
+    });
 
-    let templates = helper.data2arr(data.templates);
     let current_dispensative = JSON.parse(misure_dispensative);
     let current_compensative = JSON.parse(misure_compensative);
     let current_valutative = JSON.parse(misure_valutative);
-  
+    let current_pdp = pdp[0];
+
+    /* Page properties */
+	$page_action_title = '';
+	$page_pre_title = 'PDP annuale';
+	$page_title = 'PDP docente';
+	$page_action_modal = 'modal-template';
+
     onMount(() => { 
         if (form != null && form.status == 'ok') {
-            switch(form.action) {
-                case 'create':
-                    helper.mbox_show(
-                        'success',
-                        'Conferma',
-                        'Template creato correttamente',
-                        3000
-                    );
-                    break;
-                case 'update':
-                    helper.mbox_show(
-                        'success',
-                        'Conferma',
-                       'Template aggiornato correttamente',
-                        3000
-                    );
-                    break;
-            }
-        }
+            helper.mbox_show(
+                'success',
+                'Conferma',
+                'PDP aggiornato correttamente',
+                3000
+            );            
+        } 
     });
 
 	/* Page form model */
 	let modal_form;
 	let form_values = {
-		nome: '',
-		template_id: 0,
+        template_id : 0,
+		id: 0,
 		dispensative: '',
         compensative: '',
         valutative: '',
         altro: '',
-        note: ''
+        note: '',
+        completo: 'NO'
 	};
 
 	// schema di validazione del form
 	const form_schema = yup.object().shape({
-		nome: yup
-            .string()
-            .min(1, 'Nome necessario'),
-
-		dispensative: yup
+        dispensative: yup
             .string()
             .matches(/true/, 'Selezionare almeno una misura dispensativa'),
 
@@ -81,32 +74,35 @@
 	let modal_action = 'create';
 	let errors = {};
 
-	function start_update(e) {
+	async function start_update(e) {
 		modal_action = 'update';
-		form_values.template_id = e.detail.id;
-		const template = data.templates.filter((template) => template.id == form_values.template_id)[0];
-		form_values.nome = template.nome;
-        current_dispensative= JSON.parse(template.dispensative);
-        current_compensative = JSON.parse(template.compensative);
-        current_valutative = JSON.parse(template.valutazione);
-        form_values.altro = template.altro;
-        form_values.note = template.note;
+
+        form_values.template_id = 0;
+        form_values.id = e.detail.id;
+        current_pdp = pdp.filter(i => i.id == e.detail.id)[0];
+
+        current_dispensative = JSON.parse(current_pdp.dispensative);
+        current_compensative = JSON.parse(current_pdp.compensative);
+        current_valutative = JSON.parse(current_pdp.valutative);
+        form_values.altro = current_pdp.altro;
+        form_values.note = current_pdp.note;
+        form_values.completo = current_pdp.completo ? 'SI': 'NO';
 	}
 
     function reset_form_value() {
         form_values = {
-                nome: '',
                 template_id: 0,
+                id: 0,
                 dispensative: '',
                 compensative: '',
                 valutative: '',
                 altro: '',
-                note: ''
+                note: '',
+                completo: 'NO'
 			};		
     }
 
 	async function handleSubmit() {
-		form_values.nome = helper.sanitize_text_form(form_values.nome);
 		form_values.altro = helper.sanitize_text_form(form_values.altro);
         form_values.note = helper.sanitize_text_form(form_values.note);
         form_values.dispensative = JSON.stringify(current_dispensative);
@@ -123,16 +119,51 @@
 			errors = err.inner.reduce((acc, err) => {
 				return { ...acc, [err.path]: err.message };
 			}, {});
-            console.log(errors)
 		}
 	}
 
 	async function cancel_action() {
 		if (modal_action == 'update') {
-			await wait_fade_finish(150);
+			await helper.wait_fade_finish(150);
 			modal_action = 'create'; // Reset string
 			reset_form_value();	
 		}
+	}
+
+
+	function update_template() {
+		const template = data.templates.filter(t => t.id == form_values.template_id)[0];
+        
+        current_dispensative = JSON.parse(template.dispensative);
+        current_compensative = JSON.parse(template.compensative);
+        current_valutative = JSON.parse(template.valutazione);
+        form_values.altro = template.altro;
+        form_values.note = template.note;
+
+
+
+        // if (form_values.libri.length > 1) {
+        //     // ESTHETIC: Remove last book that is empty if more than one are present in array
+		// 	form_values.libri.pop();
+		// 	form_values.libri = form_values.libri;
+		// }
+        // 	form_values.note = template.note;
+		// form_values.libri = template.libro.split('~');
+		// const template_raw = JSON.parse(template.template);
+		
+		// // Se i sotto_sotto_argomenti sono vuoti ne aggiungiamo uno vuoto così l'insegnante può aggiungerne
+		// argomenti_primo_quadrimestre = template_raw[0].map(programma_quadrimestre => {
+		// 	return {
+		// 		titolo: programma_quadrimestre.titolo,
+		// 		sotto_argomenti: programma_quadrimestre.sotto_argomenti.map(programma => {
+		// 		return {
+		// 			sotto_argomento_text: programma.sotto_argomento_text,
+		// 			sotto_sotto_argomenti: programma.sotto_sotto_argomenti.length >= 1 ? programma.sotto_sotto_argomenti : [""]
+		// 		};	
+		// 		})
+		// 	}
+		// });
+
 	}
 
     function prevent_enter(key) {
@@ -145,23 +176,23 @@
 <Table
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
-        { name: 'creatoDa', type: 'hidden', display: 'creatoDa' },
-		{ name: 'nome', type: 'string', display: 'nome', size: 50 },
-		{ name: 'note', type: 'string', display: 'note', size: 50 },
+        { name: 'classe_col', type: 'string', display: 'Classe', size: 20, search: true },
+        { name: 'studente_col', type: 'string', display: 'Studente', size: 50, search: true },
+        { name: 'materia_col', type: 'string', display: 'Materia', size: 50, search: true },
+        { name: 'anno', type: 'string', display: 'AS' },
+        { name: 'completo', type: 'boolean', display: 'completo', search: true }
 	]}
 	page_size={10}
-	rows={templates}
-	endpoint="pdp/template"
-	footer="Template"
+	rows={pdp}
+	endpoint="pdp/docente"
+	footer="PDP docente"
 	actions={true}
     print={false}
-    print_filter={false}
-    update_tip="Aggiorna template pdp"
-    trash={true}
-    trash_tip="Rimuovi template pdp"
-	resource="pdp_template"
+    update_tip="Creo o aggiorna PDP per lo studente e la materia selezionati"
+	resource="pdp_docente"
 	modal_name={$page_action_modal}
 	on:update_start={start_update}
+    trash={false}
 />
 
 <!-- Modal from Page action -->
@@ -178,18 +209,14 @@
 		on:submit|preventDefault={handleSubmit}
 		bind:this={modal_form}
 	>
-		<input type="hidden" name="id" bind:value={form_values.template_id} />
+		<input type="hidden" name="id" bind:value={form_values.id} />
         <input type="hidden" name="dispensative" bind:value={form_values.dispensative} />
         <input type="hidden" name="compensative" bind:value={form_values.compensative} />
         <input type="hidden" name="valutative" bind:value={form_values.valutative} />
 		<div class="modal-dialog modal-xl" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					{#if modal_action == 'create'}
-						<h5 class="modal-title">Nuovo Template</h5>
-					{:else}
-						<h5 class="modal-title">Aggiorna Template</h5>
-					{/if}
+						<h5 class="modal-title">Aggiorna PDP</h5>
 					<button
 						type="button"
 						class="btn-close"
@@ -199,23 +226,45 @@
 					/>
 				</div>
 				<div class="modal-body">
-					<div class="row">
-						<div class="col-lg-6">
-                            <div class="mb-3">
-                                <div class="form-label select_text">Nome template</div>
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    bind:value={form_values.nome}
-                                    name="nome"
-                                    class:is-invalid={errors.nome}
-                                />
-                                {#if errors.nome}
-                                    <span class="invalid-feedback">{errors.nome}</span>
-                                {/if}
+                    <div class="row">
+                            <div class="col-lg-4">
+                                <div class="form-label select_text">Template</div>
+                                <select
+                                    class="form-select"
+                                    name="template"
+                                    bind:value={form_values.template_id}
+                                    on:change={update_template}
+                                >
+                                    {#each data.templates as template}
+                                            <option value={template.id}>{template.nome}</option>
+                                    {/each}
+                                </select>
                             </div>
-						</div>
-					</div>
+                            <div class="col-lg-4">
+                                <div class="mb-3">
+                                    <div class="form-label select_text">Studente</div>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        value="{current_pdp.studente_col}"
+                                        name="studente"
+                                        disabled
+                                    />
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="mb-3">
+                                    <div class="form-label select_text">Materia</div>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        value="{current_pdp.materia_col}"
+                                        name="materia"
+                                        disabled
+                                    />
+                                </div>
+                            </div>
+                    </div>
                     <div class="row myfieldset {errors.dispensative ? 'error-border' : ''}">    
                         <div class="form-label mylabel">Misure Dispensative</div>
 						<div class="col-lg-6">
@@ -296,7 +345,7 @@
                         {/if}
                     </div>
                     <div class="row">
-						<div class="col-lg-6">
+						<div class="col-lg-5">
 							<div class="form-label select_text mt-3">Altro</div>
 							<div class="input-group input-group-flat">
 								<textarea
@@ -309,7 +358,7 @@
 								/>
 							</div>
 						</div>
-                        <div class="col-lg-6">
+                        <div class="col-lg-5">
 							<div class="form-label select_text mt-3">Note</div>
 							<div class="input-group input-group-flat">
 								<textarea
@@ -322,6 +371,32 @@
 								/>
 							</div>
 						</div>
+                        <div class="col-lg-2">
+                            <br>
+                            <label class="form-label">PDP completo</label>
+                            <div class="form-selectgroup">
+                                <label class="form-selectgroup-item">
+                                        <input
+                                            type="radio"
+                                            name="completo"
+                                            value="SI"
+                                            class="form-selectgroup-input"
+                                            bind:group={form_values.completo}
+                                        />
+                                    <span class="form-selectgroup-label">SI</span>
+                                </label>
+                                <label class="form-selectgroup-item">
+                                        <input
+                                            type="radio"
+                                            name="completo"
+                                            value="NO"
+                                            class="form-selectgroup-input"
+                                            bind:group={form_values.completo}
+                                        />
+                                    <span class="form-selectgroup-label">NO</span>
+                                </label>
+                            </div>
+                        </div>
 					</div>
 				</div>
 				<div class="modal-footer">
@@ -343,6 +418,12 @@
 </div>
 
 <style>
+    .disabled {
+		/* We can't use disabled attribute since disable field also for server so create a class that emulate disabled effect */
+		pointer-events: none;
+		background: grey;
+	}
+
     /* workaround, for some reason 
     style of Libro error box keep display:none */
     .custom-invalid-feedback {
