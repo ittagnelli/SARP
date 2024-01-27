@@ -41,9 +41,9 @@ async function add_pdp(idDocente, idInsegnamento, idStudente, as) {
                 idInsegnamento: idInsegnamento,
                 idStudente: idStudente,
                 anno: as,
-                dispensative: '',
-                compensative: '',
-                valutative: '',
+                dispensative: misure_dispensative,
+                compensative: misure_compensative,
+                valutative: misure_valutative,
                 altro: ''
             }       
         });

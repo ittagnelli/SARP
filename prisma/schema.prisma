@@ -258,6 +258,7 @@ model PDP {
     compensative    String
     valutative      String
     altro           String?
+    note            String?
     completo        Boolean      @default(false)
 }
 
