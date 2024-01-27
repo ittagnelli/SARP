@@ -33,10 +33,11 @@ async function get_studenti_bes(idClasse) {
     });
 }
 
-async function add_pdp(idInsegnamento, idStudente, as) {
+async function add_pdp(idDocente, idInsegnamento, idStudente, as) {
     try {
         await SARP.PDP.create({
             data: {
+                idDocente: idDocente,
                 idInsegnamento: idInsegnamento,
                 idStudente: idStudente,
                 anno: as,
@@ -67,7 +68,7 @@ async function main(argv){
         let studenti = await get_studenti_bes(insegnamento.idClasse);
         studenti.forEach(async studente => {
             console.log(`adding PDP for insegnamento [${insegnamento.id}] - studente [${studente.id}]`);
-            await add_pdp(insegnamento.id, studente.id, insegnamento.anno);
+            await add_pdp(insegnamento.idDocente, insegnamento.id, studente.id, insegnamento.anno);
         })
     });
 }

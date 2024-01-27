@@ -1,4 +1,4 @@
-// v 0.20.0 2023-12-09
+// v 0.22.0 2024-01-27
 
 generator client {
     provider = "prisma-client-js"
@@ -248,6 +248,7 @@ model PDP {
     id              Int          @id @default(autoincrement())
     createdAt       DateTime     @default(now())
     updatedAt       DateTime     @updatedAt
+    idDocente       Int
     insegnamento    Insegnamenti @relation(fields: [idInsegnamento], references: [id])
     idInsegnamento  Int
     studente        Utente       @relation(fields: [idStudente], references: [id])
