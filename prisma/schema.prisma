@@ -55,6 +55,7 @@ model Utente {
     coordina                 Classe[]                    @relation("coordinatore")
     griglia_valutazione      String?
     pdp_Template             pdp_Template[]
+    pdp                      PDP[]
 }
 
 model Classe {
@@ -93,6 +94,7 @@ model Insegnamenti {
     programma_secondo_quadrimestre          String?
     programma_primo_quadrimestre_completo   Boolean @default(false)
     programma_secondo_quadrimestre_completo Boolean @default(false)
+    pdp_studenti                            PDP[]
 }
 
 model Session {
@@ -240,6 +242,22 @@ model programmazione_Template {
     materia   Materia  @relation(fields: [idMateria], references: [id])
     idMateria Int
     note      String? // Note aggiuntive a disposizione dell'insegnante
+}
+
+model PDP {
+    id              Int          @id @default(autoincrement())
+    createdAt       DateTime     @default(now())
+    updatedAt       DateTime     @updatedAt
+    insegnamento    Insegnamenti @relation(fields: [idInsegnamento], references: [id])
+    idInsegnamento  Int
+    studente        Utente       @relation(fields: [idStudente], references: [id])
+    idStudente      Int
+    anno            Int
+    dispensative    String
+    compensative    String
+    valutative      String
+    altro           String?
+    completo        Boolean      @default(false)
 }
 
 model pdp_Template {
