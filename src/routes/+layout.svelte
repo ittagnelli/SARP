@@ -29,7 +29,7 @@
                 <NavSubItem resource="menu_pdp_template" text="Template Docente" link="/pdp/template" />
                 <NavSubItem resource="menu_griglia_osservativa" text="Griglia Osservativa" link="/pdp/griglia_osservativa" />
                 <NavSubItem resource="menu_pdp_docente" text="PDP Docente" link="/pdp/docente" />
-                <NavSubItem resource="menu_genera_pdp" text="Genera PDP" link="/pdp/genera_pdp" />
+                <NavSubItem resource="menu_genera_pdp" text="PDP Alunni" link="/pdp/genera_pdp" />
             </NavMenu>
             <NavMenu resource="menu_programmazione" text="Programma Annuale" icon="list">
 				<NavSubItem resource="menu_programmazione_template" text="Template Docente" link="/programmazione/template" />

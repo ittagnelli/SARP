@@ -4,7 +4,7 @@
     import { saveAs } from 'file-saver';
 	import { onMount } from "svelte";
     import * as helper from '$js/helper';
-
+	
     /* Page properties */
 	$page_action_title = '';
 	$page_pre_title = 'PDP';
@@ -17,10 +17,20 @@
     // let insegnamenti = helper.data2arr(data.insegnamenti);
     // let classi = helper.data2arr(data.classi);
     let studenti = helper.data2arr(data.studenti);
-    let pdps = build_pdp_obj(studenti);
+    let pdp_studenti = is_pdp_complete(studenti);
 
-    // console.log(pdps)
-
+    function is_pdp_complete(studenti) {
+        return studenti.map((s) => {
+            s['studente_col'] = `${s.cognome} ${s.nome}`;
+            s['classe_col'] = `${s.classe.classe} ${s.classe.istituto} ${s.classe.sezione}`;
+            s['griglia_val_col'] = s.griglia_valutazione != null;
+            let tot_materie = s.pdp.length;
+            let materie_complete = s.pdp.filter(m => m.completo == true).length;
+            s['materie_col'] = `${materie_complete}/${tot_materie}`;
+            s['can_print'] = (s.griglia_valutazione != null) && (materie_complete == tot_materie);
+            return s;
+        });
+    }
 
 	onMount(async () => { // Controlliamo che l'inserimento sia andato a buon fine, usiamo on mount per richiamare le funzioni del DOM
         if (form != null) {
@@ -29,51 +39,20 @@
             saveAs(blob, form.nome_documento);        
 		}
     });
-
-    // data.classi.forEach(classe => classe.classe_name = `${classe?.classe} ${classe?.istituto} ${classe?.sezione}`);
-    // data.classi = data.classi.slice(1, data.classi.length);	// Rimuovo classe 0
-
-    function build_pdp_obj(studenti) {
-        return studenti.map((s) => {
-            s['can_print'] = s.griglia_valutazione != null;
-            return s;
-        });
-
-//         {
-//     "id": 22,
-//     "createdAt": "2023-02-14T10:50:25.153Z",
-//     "updatedAt": "2023-09-18T17:05:28.251Z",
-//     "creatoDa": 1,
-//     "tipo": "STUDENTE",
-//     "nome": "Davide",
-//     "cognome": "Buczkowsky",
-//     "natoA": "Moncalieri ",
-//     "natoIl": "2006-05-16T00:00:00.000Z",
-//     "codiceF": "BCZDVD06E16F335X",
-//     "cartaI": null,
-//     "email": "davide.buczkowsky@istitutoagnelli.it",
-//     "telefono": null,
-//     "picture": "/img/users/BUCZKOWSKY_DAVIDE.png",
-//     "bes": true,
-//     "can_login": true,
-//     "istituto": "ITT",
-//     "classeId": 12,
-//     "griglia_valutazione": null
-// }
-    }
 </script>
 
 
 <Table
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
-        { name: 'cognome', type: 'string', display: 'Cognome', size: 50, search: true },
-        { name: 'nome', type: 'string', display: 'Nome', size: 50, search: true },
-        { name: 'bes', type: 'boolean', display: "PDP", search: true },
-		{ name: 'can_print', type: 'boolean', display: "PDP Completo", search: true },
+        { name: 'classe_col', type: 'string', display: 'Classe', size: 50, search: true },
+        { name: 'studente_col', type: 'string', display: 'Studente', size: 50, search: true },
+		{ name: 'griglia_val_col', type: 'boolean', display: "Griglia Valutativa", search: true },
+        { name: 'materie_col', type: 'string', display: "Materie Complete", size: 10},
+        { name: 'can_print', type: 'boolean', display: "PDP Completo", search: true },
 	]}
 	page_size={10}
-	rows={pdps}
+	rows={pdp_studenti}
 	endpoint="pdp/genera_pdp"
 	footer="Documenti PDP"
 	actions={true}
@@ -85,6 +64,3 @@
     print_tip="Stampa PDP per lo studente selezionato"
     print_filter={"can_print"}
 />
-
-
-<!-- print_filter={"can_print"} -->
