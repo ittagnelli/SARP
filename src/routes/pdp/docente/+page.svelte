@@ -139,31 +139,6 @@
         current_valutative = JSON.parse(template.valutazione);
         form_values.altro = template.altro;
         form_values.note = template.note;
-
-
-
-        // if (form_values.libri.length > 1) {
-        //     // ESTHETIC: Remove last book that is empty if more than one are present in array
-		// 	form_values.libri.pop();
-		// 	form_values.libri = form_values.libri;
-		// }
-        // 	form_values.note = template.note;
-		// form_values.libri = template.libro.split('~');
-		// const template_raw = JSON.parse(template.template);
-		
-		// // Se i sotto_sotto_argomenti sono vuoti ne aggiungiamo uno vuoto così l'insegnante può aggiungerne
-		// argomenti_primo_quadrimestre = template_raw[0].map(programma_quadrimestre => {
-		// 	return {
-		// 		titolo: programma_quadrimestre.titolo,
-		// 		sotto_argomenti: programma_quadrimestre.sotto_argomenti.map(programma => {
-		// 		return {
-		// 			sotto_argomento_text: programma.sotto_argomento_text,
-		// 			sotto_sotto_argomenti: programma.sotto_sotto_argomenti.length >= 1 ? programma.sotto_sotto_argomenti : [""]
-		// 		};	
-		// 		})
-		// 	}
-		// });
-
 	}
 
     function prevent_enter(key) {
