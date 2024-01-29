@@ -1,5 +1,5 @@
 import { PUBLIC_PDP_TEMPLATES_DIR, PUBLIC_PDP_TEMPLATE } from "$env/static/public";
-import { access_protect, raise_error, is_primo_quadrimestre, route_protect, upper_first_letter, titlecase, custom_tags_parser, sort_strings, get_as } from "$js/helper";
+import { access_protect, raise_error, route_protect, custom_tags_parser, get_as } from "$js/helper";
 import { PrismaDB } from "$js/prisma_db.js";
 import path from 'path';
 import fs from 'fs';
@@ -42,7 +42,22 @@ export async function load({ locals }) {
 
         // get active BES students
         const studenti = await SARP.Utente.findMany({
-			orderBy: [{ tipo: 'desc' }],
+			select: {
+                id: true,
+                nome: true,
+                cognome: true,
+                griglia_valutazione: true,
+                pdp: {
+                    select: {
+                        completo: true
+                    }
+                },
+                classe: true
+            },
+            orderBy: [
+                { classeId: 'asc'},
+                { cognome: 'asc' }
+            ],
             where: {
                 bes: true,
                 can_login: true    
@@ -52,40 +67,6 @@ export async function load({ locals }) {
         return {
             studenti
         }
-        
-        // const insegnamenti = await SARP.insegnamenti.findMany({
-        //     where: {
-        //         titolare: true,
-        //         anno: get_as()
-        //     }
-        // });
-
-        // let classi = await SARP.classe.findMany({});
-
-        // classi = classi.map(classe => {
-        //     const current_insegnamento = insegnamenti.filter(insegnamento => insegnamento.idClasse == classe.id)
-        //     // per default il programma non è completo
-        //     let programma_q1_completo = false;
-        //     let programma_q2_completo = false;
-
-        //     // se c'e' un insegnamento determiniamo se è completo o no
-        //     if(current_insegnamento.length != 0) {
-        //         programma_q1_completo = current_insegnamento.filter(insegnamento => insegnamento.programma_primo_quadrimestre_completo).length == current_insegnamento.length
-        //         programma_q2_completo = current_insegnamento.filter(insegnamento => insegnamento.programma_secondo_quadrimestre_completo).length == current_insegnamento.length
-        //     }
-
-        //     return {
-        //         ...classe,
-        //         "programmazione_q1_completa": programma_q1_completo,
-        //         "programmazione_q2_completa": programma_q2_completo,
-        //         "programmazione_completa": programma_q1_completo || programma_q2_completo
-        //     }
-        // })
-
-        // return {
-        //     insegnamenti,
-        //     classi,
-        // };
     } catch (exception) {
         catch_error(exception, "la ricerca", 100);
     }
@@ -117,37 +98,28 @@ export const actions = {
 		try {
 			const form_data = await request.formData();
 			const student_id = form_data.get('id');
-            
-			// preleva la griglia osservativa per lo studente
+
+            //the document to render is made by many parts
+            //one evaluation grid coming from the student object
+            //and 3 section (dispenative, compensative and valutative)
+            //for each materia belonging to the class the student is subscribed
+
+			// get griglia osservativa for student
             const studente = await SARP.Utente.findUnique({
-                where: { id: +student_id }          
+                where: { id: +student_id },
+                include: {
+                    classe: {
+                        select: {
+                            coordinatore: true,
+                            classe: true,
+                            istituto: true,
+                            sezione: true
+                        }
+                    }
+                }
             });
-
-            // let _griglia_valutazione = [
-            //     {
-            //         qid: 1,
-            //         question: 'Manifesta difficoltà di lettura/scrittura',
-            //         answers: [
-            //             { aid: 'a', answer: 'Mai' },
-            //             { aid: 'b', answer: 'Talvolta' },
-            //             { aid: 'c', answer: 'Spesso' },
-            //             { aid: 'd', answer: 'Sempre' },
-            //         ],
-            //         answer: 'a'
-            //     },
-            //     {
-            //         qid: 2,
-            //         question: 'Manifesta difficoltà di comprensione del testo',
-            //         answers: [
-            //             { aid: 'a', answer: 'Mai' },
-            //             { aid: 'b', answer: 'Talvolta' },
-            //             { aid: 'c', answer: 'Spesso' },
-            //             { aid: 'd', answer: 'Sempre' },
-            //         ],
-            //         answer: 'a'
-            //     },
-
-            //prpeare the valutazione grids
+                
+            //prepare the valutazione grids
             let valutazione = JSON.parse(studente.griglia_valutazione);
             let griglia1 = valutazione.slice(0, 20);
             let griglia2 = valutazione.slice(20, 23);
@@ -161,23 +133,56 @@ export const actions = {
             griglia3 = format_grid1_4(griglia3);
             griglia4 = format_grid1_4(griglia4);
             griglia5 = format_grid5(griglia5);
-            
         
-
-            console.log(valutazione)
+            //now get the section for the different materie
+            const pdp = await SARP.PDP.findMany({
+                where: { 
+                    idStudente: +student_id,
+                    anno: get_as()
+                },
+                include: {
+                    insegnamento: {
+                        select: {
+                            id: true,
+                            materia: true,
+                            docente: true
+                        }
+                    }
+                }          
+            });
+                  
+            let materie = [];
+            let firme = [];
+            pdp.forEach(p => {
+                let materia = {
+                    materia: p.insegnamento.materia.nome, 
+                    docente: `${p.insegnamento.docente.nome} ${p.insegnamento.docente.cognome}`,
+                    prefix: '',
+                    has_altro: p.altro.length > 0,
+                    altro: p.altro,
+                    dispensative: JSON.parse(p.dispensative).filter(d => d.selected == true),
+                    compensative: JSON.parse(p.compensative).filter(d => d.selected == true),
+                    valutative: JSON.parse(p.valutative).filter(d => d.selected == true),
+                };
+                let firma = { materia: materia.materia, docente: materia.docente};
+                
+                materie.push(materia);
+                firme.push(firma);
+            });
 
             //prepare the object to render the template
             let renderer = {};
             renderer['nome'] = studente.nome;
             renderer['cognome'] = studente.cognome 
+            renderer['classe'] = `${studente.classe.classe} ${studente.classe.istituto} ${studente.classe.sezione}`;
+            renderer['tutor'] = `${studente.classe.coordinatore.nome} ${studente.classe.coordinatore.cognome}`;
             renderer['griglia1'] = griglia1;
             renderer['griglia2'] = griglia2;
             renderer['griglia3'] = griglia3;
             renderer['griglia4'] = griglia4;
             renderer['griglia5'] = griglia5;
-
-
-            console.log(renderer)
+            renderer['materie'] = materie;
+            renderer['firme'] = firme;
 
 			const content = fs.readFileSync(
 				path.resolve(PUBLIC_PDP_TEMPLATES_DIR, PUBLIC_PDP_TEMPLATE),
@@ -188,7 +193,8 @@ export const actions = {
 
 			const doc = new Docxtemplater(zip, {
 				paragraphLoop: true,
-				linebreaks: true
+				linebreaks: true,
+                parser: custom_tags_parser
 			});
             
             doc.render(renderer);
@@ -201,7 +207,7 @@ export const actions = {
 			return {
 				file: JSON.stringify(buf), // Convertiamo il buffer in stringa sennò sveltekit va in errore
 				// nome_documento: `PDP-${docx_programmazione_template.classe.replace(' ', '_')}.docx`
-                nome_documento: 'PDP.docx'
+                nome_documento: `PDP_${studente.cognome}_${studente.nome}.docx`
 			};
 		} catch (exception) {
 			catch_error_pdf(exception, 'la generazione', 204);
