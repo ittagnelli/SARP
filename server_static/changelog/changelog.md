@@ -1,3 +1,25 @@
+## v4.2.0 – 03 Febbraio 2024
+- `fix#467`:Aggiungere Provincia in attestati corso sicurezza
+- polishing pdp template
+- `fix#461`: Stampa sezione materie in PDP
+- add capability to print the entire PDP document
+- fix some issues on the pdp template
+- `fix#460`: Compilazione PDP da parte del docente
+- aggiunto tool per la generazione delle entries del PDP per un dato anno
+- aggiunto PDP al DB
+- updated PDP model to include idDocente for easier quiry
+- added note to PDP table
+- fix issue in create_pdp_entries
+- `fix#459`:Template PDP
+- add pdp template to DB
+- initial version of PDP template feature
+- aggiunta possibilità per docente di creare template per i PDP per le sezioni dispensazioni, compensazioni e valutazioni
+- `fix#457`:Stampa griglia valutazione in documento PDP
+- Aggiunta sezione Genera PDP per la generazione dei documenti PDP da parte dell'ADMIN
+- fix wrong pdp resource for griglia_osservativa
+- add rendering capabilities for the 5 evaluation grids
+- add pdp_template.docx
+
 ## v4.1.0 – 23 Gennaio 2024
 - `fix#453`: Provincia di Nascita per Utente
 - modificato front-end e back-end con il campo provincia
