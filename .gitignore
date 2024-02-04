@@ -11,8 +11,10 @@ prisma/SARP.db-journal
 prisma/SARP_ERD.png
 
 # Logging
-log/*
-audit/*
+log/sarp*.log
+log/sarp*.log.*
+audit/sarp_audit*.log
+audit/sarp_audit*.log.*
 
 # Deploy 
 SARP_BUILD/*
