@@ -19,7 +19,12 @@ async function get_insegnamenti(as) {
             anno: true
         },
         where: {
-            anno: +as
+            anno: +as,
+            NOT: {
+                idMateria: {
+                    in: [32, 35, 36] //Scienze Motorie, CLIL e Educazione Civica
+                }
+            }
         }
     })
 }

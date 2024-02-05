@@ -58,18 +58,8 @@
 
 	// schema di validazione del form
 	const form_schema = yup.object().shape({
-        dispensative: yup
-            .string()
-            .matches(/true/, 'Selezionare almeno una misura dispensativa'),
-
-        compensative: yup
-            .string()
-            .matches(/true/, 'Selezionare almeno una misura compensativa'),
-                      
-        valutative: yup
-            .string()
-            .matches(/true/, 'Selezionare almeno una misura valutativa')
-	});
+        //keep it for compatibility and also it might be useful in future
+    });
 
 	let modal_action = 'create';
 	let errors = {};
@@ -240,7 +230,7 @@
                                 </div>
                             </div>
                     </div>
-                    <div class="row myfieldset {errors.dispensative ? 'error-border' : ''}">    
+                    <div class="row myfieldset">    
                         <div class="form-label mylabel">Misure Dispensative</div>
 						<div class="col-lg-6">
                             <div class="mb-3">
@@ -262,15 +252,11 @@
                                   {/each}
                               </div>
                         </div>
-                        {#if errors.dispensative}
-                            <span class="error-text">{errors.dispensative}</span>
-                        {/if}
                     </div>
-                    <div class="row myfieldset {errors.compensative ? 'error-border' : ''}">
+                    <div class="row myfieldset">
                         <div class="form-label mylabel">Misure Compensative</div>
 						<div class="col-lg-6">
                             <div class="mb-3">
-                                
                                     {#each current_compensative.slice(0,4) as compensativa,i}
                                   <label class="form-check">
                                     <input class="form-check-input" type="checkbox" bind:checked={current_compensative[i].selected} >
@@ -289,11 +275,8 @@
                                   {/each}
                               </div>
                         </div>
-                        {#if errors.compensative}
-                            <span class="error-text">{errors.compensative}</span>
-                        {/if}
                     </div>
-                    <div class="row myfieldset {errors.valutative ? 'error-border' : ''}">
+                    <div class="row myfieldset">
                         <div class="form-label mylabel">Misure Valutative</div>
 						<div class="col-lg-6">
                             <div class="mb-3">
@@ -315,13 +298,10 @@
                                   {/each}
                               </div>
                         </div>
-                        {#if errors.valutative}
-                            <span class="error-text">{errors.valutative}</span>
-                        {/if}
                     </div>
                     <div class="row">
 						<div class="col-lg-5">
-							<div class="form-label select_text mt-3">Altro</div>
+							<div class="form-label select_text mt-3">Altre Annotazioni</div>
 							<div class="input-group input-group-flat">
 								<textarea
 									rows="3"
@@ -334,7 +314,7 @@
 							</div>
 						</div>
                         <div class="col-lg-5">
-							<div class="form-label select_text mt-3">Note</div>
+							<div class="form-label select_text mt-3">Note Docente (non pubblicato)</div>
 							<div class="input-group input-group-flat">
 								<textarea
 									rows="3"

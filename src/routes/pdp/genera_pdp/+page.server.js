@@ -154,22 +154,32 @@ export const actions = {
             let materie = [];
             let firme = [];
             pdp.forEach(p => {
+                let dispensative = JSON.parse(p.dispensative).filter(d => d.selected == true);
+                let compensative = JSON.parse(p.compensative).filter(d => d.selected == true);
+                let valutative = JSON.parse(p.valutative).filter(d => d.selected == true);
+
                 let materia = {
                     materia: p.insegnamento.materia.nome, 
                     docente: `${p.insegnamento.docente.nome} ${p.insegnamento.docente.cognome}`,
                     prefix: '',
                     has_altro: p.altro.length > 0,
                     altro: p.altro,
-                    dispensative: JSON.parse(p.dispensative).filter(d => d.selected == true),
-                    compensative: JSON.parse(p.compensative).filter(d => d.selected == true),
-                    valutative: JSON.parse(p.valutative).filter(d => d.selected == true),
+                    dispensative: dispensative,
+                    dispensative_yes: dispensative.length > 0,
+                    dispensative_no: dispensative.length == 0,
+                    compensative: compensative,
+                    compensative_yes: compensative.length > 0,
+                    compensative_no: compensative.length == 0,
+                    valutative: valutative,
+                    valutative_yes: valutative.length > 0,
+                    valutative_no: valutative.length == 0
                 };
                 let firma = { materia: materia.materia, docente: materia.docente};
                 
                 materie.push(materia);
                 firme.push(firma);
             });
-
+            
             //prepare the object to render the template
             let renderer = {};
             renderer['nome'] = studente.nome;
