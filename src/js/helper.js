@@ -179,16 +179,16 @@ export const pcto_valutazione_studenti_where = (data) => {
 	return clausola_where;
 };
 
-export const pcto_presenze_where = (data) => {
+export const pcto_presenze_where = (data, as) => {
 	let clausola_where;
 
     if (!is_admin(data)) {
         if(is_studente(data))
-            clausola_where = { svoltoDa: user_id(data) };
+            clausola_where = { svoltoDa: user_id(data), as: as };
         else if(is_tutor(data))
-            clausola_where = { creatoDa: user_id(data) };
+            clausola_where = { creatoDa: user_id(data), as: as };
     } else {
-        clausola_where = { id: { gt: 0 } };
+        clausola_where = { id: { gt: 0 }, as: as };
     }
     
 	return clausola_where;

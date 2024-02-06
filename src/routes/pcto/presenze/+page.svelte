@@ -197,7 +197,8 @@
         { name: 'lavoraPer', type: 'object', key: 'titolo', display: 'pcto', size: 50, search: true },
         { name: 'azienda', type: 'string', display: 'azienda', size: 30, search: true},
         { name: 'presenza', type: 'object', key: 'full_name', display: 'studente', size: 30, search: true },
-        { name: 'dataPresenza', type: 'date', display: 'data' },
+        { name: 'as', type: 'string', display: 'as'},
+		{ name: 'dataPresenza', type: 'date', display: 'data' },
         { name: 'oraInizio', type: 'time', display: 'entrata' },
         { name: 'oraFine', type: 'time', display: 'uscita' },
 	]}

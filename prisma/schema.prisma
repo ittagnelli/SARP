@@ -1,4 +1,4 @@
-// v 0.22.0 2024-01-27
+// v 0.23.0 2024-02-06
 
 generator client {
     provider = "prisma-client-js"
@@ -143,6 +143,7 @@ model pcto_Presenza {
     presenza     Utente    @relation(fields: [svoltoDa], references: [id])
     svoltoDa     Int       @default(1)
     creatoDa     Int
+    as           Int?
     dataPresenza DateTime  @default(now())
     oraInizio    DateTime?
     oraFine      DateTime?

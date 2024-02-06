@@ -1,5 +1,5 @@
 import { PrismaDB } from '$js/prisma_db';
-import { route_protect, user_id, pcto_presenze_where, raise_error, access_protect, user_ruolo } from '$js/helper';
+import { route_protect, user_id, pcto_presenze_where, raise_error, access_protect, user_ruolo, get_as } from '$js/helper';
 import { Logger } from '$js/logger';
 import { PrismaClientValidationError } from '@prisma/client/runtime';
 
@@ -32,11 +32,12 @@ export async function load({ locals }) {
 	
         const presenze = await SARP.pcto_Presenza.findMany({
 			orderBy: [{ dataPresenza: 'desc' }],
-			where: pcto_presenze_where(locals), 
+			where: pcto_presenze_where(locals, get_as()), 
 			select: {
                 id: true,
                 svoltoDa: true,
                 creatoDa: true,
+                as: true,
                 dataPresenza: true,
                 oraInizio: true,
                 oraFine: true,
@@ -114,6 +115,7 @@ export const actions = {
 			await SARP.pcto_Presenza.create({
 				data: {
 					creatoDa: user_id(locals),
+                    as: get_as(),
 					dataPresenza: new Date(form_data.get('dataPresenza')),
 					oraInizio: new Date(1970, 1, 1, hh_inizio, mm_inizio),
 					oraFine: new Date(1970,1 ,1, hh_fine, mm_fine),
