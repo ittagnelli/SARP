@@ -63,19 +63,7 @@
 	const form_schema = yup.object().shape({
 		nome: yup
             .string()
-            .min(1, 'Nome necessario'),
-
-		dispensative: yup
-            .string()
-            .matches(/true/, 'Selezionare almeno una misura dispensativa'),
-
-        compensative: yup
-            .string()
-            .matches(/true/, 'Selezionare almeno una misura compensativa'),
-                      
-        valutative: yup
-            .string()
-            .matches(/true/, 'Selezionare almeno una misura valutativa')
+            .min(1, 'Nome necessario')
 	});
 
 	let modal_action = 'create';
@@ -216,7 +204,7 @@
                             </div>
 						</div>
 					</div>
-                    <div class="row myfieldset {errors.dispensative ? 'error-border' : ''}">    
+                    <div class="row myfieldset">    
                         <div class="form-label mylabel">Misure Dispensative</div>
 						<div class="col-lg-6">
                             <div class="mb-3">
@@ -238,11 +226,8 @@
                                   {/each}
                               </div>
                         </div>
-                        {#if errors.dispensative}
-                            <span class="error-text">{errors.dispensative}</span>
-                        {/if}
                     </div>
-                    <div class="row myfieldset {errors.compensative ? 'error-border' : ''}">
+                    <div class="row myfieldset">
                         <div class="form-label mylabel">Misure Compensative</div>
 						<div class="col-lg-6">
                             <div class="mb-3">
@@ -265,11 +250,8 @@
                                   {/each}
                               </div>
                         </div>
-                        {#if errors.compensative}
-                            <span class="error-text">{errors.compensative}</span>
-                        {/if}
                     </div>
-                    <div class="row myfieldset {errors.valutative ? 'error-border' : ''}">
+                    <div class="row myfieldset">
                         <div class="form-label mylabel">Misure Valutative</div>
 						<div class="col-lg-6">
                             <div class="mb-3">
@@ -291,9 +273,6 @@
                                   {/each}
                               </div>
                         </div>
-                        {#if errors.valutative}
-                            <span class="error-text">{errors.valutative}</span>
-                        {/if}
                     </div>
                     <div class="row">
 						<div class="col-lg-6">

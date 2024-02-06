@@ -47,7 +47,7 @@
 		{ name: 'id', type: 'hidden', display: 'ID' },
         { name: 'classe_col', type: 'string', display: 'Classe', size: 50, search: true },
         { name: 'studente_col', type: 'string', display: 'Studente', size: 50, search: true },
-		{ name: 'griglia_val_col', type: 'boolean', display: "Griglia Valutativa", search: true },
+		{ name: 'griglia_val_col', type: 'boolean', display: "Griglia Osservativa", search: true },
         { name: 'materie_col', type: 'string', display: "Materie Complete", size: 10},
         { name: 'can_print', type: 'boolean', display: "PDP Completo", search: true },
 	]}
