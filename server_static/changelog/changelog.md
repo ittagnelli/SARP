@@ -1,3 +1,12 @@
+## v4.2.1 – 06 Febbraio 2024
+- `fix#471`: PCTO Presenze visualizzazione relative a.s. in corso (#479)
+- aggiunto as in DB
+- filtro presenze per as corrente
+- `fix#476`: PDP misure opzionali (#478)
+- se non sono selezionate misure viene visualizzato nel PDP un messaggio standard
+- modificato script di creazione PDP per rimuovere Ginnastica, CLIL e Educazione Civica
+- adding audit a log dir to simplify dev environment setup for new devs
+
 ## v4.2.0 – 03 Febbraio 2024
 - `fix#467`:Aggiungere Provincia in attestati corso sicurezza
 - polishing pdp template
