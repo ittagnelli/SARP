@@ -8,9 +8,7 @@ menu_home:
 
 menu_utenti:
   view:
-    - DEVELOPER
     - ADMIN
-    - TUTOR-SICUREZZA
 
 menu_classi:
   view:
@@ -245,21 +243,13 @@ ticket:
 
 utenti:
   create:
-    - DEVELOPER
     - ADMIN
-    - TUTOR-SICUREZZA
   read:
-    - DEVELOPER
     - ADMIN
-    - TUTOR-SICUREZZA
   update:
-    - DEVELOPER
     - ADMIN
-    - TUTOR-SICUREZZA
   delete:
-    - DEVELOPER
     - ADMIN
-    - TUTOR-SICUREZZA
 
 classi:
   create:
