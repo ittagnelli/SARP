@@ -1,3 +1,9 @@
+## v4.2.3 – 10 Febbraio 2024
+- `fix#482`: PDP Presenze scelta multipla studenti
+- `fix#474`: PCTO Presenze visualizzare solo stage dell'a.s. in corso
+- `fix#472`: Utenti rimozione dalla visualizzazione degli studenti diplomati
+- cambiata policy utenti: accessibili solo da ADMIN
+
 ## v4.2.1 – 06 Febbraio 2024
 - `fix#471`: PCTO Presenze visualizzazione relative a.s. in corso (#479)
 - aggiunto as in DB
