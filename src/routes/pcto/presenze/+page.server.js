@@ -232,6 +232,7 @@ export const actions = {
                 await SARP.pcto_Presenza.create({
                     data: {
                         creatoDa: user_id(locals),
+                        as: get_as(),
                         dataPresenza: new Date(form_data.get('dataPresenza')),
                         oraInizio: new Date(1970, 1, 1, hh_inizio, mm_inizio),
                         oraFine: new Date(1970,1 ,1, hh_fine, mm_fine),
@@ -242,7 +243,7 @@ export const actions = {
                 });	
             });
 		} catch (exception) {
-			catch_error(exception, "l'inserimento", 404);
+            catch_error(exception, "l'inserimento", 404);
 		}
 	}
 };
