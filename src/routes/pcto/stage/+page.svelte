@@ -315,12 +315,11 @@
         { name: 'durata_ore', type: 'number', display: 'ore'},
 		{ name: 'dataInizio', type: 'date', display: 'Inizio' },
 		{ name: 'dataFine', type: 'date', display: 'Fine' },
-		{ name: 'svoltoDa', type: 'array', subtype: 'picture', key: 'picture', display: 'iscritti', size: 3 },
         { name: 'contabilizzato', type: 'boolean', display: 'SIDI', search: true},
         { name: 'firma_pcto', type: 'boolean', display: 'Doc', search: true}
 	]}
 	rows={stages}
-	page_size={6}
+	page_size={10}
 	modal_name={$page_action_modal}
 	on:update_start={start_update}
 	endpoint="pcto/stage"
