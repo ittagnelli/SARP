@@ -1,5 +1,5 @@
 import { PrismaDB } from '$js/prisma_db';
-import { route_protect, user_id, multi_user_where, raise_error, access_protect  } from '$js/helper';
+import { route_protect, user_id, multi_user_where, raise_error, access_protect, get_as  } from '$js/helper';
 import { Logger } from '$js/logger';
 import { PrismaClientValidationError } from '@prisma/client/runtime';
 import * as helper from '../../../js/helper';
@@ -69,10 +69,13 @@ export async function load({ locals }) {
     access_protect(500, locals, action, resource);
 
     try {
+        let where_clause = multi_user_where(locals);
+        where_clause['anno_scolastico'] = get_as();
+        
         // query SQL al DB per tutte le entry nella tabella todo
         const stages = await SARP.pcto_Pcto.findMany({
             orderBy: [{ anno_scolastico: 'desc' }],
-            where: multi_user_where(locals), 
+            where: where_clause, 
             include: {
                 offertoDa: true,
                 svoltoDa: true,
