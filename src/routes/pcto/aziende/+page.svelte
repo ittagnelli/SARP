@@ -48,8 +48,7 @@
         direttore_natoA: "",
         direttore_natoIl: helper.convert_date(new Date()),
         direttore_codiceF: "",
-        // idConvenzione: new_id_convenzione,
-        idConvenzione: '',
+        idConvenzione: new_id_convenzione,
         idUtente: undefined,
         dataConvenzione: helper.convert_date(new Date()),
         dataProtocollo: helper.convert_date(new Date()),
@@ -267,7 +266,7 @@
                             name="idConvenzione"
                             {errors}
                             placeholder="2223/01"
-                            readonly={false}
+                            readonly={true}
                             bind:val={form_values.idConvenzione}
                         />
 						</div>
