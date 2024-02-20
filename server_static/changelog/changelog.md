@@ -1,3 +1,8 @@
+## v4.2.4 – 10 Febbraio 2024
+- `fix#470`: PCTO Stage visualizzare solo quelli dell'AS in corso
+- enable PCTO azienda id auto generation
+- `fix#469`: PCTO Stage rimozione lista iscritti dalla tabella principale 
+
 ## v4.2.3 – 10 Febbraio 2024
 - `fix#482`: PDP Presenze scelta multipla studenti
 - `fix#474`: PCTO Presenze visualizzare solo stage dell'a.s. in corso
