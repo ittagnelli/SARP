@@ -29,7 +29,7 @@
 
     //scelgo la custom_icon in funzione del tipo di utente
     let custom_icon = helper.is_studente(data) || (helper.is_docente(data) && !helper.is_tutor_sicurezza(data))  ? 'checklist' : 'copy';
-    let custom_tip = helper.is_studente(data) || (helper.is_docente(data) && !helper.is_tutor_sicurezza(data)) ? 'Esegui il test' : 'Somministra corso allo studente';
+    let custom_tip = helper.is_studente(data) || (helper.is_docente(data) && !helper.is_tutor_sicurezza(data)) ? 'Esegui il test' : 'Somministra test allo studente';
 	
     async function handleSubmit() {
         modal_form.submit();
