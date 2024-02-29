@@ -22,7 +22,8 @@ async function main(argv) {
 			await SARP.utente.update({
 				where: { id: utente },
 				data: {
-					classeId: 1
+					classeId: 1,
+                    can_login: false
 				}
 			});
 		} catch (e) {
