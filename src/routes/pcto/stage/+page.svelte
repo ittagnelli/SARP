@@ -21,9 +21,8 @@
 	let classi = helper.data2arr(data.classi);
     let classi_iscritte = [];
     let seguitoDa = [];
-
+    
 	classi = helper.db_to_select(classi);
-
 	utenti.forEach((utente) => {
 		utente['label'] = utente.cognome.concat(' ', utente.nome);
 		utente['value'] = utente.id;
@@ -244,7 +243,8 @@
         // query endpoint per ricavare leggere tutte le ore di questo PCTO
         const get_response = await fetch(`/pcto/stage?pcto=${pcto_id}`);
         let presenze = await get_response.json();
-        
+        presenze.sort((p1, p2) => p1.presenza.classe.id - p2.presenza.classe.id);
+
         //processo il risultato della query
         let studenti_presenze = new Map();
         presenze.forEach(presenza => {
@@ -774,7 +774,7 @@
                             <table class="table table-vcenter">
                               <thead>
                                 <tr>
-                                  <th>Foto</th>
+                                  <!-- <th>Foto</th> -->
                                   <th>Studente</th>
                                   <th>Classe</th>
                                   <th>Ore</th>
@@ -783,9 +783,9 @@
                               <tbody>
                                 {#each stage_modal_values.studenti as studente}
                                     <tr>
-                                        <td>
+                                        <!-- <td>
                                             <span class="avatar avatar-sm" style="background-image: url({studente.picture})"></span>
-                                        </td>
+                                        </td> -->
                                         <td>{studente.cognome} {studente.nome}</td>
                                         <td>{studente.classe}</td>
                                         <td>{studente.ore}/{stage_modal_values.durata_ore}</td>

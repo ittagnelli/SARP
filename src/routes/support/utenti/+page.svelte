@@ -192,19 +192,19 @@
 <Table
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
-		{ name: 'picture', type: 'image', display: 'Utente' },
-		{ name: 'cognome', type: 'string', display: 'Cognome', size: 11, search: true },
-		{ name: 'nome', type: 'string', display: 'Nome', size: 11, search: true },
+		{ name: 'picture', type: 'hidden', display: 'Utente' },
+		{ name: 'cognome', type: 'string', display: 'Cognome', size: 40, search: true },
+		{ name: 'nome', type: 'string', display: 'Nome', size: 40, search: true },
         { name: 'natoIl', type: 'date', display: 'Nato il' },
-        { name: 'tipo', type: 'string', display: 'Tipo', size: 10 },
-        { name: 'classe_str', type: 'string', display: 'Classe', size: 20 },
+        { name: 'tipo', type: 'string', display: 'Tipo', size: 10, search: true },
+        { name: 'classe_str', type: 'string', display: 'Classe', size: 20, search: true },
         { name: 'ruoli', type: 'array', subtype: 'object', key: 'ruolo', display: 'Ruolo' },
-		{ name: 'email', type: 'string', display: 'email', size: 30 },
-		{ name: 'bes', type: 'boolean', display: 'pdp' },
-		{ name: 'can_login', type: 'boolean', display: 'can_login' }
+		{ name: 'email', type: 'string', display: 'email', size: 40 },
+		{ name: 'bes', type: 'boolean', display: 'pdp', search: true },
+		{ name: 'can_login', type: 'boolean', display: 'can_login'}
 	]}
 	rows={utenti}
-	page_size={6}
+	page_size={10}
 	modal_name={$page_action_modal}
 	on:update_start={start_update}
 	footer="Utenti"
