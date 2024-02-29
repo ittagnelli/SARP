@@ -23,7 +23,6 @@
     let seguitoDa = [];
     
 	classi = helper.db_to_select(classi);
-
 	utenti.forEach((utente) => {
 		utente['label'] = utente.cognome.concat(' ', utente.nome);
 		utente['value'] = utente.id;
