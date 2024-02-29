@@ -1,3 +1,13 @@
+## v4.2.5 – 29 Febbraio 2024
+- `fix#486`: Migliorie per Segreteria
+- remove can_login flag from disable users
+- remove additional user
+- aggiunto filtro per classe in utenti
+- aggiunto filtro per tipo utente
+- aggiunto filtro per PDP in utente
+- rimosso foto in utente
+- aggiunto ordinamento per classe per report PCTO in stage
+
 ## v4.2.4 – 10 Febbraio 2024
 - `fix#470`: PCTO Stage visualizzare solo quelli dell'AS in corso
 - enable PCTO azienda id auto generation
