@@ -81,7 +81,8 @@
         
         indirizzo: yup
         .string()
-        .matches(/^$|^[a-zA-Z0-9 (),/]{3,100}$/, "Indirizzo azienda non valido"),
+        .min(0, "Indirizzo azienda non valido")
+        .max(100, "Indirizzo azienda non valido"),
 
         piva: yup
         .string()
@@ -89,7 +90,7 @@
 
         telefono: yup
 		.string()
-		.matches(/^$|^[0-9]{3}\.[0-9]{3}\.[0-9]{2}\.[0-9]{2}$/, "Numero non valido [333.123.45.67]"),
+        .matches(/^$|^[0-9]{10}$/, "Numero non valido [3331234567]"),
 
         email_privacy: yup
 			.string()
@@ -101,7 +102,7 @@
 
         direttore_nome: yup
         .string()
-        .matches(/^$|^[a-zA-Z ']{3,30}$/, "Nome Direttore non valido [Nome Cognome]"),
+        .matches(/^$|^[a-zA-Z à-è-ì-ò-ù']{3,30}$/, "Nome Direttore non valido [Nome Cognome]"),
 
         direttore_natoA: yup
         .string()
@@ -137,7 +138,8 @@
         let current_year = year.substring(0, 2);
         let as = String(helper.get_as()).substring(2, 4);
 
-        return current_year == as ? `${year}/${+serial + 1}` : `${as}${+as + 1}/1`;
+        //return current_year == as ? `${year}/${+serial + 1}` : `${as}${+as + 1}/1`;
+        return `${as}${+as + 1}/${+serial + 1}` //fixing #448
     }
 
     async function start_update(e) {
@@ -306,7 +308,7 @@
                                 label="Telefono"
                                 name="telefono"
                                 {errors}
-                                placeholder="333.123.45.67"
+                                placeholder="3331234567"
                                 bind:val={form_values.telefono}
                             />
 						</div>

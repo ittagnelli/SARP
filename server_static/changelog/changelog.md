@@ -1,3 +1,8 @@
+## v4.2.6 – 12 Marzo 2024
+- `fix#488`:  PCTO small bugs 
+- cambiato algoritmo di generazione dell'ID convenzione per un azienda
+- rilassata regex per il telefono e indirizzo Azienda
+ 
 ## v4.2.5 – 29 Febbraio 2024
 - `fix#486`: Migliorie per Segreteria
 - remove can_login flag from disable users
