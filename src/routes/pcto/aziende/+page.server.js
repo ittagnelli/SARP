@@ -55,18 +55,17 @@ export async function load({ locals }) {
 	try {
 		// query SQL al DB per tutte le entry nella tabella todo
 		const companies = await SARP.pcto_Azienda.findMany({
-			orderBy: [{ idConvenzione: 'desc' }],
+			orderBy: [{ id: 'desc' }],
 			where: multi_user_where(locals)
 		});
 
         const last_id_convenzione = await SARP.pcto_Azienda.findMany({
-			orderBy: [{ idConvenzione: 'desc' }],
+			orderBy: [{ id: 'desc' }],
             take: 1,
             select: {
                 idConvenzione: true
             }
 		});
-
 
 		// restituisco il risultato della query SQL
 		return { 
