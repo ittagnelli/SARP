@@ -1,3 +1,12 @@
+## v4.2.7 – 20 Marzo 2024
+- `fix#496`: PCTO Stage as default
+- Anno Scolastico in Stage impostato in modo automatico e non modificabile
+- `fix#497`: PCTO Stage aggiungere orario ingresso e uscita 
+- Aggiunto campo Orario Accesso per lo stage
+- Accetta orario come 08:00-13:00
+- Accetta orario come 08:00-13:00 14:00-18:00
+- Modificato template convenzione studente per riportare orario accesso in azienda
+
 ## v4.2.6 – 12 Marzo 2024
 - `fix#488`:  PCTO small bugs 
 - cambiato algoritmo di generazione dell'ID convenzione per un azienda
