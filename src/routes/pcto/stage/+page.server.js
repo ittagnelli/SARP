@@ -139,6 +139,7 @@ export const actions = {
                     dataInizio: new Date(form_data.get('dataInizio')),
                     dataFine: new Date(form_data.get('dataFine')),
                     durata_ore: +form_data.get('durata_ore'),
+                    orario_accesso: form_data.get('orario_accesso'),
                     idAzienda: +form_data.get('azienda'),
                     svoltoDa: {
                         connect: ids
@@ -187,6 +188,7 @@ export const actions = {
                     dataInizio: new Date(form_data.get('dataInizio')),
                     dataFine: new Date(form_data.get('dataFine')),
                     durata_ore: +form_data.get('durata_ore'),
+                    orario_accesso: form_data.get('orario_accesso'),
                     idAzienda: +form_data.get('azienda'),
                     svoltoDa: {
                         set: ids
@@ -252,6 +254,7 @@ export const actions = {
             ddata['A_SEDE'] = pcto?.offertoDa.indirizzo;
             ddata['P_INIZIO'] = convert_date (pcto?.dataInizio);
             ddata['P_FINE'] = convert_date (pcto?.dataFine);
+            ddata['P_ORARIO_ACCESSO'] = pcto?.orario_accesso;
             ddata['A_ATTIVITA_1'] = pcto?.task1;
             ddata['A_ATTIVITA_2'] = pcto?.task2;
             ddata['A_ATTIVITA_3'] = pcto?.task3;

@@ -67,7 +67,8 @@
 		dataInizio: helper.convert_date(new Date()),
 		dataFine: helper.convert_date(new Date()),
         durata_ore: 0,
-        anno_scolastico: 0,
+        orario_accesso: '',
+        anno_scolastico: helper.get_as(),
         firma_pcto: 'NO',
         task1: '',
         task2: '',
@@ -119,7 +120,12 @@
 
         durata_ore: yup
         .number()
-        .min(2, 'Ore previste necessarie')
+        .min(2, 'Ore previste necessarie'),
+
+        orario_accesso: yup
+        .string()
+        .required('Orario accesso necessario')
+        .matches(/^[01][0-9]:[0-5][0-5]-[01][0-9]:[0-5][0-5]$|^[01][0-9]:[0-5][0-5]-[01][0-9]:[0-5][0-5] [01][0-9]:[0-5][0-5]-[01][0-9]:[0-5][0-5]$/, "Orario accesso non valido"),
 	});
 
     let stage_modal_values = {
@@ -164,6 +170,7 @@
 		form_values.dataInizio = helper.convert_date(stage.dataInizio);
 		form_values.dataFine = helper.convert_date(stage.dataFine);
         form_values.durata_ore = stage.durata_ore;
+        form_values.orario_accesso = stage.orario_accesso;
         form_values.anno_scolastico = stage.anno_scolastico;
         form_values.firma_pcto = stage.firma_pcto ? 'SI' : 'NO';
         form_values.task1 = stage.task1;
@@ -419,6 +426,7 @@
 								{errors}
 								placeholder="2022"
 								bind:val={form_values.anno_scolastico}
+                                readonly
 							/>
 						</div>
                         <div class="col-lg-2">
@@ -428,6 +436,15 @@
 								{errors}
 								placeholder="40"
 								bind:val={form_values.durata_ore}
+							/>
+						</div>
+                        <div class="col-lg-4">
+							<InputText
+								label="Orario Accesso"
+								name="orario_accesso"
+								{errors}
+								placeholder="08:00-13:00 [14:00-17:30]"
+								bind:val={form_values.orario_accesso}
 							/>
 						</div>
 					</div>
