@@ -1,4 +1,4 @@
-// v 0.23.0 2024-02-06
+// v 0.24.0 2024-03-20
 
 generator client {
     provider = "prisma-client-js"
@@ -201,6 +201,7 @@ model pcto_Pcto {
     dataInizio          DateTime
     dataFine            DateTime
     durata_ore          Int                         @default(0)
+    orario_accesso      String?
     offertoDa           pcto_Azienda                @relation(fields: [idAzienda], references: [id])
     idAzienda           Int
     valutatoDa          pcto_Valutazione[]
