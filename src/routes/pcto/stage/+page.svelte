@@ -67,7 +67,7 @@
 		dataInizio: helper.convert_date(new Date()),
 		dataFine: helper.convert_date(new Date()),
         durata_ore: 0,
-        anno_scolastico: 0,
+        anno_scolastico: helper.get_as(),
         firma_pcto: 'NO',
         task1: '',
         task2: '',
@@ -419,6 +419,7 @@
 								{errors}
 								placeholder="2022"
 								bind:val={form_values.anno_scolastico}
+                                readonly
 							/>
 						</div>
                         <div class="col-lg-2">
