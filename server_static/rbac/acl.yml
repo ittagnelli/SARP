@@ -28,6 +28,26 @@ menu_pdp:
     - ADMIN
     - DOCENTE
     - TUTOR-CLASSE
+    - STUDENTE
+
+menu_autovalutazione:
+  view:
+    - ADMIN
+    - STUDENTE
+
+pdp_autovalutazione:
+  read:
+    - ADMIN
+    - STUDENTE
+  create:
+    - ADMIN
+    - STUDENTE
+  update:
+    - ADMIN
+    - STUDENTE
+  delete:
+    - ADMIN
+    - STUDENTE
 
 menu_pdp_template:
   view:
