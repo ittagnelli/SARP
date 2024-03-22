@@ -1,5 +1,5 @@
 import { PrismaDB } from '$js/prisma_db';
-import { route_protect, raise_error, is_admin, user_id, access_protect, is_tutor_classe } from '$js/helper';
+import { route_protect, raise_error, access_protect, multi_user_field_where } from '$js/helper';
 import { Logger } from '$js/logger';
 import { fail } from '@sveltejs/kit';
 import { PrismaClientValidationError } from '@prisma/client/runtime';
@@ -22,42 +22,15 @@ function catch_error(exception, type, code) {
 
 export async function load({ locals }) {
     let action = 'read';
-    let clausola_where;
 
     route_protect(locals);
-    access_protect(1300, locals, action, resource);
+    access_protect(3000, locals, action, resource);
 
-    //select all BES students for admin
-    // or just the one for which the user is tutor       
-    // if(is_admin(locals)) {
-    //     clausola_where = {
-    //         bes: true
-    //     }
-    // }
-    // if(is_tutor_classe(locals)) {
-    //     const classi = (await SARP.Classe.findMany({
-    //         select: {
-    //             id: true,
-                
-    //         },
-    //         orderBy: [{ id: 'desc' }],
-    //         where: {
-    //             coordinatoreId: user_id(locals)
-    //         }    
-    //     })).map((c) => c.id);
-        
-    //     clausola_where = {
-    //         bes: true,
-    //         classeId: {
-    //             in: classi
-    //         }
-    //     }
-    // }
-
+    let where_search = multi_user_field_where('id', locals);
 	try {
 		const studenti = await SARP.Utente.findMany({
 			orderBy: [{ tipo: 'desc' }],
-            where: clausola_where            
+            where: where_search,            
 		});
 
 		// restituisco il risultato della query SQL
@@ -70,35 +43,24 @@ export async function load({ locals }) {
 
 }
 
-const update_griglia = (form) => {
-    //update griglia_valutazione with the actual answers from user  
-    let out_griglia = JSON.parse(form.get('griglia_valutazione'));
-    out_griglia.forEach((q) => {
-        if(form.has(q.qid)) {
-            q.answer = form.get(q.qid);
-        }
-    })
-    
-    return JSON.stringify(out_griglia);
-}
-
 export const actions = {
 	update: async ({ cookies, request, locals }) => {
         let action = 'update';
 
         route_protect(locals);
-        access_protect(1302, locals, action, resource);
+        access_protect(3302, locals, action, resource);
 
 		const form_data = await request.formData();
 		let student_id = form_data.get('student_id');
-        let out_griglia = update_griglia(form_data);
+        // let out_griglia = update_griglia(form_data);
         
         SARP.set_session(locals); // passa la sessione all'audit
 		try {
 			await SARP.Utente.update({
 				where: { id: +student_id },
 				data: {
-                    griglia_valutazione: out_griglia
+                    griglia_pdp_a1: form_data.get('griglia_pdp_a1'),
+                    griglia_pdp_a1_done: form_data.get("completo") === 'SI'
 				}
 			});		
 		} catch (exception) {
