@@ -6,7 +6,7 @@ import { PrismaClientValidationError } from '@prisma/client/runtime';
 
 let logger = new Logger("server"); //instanzia il logger
 const SARP = new PrismaDB(); //Istanzia il client SARP DB
-let resource = "pdp_autovalutazione"; // definisco il nome della risorsa di questo endpoint
+let resource = "pdp_mipresento"; // definisco il nome della risorsa di questo endpoint
 
 // @ts-ignore
 function catch_error(exception, type, code) {
@@ -65,7 +65,7 @@ export async function load({ locals }) {
 			studenti
 		}
 	} catch (exception) {
-        catch_error(exception, "la ricerca", 2000);
+        catch_error(exception, "la ricerca", 3000);
 	}
 
 }
@@ -104,7 +104,7 @@ export const actions = {
 		} catch (exception) {
             // @ts-ignore
             if(exception.code != "P2002")
-                catch_error(exception, "l'aggiornamento", 2002);
+                catch_error(exception, "l'aggiornamento", 3002);
             else
                 return fail(400, { error_mex: "Griglia non univoca" });   // La richiesta fallisce
 		}

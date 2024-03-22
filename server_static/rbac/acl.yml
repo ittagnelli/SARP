@@ -49,6 +49,26 @@ pdp_autovalutazione:
     - ADMIN
     - STUDENTE
 
+menu_mipresento:
+  view:
+    - ADMIN
+    - STUDENTE
+
+pdp_mipresento:
+  read:
+    - ADMIN
+    - STUDENTE
+  create:
+    - ADMIN
+    - STUDENTE
+  update:
+    - ADMIN
+    - STUDENTE
+  delete:
+    - ADMIN
+    - STUDENTE
+
+
 menu_pdp_template:
   view:
     - ADMIN

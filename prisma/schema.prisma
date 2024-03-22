@@ -1,4 +1,4 @@
-// v 0.24.0 2024-03-20
+// v 0.25.0 2024-03-21
 
 generator client {
     provider = "prisma-client-js"
@@ -53,7 +53,9 @@ model Utente {
     template                 programmazione_Template[]
     quiz_sicurezza           sicurezza_Test[]
     coordina                 Classe[]                    @relation("coordinatore")
-    griglia_valutazione      String?
+    griglia_valutazione      String?                     //griglia valutazione a cura del tutor
+    griglia_pdp_a1           String?                     //griglia A1 a cura dello studente
+    griglia_pdp_c1           String?                     //griglia C1 a cura dello studente
     pdp_Template             pdp_Template[]
     pdp                      PDP[]
 }
