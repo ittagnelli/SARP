@@ -1,4 +1,4 @@
-// v 0.25.0 2024-03-21
+// v 0.26.0 2024-03-22
 
 generator client {
     provider = "prisma-client-js"
@@ -33,6 +33,7 @@ model Utente {
     cartaI                   String?
     email                    String                      @unique
     telefono                 String?
+    residenza                String?
     picture                  String?
     bes                      Boolean?
     can_login                Boolean                     @default(false)

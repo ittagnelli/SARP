@@ -1,5 +1,5 @@
 ---
-# v1.0 2023-01-17
+# v2.0 2023-01-17
 
 # menu resources don't have CRUD acl but just view
 menu_home:
@@ -9,6 +9,7 @@ menu_home:
 menu_utenti:
   view:
     - ADMIN
+    - TUTOR-SCOLASTICO
 
 menu_classi:
   view:
@@ -286,8 +287,10 @@ utenti:
     - ADMIN
   read:
     - ADMIN
+    - TUTOR-SCOLASTICO
   update:
     - ADMIN
+    - TUTOR-SCOLASTICO
   delete:
     - ADMIN
 

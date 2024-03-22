@@ -276,6 +276,7 @@ export const actions = {
                 ddata['S_NOME'] = studente.cognome + ' ' + studente.nome;
                 ddata['S_NATOA'] = studente.natoA;
                 ddata['S_NATOIL'] = convert_date(studente.natoIl);
+                ddata['S_RESIDENZA'] = studente.residenza;
                 ddata['S_CF'] = studente.codiceF || '';
                 ddata['S_CI'] = studente.cartaI || '';
                 ddata['S_TELEFONO'] = studente.telefono || '';
