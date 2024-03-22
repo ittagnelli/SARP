@@ -1,3 +1,8 @@
+## v4.2.8 – 22 Marzo 2024
+- `fix#501`: Update utenti a TUTOR-SCOLASTICO per PCTO
+- Aggiunto campo residenza in Utente
+- Aggiunto campo resindenza in modulo PCTO convenzione studente
+
 ## v4.2.7 – 20 Marzo 2024
 - `fix#496`: PCTO Stage as default
 - Anno Scolastico in Stage impostato in modo automatico e non modificabile
