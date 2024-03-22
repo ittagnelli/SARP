@@ -48,6 +48,7 @@
         natoA: '',
 		provincia: '',
         natoIl: '',
+        residenza: '',
         codiceF: '',
         cartaI: '',
 		email: '',
@@ -108,8 +109,11 @@
 
         classe: yup
             .number()
-            .min(1, 'Selezionare una classe')
-
+            .min(1, 'Selezionare una classe'),
+        
+        residenza: yup
+            .string()
+            .nullable()
 	});
 
 	onMount(() => {
@@ -133,6 +137,7 @@
         form_values.natoA = utente.natoA;
 		form_values.provincia = utente.provincia;
         form_values.natoIl = helper.convert_date(utente.natoIl);
+        form_values.residenza = utente.residenza;
         form_values.codiceF = utente.codiceF;
         form_values.cartaI = utente.cartaI;
 		form_values.email = utente.email;
@@ -158,6 +163,7 @@
 				natoA: '',
 				provincia: '',
 				natoIl: '',
+                residenza: '',
 				codiceF: '',
                 cartaI: '',
 				email: '',
@@ -247,10 +253,10 @@
 						<ModalError msg={form.error_mex} />
 					{/if}
 					<div class="row">
-						<div class="col-lg-3">
+						<div class="col-lg-2">
 							<InputText label="Nome" name="nome" placeholder="Nome" bind:val={form_values.nome} {errors} />
 						</div>
-						<div class="col-lg-3">
+						<div class="col-lg-2">
 							<InputText label="Cognome" name="cognome" placeholder="Cognome" bind:val={form_values.cognome} {errors} />
 						</div>
                         <div class="col-lg-2">
@@ -262,11 +268,11 @@
 								{errors}
 							/>
 						</div>
-						<div class="col-lg-2">
+						<div class="col-lg-1">
 							<InputText
 								label="Provincia"
 								name="provincia"
-								placeholder="Provincia"
+								placeholder="TO"
 								bind:val={form_values.provincia}
 								{errors}
 							/>
@@ -278,6 +284,15 @@
                                 {errors}
                                 bind:val={form_values.natoIl}
                             />
+						</div>
+                        <div class="col-lg-3">
+                            <InputText
+								label="Residente in"
+								name="residenza"
+								placeholder="via Torino 93 - TORINO"
+								bind:val={form_values.residenza}
+								{errors}
+							/>
 						</div>
 					</div>
 					<div class="row">
