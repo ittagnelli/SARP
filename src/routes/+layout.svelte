@@ -28,6 +28,7 @@
             <NavMenu resource="menu_pdp" text="PDP" icon="certificate">
                 <NavSubItem resource="menu_mipresento" text="Mi Presento" link="/pdp/mipresento" />
                 <NavSubItem resource="menu_autovalutazione" text="Autovalutazione" link="/pdp/autovalutazione" />
+                <NavSubItem resource="menu_patto_educativo" text="Patto Educativo" link="/pdp/patto_educativo" />
                 <NavSubItem resource="menu_pdp_template" text="Template Docente" link="/pdp/template" />
                 <NavSubItem resource="menu_griglia_osservativa" text="Griglia Osservativa" link="/pdp/griglia_osservativa" />
                 <NavSubItem resource="menu_pdp_docente" text="PDP Docente" link="/pdp/docente" />

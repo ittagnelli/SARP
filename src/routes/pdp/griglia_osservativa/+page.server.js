@@ -1,5 +1,5 @@
 import { PrismaDB } from '$js/prisma_db';
-import { route_protect, raise_error, is_admin, user_id, access_protect, is_tutor_classe } from '$js/helper';
+import { route_protect, raise_error, is_admin, user_id, access_protect, is_tutor_classe, is_tutor_bes } from '$js/helper';
 import { Logger } from '$js/logger';
 import { fail } from '@sveltejs/kit';
 import { PrismaClientValidationError } from '@prisma/client/runtime';
@@ -29,7 +29,7 @@ export async function load({ locals }) {
 
     //select all BES students for admin
     // or just the one for which the user is tutor       
-    if(is_admin(locals)) {
+    if(is_admin(locals) || is_tutor_bes(locals)) {
         clausola_where = {
             bes: true
         }

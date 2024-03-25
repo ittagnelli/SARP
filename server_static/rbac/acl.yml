@@ -1,5 +1,5 @@
 ---
-# v2.0 2023-01-17
+# v3.0 2024-03-25
 
 # menu resources don't have CRUD acl but just view
 menu_home:
@@ -29,46 +29,75 @@ menu_pdp:
     - ADMIN
     - DOCENTE
     - TUTOR-CLASSE
-    - STUDENTE
-
-menu_autovalutazione:
-  view:
-    - ADMIN
-    - STUDENTE
-
-pdp_autovalutazione:
-  read:
-    - ADMIN
-    - STUDENTE
-  create:
-    - ADMIN
-    - STUDENTE
-  update:
-    - ADMIN
-    - STUDENTE
-  delete:
-    - ADMIN
+    - TUTOR-BES
     - STUDENTE
 
 menu_mipresento:
   view:
     - ADMIN
+    - TUTOR-BES
     - STUDENTE
 
 pdp_mipresento:
   read:
     - ADMIN
+    - TUTOR-BES
     - STUDENTE
   create:
     - ADMIN
+    - TUTOR-BES
     - STUDENTE
   update:
     - ADMIN
+    - TUTOR-BES
     - STUDENTE
   delete:
     - ADMIN
+    - TUTOR-BES
     - STUDENTE
 
+menu_autovalutazione:
+  view:
+    - ADMIN
+    - TUTOR-BES
+    - STUDENTE
+
+pdp_autovalutazione:
+  read:
+    - ADMIN
+    - TUTOR-BES
+    - STUDENTE
+  create:
+    - ADMIN
+    - TUTOR-BES
+    - STUDENTE
+  update:
+    - ADMIN
+    - TUTOR-BES
+    - STUDENTE
+  delete:
+    - ADMIN
+    - TUTOR-BES
+    - STUDENTE
+
+menu_patto_educativo:
+  view:
+    - ADMIN
+    - TUTOR-BES
+
+pdp_patto_educativo:
+  read:
+    - ADMIN
+    - TUTOR-BES
+  create:
+    - ADMIN
+    - TUTOR-BES
+  update:
+    - ADMIN
+    - TUTOR-BES
+  delete:
+    - ADMIN
+    - TUTOR-BES
 
 menu_pdp_template:
   view:
@@ -92,11 +121,13 @@ pdp_template:
 menu_griglia_osservativa:
   view:
     - ADMIN
+    - TUTOR-BES
     - TUTOR-CLASSE
 
 pdp_griglia_osservativa:
   read:
     - ADMIN
+    - TUTOR-BES
     - TUTOR-CLASSE
   update:
     - ADMIN
@@ -120,14 +151,18 @@ pdp_docente:
 menu_genera_pdp:
   view:
     - ADMIN
+    - TUTOR-BES
 
 genera_pdp:
   update:
     - ADMIN
+    - TUTOR-BES
   read:
     - ADMIN
+    - TUTOR-BES
   delete:
     - ADMIN
+    - TUTOR-BES
 
 menu_programmazione:
   view:

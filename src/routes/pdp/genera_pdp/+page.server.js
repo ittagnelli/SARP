@@ -1,5 +1,5 @@
 import { PUBLIC_PDP_TEMPLATES_DIR, PUBLIC_PDP_TEMPLATE } from "$env/static/public";
-import { access_protect, raise_error, route_protect, custom_tags_parser, get_as } from "$js/helper";
+import { access_protect, raise_error, route_protect, custom_tags_parser, get_as, is_admin, is_tutor_bes } from "$js/helper";
 import { PrismaDB } from "$js/prisma_db.js";
 import path from 'path';
 import fs from 'fs';
@@ -40,36 +40,38 @@ export async function load({ locals }) {
         access_protect(200, locals, action, resource);
         SARP.set_session(locals);
 
-        // get active BES students
-        const studenti = await SARP.Utente.findMany({
-			select: {
-                id: true,
-                nome: true,
-                cognome: true,
-                griglia_valutazione: true,
-                griglia_pdp_a1: true,
-                griglia_pdp_a1_done: true,
-                griglia_pdp_c1: true,
-                griglia_pdp_c1_done: true,
-                pdp: {
-                    select: {
-                        completo: true
-                    }
+        if(is_admin(locals) || is_tutor_bes(locals)) {
+            // get active BES students
+            const studenti = await SARP.Utente.findMany({
+                select: {
+                    id: true,
+                    nome: true,
+                    cognome: true,
+                    griglia_valutazione: true,
+                    griglia_pdp_a1: true,
+                    griglia_pdp_a1_done: true,
+                    griglia_pdp_c1: true,
+                    griglia_pdp_c1_done: true,
+                    pdp: {
+                        select: {
+                            completo: true
+                        }
+                    },
+                    classe: true
                 },
-                classe: true
-            },
-            orderBy: [
-                { classeId: 'asc'},
-                { cognome: 'asc' }
-            ],
-            where: {
-                bes: true,
-                can_login: true    
-            }            
-		});
+                orderBy: [
+                    { classeId: 'asc'},
+                    { cognome: 'asc' }
+                ],
+                where: {
+                    bes: true,
+                    can_login: true    
+                }            
+            });
 
-        return {
-            studenti
+            return {
+                studenti
+            }
         }
     } catch (exception) {
         catch_error(exception, "la ricerca", 100);
