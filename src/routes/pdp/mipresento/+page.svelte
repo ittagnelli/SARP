@@ -41,7 +41,7 @@
 		form_values.student_id = e.detail.id;
 		//cerca l'utente da fare update
 		let studente = studenti.filter((item) => item.id == form_values.student_id)[0];
-        form_values.completo = studente.griglia_pdp_a1_done ? 'SI': 'NO';;
+        form_values.completo = studente.griglia_pdp_a1_done ? 'SI': 'NO';
         current_griglia_pdp_a1 = JSON.parse(studente.griglia_pdp_a1);
 	}
 
@@ -60,11 +60,11 @@
 <Table
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
-		{ name: 'cognome', type: 'string', display: 'Cognome', size: 11, search: true },
-		{ name: 'nome', type: 'string', display: 'Nome', size: 11, search: true },
+		{ name: 'cognome', type: 'string', display: 'Cognome', size: 30, search: true },
+		{ name: 'nome', type: 'string', display: 'Nome', size: 30, search: true },
         { name: 'natoIl', type: 'date', display: 'Nato il' },
         { name: 'email', type: 'string', display: 'email', size: 30 },
-		{ name: 'bes', type: 'boolean', display: 'pdp' },
+		{ name: 'bes', type: 'boolean', display: 'pdp', search: true },
         { name: 'griglia_pdp_a1_done', type: 'boolean', display: 'competo', search: true }
 	]}
 	rows={studenti}
@@ -76,7 +76,7 @@
 	actions={true}
     trash={false}
     update_tip="Compila Presentazione al Consiglio di Classe"
-    resource="pdp_griglia_osservativa"
+    resource="pdp_mipresento"
 />
 
 <div
@@ -208,7 +208,7 @@
                             </div>
                         </div>
                     </div>
-
+                    <br>
                     <div class="modal-footer">
 						<a href="#" class="btn btn-danger" data-bs-dismiss="modal">
 							<b>Cancel</b>

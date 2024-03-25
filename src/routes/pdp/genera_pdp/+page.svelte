@@ -27,7 +27,10 @@
             let tot_materie = s.pdp.length;
             let materie_complete = s.pdp.filter(m => m.completo == true).length;
             s['materie_col'] = `${materie_complete}/${tot_materie}`;
-            s['can_print'] = (s.griglia_valutazione != null) && (materie_complete == tot_materie);
+            s['can_print'] = (s.griglia_valutazione != null) && 
+                             (materie_complete == tot_materie) &&
+                             s.griglia_pdp_a1_done && 
+                             s.griglia_pdp_c1_done;
             return s;
         });
     }
@@ -48,6 +51,8 @@
         { name: 'classe_col', type: 'string', display: 'Classe', size: 50, search: true },
         { name: 'studente_col', type: 'string', display: 'Studente', size: 50, search: true },
 		{ name: 'griglia_val_col', type: 'boolean', display: "Griglia Osservativa", search: true },
+        { name: 'griglia_pdp_a1_done', type: 'boolean', display: "Mi Presento", search: true },
+        { name: 'griglia_pdp_c1_done', type: 'boolean', display: "Autovalutazione", search: true },
         { name: 'materie_col', type: 'string', display: "Materie Complete", size: 10},
         { name: 'can_print', type: 'boolean', display: "PDP Completo", search: true },
 	]}
