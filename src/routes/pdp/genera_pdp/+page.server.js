@@ -76,17 +76,6 @@ export async function load({ locals }) {
     }
 }
 
-// //format the answer for 4 columns grid
-// function format_grid1_4(grid) {
-//     grid.map((q) => {
-//         q.answers.forEach((a) => {
-//             q[`ans_${a.aid}`] = a.aid == q.answer ? 'X' : ''; 
-//         })
-//     });
-
-//     return grid;
-// }
-
 //format the answer for 4 columns grid
 function format_grid1_4d(grid) {
     grid.map((q) => {
@@ -145,6 +134,9 @@ export const actions = {
             });
                 
             //prepare the valutazione grids
+            //Qui è un gran casino in quanto stato fatto in fasi successive
+            //In ogni acso prima preparo le varie griglie per con le risposte del tutor di classe
+            //poi arricchisco la griglia con le risposte dello studente
             let dvalutazione = JSON.parse(studente.griglia_valutazione);
             let svalutazione = JSON.parse(studente.griglia_pdp_c1);
             let dgriglia1 = dvalutazione.slice(0, 20);
@@ -165,7 +157,7 @@ export const actions = {
             dsgriglia4 = format_grid1_4d(dsgriglia4);
             dsgriglia4 = format_grid1_4s(dsgriglia4, sgriglia4);
             dgriglia5 = format_grid_5d(dgriglia5);
-        
+
             //now get the section for the different materie
             const pdp = await SARP.PDP.findMany({
                 where: { 
@@ -215,7 +207,9 @@ export const actions = {
             //prepare the object to render the template
             let renderer = {};
             renderer['nome'] = studente.nome;
-            renderer['cognome'] = studente.cognome 
+            renderer['cognome'] = studente.cognome;
+            renderer['nato_a'] = studente.natoA;
+            renderer['nato_il'] = studente.natoIl.toLocaleDateString("it-IT");
             renderer['classe'] = `${studente.classe.classe} ${studente.classe.istituto} ${studente.classe.sezione}`;
             renderer['tutor'] = `${studente.classe.coordinatore.nome} ${studente.classe.coordinatore.cognome}`;
             renderer['griglia1'] = dgriglia1;
@@ -224,7 +218,12 @@ export const actions = {
             renderer['griglia4'] = dsgriglia4;
             renderer['griglia5'] = dgriglia5;
             renderer['materie'] = materie;
-            renderer['firme'] = firme;
+            renderer['firme'] = firme; 
+            
+            //Preparo per il rendering della sezione Mi Presento al consiglio di classe
+            //le chiavi hanno già il nome corretto, basta che le aggiungo alll'oggetto renderer
+            let mipresento = JSON.parse(studente.griglia_pdp_a1);
+            renderer = Object.assign(renderer, mipresento);
 
 			const content = fs.readFileSync(
 				path.resolve(PUBLIC_PDP_TEMPLATES_DIR, PUBLIC_PDP_TEMPLATE),

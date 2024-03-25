@@ -102,9 +102,9 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="mb-3">
-                                Io sono  <input size="14" class="input" type="text" name="nome" placeholder="Nome Cognome" bind:value={current_griglia_pdp_a1['nome']} />
-                                ho  <input class="input" type="number" id="anni" min="12" max="22" bind:value={current_griglia_pdp_a1['anni']} /> anni 
-                                e frequento la classe <input size="14" class="input" type="text" name="classe" placeholder="3 ITT INFO" bind:value={current_griglia_pdp_a1['classe']} />
+                                Io sono  <input size="14" class="input" type="text" name="nome" placeholder="Nome Cognome" bind:value={current_griglia_pdp_a1['mipresento_nome']} />
+                                ho  <input class="input" type="number" id="anni" min="12" max="22" bind:value={current_griglia_pdp_a1['mipresento_anni']} /> anni 
+                                e frequento la classe <input size="14" class="input" type="text" name="classe" placeholder="3 ITT INFO" bind:value={current_griglia_pdp_a1['mipresento_classe']} />
                             </div>
                         </div>
                     </div>
@@ -112,7 +112,7 @@
                         <div class="col-lg-12">
                             <div class="mb-3">
                                 <label class="form-label">Chi sono; quali sono i miei interessi, le difficoltà, le attività preferite</label>
-                                <textarea name="testo_1" cols="100" rows="3" bind:value={current_griglia_pdp_a1['testo_1']} />
+                                <textarea name="testo_1" cols="100" rows="3" bind:value={current_griglia_pdp_a1['mipresento_testo_1']} />
                             </div>
                         </div>
                     </div>
@@ -120,7 +120,7 @@
                         <div class="col-lg-12">
                             <div class="mb-3">
                                 <label class="form-label">Quando sono soddisfatto; quando sto bene?</label>
-                                <textarea name="testo_1" cols="100" rows="3" bind:value={current_griglia_pdp_a1['testo_2']} />
+                                <textarea name="testo_1" cols="100" rows="3" bind:value={current_griglia_pdp_a1['mipresento_testo_2']} />
                             </div>
                         </div>
                     </div>
@@ -128,7 +128,7 @@
                         <div class="col-lg-12">
                             <div class="mb-3">
                                 <label class="form-label">Che cosa non mi piace; che cosa mi è di aiuto; che cosa mi è difficile?</label>
-                                <textarea name="testo_1" cols="100" rows="3" bind:value={current_griglia_pdp_a1['testo_3']} />
+                                <textarea name="testo_1" cols="100" rows="3" bind:value={current_griglia_pdp_a1['mipresento_testo_3']} />
                             </div>
                         </div>
                     </div>
@@ -136,7 +136,7 @@
                         <div class="col-lg-12">
                             <div class="mb-3">
                                 <label class="form-label">Che cosa vorrei che succedesse; che cosa mi aspetto dalla scuola, dagli insegnanti, dai compagni.</label>
-                                <textarea name="testo_1" cols="100" rows="3" bind:value={current_griglia_pdp_a1['testo_4']} />
+                                <textarea name="testo_1" cols="100" rows="3" bind:value={current_griglia_pdp_a1['mipresento_testo_4']} />
                             </div>
                         </div>
                     </div>
@@ -144,7 +144,7 @@
                         <div class="col-lg-12">
                             <div class="mb-3">
                                 <label class="form-label">Quali sono i miei interessi, sport, hobby, attività, ….</label>
-                                <textarea name="testo_1" cols="100" rows="3" bind:value={current_griglia_pdp_a1['testo_5']} />
+                                <textarea name="testo_1" cols="100" rows="3" bind:value={current_griglia_pdp_a1['mipresento_testo_5']} />
                             </div>
                         </div>
                     </div>
@@ -152,7 +152,7 @@
                         <div class="col-lg-12">
                             <div class="mb-3">
                                 <label class="form-label">A che gruppi extra scolastici partecipo?</label>
-                                <textarea name="testo_1" cols="100" rows="3" bind:value={current_griglia_pdp_a1['testo_6']} />
+                                <textarea name="testo_1" cols="100" rows="3" bind:value={current_griglia_pdp_a1['mipresento_testo_6']} />
                             </div>
                         </div>
                     </div>
@@ -160,7 +160,7 @@
                         <div class="col-lg-12">
                             <div class="mb-3">
                                 <label class="form-label">I miei punti di forza</label>
-                                <textarea name="testo_1" cols="100" rows="3" bind:value={current_griglia_pdp_a1['testo_7']} />
+                                <textarea name="testo_1" cols="100" rows="3" bind:value={current_griglia_pdp_a1['mipresento_testo_7']} />
                             </div>
                         </div>
                     </div>
@@ -168,7 +168,7 @@
                         <div class="col-lg-12">
                             <div class="mb-3">
                                 <label class="form-label">Le mie fragilità</label>
-                                <textarea name="testo_1" cols="100" rows="3" bind:value={current_griglia_pdp_a1['testo_8']} />
+                                <textarea name="testo_1" cols="100" rows="3" bind:value={current_griglia_pdp_a1['mipresento_testo_8']} />
                             </div>
                         </div>
                     </div>
@@ -176,7 +176,7 @@
                         <div class="col-lg-12">
                             <div class="mb-3">
                                 <label class="form-label">Bisogni : che cosa chiedo ai miei insegnanti?</label>
-                                <textarea name="testo_1" cols="100" rows="3" bind:value={current_griglia_pdp_a1['testo_9']} />
+                                <textarea name="testo_1" cols="100" rows="3" bind:value={current_griglia_pdp_a1['mipresento_testo_9']} />
                             </div>
                         </div>
                     </div>  
