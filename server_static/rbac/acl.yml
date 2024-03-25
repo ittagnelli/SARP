@@ -1,5 +1,5 @@
 ---
-# v1.0 2023-01-17
+# v2.0 2023-01-17
 
 # menu resources don't have CRUD acl but just view
 menu_home:
@@ -49,6 +49,26 @@ pdp_autovalutazione:
   delete:
     - ADMIN
     - STUDENTE
+
+menu_mipresento:
+  view:
+    - ADMIN
+    - STUDENTE
+
+pdp_mipresento:
+  read:
+    - ADMIN
+    - STUDENTE
+  create:
+    - ADMIN
+    - STUDENTE
+  update:
+    - ADMIN
+    - STUDENTE
+  delete:
+    - ADMIN
+    - STUDENTE
+
 
 menu_pdp_template:
   view:

@@ -47,6 +47,10 @@ export async function load({ locals }) {
                 nome: true,
                 cognome: true,
                 griglia_valutazione: true,
+                griglia_pdp_a1: true,
+                griglia_pdp_a1_done: true,
+                griglia_pdp_c1: true,
+                griglia_pdp_c1_done: true,
                 pdp: {
                     select: {
                         completo: true
@@ -73,20 +77,30 @@ export async function load({ locals }) {
 }
 
 //format the answer for 4 columns grid
-function format_grid1_4(grid) {
+function format_grid1_4d(grid) {
     grid.map((q) => {
         q.answers.forEach((a) => {
-            q[`ans_${a.aid}`] = a.aid == q.answer ? 'X' : ''; 
+            q[`dans_${a.aid}`] = a.aid == q.answer ? 'X' : ''; 
         })
     });
 
     return grid;
 }
 
+function format_grid1_4s(grid1, grid2) {
+     grid1.map((q,i) => {
+        grid2[i].answers.forEach((a) => {
+            q[`sans_${a.aid}`] = a.aid == grid2[i].answer ? 'X' : ''; 
+        })
+    });
+
+    return grid1;
+}
+
 //format the answer for SI/NO questions
-function format_grid5(grid) {
+function format_grid_5d(grid) {
     grid.map((q) => {
-        q['ans'] = q.answer == 'a' ? 'SI' : 'NO'; 
+        q['dans'] = q.answer == 'a' ? 'SI' : 'NO'; 
     });
 
     return grid;
@@ -120,20 +134,30 @@ export const actions = {
             });
                 
             //prepare the valutazione grids
-            let valutazione = JSON.parse(studente.griglia_valutazione);
-            let griglia1 = valutazione.slice(0, 20);
-            let griglia2 = valutazione.slice(20, 23);
-            let griglia3 = valutazione.slice(23, 28);
-            let griglia4 = valutazione.slice(28, 32);
-            let griglia5 = valutazione.slice(32);
+            //Qui è un gran casino in quanto stato fatto in fasi successive
+            //In ogni acso prima preparo le varie griglie per con le risposte del tutor di classe
+            //poi arricchisco la griglia con le risposte dello studente
+            let dvalutazione = JSON.parse(studente.griglia_valutazione);
+            let svalutazione = JSON.parse(studente.griglia_pdp_c1);
+            let dgriglia1 = dvalutazione.slice(0, 20);
+            let dsgriglia2 = dvalutazione.slice(20, 23);
+            let sgriglia2 = svalutazione.slice(0, 3);
+            let dsgriglia3 = dvalutazione.slice(23, 28);
+            let sgriglia3 = svalutazione.slice(3, 8);
+            let dsgriglia4 = dvalutazione.slice(28, 32);
+            let sgriglia4 = svalutazione.slice(8, 12);
+            let dgriglia5 = dvalutazione.slice(32);
             
             //set an X to the right answer column
-            griglia1 = format_grid1_4(griglia1);
-            griglia2 = format_grid1_4(griglia2);
-            griglia3 = format_grid1_4(griglia3);
-            griglia4 = format_grid1_4(griglia4);
-            griglia5 = format_grid5(griglia5);
-        
+            dgriglia1 = format_grid1_4d(dgriglia1);
+            dsgriglia2 = format_grid1_4d(dsgriglia2);
+            dsgriglia2 = format_grid1_4s(dsgriglia2, sgriglia2);
+            dsgriglia3 = format_grid1_4d(dsgriglia3);
+            dsgriglia3 = format_grid1_4s(dsgriglia3, sgriglia3);
+            dsgriglia4 = format_grid1_4d(dsgriglia4);
+            dsgriglia4 = format_grid1_4s(dsgriglia4, sgriglia4);
+            dgriglia5 = format_grid_5d(dgriglia5);
+
             //now get the section for the different materie
             const pdp = await SARP.PDP.findMany({
                 where: { 
@@ -183,16 +207,23 @@ export const actions = {
             //prepare the object to render the template
             let renderer = {};
             renderer['nome'] = studente.nome;
-            renderer['cognome'] = studente.cognome 
+            renderer['cognome'] = studente.cognome;
+            renderer['nato_a'] = studente.natoA;
+            renderer['nato_il'] = studente.natoIl.toLocaleDateString("it-IT");
             renderer['classe'] = `${studente.classe.classe} ${studente.classe.istituto} ${studente.classe.sezione}`;
             renderer['tutor'] = `${studente.classe.coordinatore.nome} ${studente.classe.coordinatore.cognome}`;
-            renderer['griglia1'] = griglia1;
-            renderer['griglia2'] = griglia2;
-            renderer['griglia3'] = griglia3;
-            renderer['griglia4'] = griglia4;
-            renderer['griglia5'] = griglia5;
+            renderer['griglia1'] = dgriglia1;
+            renderer['griglia2'] = dsgriglia2;
+            renderer['griglia3'] = dsgriglia3;
+            renderer['griglia4'] = dsgriglia4;
+            renderer['griglia5'] = dgriglia5;
             renderer['materie'] = materie;
-            renderer['firme'] = firme;
+            renderer['firme'] = firme; 
+            
+            //Preparo per il rendering della sezione Mi Presento al consiglio di classe
+            //le chiavi hanno già il nome corretto, basta che le aggiungo alll'oggetto renderer
+            let mipresento = JSON.parse(studente.griglia_pdp_a1);
+            renderer = Object.assign(renderer, mipresento);
 
 			const content = fs.readFileSync(
 				path.resolve(PUBLIC_PDP_TEMPLATES_DIR, PUBLIC_PDP_TEMPLATE),
@@ -220,6 +251,7 @@ export const actions = {
                 nome_documento: `PDP_${studente.cognome}_${studente.nome}.docx`
 			};
 		} catch (exception) {
+            console.log(exception)
 			catch_error_pdf(exception, 'la generazione', 204);
 		}
 	}
