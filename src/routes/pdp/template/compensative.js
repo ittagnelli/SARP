@@ -1,30 +1,30 @@
 let _misure_compensative = [
     {
-        text: 'C1 Utilizzo di computer e tablet',
+        text: 'Utilizzo di computer e tablet',
         selected: false
     },
     {
-        text: 'C2 Utilizzo di programmi di video-scrittura con correttore ortografico o con tecnologie di sintesi vocale',
+        text: 'Utilizzo di programmi di video-scrittura con correttore ortografico (possibilmente vocale) e con tecnologie di sintesi vocale (anche per le lingue straniere)',
         selected: false
     },
     {
-        text: 'C3 Utilizzo di risorse audio (file audio digitali, audiolibri…)',
+        text: 'Utilizzo di risorse audio (file audio digitali, audiolibri…)',
         selected: false
     },
     {
-        text: 'C4 Utilizzo di ausili per il calcolo (tavola pitagorica, linee dei numeri…) ed eventualmente della calcolatrice',
+        text: 'Utilizzo di ausili per il calcolo (tavola pitagorica, linee dei numeri…) ed eventualmente della calcolatrice',
         selected: false
     },
     {
-        text: 'C5 Utilizzo di schemi, formulari, tabelle, mappe o diagrammi di flusso precedentemente validate e firmate dall’insegnante come supporto durante compiti e verifiche scritte (vedi specifiche strumenti compensativi), eventualmente anche su supporto digitalizzato',
+        text: 'Utilizzo di schemi, formulari, tabelle, mappe e diagrammi di flusso precedentemente validate e firmate dall’insegnante come supporto durante compiti e verifiche scritte .Eventualmente anche su supporto digitalizzato (presentazioni multimediali), per facilitare il recupero delle informazioni',
         selected: false
     },
     {
-        text: 'C6 Utilizzo di dizionari digitali (cd rom, risorse online)',
+        text: 'Utilizzo di dizionari digitali (cd rom, risorse online)',
         selected: false
     },
     {
-        text: 'C7 Utilizzo di software didattici e compensativi (free e/o commerciali)',
+        text: 'Utilizzo di software didattici e compensativi (free e/o commerciali)',
         selected: false
     }
 ];
