@@ -47,18 +47,6 @@ export async function load({ locals }) {
 	}
 }
 
-const update_griglia = (form) => {
-    //update griglia_valutazione with the actual answers from user  
-    let out_griglia = JSON.parse(form.get('griglia_valutazione'));
-    out_griglia.forEach((q) => {
-        if(form.has(q.qid)) {
-            q.answer = form.get(q.qid);
-        }
-    })
-    
-    return JSON.stringify(out_griglia);
-}
-
 export const actions = {
 	update: async ({ cookies, request, locals }) => {
         let action = 'update';
@@ -68,14 +56,14 @@ export const actions = {
 
 		const form_data = await request.formData();
 		let student_id = form_data.get('student_id');
-        let out_griglia = update_griglia(form_data);
-        
+       
         SARP.set_session(locals); // passa la sessione all'audit
 		try {
 			await SARP.Utente.update({
 				where: { id: +student_id },
 				data: {
-                    griglia_valutazione: out_griglia
+                    griglia_pdp_c2: form_data.get('griglia_pdp_c2'),
+                    griglia_pdp_c2_done: form_data.get("completo") === 'SI'
 				}
 			});		
 		} catch (exception) {

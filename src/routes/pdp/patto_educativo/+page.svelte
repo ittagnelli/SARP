@@ -30,7 +30,8 @@
 	// le operazione di create e update
 	let form_values = {
 		student_id: 0,
-		griglia_pdp_c2: '[]'
+		griglia_pdp_c2: '[]',
+        completo: 'NO'
 	};
 
 	async function start_update(e) {
@@ -38,7 +39,8 @@
 		form_values.student_id = e.detail.id;
 		//cerca l'utente da fare update
 		let studente = studenti.filter((item) => item.id == form_values.student_id)[0];
-		form_values.griglia_pdp_c2 = studente.griglia_pdp_c2;
+        form_values.completo = studente.griglia_pdp_c2_done ? 'SI': 'NO';
+        form_values.griglia_pdp_c2 = JSON.parse(studente.griglia_pdp_c2);
 	}
 
 	async function cancel_action(){
@@ -47,7 +49,8 @@
 			modal_action = 'create';	// Reset model string
 			form_values = {	// Reset form values
 				student_id: 0,
-				griglia_pdp_c2: '[]'
+				griglia_pdp_c2: '[]',
+                completo: 'NO'
 			};
 		}
 	}
@@ -61,7 +64,7 @@
         { name: 'natoIl', type: 'date', display: 'Nato il' },
         { name: 'email', type: 'string', display: 'email', size: 30 },
 		{ name: 'bes', type: 'boolean', display: 'pdp' },
-        { name: 'griglia_pdp_c2_completo', type: 'boolean', display: 'completo' }
+        { name: 'griglia_pdp_c2_done', type: 'boolean', display: 'completo' }
 	]}
 	rows={studenti}
 	page_size={10}
@@ -90,72 +93,113 @@
 	>
 		<div class="modal-dialog modal-xl" role="document">
             <input type="hidden" name="student_id" bind:value={form_values.student_id} />
-            <input type="hidden" name="griglia_pdp_c2" bind:value={form_values.griglia_pdp_c2} />
+            <input type="hidden" name="griglia_pdp_c2" value={JSON.stringify(form_values.griglia_pdp_c2)} />
             <div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">Griglia Osservativa</h5>
+					<h5 class="modal-title">Patto Educativo</h5>
 				</div>
 				<div class="modal-body">
-                    <!-- very ugly but svelte is not php and tag must be closed in each loop
-                    so this solution is not nice but overcome the problem -->
-                    {#if form_values.griglia_pdp_c2.length > 0}
-                        {@const questions = JSON.parse(form_values.griglia_pdp_c2)}
-                        {@const max_questions = questions.length}
-                        {#each questions as question,idx}
-                            {#if idx % 2 == 0}
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">{idx + 1}. {questions[idx].question} </label>
-                                        <fieldset class="form-fieldset">
-                                            <div>
-                                                <div>
-                                                    {#each questions[idx].answers as answer}
-                                                        <label class="form-check">
-                                                            <input 
-                                                                class="form-check-input" 
-                                                                type="radio"  
-                                                                name="{questions[idx].qid}" 
-                                                                value="{answer.aid}"
-                                                                checked={answer.aid == questions[idx].answer}
-                                                            >
-                                                            <span class="form-check-label">{answer.answer}</span>
-                                                        </label>
-                                                    {/each}
-                                                </div>
-                                            </div>
-                                        </fieldset>
+                    {#each form_values.griglia_pdp_c2 as question,idx}
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="mb-3">
+                                    <label class="form-label">{idx + 1}. {question.question} </label>
+                                    <!-- gestisce la domanda 0 che è un caso speciale -->
+                                    {#if idx == 0}
+                                        <div class="form-selectgroup">
+                                            <label class="form-selectgroup-item">
+                                                    <input
+                                                        type="radio"
+                                                        name="answer{idx}"
+                                                        value="SI"
+                                                        class="form-selectgroup-input"
+                                                        bind:group={(form_values.griglia_pdp_c2[idx]).answer}
+                                                    />
+                                                <span class="form-selectgroup-label">SI</span>
+                                            </label>
+                                            <label class="form-selectgroup-item">
+                                                    <input
+                                                        type="radio"
+                                                        name="answer{idx}"
+                                                        value="NO"
+                                                        class="form-selectgroup-input"
+                                                        bind:group={(form_values.griglia_pdp_c2[idx]).answer}
+                                                    />
+                                                <span class="form-selectgroup-label">NO</span>
+                                            </label>
+                                        </div>
+                                        <br><br>
+                                        <input type="text" name="disc_1" bind:value={(form_values.griglia_pdp_c2[idx]).disc_1} />
+                                        <input type="text" name="cadenza_1" bind:value={(form_values.griglia_pdp_c2[idx]).cadenza_1} /><br><br>
+                                        <input type="text" name="disc_2" bind:value={(form_values.griglia_pdp_c2[idx]).disc_2} />
+                                        <input type="text" name="cadenza_2" bind:value={(form_values.griglia_pdp_c2[idx]).cadenza_2} /><br><br>
+                                        <input type="text" name="disc_3" bind:value={(form_values.griglia_pdp_c2[idx]).disc_3} />
+                                        <input type="text" name="cadenza_3" bind:value={(form_values.griglia_pdp_c2[idx]).cadenza_3} /><br><br>
+                                        <input type="text" name="disc_4" bind:value={(form_values.griglia_pdp_c2[idx]).disc_4} />
+                                        <input type="text" name="cadenza_4" bind:value={(form_values.griglia_pdp_c2[idx]).cadenza_4} />
+                                    {/if}
+                                    <!-- gestisce la domanda 16 che è un caso speciale -->
+                                    {#if idx == 16 || idx == 17}
+                                        <input type="text" name="answer{idx}" size="80" bind:value={(form_values.griglia_pdp_c2[idx]).answer} />
+                                    {/if}
+                                    <!-- gestisce tutte le altre domande -->
+                                    {#if idx != 0 && idx != 16 && idx != 17}
+                                    <div class="form-selectgroup">
+                                        <label class="form-selectgroup-item">
+                                                <input
+                                                    type="radio"
+                                                    name="answer{idx}"
+                                                    value="SI"
+                                                    class="form-selectgroup-input"
+                                                    bind:group={(form_values.griglia_pdp_c2[idx]).answer}
+                                                />
+                                            <span class="form-selectgroup-label">SI</span>
+                                        </label>
+                                        <label class="form-selectgroup-item">
+                                                <input
+                                                    type="radio"
+                                                    name="answer{idx}"
+                                                    value="NO"
+                                                    class="form-selectgroup-input"
+                                                    bind:group={(form_values.griglia_pdp_c2[idx]).answer}
+                                                />
+                                            <span class="form-selectgroup-label">NO</span>
+                                        </label>
                                     </div>
+                                    {/if}
                                 </div>
-                                {#if questions[idx + 1]} <!-- needed to handle odd number of questions -->
-                                <div class="col-lg-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">{idx + 2}. {questions[idx + 1].question} </label>
-                                        <fieldset class="form-fieldset">
-                                            <div>
-                                                <div>
-                                                    {#each questions[idx + 1].answers as answer}
-                                                        <label class="form-check">
-                                                            <input 
-                                                                class="form-check-input" 
-                                                                type="radio"  
-                                                                name="{questions[idx + 1].qid}" 
-                                                                value="{answer.aid}"
-                                                                checked={answer.aid == questions[idx + 1].answer}
-                                                            >
-                                                            <span class="form-check-label">{answer.answer}</span>
-                                                        </label>
-                                                    {/each}
-                                                </div>
-                                            </div>
-                                        </fieldset>
-                                    </div>
-                                </div>
-                                {/if}
                             </div>
-                            {/if}
-                        {/each}
-                    {/if}
+                        </div>
+                    {/each}
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <br>
+                            <label class="form-label">Patto Educativo Completo</label>
+                            <div class="form-selectgroup">
+                                <label class="form-selectgroup-item">
+                                        <input
+                                            type="radio"
+                                            name="completo"
+                                            value="SI"
+                                            class="form-selectgroup-input"
+                                            bind:group={form_values.completo}
+                                        />
+                                    <span class="form-selectgroup-label">SI</span>
+                                </label>
+                                <label class="form-selectgroup-item">
+                                        <input
+                                            type="radio"
+                                            name="completo"
+                                            value="NO"
+                                            class="form-selectgroup-input"
+                                            bind:group={form_values.completo}
+                                        />
+                                    <span class="form-selectgroup-label">NO</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
 					<div class="modal-footer">
 						<a href="#" class="btn btn-danger" data-bs-dismiss="modal">
 							<b>Cancel</b>

@@ -52,6 +52,8 @@ export async function load({ locals }) {
                     griglia_pdp_a1_done: true,
                     griglia_pdp_c1: true,
                     griglia_pdp_c1_done: true,
+                    griglia_pdp_c2: true,
+                    griglia_pdp_c2_done: true,
                     pdp: {
                         select: {
                             completo: true
@@ -226,6 +228,23 @@ export const actions = {
             //le chiavi hanno già il nome corretto, basta che le aggiungo alll'oggetto renderer
             let mipresento = JSON.parse(studente.griglia_pdp_a1);
             renderer = Object.assign(renderer, mipresento);
+
+            let educativo = JSON.parse(studente.griglia_pdp_c2);
+            educativo.forEach(q => {
+                renderer[`griglia_c2_${q.qid}`] = q.answer;
+                if(q.qid == 1) {
+                    renderer['griglia_c2_1_disc'] = q.disc_1;
+                    renderer['griglia_c2_1_cad'] = q.cadenza_1;
+                    renderer['griglia_c2_2_disc'] = q.disc_2;
+                    renderer['griglia_c2_2_cad'] = q.cadenza_2;
+                    renderer['griglia_c2_3_disc'] = q.disc_3;
+                    renderer['griglia_c2_3_cad'] = q.cadenza_3;
+                    renderer['griglia_c2_4_disc'] = q.disc_4;
+                    renderer['griglia_c2_4_cad'] = q.cadenza_4;
+                }
+                if(q.qid == 17 || q.qid == 18) 
+                    renderer[`griglia_c2_${q.qid}_YN`] = q.answer.length > 0 ? 'SI' : 'NO'; 
+            });
 
 			const content = fs.readFileSync(
 				path.resolve(PUBLIC_PDP_TEMPLATES_DIR, PUBLIC_PDP_TEMPLATE),
