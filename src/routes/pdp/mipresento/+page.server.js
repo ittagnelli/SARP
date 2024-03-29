@@ -1,5 +1,5 @@
 import { PrismaDB } from '$js/prisma_db';
-import { route_protect, raise_error, access_protect, multi_user_field_where } from '$js/helper';
+import { route_protect, raise_error, access_protect, is_admin, is_tutor_bes, user_id } from '$js/helper';
 import { Logger } from '$js/logger';
 import { fail } from '@sveltejs/kit';
 import { PrismaClientValidationError } from '@prisma/client/runtime';
@@ -22,15 +22,22 @@ function catch_error(exception, type, code) {
 
 export async function load({ locals }) {
     let action = 'read';
-
+    
     route_protect(locals);
     access_protect(3000, locals, action, resource);
 
-    let where_search = multi_user_field_where('id', locals);
-	try {
+    let clausola_where = { id: user_id(locals) };
+
+    if(is_admin(locals) || is_tutor_bes(locals)) {
+        clausola_where = {
+            id: { gt: 0 }
+        }
+    }
+    
+    try {
 		const studenti = await SARP.Utente.findMany({
 			orderBy: [{ tipo: 'desc' }],
-            where: where_search,            
+            where: clausola_where,            
 		});
 
 		// restituisco il risultato della query SQL
@@ -40,7 +47,6 @@ export async function load({ locals }) {
 	} catch (exception) {
         catch_error(exception, "la ricerca", 3000);
 	}
-
 }
 
 export const actions = {

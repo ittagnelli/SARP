@@ -112,6 +112,10 @@ export const is_tutor_classe = (data) => {
 	return user_ruolo(data).includes('TUTOR-CLASSE');
 };
 
+export const is_tutor_bes = (data) => {
+	return user_ruolo(data).includes('TUTOR-BES');
+};
+
 export const is_studente = (data) => {
 	return user_ruolo(data).includes('STUDENTE');
 };
