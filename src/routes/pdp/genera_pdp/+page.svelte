@@ -24,12 +24,11 @@
         return studenti.map((s) => {
             s['studente_col'] = `${s.cognome} ${s.nome}`;
             s['classe_col'] = `${s.classe.classe} ${s.classe.istituto} ${s.classe.sezione}`;
-            s['griglia_val_col'] = s.griglia_valutazione != null;
             let tot_materie = s.pdp.length;
             let materie_complete = s.pdp.filter(m => m.completo == true).length;
             s['materie_col'] = `${materie_complete}/${tot_materie}`;
-            s['can_print'] = (s.griglia_valutazione != null) && 
-                             (materie_complete == tot_materie) &&
+            s['can_print'] = (materie_complete == tot_materie) &&
+                             s.griglia_valutazione_done && 
                              s.griglia_pdp_a1_done && 
                              s.griglia_pdp_c1_done &&
                              s.griglia_pdp_c2_done;
@@ -52,7 +51,7 @@
 		{ name: 'id', type: 'hidden', display: 'ID' },
         { name: 'classe_col', type: 'string', display: 'Classe', size: 50, search: true },
         { name: 'studente_col', type: 'string', display: 'Studente', size: 50, search: true },
-		{ name: 'griglia_val_col', type: 'boolean', display: "Griglia Osservativa", search: true },
+		{ name: 'griglia_valutazione_done', type: 'boolean', display: "Griglia Osservativa", search: true },
         { name: 'griglia_pdp_a1_done', type: 'boolean', display: "Mi Presento", search: true },
         { name: 'griglia_pdp_c1_done', type: 'boolean', display: "Autovalutazione", search: true },
         { name: 'griglia_pdp_c2_done', type: 'boolean', display: "Patto Educativo", search: true },

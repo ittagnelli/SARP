@@ -48,6 +48,7 @@ export async function load({ locals }) {
                     nome: true,
                     cognome: true,
                     griglia_valutazione: true,
+                    griglia_valutazione_done: true,
                     griglia_pdp_a1: true,
                     griglia_pdp_a1_done: true,
                     griglia_pdp_c1: true,

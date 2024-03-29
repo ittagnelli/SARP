@@ -31,7 +31,8 @@
 	// le operazione di create e update
 	let form_values = {
 		student_id: 0,
-		griglia_valutazione: '[]'
+		griglia_valutazione: '[]',
+        completo: 'NO'
 	};
 
 	async function start_update(e) {
@@ -39,6 +40,7 @@
 		form_values.student_id = e.detail.id;
 		//cerca l'utente da fare update
 		let studente = studenti.filter((item) => item.id == form_values.student_id)[0];
+        form_values.completo = studente.griglia_valutazione_done ? 'SI': 'NO';
 		form_values.griglia_valutazione = studente.griglia_valutazione;
 	}
 
@@ -48,7 +50,8 @@
 			modal_action = 'create';	// Reset model string
 			form_values = {	// Reset form values
 				student_id: 0,
-				griglia_valutazione: '[]'
+				griglia_valutazione: '[]',
+                completo: 'NO'
 			};
 		}
 	}
@@ -63,6 +66,7 @@
         { name: 'natoIl', type: 'date', display: 'Nato il' },
         { name: 'email', type: 'string', display: 'email', size: 30 },
 		{ name: 'bes', type: 'boolean', display: 'pdp' },
+        { name: 'griglia_valutazione_done', type: 'boolean', display: 'completo' }
 	]}
 	rows={studenti}
 	page_size={6}
@@ -157,6 +161,35 @@
                             {/if}
                         {/each}
                     {/if}
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <br>
+                            <label class="form-label">Patto Educativo Completo</label>
+                            <div class="form-selectgroup">
+                                <label class="form-selectgroup-item">
+                                        <input
+                                            type="radio"
+                                            name="completo"
+                                            value="SI"
+                                            class="form-selectgroup-input"
+                                            bind:group={form_values.completo}
+                                        />
+                                    <span class="form-selectgroup-label">SI</span>
+                                </label>
+                                <label class="form-selectgroup-item">
+                                        <input
+                                            type="radio"
+                                            name="completo"
+                                            value="NO"
+                                            class="form-selectgroup-input"
+                                            bind:group={form_values.completo}
+                                        />
+                                    <span class="form-selectgroup-label">NO</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
 					<div class="modal-footer">
 						<a href="#" class="btn btn-danger" data-bs-dismiss="modal">
 							<b>Cancel</b>
