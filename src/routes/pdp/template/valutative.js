@@ -1,42 +1,42 @@
 let _misure_valutative = [
     {
-        text: 'V1 Valutare per formare (orientare il processo di insegnamento-apprendimento)',
+        text: 'Valutare per formare (orientare il processo di insegnamento-apprendimento)',
         selected: false
     },
     {
-        text: 'V2 Valorizzare il processo di apprendimento dell’allievo e non valutare esclusivamente il prodotto/risultato delle prove',
+        text: 'Valorizzare il processo di apprendimento dell’allievo e non valutare esclusivamente il prodotto/risultato',
         selected: false
     },
     {
-        text: 'V3 Predisporre verifiche scalari (graduate, con difficoltà crescente)',
+        text: 'Predisporre verifiche scalari (graduate, con difficoltà crescente)',
         selected: false
     },
     {
-        text: 'V4 Programmare e concordare con l’alunno le verifiche',
+        text: 'Programmare con un anticipo di almeno una settimana  la data delle verifiche',
         selected: false
     },
     {
-        text: 'V5 Prevedere verifiche orali a compensazione di quelle scritte ove necessario',
+        text: 'Prevedere verifiche orali a compensazione di quelle scritte (soprattutto per la lingua straniera) ove necessario',
         selected: false
     },
     {
-        text: 'V6 Facilitare la decodifica della consegna e del testo',
+        text: 'Verificare che la consegna sia stata compresa correttamente',
         selected: false
     },
     {
-        text: 'V7 Valutare tenendo conto maggiormente del contenuto che della forma',
+        text: 'Valutare tenendo conto maggiormente del contenuto piuttosto che della forma (errori di ortografia, precisione del tratto e pulizia nel disegno)',
         selected: false
     },
     {
-        text: 'V8 Valutazione dei procedimenti e non dei calcoli nella risoluzione dei problemi',
+        text: 'Valutazione dei procedimenti e non dei calcoli nella risoluzione dei problemi',
         selected: false
     },
     {
-        text: 'V9 Introdurre prove informatizzate',
+        text: 'Introdurre prove informatizzate',
         selected: false
     },
     {
-        text: 'V10 Nelle verifiche, riduzione e adattamento del numero degli esercizi senza modificare gli obiettivi oppure tempi più lunghi per l’esecuzione delle prove',
+        text: 'Nelle verifiche, riduzione e adattamento del numero degli esercizi senza modificare gli obiettivi',
         selected: false
     }
 ];
