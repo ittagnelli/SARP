@@ -99,7 +99,8 @@ export const actions = {
 			await SARP.Utente.update({
 				where: { id: +student_id },
 				data: {
-                    griglia_valutazione: out_griglia
+                    griglia_valutazione: out_griglia,
+                    griglia_valutazione_done: form_data.get("completo") === 'SI'
 				}
 			});		
 		} catch (exception) {
