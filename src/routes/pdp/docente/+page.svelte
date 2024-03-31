@@ -4,7 +4,6 @@
 	import Table from '$lib/components/common/table.svelte';
     import MessageBox from '$lib/components/common/message_box.svelte';
     import { onMount } from 'svelte';
-    import { saveAs } from 'file-saver';
 	import * as yup from 'yup';
     import { misure_dispensative } from '../template/dispensative.js'
     import { misure_compensative } from '../template/compensative.js';
@@ -51,7 +50,9 @@
 		dispensative: '',
         compensative: '',
         valutative: '',
-        altro: '',
+        altro_compensative: '',
+        altro_dispensative: '',
+        altro_valutative: '',
         note: '',
         completo: 'NO'
 	};
@@ -74,26 +75,32 @@
         current_dispensative = JSON.parse(current_pdp.dispensative);
         current_compensative = JSON.parse(current_pdp.compensative);
         current_valutative = JSON.parse(current_pdp.valutative);
-        form_values.altro = current_pdp.altro;
+        form_values.altro_compensative = current_pdp.altro_compensative;
+        form_values.altro_dispensative = current_pdp.altro_dispensative;
+        form_values.altro_valutative = current_pdp.altro_valutative;
         form_values.note = current_pdp.note;
         form_values.completo = current_pdp.completo ? 'SI': 'NO';
 	}
 
     function reset_form_value() {
         form_values = {
-                template_id: 0,
-                id: 0,
-                dispensative: '',
-                compensative: '',
-                valutative: '',
-                altro: '',
-                note: '',
-                completo: 'NO'
-			};		
+            template_id: 0,
+            id: 0,
+            dispensative: '',
+            compensative: '',
+            valutative: '',
+            altro_compensative: '',
+            altro_dispensative: '',
+            altro_valutative: '',
+            note: '',
+            completo: 'NO'
+		};		
     }
 
 	async function handleSubmit() {
-		form_values.altro = helper.sanitize_text_form(form_values.altro);
+		form_values.altro_compensative = helper.sanitize_text_form(form_values.altro_compensative);
+        form_values.altro_dispensative = helper.sanitize_text_form(form_values.altro_dispensative);
+        form_values.altro_valutative = helper.sanitize_text_form(form_values.altro_valutative);
         form_values.note = helper.sanitize_text_form(form_values.note);
         form_values.dispensative = JSON.stringify(current_dispensative);
         form_values.compensative = JSON.stringify(current_compensative);
@@ -127,7 +134,9 @@
         current_dispensative = JSON.parse(template.dispensative);
         current_compensative = JSON.parse(template.compensative);
         current_valutative = JSON.parse(template.valutazione);
-        form_values.altro = template.altro;
+        form_values.altro_compensative = template.altro_compensative;
+        form_values.altro_dispensative = template.altro_dispensative;
+        form_values.altro_valutative = template.altro_valutative;
         form_values.note = template.note;
 	}
 
@@ -252,6 +261,17 @@
                                   {/each}
                               </div>
                         </div>
+                        <div class="form-label select_text mt-3">Altro</div>
+							<div class="input-group input-group-flat">
+								<textarea
+									rows="3"
+									class="form-control mt-2"
+									id="altro_dispensative"
+									name="altro_dispensative"
+									bind:value={form_values.altro_dispensative}
+                                    on:keydown={prevent_enter}
+								/>
+						</div>
                     </div>
                     <div class="row myfieldset">
                         <div class="form-label mylabel">Misure Compensative</div>
@@ -275,6 +295,17 @@
                                   {/each}
                               </div>
                         </div>
+                        <div class="form-label select_text mt-3">Altro</div>
+							<div class="input-group input-group-flat">
+								<textarea
+									rows="3"
+									class="form-control mt-2"
+									id="altro_compensative"
+									name="altro_compensative"
+									bind:value={form_values.altro_compensative}
+                                    on:keydown={prevent_enter}
+								/>
+						</div>
                     </div>
                     <div class="row myfieldset">
                         <div class="form-label mylabel">Misure Valutative</div>
@@ -298,22 +329,20 @@
                                   {/each}
                               </div>
                         </div>
-                    </div>
-                    <div class="row">
-						<div class="col-lg-5">
-							<div class="form-label select_text mt-3">Altre Annotazioni</div>
+                        <div class="form-label select_text mt-3">Altro</div>
 							<div class="input-group input-group-flat">
 								<textarea
 									rows="3"
 									class="form-control mt-2"
-									id="altro"
-									name="altro"
-									bind:value={form_values.altro}
+									id="altro_valutative"
+									name="altro_valutative"
+									bind:value={form_values.altro_valutative}
                                     on:keydown={prevent_enter}
 								/>
-							</div>
 						</div>
-                        <div class="col-lg-5">
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-10">
 							<div class="form-label select_text mt-3">Note Docente (non pubblicato)</div>
 							<div class="input-group input-group-flat">
 								<textarea
