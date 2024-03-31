@@ -55,7 +55,9 @@
 		dispensative: '',
         compensative: '',
         valutative: '',
-        altro: '',
+        altro_compensative: '',
+        altro_dispensative: '',
+        altro_valutative: '',
         note: ''
 	};
 
@@ -77,7 +79,9 @@
         current_dispensative= JSON.parse(template.dispensative);
         current_compensative = JSON.parse(template.compensative);
         current_valutative = JSON.parse(template.valutazione);
-        form_values.altro = template.altro;
+        form_values.altro_compensative = template.altro_compensative;
+        form_values.altro_dispensative = template.altro_dispensative;
+        form_values.altro_valutative = template.altro_valutative;
         form_values.note = template.note;
 	}
 
@@ -88,14 +92,18 @@
                 dispensative: '',
                 compensative: '',
                 valutative: '',
-                altro: '',
+                altro_compensative: '',
+                altro_dispensative: '',
+                altro_valutative: '',
                 note: ''
 			};		
     }
 
 	async function handleSubmit() {
 		form_values.nome = helper.sanitize_text_form(form_values.nome);
-		form_values.altro = helper.sanitize_text_form(form_values.altro);
+		form_values.altro_compensative = helper.sanitize_text_form(form_values.altro_compensative);
+        form_values.altro_dispensative = helper.sanitize_text_form(form_values.altro_dispensative);
+        form_values.altro_valutative = helper.sanitize_text_form(form_values.altro_valutative);
         form_values.note = helper.sanitize_text_form(form_values.note);
         form_values.dispensative = JSON.stringify(current_dispensative);
         form_values.compensative = JSON.stringify(current_compensative);
@@ -226,6 +234,17 @@
                                   {/each}
                               </div>
                         </div>
+                        <div class="form-label select_text mt-3">Altro</div>
+							<div class="input-group input-group-flat">
+								<textarea
+									rows="3"
+									class="form-control mt-2"
+									id="altro_dispensative"
+									name="altro_dispensative"
+									bind:value={form_values.altro_dispensative}
+                                    on:keydown={prevent_enter}
+								/>
+						</div>
                     </div>
                     <div class="row myfieldset">
                         <div class="form-label mylabel">Misure Compensative</div>
@@ -250,6 +269,17 @@
                                   {/each}
                               </div>
                         </div>
+                        <div class="form-label select_text mt-3">Altro</div>
+							<div class="input-group input-group-flat">
+								<textarea
+									rows="3"
+									class="form-control mt-2"
+									id="altro_compensative"
+									name="altro_compensative"
+									bind:value={form_values.altro_compensative}
+                                    on:keydown={prevent_enter}
+								/>
+						</div>
                     </div>
                     <div class="row myfieldset">
                         <div class="form-label mylabel">Misure Valutative</div>
@@ -273,23 +303,21 @@
                                   {/each}
                               </div>
                         </div>
-                    </div>
-                    <div class="row">
-						<div class="col-lg-6">
-							<div class="form-label select_text mt-3">Altro</div>
+                        <div class="form-label select_text mt-3">Altro</div>
 							<div class="input-group input-group-flat">
 								<textarea
 									rows="3"
 									class="form-control mt-2"
-									id="altro"
-									name="altro"
-									bind:value={form_values.altro}
+									id="altro_valutative"
+									name="altro_valutative"
+									bind:value={form_values.altro_valutative}
                                     on:keydown={prevent_enter}
 								/>
-							</div>
 						</div>
-                        <div class="col-lg-6">
-							<div class="form-label select_text mt-3">Note</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+							<div class="form-label select_text mt-3">Note Docente (non pubblicato)</div>
 							<div class="input-group input-group-flat">
 								<textarea
 									rows="3"

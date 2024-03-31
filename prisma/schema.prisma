@@ -1,4 +1,4 @@
-// v 0.29.0 2024-03-29
+// v 0.30.0 2024-03-31
 
 generator client {
     provider = "prisma-client-js"
@@ -255,35 +255,39 @@ model programmazione_Template {
 }
 
 model PDP {
-    id              Int          @id @default(autoincrement())
-    createdAt       DateTime     @default(now())
-    updatedAt       DateTime     @updatedAt
-    idDocente       Int
-    insegnamento    Insegnamenti @relation(fields: [idInsegnamento], references: [id])
-    idInsegnamento  Int
-    studente        Utente       @relation(fields: [idStudente], references: [id])
-    idStudente      Int
-    anno            Int
-    dispensative    String
-    compensative    String
-    valutative      String
-    altro           String?
-    note            String?
-    completo        Boolean      @default(false)
+    id                    Int          @id @default(autoincrement())
+    createdAt             DateTime     @default(now())
+    updatedAt             DateTime     @updatedAt
+    idDocente             Int
+    insegnamento          Insegnamenti @relation(fields: [idInsegnamento], references: [id])
+    idInsegnamento        Int
+    studente              Utente       @relation(fields: [idStudente], references: [id])
+    idStudente            Int
+    anno                  Int
+    dispensative          String
+    compensative          String
+    valutative            String
+    altro_compensative    String?
+    altro_dispensative    String?
+    altro_valutative      String?
+    note                  String?
+    completo              Boolean      @default(false)
 }
 
 model pdp_Template {
-    id            Int      @id @default(autoincrement())
-    createdAt     DateTime @default(now())
-    updatedAt     DateTime @updatedAt
-    docente       Utente   @relation(fields: [creatoDa], references: [id])
-    creatoDa      Int
-    nome          String
-    dispensative  String
-    compensative  String
-    valutazione   String
-    altro         String?
-    note          String? // Note aggiuntive a disposizione dell'insegnante
+    id                    Int      @id @default(autoincrement())
+    createdAt             DateTime @default(now())
+    updatedAt             DateTime @updatedAt
+    docente               Utente   @relation(fields: [creatoDa], references: [id])
+    creatoDa              Int
+    nome                  String
+    dispensative          String
+    compensative          String
+    valutazione           String
+    altro_compensative    String?
+    altro_dispensative    String?
+    altro_valutative      String?
+    note                  String? // Note aggiuntive a disposizione dell'insegnante
 }
 
 model sicurezza_Corso {

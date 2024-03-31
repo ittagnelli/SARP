@@ -94,7 +94,9 @@ export const actions = {
                     dispensative: form.get("dispensative"),
                     compensative: form.get("compensative"),
                     valutative: form.get("valutative"),
-                    altro: form.get("altro")?.toString(),
+                    altro_compensative: form.get("altro_compensative")?.toString(),
+                    altro_dispensative: form.get("altro_dispensative")?.toString(),
+                    altro_valutative: form.get("altro_valutative")?.toString(),
                     note: form.get("note")?.toString(),
                     completo: form.get("completo") === 'SI'
                 },
