@@ -54,6 +54,7 @@
 		email: '',
 		telefono: '',
 		bes_select: 'NO',
+        obiettivi_minimi: 'NO',
 		can_login_select: 'SI',
 		istituto_select: 'ITT',
         classe: 0
@@ -146,6 +147,7 @@
 		form_values.ruolo = utente.ruoli.map((role) => String(role.id));
 		form_values.istituto_select = utente.istituto;
 		form_values.bes_select = utente.bes ? 'SI' : 'NO';
+        form_values.obiettivi_minimi = utente.obiettivi_minimi ? 'SI' : 'NO',
 		form_values.can_login_select = utente.can_login ? 'SI' : 'NO';
         form_values.classe = utente.classe.id;
 	}
@@ -169,6 +171,7 @@
 				email: '',
 				telefono: '',
 				bes_select: 'NO',
+                obiettivi_minimi: 'NO',
 				can_login_select: 'SI',
 				istituto_select: 'ITT',
 				classe: 0
@@ -207,6 +210,7 @@
         { name: 'ruoli', type: 'array', subtype: 'object', key: 'ruolo', display: 'Ruolo' },
 		{ name: 'email', type: 'string', display: 'email', size: 40 },
 		{ name: 'bes', type: 'boolean', display: 'pdp', search: true },
+        { name: 'obiettivi_minimi', type: 'boolean', display: 'obiettivi minimi', search: true },
 		{ name: 'can_login', type: 'boolean', display: 'can_login'}
 	]}
 	rows={utenti}
@@ -431,6 +435,7 @@
 							{/if}
 						</div>
                     </div>
+                    <br>
 					<div class="row">
 						<div class="col-lg-4">
 							<div class="mb-3">
@@ -481,6 +486,33 @@
 												value="NO"
 												class="form-selectgroup-input"
 												bind:group={form_values.bes_select}
+											/>
+											<span class="form-selectgroup-label">NO</span>
+										</label>
+									</div>
+								</div>
+							</div>
+                            <div class="col-lg-4">
+								<div class="mb-3">
+									<label class="form-label">Obiettivi Minimi</label>
+									<div class="form-selectgroup">
+										<label class="form-selectgroup-item">
+											<input
+												type="radio"
+												name="obiettivi_minimi"
+												value="SI"
+												class="form-selectgroup-input"
+												bind:group={form_values.obiettivi_minimi}
+											/>
+											<span class="form-selectgroup-label">SI</span>
+										</label>
+										<label class="form-selectgroup-item">
+											<input
+												type="radio"
+												name="obiettivi_minimi"
+												value="NO"
+												class="form-selectgroup-input"
+												bind:group={form_values.obiettivi_minimi}
 											/>
 											<span class="form-selectgroup-label">NO</span>
 										</label>

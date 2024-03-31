@@ -104,6 +104,7 @@ export const actions = {
                     picture: 'img/avatar.png',
 					istituto: form_data.get('istituto'),
 					bes: form_data.get('bes') == "SI" ? true : false,
+                    obiettivi_minimi: form_data.get('obiettivi_minimi') == "SI" ? true : false,
 					can_login: form_data.get('can_login') == "SI" ? true : false,
                     ruoli: {
                         connect: ids
@@ -157,6 +158,7 @@ export const actions = {
 					tipo: form_data.get('tipo'),
 					istituto: form_data.get('istituto'),
 					bes: form_data.get('bes') == "SI" ? true : false,
+                    obiettivi_minimi: form_data.get('obiettivi_minimi') == "SI" ? true : false,
 					can_login: form_data.get('can_login') == "SI" ? true : false,
                     ruoli: {
                         set: ids

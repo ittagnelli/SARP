@@ -1,4 +1,4 @@
-// v 0.30.0 2024-03-31
+// v 0.31.0 2024-03-31
 
 generator client {
     provider = "prisma-client-js"
@@ -36,6 +36,7 @@ model Utente {
     residenza                String?
     picture                  String?
     bes                      Boolean?
+    obiettivi_minimi         Boolean                     @default(false)
     can_login                Boolean                     @default(false)
     istituto                 String?
     valuta                   pcto_Valutazione[]
