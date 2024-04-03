@@ -266,7 +266,7 @@ export const actions = {
             ddata['P_TUTOR'] = pcto?.tutor_scolastico?.cognome + ' ' + pcto?.tutor_scolastico?.nome;
             ddata['P_TUTOR_CELL'] = pcto?.tutor_scolastico?.telefono;
             ddata['P_TUTOR_EMAIL'] = pcto?.tutor_scolastico?.email;
-            ddata['P_DATA_STIPULA'] = convert_date(pcto?.offertoDa?.dataConvenzione)
+            ddata['P_DATA_STIPULA'] = convert_date(new Date());
 
             //genero il documento #2 per ogni studente con le informazioni specifiche
             for(let studente of pcto?.svoltoDa) {
