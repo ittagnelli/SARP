@@ -1,3 +1,30 @@
+## v4.3.0 – 03 Aprile 2024
+- `fix#516`: PCTO Stage date aggiornate al momento della stampa nei documenti
+- `fix#513`: Studente Obiettivi Minimi (#515)
+- Ora è possibile specificare per gli studenti se hanno diritto agli obiettivi minimi nel PDP o meno
+- `fix:#511`: PDP aggiunta tre sezioni altro in template e docente (#512)    
+- Il docente sia nel template che nel PDP studente può specificare altre indicazioni per le misure dispensative, compensative e valutative
+- `fix#490`: PDP sostituzione template 
+- `fix#495`: PDP aggiornamento voci dispensative, compensative e valutative
+- `fix#503`:Aggiunta flag completamento PDP griglia osservativa
+- `fix#494`: PDP compilazione griglia C2 
+- compilazione griglia C2 (patto educativo)
+- aggiunta migrazione per griglia_pdp_c2 in utente
+- aggiornata ACL policy
+- aggiunto ruolo tutor-bes
+- aggiunto menu pdp->patto_educativo
+- il patto educativo può essere solo gestito dal tutor-bes
+- aggiornato template per includere le risposte della griglia C2 Patto Educativo
+- `fix#491`: PDP Sezione A1 per tutti gli studenti 
+- `fix#493`: PDP griglia C1 compilazione da parte di TUTTI gli studenti f
+- fix#491: PDP Sezione A1 per tutti gli studenti
+- Aggiunta sezione Mi Presento in PDP per tutti gli studenti e Admin
+- Lo studente può compilare in autonomia la propria presentazione verso il consiglio di classe
+- fix#493 PDP griglia C1 compilazione da parte di TUTTI gli studenti
+- Lo studente può compilare in autonomia la griglia valutativa C1
+- Aggiornato il template del PDP per riportare anche la sezione mi presento e l'autovalutazione C1
+- Aggiornami alcuni campi relativi alle generalità dello studente nel template
+
 ## v4.2.8 – 22 Marzo 2024
 - `fix#501`: Update utenti a TUTOR-SCOLASTICO per PCTO
 - Aggiunto campo residenza in Utente
