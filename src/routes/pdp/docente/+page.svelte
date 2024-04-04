@@ -12,12 +12,14 @@
 	export let data;
     export let form;
 
+    let obiettivi_minimi_templates = helper.data2arr(data.obiettivi_minimi_templates);
     let pdp = helper.data2arr(data.pdp);
     //add field for easier table visualization
     pdp.forEach(p => {
         p['studente_col'] = `${p.studente.cognome} ${p.studente.nome}`;
         p['classe_col'] = `${p.insegnamento.classe.classe} ${p.insegnamento.classe.istituto} ${p.insegnamento.classe.sezione}`;
         p['materia_col'] = p.insegnamento.materia.nome;
+        p['obiettivi_minimi'] = p.studente.obiettivi_minimi;
     });
 
     let current_dispensative = JSON.parse(misure_dispensative);
@@ -54,12 +56,23 @@
         altro_dispensative: '',
         altro_valutative: '',
         note: '',
-        completo: 'NO'
+        completo: 'NO',
+        obiettivi_minimi: '',
+        obiettivi_minimi_id: 0,
+        has_obiettivi_minimi: false
 	};
 
 	// schema di validazione del form
 	const form_schema = yup.object().shape({
         //keep it for compatibility and also it might be useful in future
+        has_obiettivi_minimi: yup
+                            .boolean(),
+        obiettivi_minimi: yup
+                        .string()
+                        .when('has_obiettivi_minimi', {
+                            is: true,
+                            then: yup.string().required("Obiettivi Minimi necessari")
+                        })
     });
 
 	let modal_action = 'create';
@@ -80,6 +93,7 @@
         form_values.altro_valutative = current_pdp.altro_valutative;
         form_values.note = current_pdp.note;
         form_values.completo = current_pdp.completo ? 'SI': 'NO';
+        form_values.has_obiettivi_minimi = current_pdp.obiettivi_minimi
 	}
 
     function reset_form_value() {
@@ -93,7 +107,9 @@
             altro_dispensative: '',
             altro_valutative: '',
             note: '',
-            completo: 'NO'
+            completo: 'NO',
+            obiettivi_minimi: '',
+            obiettivi_minimi_id: 0
 		};		
     }
 
@@ -107,13 +123,13 @@
         form_values.valutative = JSON.stringify(current_valutative);
 
 		try {
-			// valida il form prima del submit
-			await form_schema.validate(form_values, { abortEarly: false });
-			errors = {};
+			// valida il form prima del submit solo se ci sono obiettivi minimi
+            await form_schema.validate(form_values, { abortEarly: false });
+            errors = {};
             modal_form.submit();
             reset_form_value();
 		} catch (err) {
-			errors = err.inner.reduce((acc, err) => {
+            errors = err.inner.reduce((acc, err) => {
 				return { ...acc, [err.path]: err.message };
 			}, {});
 		}
@@ -129,7 +145,7 @@
 
 
 	function update_template() {
-		const template = data.templates.filter(t => t.id == form_values.template_id)[0];
+		const template = data.templates?.filter(t => t.id == form_values.template_id)[0];
         
         current_dispensative = JSON.parse(template.dispensative);
         current_compensative = JSON.parse(template.compensative);
@@ -139,6 +155,12 @@
         form_values.altro_valutative = template.altro_valutative;
         form_values.note = template.note;
 	}
+
+    function update_obiettivi_minimi() {
+        let obiettivo_minimo = obiettivi_minimi_templates.filter(template => template.id == form_values.obiettivi_minimi_id)[0];
+        if(obiettivo_minimo)
+            form_values.obiettivi_minimi = obiettivo_minimo.template;
+    }
 
     function prevent_enter(key) {
         if(key.key == 'Enter') key.preventDefault();
@@ -154,6 +176,7 @@
         { name: 'studente_col', type: 'string', display: 'Studente', size: 50, search: true },
         { name: 'materia_col', type: 'string', display: 'Materia', size: 50, search: true },
         { name: 'anno', type: 'string', display: 'AS' },
+        { name: 'obiettivi_minimi', type: 'boolean', display: 'Obiettivi Minimi', search: true},
         { name: 'completo', type: 'boolean', display: 'completo', search: true }
 	]}
 	page_size={10}
@@ -187,6 +210,7 @@
         <input type="hidden" name="dispensative" bind:value={form_values.dispensative} />
         <input type="hidden" name="compensative" bind:value={form_values.compensative} />
         <input type="hidden" name="valutative" bind:value={form_values.valutative} />
+        <input type="hidden" name="obiettivi_minimi" bind:value={form_values.obiettivi_minimi} />
 		<div class="modal-dialog modal-xl" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -201,7 +225,7 @@
 				</div>
 				<div class="modal-body">
                     <div class="row">
-                            <div class="col-lg-4">
+                            <div class="{current_pdp.obiettivi_minimi ? 'col-lg-3' : 'col-lg-4'}">
                                 <div class="form-label select_text">Template</div>
                                 <select
                                     class="form-select"
@@ -214,7 +238,7 @@
                                     {/each}
                                 </select>
                             </div>
-                            <div class="col-lg-4">
+                            <div class="{current_pdp.obiettivi_minimi ? 'col-lg-3' : 'col-lg-4'}">
                                 <div class="mb-3">
                                     <div class="form-label select_text">Studente</div>
                                     <input
@@ -226,7 +250,7 @@
                                     />
                                 </div>
                             </div>
-                            <div class="col-lg-4">
+                            <div class="{current_pdp.obiettivi_minimi ? 'col-lg-3' : 'col-lg-4'}">
                                 <div class="mb-3">
                                     <div class="form-label select_text">Materia</div>
                                     <input
@@ -238,6 +262,27 @@
                                     />
                                 </div>
                             </div>
+                            {#if current_pdp.obiettivi_minimi}
+                                <div class="col-lg-3">
+                                    <div class="mb-3">
+                                        <div class="form-label select_text">Obiettivi Minimi</div>
+                                        <select
+                                            class="form-select"
+                                            class:is-invalid={errors.obiettivi_minimi}
+                                            name="obiettivi_minimi_id"
+                                            bind:value={form_values.obiettivi_minimi_id}
+                                            on:change={update_obiettivi_minimi}
+                                        >
+                                            {#each obiettivi_minimi_templates as om_t}
+                                                    <option value={om_t.id}>{om_t.nome}</option>
+                                            {/each}
+                                        </select>
+                                        {#if errors.obiettivi_minimi}
+									        <span class="invalid-feedback">{errors.obiettivi_minimi}</span>
+								        {/if}
+                                    </div>
+                                </div>
+                            {/if}
                     </div>
                     <div class="row myfieldset">    
                         <div class="form-label mylabel">Misure Dispensative</div>
