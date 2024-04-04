@@ -37,7 +37,8 @@ export async function load({ locals }) {
                 studente: {
                     select: {
                         nome: true,
-                        cognome: true
+                        cognome: true,
+                        obiettivi_minimi: true
                     }
                 },
                 insegnamento: {
@@ -69,10 +70,16 @@ export async function load({ locals }) {
             }
         });
 
+        let obiettivi_minimi_templates = await SARP.programmazione_Template.findMany({
+            where: {
+                creatoDa: user_id(locals)
+            }
+        });
 
         return {
             pdp,
-            templates
+            templates,
+            obiettivi_minimi_templates
         };
     } catch (exception) {
         catch_error(exception, 2601);
@@ -88,12 +95,13 @@ export const actions = {
 
         try {
             const form = await request.formData();	
-
+            
             await SARP.PDP.update({
                 data: {
                     dispensative: form.get("dispensative"),
                     compensative: form.get("compensative"),
                     valutative: form.get("valutative"),
+                    obiettivi_minimi: form.get("obiettivi_minimi"),
                     altro_compensative: form.get("altro_compensative")?.toString(),
                     altro_dispensative: form.get("altro_dispensative")?.toString(),
                     altro_valutative: form.get("altro_valutative")?.toString(),
