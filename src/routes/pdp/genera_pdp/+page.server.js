@@ -202,8 +202,11 @@ export const actions = {
                     compensative_no: compensative.length == 0,
                     valutative: valutative,
                     valutative_yes: valutative.length > 0,
-                    valutative_no: valutative.length == 0
-                };
+                    valutative_no: valutative.length == 0,
+                    has_obiettivi_minimi: studente.obiettivi_minimi,
+                    argomenti_q1: JSON.parse(p.obiettivi_minimi)[0],
+					argomenti_q2: JSON.parse(p.obiettivi_minimi)[1]
+                };                
                 let firma = { materia: materia.materia, docente: materia.docente};
                 
                 materie.push(materia);
@@ -247,6 +250,10 @@ export const actions = {
                 if(q.qid == 17 || q.qid == 18) 
                     renderer[`griglia_c2_${q.qid}_YN`] = q.answer.length > 0 ? 'SI' : 'NO'; 
             });
+
+            //programma obiettivi minimi se necessario
+            // renderer['has_obiettivi_minimi'] = studente.obiettivi_minimi;
+
 
 			const content = fs.readFileSync(
 				path.resolve(PUBLIC_PDP_TEMPLATES_DIR, PUBLIC_PDP_TEMPLATE),
