@@ -185,6 +185,7 @@
 	footer="PDP docente"
 	actions={true}
     print={false}
+    print_filter={false}
     update_tip="Creo o aggiorna PDP per lo studente e la materia selezionati"
 	resource="pdp_docente"
 	modal_name={$page_action_modal}
