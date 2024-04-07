@@ -31,7 +31,8 @@
                              s.griglia_valutazione_done && 
                              s.griglia_pdp_a1_done && 
                              s.griglia_pdp_c1_done &&
-                             s.griglia_pdp_c2_done;
+                             s.griglia_pdp_c2_done &&
+                             s.griglia_pdp_b_done;
             return s;
         });
     }
@@ -55,6 +56,7 @@
         { name: 'griglia_pdp_a1_done', type: 'boolean', display: "Mi Presento", search: true },
         { name: 'griglia_pdp_c1_done', type: 'boolean', display: "Autovalutazione", search: true },
         { name: 'griglia_pdp_c2_done', type: 'boolean', display: "Patto Educativo", search: true },
+        { name: 'griglia_pdp_b_done', type: 'boolean', display: "Griglia Abilità", search: true },
         { name: 'materie_col', type: 'string', display: "Materie Complete", size: 10},
         { name: 'can_print', type: 'boolean', display: "PDP Completo", search: true },
 	]}

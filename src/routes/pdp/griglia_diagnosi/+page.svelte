@@ -112,18 +112,18 @@
                                     </tr>
                                     <tr>
                                         <td class="right">BRANO</td>
-                                        <td class="center"><input class="input" type="text" value="{form_values.griglia_pdp_b['brano_velocita']}"/></td>
-                                        <td class="center"><input class="input" type="text" value="{form_values.griglia_pdp_b['brano_correttezza']}"/></td>
+                                        <td class="center"><input class="input" type="text" bind:value="{form_values.griglia_pdp_b['brano_velocita']}"/></td>
+                                        <td class="center"><input class="input" type="text" bind:value="{form_values.griglia_pdp_b['brano_correttezza']}"/></td>
                                     </tr>
                                     <tr>
                                         <td class="right">PAROLE</td>
-                                        <td class="center"><input class="input" type="text" value="{form_values.griglia_pdp_b['parole_velocita']}"/></td>
-                                        <td class="center"><input class="input" type="text" value="{form_values.griglia_pdp_b['parole_correttezza']}"/></td>
+                                        <td class="center"><input class="input" type="text" bind:value="{form_values.griglia_pdp_b['parole_velocita']}"/></td>
+                                        <td class="center"><input class="input" type="text" bind:value="{form_values.griglia_pdp_b['parole_correttezza']}"/></td>
                                     </tr>
                                     <tr>
                                         <td class="right">NON PAROLE</td>
-                                        <td class="center"><input class="input" type="text" value="{form_values.griglia_pdp_b['notparole_velocita']}"/></td>
-                                        <td class="center"><input class="input" type="text" value="{form_values.griglia_pdp_b['notparole_correttezza']}"/></td>
+                                        <td class="center"><input class="input" type="text" bind:value="{form_values.griglia_pdp_b['notparole_velocita']}"/></td>
+                                        <td class="center"><input class="input" type="text" bind:value="{form_values.griglia_pdp_b['notparole_correttezza']}"/></td>
                                     </tr>
                                     <tr>
                                         <td class="header" colspan="3">COMPRENSIONE</td>
@@ -131,15 +131,15 @@
                                     <tr>
                                         <td class="center">
                                             BRANO DI CRONACA
-                                            <input class="input" type="text" value="{form_values.griglia_pdp_b['brano_cronaca']}"/>
+                                            <input class="input" type="text" bind:value="{form_values.griglia_pdp_b['brano_cronaca']}"/>
                                         </td>
                                         <td class="center">
                                             BRANO INFORMATIVO
-                                            <input class="input" type="text" value="{form_values.griglia_pdp_b['brano_informativo']}"/>
+                                            <input class="input" type="text" bind:value="{form_values.griglia_pdp_b['brano_informativo']}"/>
                                         </td>
                                         <td class="center">
                                             TOTALE
-                                            <input class="input" type="text" value="{form_values.griglia_pdp_b['brano_totale']}"/>
+                                            <input class="input" type="text" bind:value="{form_values.griglia_pdp_b['brano_totale']}"/>
                                         </td>
                                     </tr>
                                     <tr>
@@ -148,22 +148,22 @@
                                     <tr>
                                         <td class="center">
                                             DETTATO DI BRANO
-                                            <input class="input" type="text" value="{form_values.griglia_pdp_b['dettato_brano']}"/>
+                                            <input class="input" type="text" bind:value="{form_values.griglia_pdp_b['dettato_brano']}"/>
                                         </td>
                                         <td class="center">
                                             OMOFONE NON OMOGRAFE
-                                            <input class="input" type="text" value="{form_values.griglia_pdp_b['omografe']}"/>
+                                            <input class="input" type="text" bind:value="{form_values.griglia_pdp_b['omografe']}"/>
                                         </td>
                                         <td class="center">
                                             LISTA DI PAROLE
-                                            <input class="input" type="text" value="{form_values.griglia_pdp_b['lista_parole']}"/><br>
+                                            <input class="input" type="text" bind:value="{form_values.griglia_pdp_b['lista_parole']}"/><br>
                                             LISTA DI NON PAROLE
-                                            <input class="input" type="text" value="{form_values.griglia_pdp_b['lista_notparole']}"/>
+                                            <input class="input" type="text" bind:value="{form_values.griglia_pdp_b['lista_notparole']}"/>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="center" colspan="3">
-                                            <input class="input" type="text" value="{form_values.griglia_pdp_b['scrittura_altro']}"/>
+                                            <input class="input" type="text" bind:value="{form_values.griglia_pdp_b['scrittura_altro']}"/>
                                         </td>
                                     </tr>
                                     <tr>
@@ -172,20 +172,20 @@
                                     <tr>
                                         <td class="center">
                                             lele<br>
-                                            <input class="input" type="text" value="{form_values.griglia_pdp_b['grafia_lele']}"/>
+                                            <input class="input" type="text" bind:value="{form_values.griglia_pdp_b['grafia_lele']}"/>
                                         </td>
                                         <td class="center">
                                             uno<br>
-                                            <input class="input" type="text" value="{form_values.griglia_pdp_b['grafia_uno']}"/>
+                                            <input class="input" type="text" bind:value="{form_values.griglia_pdp_b['grafia_uno']}"/>
                                         </td>
                                         <td class="center">
                                             Numeri in parole
-                                            <input class="input" type="text" value="{form_values.griglia_pdp_b['grafia_numeri']}"/><br>
+                                            <input class="input" type="text" bind:value="{form_values.griglia_pdp_b['grafia_numeri']}"/><br>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="center" colspan="3">
-                                            <input class="input" type="text" value="{form_values.griglia_pdp_b['grafia_altro']}"/>
+                                            <input class="input" type="text" bind:value="{form_values.griglia_pdp_b['grafia_altro']}"/>
                                         </td>
                                     </tr>
                                     <tr>
@@ -194,67 +194,90 @@
                                     <tr>
                                         <td class="center">
                                             AREA DEL NUMERO<br>
-                                            <input class="input" type="text" value="{form_values.griglia_pdp_b['calcolo_area_numero']}"/>
+                                            <input class="input" type="text" bind:value="{form_values.griglia_pdp_b['calcolo_area_numero']}"/>
                                         </td>
                                         <td class="center">
                                             AREA DEL CALCOLO<br>
-                                            <input class="input" type="text" value="{form_values.griglia_pdp_b['calcolo_area_calcolo']}"/>
+                                            <input class="input" type="text" bind:value="{form_values.griglia_pdp_b['calcolo_area_calcolo']}"/>
                                         </td>
                                         <td class="center">
                                             SENSO DEL NUMERO<br>
-                                            <input class="input" type="text" value="{form_values.griglia_pdp_b['senso_numero']}"/><br>
+                                            <input class="input" type="text" bind:value="{form_values.griglia_pdp_b['senso_numero']}"/><br>
                                         </td>
                                     </tr> 
                                     <tr>
                                         <td class="center">
                                             Conteggio<br>
-                                            <input class="input" type="text" value="{form_values.griglia_pdp_b['calcolo_conteggio']}"/>
+                                            <input class="input" type="text" bind:value="{form_values.griglia_pdp_b['calcolo_conteggio']}"/>
                                         </td>
                                         <td class="center">
                                             Moltiplicazioni a mente<br>
-                                            <input class="input" type="text" value="{form_values.griglia_pdp_b['calcolo_moltiplicazioni']}"/>
+                                            <input class="input" type="text" bind:value="{form_values.griglia_pdp_b['calcolo_moltiplicazioni']}"/>
                                         </td>
                                         <td class="center">
                                             Triplette<br>
-                                            <input class="input" type="text" value="{form_values.griglia_pdp_b['senso_triplette']}"/><br>
+                                            <input class="input" type="text" bind:value="{form_values.griglia_pdp_b['senso_triplette']}"/><br>
                                         </td>
                                     </tr> 
                                     <tr>
                                         <td class="center">
                                             Lettura dei numeri<br>
-                                            <input class="input" type="text" value="{form_values.griglia_pdp_b['calcolo_lettura']}"/>
+                                            <input class="input" type="text" bind:value="{form_values.griglia_pdp_b['calcolo_lettura']}"/>
                                         </td>
                                         <td class="center">
                                             Calcolo a mente<br>
-                                            <input class="input" type="text" value="{form_values.griglia_pdp_b['calcolo_mente']}"/>
+                                            <input class="input" type="text" bind:value="{form_values.griglia_pdp_b['calcolo_mente']}"/>
                                         </td>
                                         <td class="center">
                                             Inserzioni<br>
-                                            <input class="input" type="text" value="{form_values.griglia_pdp_b['senso_inserzioni']}"/><br>
+                                            <input class="input" type="text" bind:value="{form_values.griglia_pdp_b['senso_inserzioni']}"/><br>
                                         </td>
                                     </tr> 
                                     <tr>
                                         <td class="center">
                                             Scrittura di numeri<br>
-                                            <input class="input" type="text" value="{form_values.griglia_pdp_b['calcolo_scrittura']}"/>
+                                            <input class="input" type="text" bind:value="{form_values.griglia_pdp_b['calcolo_scrittura']}"/>
                                         </td>
                                         <td class="center">
                                             Calcolo rapido<br>
-                                            <input class="input" type="text" value="{form_values.griglia_pdp_b['calcolo_rapido']}"/>
+                                            <input class="input" type="text" bind:value="{form_values.griglia_pdp_b['calcolo_rapido']}"/>
                                         </td>
                                         <td class="center">
                                             Calcolo approssimativo<br>
-                                            <input class="input" type="text" value="{form_values.griglia_pdp_b['senso_approssimativo']}"/><br>
+                                            <input class="input" type="text" bind:value="{form_values.griglia_pdp_b['senso_approssimativo']}"/><br>
                                         </td>
                                     </tr> 
                                     <tr>
                                         <td class="center"></td>
                                         <td class="center">
                                             Operazioni scritte<br>
-                                            <input class="input" type="text" value="{form_values.griglia_pdp_b['calcolo_scritte']}"/>
+                                            <input class="input" type="text" bind:value="{form_values.griglia_pdp_b['calcolo_scritte']}"/>
                                         </td>
                                         <td class="center"></td>
                                     </tr> 
+                                </table><br>
+                                ALTRE CARATTERISTICHE DEL PROCESSO DI APPRENDIMENTO<br><br>
+                                <table>
+                                    <tr>
+                                        <td class="center td-short">PROPRIETÀ' LINGUISTICA</td>
+                                        <td class="center"><input class="inputlg" type="text" bind:value="{form_values.griglia_pdp_b['altro_linguistica']}"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="center">MEMORIA</td>
+                                        <td class="center"><input class="inputlg" type="text" bind:value="{form_values.griglia_pdp_b['altro_memoria']}"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="center">ATTENZIONE</td>
+                                        <td class="center"><input class="inputlg" type="text" bind:value="{form_values.griglia_pdp_b['altro_attenzione']}"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="center">VELOCITÀ' DI ELABORAZIONE</td>
+                                        <td class="center"><input class="inputlg" type="text" bind:value="{form_values.griglia_pdp_b['altro_elaborazione']}"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="center">AREE DI FORZA</td>
+                                        <td class="center"><input class="inputlg" type="text" bind:value="{form_values.griglia_pdp_b['altro_forza']}"/></td>
+                                    </tr>
                                 </table>
                             </div>
                         </div>
@@ -305,12 +328,6 @@
 </div>
 
 <style>
-    .lettura-label {
-        position: relative;
-        top: 2.5rem;
-        font-weight: bold;
-    }
-
     table {
         width: 100%;
     }
@@ -338,6 +355,14 @@
 
     .input {
         width: 70%;
+    }
+
+    .td-short {
+        width: 30%;
+    }
+
+    .inputlg {
+        width: 90%;
     }
 
 </style>

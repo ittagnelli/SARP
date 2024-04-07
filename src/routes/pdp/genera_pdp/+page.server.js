@@ -55,6 +55,8 @@ export async function load({ locals }) {
                     griglia_pdp_c1_done: true,
                     griglia_pdp_c2: true,
                     griglia_pdp_c2_done: true,
+                    griglia_pdp_b: true,
+                    griglia_pdp_b_done: true,
                     pdp: {
                         select: {
                             completo: true
@@ -251,9 +253,9 @@ export const actions = {
                     renderer[`griglia_c2_${q.qid}_YN`] = q.answer.length > 0 ? 'SI' : 'NO'; 
             });
 
-            //programma obiettivi minimi se necessario
-            // renderer['has_obiettivi_minimi'] = studente.obiettivi_minimi;
-
+            //griglia abilità B
+            let griglia_abilita = JSON.parse(studente.griglia_pdp_b);
+            renderer = Object.assign(renderer, griglia_abilita);
 
 			const content = fs.readFileSync(
 				path.resolve(PUBLIC_PDP_TEMPLATES_DIR, PUBLIC_PDP_TEMPLATE),

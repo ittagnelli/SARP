@@ -56,7 +56,7 @@ export const actions = {
 
 		const form_data = await request.formData();
 		let student_id = form_data.get('student_id');
-       
+
         SARP.set_session(locals); // passa la sessione all'audit
 		try {
 			await SARP.Utente.update({
