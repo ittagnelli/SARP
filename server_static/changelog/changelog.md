@@ -1,3 +1,10 @@
+## v4.4.0 – 07 Aprile 2024
+- `fix#492`: PDP compilazione Sezione B
+- Il referente BES può compilare la tabella delle Abilità B
+- `fix#519`: PDP obiettivi minimi per materia in template 
+- `fix#514`: PDP Obiettivi Minimi    
+- Docente può specificare un template di programmazione per gli studenti che hanno gli obiettivi minimi
+
 ## v4.3.0 – 03 Aprile 2024
 - `fix#516`: PCTO Stage date aggiornate al momento della stampa nei documenti
 - `fix#513`: Studente Obiettivi Minimi (#515)
