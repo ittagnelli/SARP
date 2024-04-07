@@ -75,6 +75,8 @@
     endpoint="pdp/griglia_osservativa"
 	actions={true}
     trash={false}
+    print={false}
+    print_filter={false}
     update_tip="Compila Presentazione al Consiglio di Classe"
     resource="pdp_mipresento"
 />

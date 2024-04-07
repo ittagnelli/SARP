@@ -11,6 +11,7 @@
 
 	let logger = new Logger('client');
 	let studenti = helper.data2arr(data.studenti);
+
     //set default griglia_valutazione for students never evaluated
     studenti.forEach((s) => {
         if(s.griglia_valutazione == null)
@@ -19,7 +20,7 @@
     
 	//configura la pagina pre-titolo, titolo e nome del modale
 	$page_pre_title = 'TUTOR';
-	$page_title = 'Studenti';
+	$page_title = 'Griglia Osservativa Studenti';
 	$page_action_title = '';
 	$page_action_modal = 'modal-update-griglia';
 
@@ -42,6 +43,7 @@
 		let studente = studenti.filter((item) => item.id == form_values.student_id)[0];
         form_values.completo = studente.griglia_valutazione_done ? 'SI': 'NO';
 		form_values.griglia_valutazione = studente.griglia_valutazione;
+        // console.log(form_values.griglia_valutazione)
 	}
 
 	async function cancel_action(){
@@ -60,7 +62,6 @@
 <Table
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
-		{ name: 'picture', type: 'image', display: 'Utente' },
 		{ name: 'cognome', type: 'string', display: 'Cognome', size: 11, search: true },
 		{ name: 'nome', type: 'string', display: 'Nome', size: 11, search: true },
         { name: 'natoIl', type: 'date', display: 'Nato il' },
@@ -69,13 +70,15 @@
         { name: 'griglia_valutazione_done', type: 'boolean', display: 'completo' }
 	]}
 	rows={studenti}
-	page_size={6}
+	page_size={10}
 	modal_name={$page_action_modal}
 	on:update_start={start_update}
 	footer="Studenti"
     endpoint="pdp/griglia_osservativa"
 	actions={true}
     trash={false}
+    print={false}
+    print_filter={false}
     update_tip="Aggiorna Griglia Osservativa"
     resource="pdp_griglia_osservativa"
 />

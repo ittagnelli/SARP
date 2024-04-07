@@ -1,4 +1,4 @@
-// v 0.32.0 2024-04-04
+// v 0.33.0 2024-04-06
 
 generator client {
     provider = "prisma-client-js"
@@ -63,6 +63,8 @@ model Utente {
     griglia_pdp_c1_done      Boolean                     @default(false)
     griglia_pdp_c2           String?                     //griglia C2 a cura dello studente
     griglia_pdp_c2_done      Boolean                     @default(false)
+    griglia_pdp_b            String?                     //griglia B a cura del referente BES
+    griglia_pdp_b_done       Boolean                     @default(false)
     pdp_Template             pdp_Template[]
     pdp                      PDP[]
 }

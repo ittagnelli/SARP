@@ -74,6 +74,8 @@
     endpoint="pdp/patto_educativo"
 	actions={true}
     trash={false}
+    print={false}
+    print_filter={false}
     update_tip="Aggiorna Patto Educativo"
     resource="pdp_patto_educativo"
 />

@@ -31,6 +31,7 @@
                 <NavSubItem resource="menu_patto_educativo" text="Patto Educativo" link="/pdp/patto_educativo" />
                 <NavSubItem resource="menu_pdp_template" text="Template Docente" link="/pdp/template" />
                 <NavSubItem resource="menu_griglia_osservativa" text="Griglia Osservativa" link="/pdp/griglia_osservativa" />
+                <NavSubItem resource="menu_griglia_diagnosi" text="Griglia Diagnosi" link="/pdp/griglia_diagnosi" />
                 <NavSubItem resource="menu_pdp_docente" text="PDP Docente" link="/pdp/docente" />
                 <NavSubItem resource="menu_genera_pdp" text="PDP Alunni" link="/pdp/genera_pdp" />
             </NavMenu>

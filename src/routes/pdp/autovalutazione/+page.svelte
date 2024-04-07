@@ -11,7 +11,6 @@
 	let logger = new Logger('client');
 	let studenti = helper.data2arr(data.studenti);
 
-    console.log(studenti)
     //set default griglia_pdp_c1 for students never evaluated
     studenti.forEach((s) => {
         if(s.griglia_pdp_c1 == null)
@@ -76,6 +75,8 @@
     endpoint="pdp/griglia_osservativa"
 	actions={true}
     trash={false}
+    print={false}
+    print_filter={false}
     update_tip="Compila Autovalutazione"
     resource="pdp_autovalutazione"
 />

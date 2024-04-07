@@ -133,6 +133,19 @@ pdp_griglia_osservativa:
     - ADMIN
     - TUTOR-CLASSE
 
+menu_griglia_diagnosi:
+  view:
+    - ADMIN
+    - TUTOR-BES
+
+pdp_griglia_diagnosi:
+  read:
+    - ADMIN
+    - TUTOR-BES
+  update:
+    - ADMIN
+    - TUTOR-BES
+
 menu_pdp_docente:
   view:
     - ADMIN
