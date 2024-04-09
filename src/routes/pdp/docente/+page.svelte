@@ -59,7 +59,9 @@
         completo: 'NO',
         obiettivi_minimi: '',
         obiettivi_minimi_id: 0,
-        has_obiettivi_minimi: false
+        has_obiettivi_minimi: false,
+        sintesi_vocale: false,
+        tempo_esteso: false
 	};
 
 	// schema di validazione del form
@@ -109,7 +111,9 @@
             note: '',
             completo: 'NO',
             obiettivi_minimi: '',
-            obiettivi_minimi_id: 0
+            obiettivi_minimi_id: 0,
+            sintesi_vocale: false,
+            tempo_esteso: false
 		};		
     }
 
@@ -121,6 +125,10 @@
         form_values.dispensative = JSON.stringify(current_dispensative);
         form_values.compensative = JSON.stringify(current_compensative);
         form_values.valutative = JSON.stringify(current_valutative);
+
+        //imposta i flag sintesi_vocale e tempo_esteso
+        form_values.sintesi_vocale = current_dispensative[7].selected || current_compensative[1].selected;
+        form_values.tempo_esteso = false;
 
 		try {
 			// valida il form prima del submit solo se ci sono obiettivi minimi
@@ -212,6 +220,8 @@
         <input type="hidden" name="compensative" bind:value={form_values.compensative} />
         <input type="hidden" name="valutative" bind:value={form_values.valutative} />
         <input type="hidden" name="obiettivi_minimi" bind:value={form_values.obiettivi_minimi} />
+        <input type="hidden" name="sintesi_vocale" bind:value={form_values.sintesi_vocale} />
+        <input type="hidden" name="tempo_esteso" bind:value={form_values.tempo_esteso} />
 		<div class="modal-dialog modal-xl" role="document">
 			<div class="modal-content">
 				<div class="modal-header">

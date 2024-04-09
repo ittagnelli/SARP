@@ -1,4 +1,4 @@
-// v 0.33.0 2024-04-06
+// v 0.34.0 2024-04-09
 
 generator client {
     provider = "prisma-client-js"
@@ -276,6 +276,8 @@ model PDP {
     altro_valutative      String?
     note                  String?
     completo              Boolean      @default(false)
+    sintesi_vocale        Boolean      @default(false)
+    tempo_esteso          Boolean      @default(false)
 }
 
 model pdp_Template {
