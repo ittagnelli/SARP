@@ -35,11 +35,11 @@ function catch_error_pdf(exception, type, code) {
 export async function load({ locals }) {
     let action = 'read';
 
-    try {
-        route_protect(locals);
-        access_protect(200, locals, action, resource);
-        SARP.set_session(locals);
+    route_protect(locals);
+    access_protect(200, locals, action, resource);
+    SARP.set_session(locals);
 
+    try {
         if(is_admin(locals) || is_tutor_bes(locals)) {
             // get active BES students
             const studenti = await SARP.Utente.findMany({
