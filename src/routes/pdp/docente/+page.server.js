@@ -106,7 +106,9 @@ export const actions = {
                     altro_dispensative: form.get("altro_dispensative")?.toString(),
                     altro_valutative: form.get("altro_valutative")?.toString(),
                     note: form.get("note")?.toString(),
-                    completo: form.get("completo") === 'SI'
+                    completo: form.get("completo") === 'SI',
+                    sintesi_vocale: form.get("sintesi_vocale") === 'true',
+                    tempo_esteso: form.get("tempo_esteso") === 'true'
                 },
                 where: {
                     id: parseInt(form.get("id"))

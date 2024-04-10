@@ -59,7 +59,9 @@ export async function load({ locals }) {
                     griglia_pdp_b_done: true,
                     pdp: {
                         select: {
-                            completo: true
+                            completo: true,
+                            sintesi_vocale: true,
+                            tempo_esteso: true
                         }
                     },
                     classe: true

@@ -4,7 +4,7 @@
     import { saveAs } from 'file-saver';
 	import { onMount } from "svelte";
     import * as helper from '$js/helper';
-	import { identity } from "svelte/internal";
+	import { construct_svelte_component, identity } from "svelte/internal";
 	
     /* Page properties */
 	$page_action_title = '';
@@ -21,9 +21,11 @@
     let pdp_studenti = is_pdp_complete(studenti);
 
     function is_pdp_complete(studenti) {
-        return studenti.map((s) => {
+        return studenti.map((s,i) => {
             s['studente_col'] = `${s.cognome} ${s.nome}`;
             s['classe_col'] = `${s.classe.classe} ${s.classe.istituto} ${s.classe.sezione}`;
+            s['sintesi_vocale'] = s.pdp.some(i => i.sintesi_vocale == true);
+            s['tempo_esteso'] = s.pdp.some(i => i.tempo_esteso == true);
             let tot_materie = s.pdp.length;
             let materie_complete = s.pdp.filter(m => m.completo == true).length;
             s['materie_col'] = `${materie_complete}/${tot_materie}`;
@@ -52,6 +54,8 @@
 		{ name: 'id', type: 'hidden', display: 'ID' },
         { name: 'classe_col', type: 'string', display: 'Classe', size: 50, search: true },
         { name: 'studente_col', type: 'string', display: 'Studente', size: 50, search: true },
+        { name: 'sintesi_vocale', type: 'boolean', display: "Sintesi Vocale", search: true },
+        { name: 'tempo_esteso', type: 'boolean', display: "Tempo Esteso", search: true },
 		{ name: 'griglia_valutazione_done', type: 'boolean', display: "Griglia Osservativa", search: true },
         { name: 'griglia_pdp_a1_done', type: 'boolean', display: "Mi Presento", search: true },
         { name: 'griglia_pdp_c1_done', type: 'boolean', display: "Autovalutazione", search: true },

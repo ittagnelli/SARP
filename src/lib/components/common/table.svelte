@@ -38,6 +38,7 @@ let rows_paged = []; //pagina attuale di rows
 let bigpage; // numero di pagina contenente MAX_PAGES pagine
 let rows_db = []; // contiene le righe di rows con le chiavi ordinate come la tabella
 let rows_filtered = []; //contiene le righe filtrate dall'utente
+let table_filters = new Map(); //mappa di filtri da applicare
 let footer_num = 0, footer_den = 0;
 let show_pagination = true;
 let current_item_delete = 0; //elemento corrente da eliminare per una data risorsa
@@ -55,6 +56,8 @@ rows.forEach((row) => {
 });
 
 $: {
+    // console.log("FILTER:", rows_filtered.length, rows_filtered)
+
     //al cambiamento dell'inizio e fine pagina aggiorno le righe della tabella
     rows_paged = [...rows_filtered.slice(page_start, page_end)];
 
@@ -105,29 +108,45 @@ function start_delete(id) {
 }
 
 function table_filter(col, type, key) {
-    if(type != 'boolean') {
-        let val = document.getElementById(`filter_${col}`).value;
-        if(val.length == 0)
-            rows_filtered = rows_db;
-        else {
-            if(type == 'string') 
-                rows_filtered = rows_db.filter(item => item[col].toLowerCase().startsWith(val.toLowerCase()));    
-            if(type == 'number')
-                rows_filtered = rows_db.filter(item => item[col] == +val);
-            if(type == 'object')
-                rows_filtered = rows_db.filter(item => item[col][key].toLowerCase().startsWith(val.toLowerCase()));
-        }   
-    } else {
+    //reset the filter each time
+    rows_filtered = rows_db;
+
+    //build the filter map
+    if(type == 'boolean') {
         let valt = document.getElementById(`filter_${col}T`).checked;
         let valf = document.getElementById(`filter_${col}F`).checked;
-        
-        if(valt && !valf)
-            rows_filtered = rows_db.filter(item => item[col] == valt);
-        else if(!valt && valf)
-            rows_filtered = rows_db.filter(item => item[col] == !valf);
+        if(!valt && !valf && table_filters.has(col))
+            table_filters.delete(col)
         else
-            rows_filtered = rows_db;
+            table_filters.set(col, {type, valt, valf})
+    } else {
+        let val = document.getElementById(`filter_${col}`).value;
+        if(val.length == 0 && table_filters.has(col))
+            table_filters.delete(col)
+        else
+            table_filters.set(col, {type, val, key})
     }
+
+    //apply the filter map
+    for(let [col,filter] of table_filters.entries()) {
+        switch(filter.type) {
+            case 'boolean':
+                if(filter.valt && !filter.valf)
+                    rows_filtered = rows_filtered.filter(item => item[col] == filter.valt);
+                else if(!filter.valt && filter.valf)       
+                    rows_filtered = rows_filtered.filter(item => item[col] == !filter.valf);
+                break;
+            case 'object':
+                rows_filtered = rows_filtered.filter(item => item[col][filter.key].toLowerCase().startsWith((filter.val).toLowerCase()));
+                break;
+            case 'number':
+                rows_filtered = rows_filtered.filter(item => item[col] == +(filter.val));
+                break;
+            case 'string':
+                rows_filtered = rows_filtered.filter(item => item[col].toLowerCase().startsWith((filter.val).toLowerCase()));
+        }
+    }
+
     show_pagination = rows_filtered.length == rows_db.length;
     rows_paged = [...rows_filtered.slice(page_start, page_end)];
     //if need to paginate the restore original page size
