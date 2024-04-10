@@ -1,3 +1,12 @@
+## v4.5.0 – 10 Aprile 2024
+- `fix#527`: Logout error da PDP Alunni 
+- `fix#525`: PDP presenza voci specifiche    
+- modifica alla tabella in modo da poter applicare filtri in AND
+- aggiunti flag sintesi_vocale e tempo_esteso a PDP
+- aggiunte colonne sintesi_vocale e tempo_esteso in PDP Alunni
+- In tal modo la segreteria può verificare quali studenti di V hanno questi flag a true o meno
+- `fix#523`: PDP Layout Patto Educativo
+
 ## v4.4.0 – 07 Aprile 2024
 - `fix#492`: PDP compilazione Sezione B
 - Il referente BES può compilare la tabella delle Abilità B
