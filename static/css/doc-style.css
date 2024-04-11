@@ -1,0 +1,39 @@
+h2 {
+  margin-top: 1rem;  
+  margin-bottom: -1rem;
+}
+p {
+    margin-bottom: -1.0rem;
+}
+
+img {
+    display: block;
+    margin: auto;
+    padding: 1rem;
+}
+
+.bold-red {
+    color: red;
+    font-weight: bold;
+}
+
+.button {
+    width: 120px;
+    padding: 6px;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 5px;
+}
+
+.green {
+    background-color: #2FB344;
+}
+
+.blue {
+    background-color: #206BC4;
+}
+
+.red {
+    background-color: #D63939;
+}
