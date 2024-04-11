@@ -497,3 +497,39 @@ convert_to_print:
     - ADMIN
     - DOCENTE
     - DEVELOPER
+
+menu_doc:
+  view:
+    - '*'
+    
+menu_doc_utenti:
+  view:
+    - '*'
+
+menu_doc_classi:
+  view:
+    - '*'
+
+menu_doc_pcto:
+  view:
+    - '*'
+
+menu_doc_pdp:
+  view:
+    - '*'
+
+menu_doc_programmazione:
+  view:
+    - '*'
+
+menu_doc_sicurezza:
+  view:
+    - '*'
+
+menu_doc_tools:
+  view:
+    - '*'
+
+documentazione:
+  read:
+    - '*'
