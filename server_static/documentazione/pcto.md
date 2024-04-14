@@ -76,7 +76,7 @@ Descriviamo ora le colonne di questa tabella:
 - **FINE**: indica la data di fine dello stage
 - **SIDI**: indica se lo stage è registrato in SIDI
 - **DOC**: indica se la documentazione è completa e firmata
-- **AZIONI**: azioni che è possibile svolgere su ogni singola azienda
+- **AZIONI**: azioni che è possibile svolgere su ogni singolo stage
   - **Stampa convenzione per tutti gli studenti**: scarica documento (in formato docx) della convenzione per lo stage per ogni studente
   - **Aggiorna stage**: entra nella  modalità aggiornamento delle informazioni di uno stage
   - **Visualizza stato studenti**: entra nella modalità visualizzazione dello stato degli studenti impiegati nello stage
@@ -188,3 +188,19 @@ Dopo aver effettuato il login con le credenziali fornite dalla scuola, per regis
 - La presenza verrà effettivamente rimossa
 
 ![image info](/img/documentazione/pcto/pcto_presenze_15.png)
+
+## VALUTAZIONE STUDENTI - VISTA PRINCIPALE
+
+La schermata principale della sezione *VALUTAZIONE STUDENTI* mostra una tabella, con varie colonne, contenente la lista di tutti gli studenti che hanno ricevuto una valutazione presenti sul sistema.
+La tabella viene aggiornata automaticamente in caso di aggiunta, modifica o rimozione di una o più valutazioni.
+
+![PCTO_Aziende_tabella](/img/documentazione/pcto/pcto_valutazioneStudenti_01.png)
+
+Descriviamo ora le colonne di questa tabella:
+- **STAGE**: nome dello stage
+- **AZIENDA**: nome dell'azienda
+- **STAGISTA**: nome dello stagista
+- **DATA CREAZIONE**: data di creazione della valutazione
+- **AZIONI**: azioni che è possibile svolgere su ogni singola valutazione
+  - **Aggiorna valutazione stagista**: entra nella  modalità aggiornamento delle informazioni di una valutazione
+  - **Rimuovi valutazione stagista**: rimuove una valutazione dal sistema
