@@ -56,3 +56,46 @@ Una volta terminato l'inserimento di tutti i campi obbligatori e di altri campi 
 Se non ci sono errori, il form dati si chiuderà e la tabella sarà automaticamente aggiornata e includerà la nuova azienda.
 
 Se al contrario l'utente preme il pulsante <span class="button red">Cancel</span>, il form viene chiuso, NON viene inviata la richiesta di creazione o aggiornamento di una nuova azienda e la tabella non viene aggiornata.
+
+## STAGE - VISTA PRINCIPALE
+
+La schermata principale della sezione *STAGE* mostra una tabella, con varie colonne, contenente la lista di tutti gli stage presenti sul sistema.
+La tabella viene aggiornata automaticamente in caso di aggiunta, modifica o rimozione di uno o più stage.
+
+![PCTO_Stage_tabella](/img/documentazione/pcto/pcto_stage_01.png)
+
+Descriviamo ora le colonne di questa tabella:
+- **TITOLO**: nome dello stage
+- **DESCRIZIONE**: descrizione dello stage
+- **AZIENDA**: nome dell'azienda
+- **CLASSE**: indica per quale classe è indicato lo stage
+  - **A.S.**: anno scolastico di inserimento dello stage nel sistema
+  - **TUTOR SCOLASTICO**: tutor responsabile dello stage
+  - **ORE**: indica la durata dello stage (in ore)
+  - **INIZIO**: indica la data di inizio dello stage
+- **FINE**: indica la data di fine dello stage
+- **SIDI**: indica se lo stage è registrato in SIDI
+- **DOC**: indica se la documentazione è completa e firmata
+- **AZIONI**: azioni che è possibile svolgere su ogni singola azienda
+  - **Stampa convenzione per tutti gli studenti**: scarica documento (in formato docx) della convenzione per lo stage per ogni studente
+  - **Aggiorna stage**: entra nella  modalità aggiornamento delle informazioni di uno stage
+  - **Visualizza stato studenti**: entra nella modalità visualizzazione dello stato degli studenti impiegati nello stage
+  - **Rimuovi stage**: rimuove uno stage dal sistema
+
+## AGGIUNTA E AGGIORNAMENTO DI UNO STAGE
+
+Per aggiungere un nuovo stage è necessario premere il pulsante <span class="button blue">+ Aggiungi stage</span> presente in alto a destro dello schermo. 
+
+Dopo aver premuto il pulsante apparirà un form (o maschera) di inserimento dati. Lo stesso form dati apparirà anche se si preme l'icona di *Aggiorna stage*.
+Analizziamo ora il form dati in dettaglio
+
+![Utenti_form](/img/documentazione/pcto/pcto_stage_02.png)
+
+In figura tutti i campi presenti nel form. Come si nota sono presenti tutti i campi visibili nella tabella iniziale, ma sono anche presenti altri campi. I campi con il <span class="bold-red">bordo rosso</span> rappresentano i campi **OBBLIGATORI**.
+
+Ove possibile, i campi presentano un esempio di compilazione, rappresentato in grigio chiaro. Quest'informazione serve come linea guida sulla compilazione del singolo campo e specifica anche l'eventuale formato del campo che va rispettato.
+
+Una volta terminato l'inserimento di tutti i campi obbligatori e di altri campi facoltativi premendo il pulsante <span class="button green">+ Crea Stage</span> verrà inviata la richiesta di creazione di un nuovo stage.
+Se non ci sono errori, il form dati si chiuderà e la tabella sarà automaticamente aggiornata e includerà il nuovo stage.
+
+Se al contrario l'utente preme il pulsante <span class="button red">Cancel</span>, il form viene chiuso, NON viene inviata la richiesta di creazione o aggiornamento di un nuovo stage e la tabella non viene aggiornata.
