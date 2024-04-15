@@ -69,10 +69,10 @@ Descriviamo ora le colonne di questa tabella:
 - **DESCRIZIONE**: descrizione dello stage
 - **AZIENDA**: nome dell'azienda
 - **CLASSE**: indica per quale classe è indicato lo stage
-  - **A.S.**: anno scolastico di inserimento dello stage nel sistema
-  - **TUTOR SCOLASTICO**: tutor responsabile dello stage
-  - **ORE**: indica la durata dello stage (in ore)
-  - **INIZIO**: indica la data di inizio dello stage
+- **A.S.**: anno scolastico di svolgimento dello stage
+- **TUTOR SCOLASTICO**: tutor responsabile dello stage
+- **ORE**: indica la durata prevista dello stage (in ore)
+- **INIZIO**: indica la data di inizio dello stage
 - **FINE**: indica la data di fine dello stage
 - **SIDI**: indica se lo stage è registrato in SIDI
 - **DOC**: indica se la documentazione è completa e firmata
@@ -94,6 +94,8 @@ Analizziamo ora il form dati in dettaglio
 In figura tutti i campi presenti nel form. Come si nota sono presenti tutti i campi visibili nella tabella iniziale, ma sono anche presenti altri campi. I campi con il <span class="bold-red">bordo rosso</span> rappresentano i campi **OBBLIGATORI**.
 
 Ove possibile, i campi presentano un esempio di compilazione, rappresentato in grigio chiaro. Quest'informazione serve come linea guida sulla compilazione del singolo campo e specifica anche l'eventuale formato del campo che va rispettato.
+
+Nel campo *Orario Accesso* il formato da rispettare è 00:00-00:00.
 
 Una volta terminato l'inserimento di tutti i campi obbligatori e di altri campi facoltativi premendo il pulsante <span class="button green">+ Crea Stage</span> verrà inviata la richiesta di creazione di un nuovo stage.
 Se non ci sono errori, il form dati si chiuderà e la tabella sarà automaticamente aggiornata e includerà il nuovo stage.
