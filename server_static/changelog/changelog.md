@@ -1,3 +1,11 @@
+## v4.6.0 – 16 Aprile 2024
+- `fix#538`: Fix vari per programmazione annuale
+- Aggiornamento della sezione programmazione annuale in preparazione della fine del pentamestre
+- `fix#535`:Documentazione sezione Utenti
+- Aggiunta la documentazione sulla sezione `Utenti`
+- `fix#529``: SAPR Documentation infrastructure 
+- Creata infrastruttura per la sezione documentazione di SARP
+
 ## v4.5.0 – 10 Aprile 2024
 - `fix#527`: Logout error da PDP Alunni 
 - `fix#525`: PDP presenza voci specifiche    

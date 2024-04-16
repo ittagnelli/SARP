@@ -1,5 +1,5 @@
 import { PUBLIC_PROGRAMMAZIONE_ANNUALE_TEMPLATE, PUBLIC_PROGRAMMAZIONE_ANNUALE_TEMPLATES_DIR } from "$env/static/public";
-import { access_protect, is_primo_quadrimestre, route_protect, upper_first_letter, titlecase, custom_tags_parser, sort_strings } from "$js/helper";
+import { access_protect, route_protect, upper_first_letter, titlecase, custom_tags_parser, sort_strings } from "$js/helper";
 import { PrismaDB } from "$js/prisma_db.js";
 import path from 'path';
 import fs from 'fs';
@@ -30,18 +30,23 @@ export async function load({ locals }) {
         // per default il programma non è completo
         let programma_q1_completo = false;
         let programma_q2_completo = false;
+        let ins_ratio_q1 = '';
+        let ins_ratio_q2 = '';
 
         // se c'e' un insegnamento determiniamo se è completo o no
         if(current_insegnamento.length != 0) {
             programma_q1_completo = current_insegnamento.filter(insegnamento => insegnamento.programma_primo_quadrimestre_completo).length == current_insegnamento.length
 		    programma_q2_completo = current_insegnamento.filter(insegnamento => insegnamento.programma_secondo_quadrimestre_completo).length == current_insegnamento.length
+            ins_ratio_q1 = `${current_insegnamento.filter(insegnamento => insegnamento.programma_primo_quadrimestre_completo).length}/${current_insegnamento.length}`;
+            ins_ratio_q2 = `${current_insegnamento.filter(insegnamento => insegnamento.programma_secondo_quadrimestre_completo).length}/${current_insegnamento.length}`;
         }
 
 		return {
 			...classe,
 			"programmazione_q1_completa": programma_q1_completo,
 			"programmazione_q2_completa": programma_q2_completo,
-			"programmazione_completa": programma_q1_completo || programma_q2_completo
+            ins_ratio_q1,
+            ins_ratio_q2
 		}
 	})
     return {
@@ -55,6 +60,7 @@ export const actions = {
 		try {
 			const form_data = await request.formData();
 			const id = form_data.get('id');
+            const periodo = Number(form_data.get('periodo')) || 0;
             let materie_programmi = null;
 
 			// preleva la classe dal DB
@@ -83,8 +89,8 @@ export const actions = {
             //Educazione Civica nel primo trimestre non presenta un programma ma solo una frase fissa
             //mentre nel pentamestre è una materia normale
             //aggiunto il flag render per flessibilità futura 
-			if(is_primo_quadrimestre()){
-				materie_programmi = insegnamenti.map(insegnamento => {
+			if(periodo == 1) {
+            	materie_programmi = insegnamenti.map(insegnamento => {
 					const programma = JSON.parse(insegnamento.programma_primo_quadrimestre);
 					const libri = programma[2].libri.split('~'); // Sappiamo che l'array è composto da:	Q1, Q2, Libri
 					const note = programma[2].note;
@@ -100,11 +106,12 @@ export const actions = {
                         render: insegnamento.materia.nome != 'Educazione Civica' 
 					}
 				});
-			} else {
-				materie_programmi = insegnamenti.map(insegnamento => {
+			} else if(periodo == 2) {
+                materie_programmi = insegnamenti.map(insegnamento => {
 					const programma = JSON.parse(insegnamento.programma_secondo_quadrimestre);
 					const libri = programma[2].libri.split('~'); // Sappiamo che l'array è composto da:	Q1, Q2, Libri
-					return {
+					const note = programma[2].note;
+                    return {
 						nome: insegnamento.materia.nome, 
 						professore: upper_first_letter(insegnamento.docente.nome).concat(" ").concat(upper_first_letter(insegnamento.docente.cognome)),
 						libri: libri,
@@ -161,9 +168,9 @@ export const actions = {
 				compression: 'DEFLATE'
 			});
 
-			return {
+            return {
 				file: JSON.stringify(buf), // Convertiamo il buffer in stringa sennò sveltekit va in errore
-				nome_documento: `Programmazione-${docx_programmazione_template.classe.replace(' ', '_')}.docx`
+				nome_documento: `Programmazione-${docx_programmazione_template.classe.replace(' ', '_')}-periodo-${periodo}.docx`
 			};
 		} catch (exception) {
 			console.log(exception)
