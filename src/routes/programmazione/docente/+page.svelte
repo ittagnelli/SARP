@@ -12,9 +12,7 @@
 	import { page_action_title, page_title, page_pre_title, page_action_modal } from '$js/store';
 	import Programmazione from '$lib/components/common/programmazione.svelte';
 	import Table from '$lib/components/common/table.svelte';
-	import Alert from '$lib/components/common/alert.svelte';
-    import InputText from '$lib/components/modal/input_text.svelte';
-    import MessageBox from '$lib/components/common/message_box.svelte';
+	import MessageBox from '$lib/components/common/message_box.svelte';
     import { onMount } from 'svelte';
     import { saveAs } from 'file-saver';
 	import * as yup from 'yup';
@@ -41,7 +39,7 @@
                 3000
             );            
         } else if (form != null) {
-             const buffer = new Uint8Array(JSON.parse(form.file).data); // Convertiamo la stringa in un oggetto che conterrà il nostro array di bytes che verrà poi convertito in Uint8Array, necessario all'oggetto Blob
+            const buffer = new Uint8Array(JSON.parse(form.file).data); // Convertiamo la stringa in un oggetto che conterrà il nostro array di bytes che verrà poi convertito in Uint8Array, necessario all'oggetto Blob
             var blob = new Blob([buffer], { type: 'application/msword' });
             saveAs(blob, form.nome_documento);        
         }
@@ -57,8 +55,8 @@
 		classe: 0,
         code_classroom: 'xxx',
 		libri: [''], // Avoid a warning in handlesubmit
-        	note: "",
-        	libri_raw: "",  // Tilde-based libri array
+        note: "",
+        libri_raw: "",  // Tilde-based libri array
 		primo_quadrimestre: [],
 		secondo_quadrimestre: [],
 		conferma: '',
@@ -347,33 +345,38 @@
 <Table
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
-		{ name: 'classe', type: 'object', key: 'classe', display: 'classe', size: 20, search: true },
-		{ name: 'materia', type: 'object', display: 'materia', key: 'nome', size: 50, search: true },
+		{ name: 'classe', type: 'object', key: 'classe', display: 'classe', size: 15, search: true },
+		{ name: 'materia', type: 'object', display: 'materia', key: 'nome', size: 20, search: true },
         { name: 'docente', type: 'object', display: 'Docente', key: 'cognome', size: 50, search: true },
         {
 			name: 'programma_primo_quadrimestre_presente',
 			type: 'boolean',
-			display: 'Programmazione Inizio Anno Presente',
+			display: 'Prog. Inizio Anno Presente',
             search: true
 		},
         {
 			name: 'programma_primo_quadrimestre_completo',
 			type: 'boolean',
-			display: 'Programmazione Inizio Anno Completa',
+			display: 'Prog. Inizio Anno Completa',
             search: true
 		},
 		{
 			name: 'programma_secondo_quadrimestre_presente_',
 			type: 'boolean',
-			display: 'Programmazione Fine Anno Presente',
+			display: 'Prog. Fine Anno Presente',
             search: true
 		},
         {
 			name: 'programma_secondo_quadrimestre_completo',
 			type: 'boolean',
-			display: 'Programmazione Fine Anno Completa',
+			display: 'Prog. Fine Anno Completa',
             search: true
-		}
+        },
+        {
+			name: 'can_print',
+			type: 'hidden',
+			display: 'can print'
+        }
 	]}
 	page_size={10}
 	rows={insegnamenti}
@@ -381,7 +384,7 @@
 	footer="Programmazione docente"
 	actions={true}
     print={true}
-    print_filter={is_primo_quadrimestre() ? "programma_primo_quadrimestre_presente" : "programma_secondo_quadrimestre_presente"}
+    print_filter={"can_print"}
     print_tip="Visualizza programmazione per la materia selezionata"
     update_tip="Creo o aggiorna programmazione per il quadrimestre in corso"
 	resource="programmazione_docente"
