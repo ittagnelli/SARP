@@ -347,7 +347,7 @@
 		{ name: 'id', type: 'hidden', display: 'ID' },
 		{ name: 'classe', type: 'object', key: 'classe', display: 'classe', size: 15, search: true },
 		{ name: 'materia', type: 'object', display: 'materia', key: 'nome', size: 20, search: true },
-        { name: 'docente', type: 'object', display: 'Docente', key: 'cognome', size: 50, search: true },
+        { name: 'docente', type: is_admin(data) ? 'object': 'hidden', display: 'Docente', key: 'cognome', size: 50, search: true },
         {
 			name: 'programma_primo_quadrimestre_presente',
 			type: 'boolean',
