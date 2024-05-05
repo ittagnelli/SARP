@@ -16,7 +16,7 @@ La sezione *UTENTI*, indirizzata principalmente agli amministratori di SARP e pe
 La schermata principale della sezione *UTENTI* mostra una tabella, con varie colonne, contenente la lista di tutti gli utenti presenti sul sistema.
 La tabella viene aggiornata automaticamente in caso di aggiunta, modifica o rimozione di uno o più utenti.
 
-![Utenti_tabella](/img/documentazione/utenti/utenti_01.png)
+![Utenti_tabella](/img/documentazione/utenti/utenti_01.png#img-doc)
 
 Descriviamo ora le colonne di questa tabella:
 - **COGNOME**: cognome dell'utente
@@ -55,7 +55,7 @@ Per aggiungere un nuovo utente è necessario premere il pulsante <span class="bu
 Dopo aver premuto il pulsante apparirà un form (o maschera) di inserimento dati.Lo stesso form dati apparirà anche se si preme l'icona di *Aggiorna anagrafica utente*.
 Analizziamo ora il form dati in dettaglio
 
-![Utenti_form](/img/documentazione/utenti/utenti_02.png)
+![Utenti_form](/img/documentazione/utenti/utenti_02.png#img-doc)
 
 In figura tutti i campi presenti nel form. Come si nota sono presenti tutti i campi visibili nella tabella iniziale, ma sono anche presenti altri campi. I campi con il <span class="bold-red">bordo rosso</span> rappresentano i campi **OBBLIGATORI**.
 

@@ -501,7 +501,11 @@ convert_to_print:
 menu_doc:
   view:
     - '*'
-    
+
+menu_doc_generale:
+  view:
+    - '*'
+
 menu_doc_utenti:
   view:
     - '*'

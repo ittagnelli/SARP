@@ -26,12 +26,6 @@
 		<div class="row text-center align-items-center flex-row-reverse">
 			<div class="col-lg-auto ms-lg-auto">
 				<ul class="list-inline list-inline-dots mb-0">
-					<!-- <li class="list-inline-item">
-						<a href="./docs/index.html" class="link-secondary">Documentazione</a>
-					</li> -->
-					<li class="list-inline-item">
-						<a href="/support/faq" class="link-secondary" data-tippy-content="Leggi le risposte alle domande più frequenti">FAQ</a>
-					</li>
 					<li class="list-inline-item">
 						<a href="/support/ticket" class="link-secondary" data-tippy-content="Informa gli sviluppatori per eventuali problemi o suggerimenti">Segnala un problema</a>
 					</li>

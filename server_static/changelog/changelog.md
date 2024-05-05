@@ -1,9 +1,14 @@
+## v4.7.0 – 05 Maggio 2024
+- `fix#532`: Documentazione sezione PCTO
+- Aggiunta documentazione relativa alla funzione Aziende dell'applicazione PCTO
+- Rimozione sezione FAQ in quanto rimpiazzata dalla sezione documentazione
+  
 ## v4.6.0 – 16 Aprile 2024
 - `fix#538`: Fix vari per programmazione annuale
 - Aggiornamento della sezione programmazione annuale in preparazione della fine del pentamestre
 - `fix#535`:Documentazione sezione Utenti
 - Aggiunta la documentazione sulla sezione `Utenti`
-- `fix#529``: SAPR Documentation infrastructure 
+- `fix#529``: SARP Documentation infrastructure 
 - Creata infrastruttura per la sezione documentazione di SARP
 
 ## v4.5.0 – 10 Aprile 2024
@@ -52,7 +57,7 @@
 ## v4.2.8 – 22 Marzo 2024
 - `fix#501`: Update utenti a TUTOR-SCOLASTICO per PCTO
 - Aggiunto campo residenza in Utente
-- Aggiunto campo resindenza in modulo PCTO convenzione studente
+- Aggiunto campo residenza in modulo PCTO convenzione studente
 
 ## v4.2.7 – 20 Marzo 2024
 - `fix#496`: PCTO Stage as default
@@ -107,7 +112,7 @@
 - `fix#460`: Compilazione PDP da parte del docente
 - aggiunto tool per la generazione delle entries del PDP per un dato anno
 - aggiunto PDP al DB
-- updated PDP model to include idDocente for easier quiry
+- updated PDP model to include idDocente for easier query
 - added note to PDP table
 - fix issue in create_pdp_entries
 - `fix#459`:Template PDP
@@ -144,7 +149,7 @@
 - `fix#442`: Assegnazione automatica convenzione azienda 
 
 ## v3.9.0 – 02 Novembre 2023
-- `fix#437`: Aggiunta Istituto Medien       
+- `fix#437`: Aggiunta Istituto Medie     
 - `fix#438`: Caricamento docenti Medie a sistema tramite script automatico
 
 
@@ -183,7 +188,7 @@
 - `fix#422`:Tabella programmazione docente visualizzare docente materia 
   
 ## v3.6.0 – 02 Ottobre 2023
-- `fix#420`: Condivione template impossibile in alcuni scenari (#421)
+- `fix#420`: Condivisione template impossibile in alcuni scenari (#421)
 - il docente ora può condividere un template solo con docenti della stessa materia
 - quick fix: cambio nome colonne in programmazione
 - update of deploy.sh script to properly cleanup environment
@@ -360,18 +365,18 @@
 - `fix#319`: PCTO presenze non inseribili per 1 solo studente
 - `fix#311`: riduzione tabella PCTO presenze
 - `fix#313`: Reduce data dowloaded for presenze
-- optimed query by selecting only needed fields to reduce data downloaded
+- optimized query by selecting only needed fields to reduce data downloaded
 
 
 ## v1.7.0 – 20 Maggio 2023
 - `fix#309`: aggiungere valutazione PCTO studente (#310)    
 - il tutor aziendale può valutare gli studenti che hanno partecipato al PCTO di cui lui è tutor
-- il tutor scoladtrico può visionare le valutazioni degli studenti per cui è tutor scolastico
+- il tutor scolastico può visionare le valutazioni degli studenti per cui è tutor scolastico
 - admin può eseguire tutte le operazioni
 - aggiunto sezione FAQ per la valutazione studente
 
 ## v1.6.4 – 13 Maggio 2023
-- `fix#307`: Corso sicurezza non può aggiugere studenti o classi (#308)
+- `fix#307`: Corso sicurezza non può aggiungere studenti o classi (#308)
 - `fix#305`: formato data documento PCTO convenzione errato (#306)
 - `fix#302`: email tutor aziendale e utente non accettata (#303)
 - `fix#301`: Aggiungere gestione presenze in FAQ per tutor
@@ -381,7 +386,7 @@
 ## v1.6.0 – 05 Maggio 2023
 - `fix#279`: Generazione documenti PCTO stage  
 - aggiunta funzionalità di generazione e stampa documenti convenzione studente e patto formativo
-- per ogni studente che partecipa ad un dato PCTO, il sistema genera in automattico tutti i documenti necessari
+- per ogni studente che partecipa ad un dato PCTO, il sistema genera in automatico tutti i documenti necessari
 - `fix#296`: aggiungere il campo #CI in PCTO azienda (#297)
 
 
@@ -396,10 +401,10 @@
 
 
 ## v1.4.0 – 01 Maggio 2023
-- `fix#278`: PCTO presenze creaziono solo dei tutor (#289)    
+- `fix#278`: PCTO presenze creazione solo dei tutor (#289)    
 - le ore sono automaticamente approvate e non è più possibile modificare da UI
 - le presenze possono essere create solo da web da admin, tutor scolastico o tutor aziendale
-- lo studente può solo consultare il suo monte ore e le ore scvolte via web e mobile
+- lo studente può solo consultare il suo monte ore e le ore svolte via web e mobile
 - `fix#280`: PCTO Stage presenze solo se PCTO valido (#288)
 - le presenze possono essere create solo per i PCTO con tutti i documenti firmati e approvati dalla segreteria
 - `fix#277`: PCTO Stage flag firma feature (#287)
@@ -409,7 +414,7 @@
 - `fix#274`: Da direttore a legale rappresentante
 - Cambiato nome campo modale e colonna tabella da direttore a Legale Rappresentante
 - `fix#275`: Email PCTO Azienda per privacy
-- Aggiunto campo emailk_privacy al DB e CRUD
+- Aggiunto campo email_privacy al DB e CRUD
 
 ## v1.3.1 – 28 Aprile 2023
 - `fix#283`: Logo Login mancante 
@@ -440,7 +445,7 @@
 - aggiunta generazione errore in caso di login fallito
 - `fix#252`:script inserimento e update materie classi 
 - utils: add import_docenti
-- full refactor of ad dinsegnamenti
+- full refactor of ad di insegnamenti
 - modified DB to add a unique constraint on Materia.nome
 - add script to fill Materie table
 
@@ -496,7 +501,7 @@
 - `fix#214`: Rimuovere possibilità di inserire docenti in stage 
 - aggiunto filtro per docenti, pertanto solo gli studenti possono essere aggiunti ad uno stage
 - `fix#178`: filtri tabella 
-- aggiunta la possibilità di filtare una tabella per uno specifico campo
+- aggiunta la possibilità di filtrare una tabella per uno specifico campo
 - aggiunta l'opzione searchable alle righe della table
 - si possono fare ricerche per campi string, boolean e number
 - aggiunto placeholder al campo filtro
@@ -531,7 +536,7 @@
 - `fix#197`: Stage contabilizzato
 - fix bug in autenticazione dev per cypress
 - ora è possibile autenticarsi con google o con credenziali email se in DEV
-- modificato tabella pcto aggiunto flad contabilizzato
+- modificato tabella pcto aggiunto flag contabilizzato
 - modificato view stage per gestire flag contabilizzato
 - ora è possibile contrassegnare uno stage come contabilizzato se tutte le sue ore sono state riportate in SIDI
 - `fix#108`: Aggiunta test automatici per la vista utenti 
@@ -550,9 +555,9 @@
 ## v0.27.0 – 01 Marzo 2023
 - `fix#190`: corso sicurezza genera max 10 attestati
 -  aggiunto delay di 100ms nella generazione di ogni attestato del corso di sicurezza
-- ciò è dovuto per aggirare la limitazione di chrome a max 10 download contemporaneai
+- ciò è dovuto per aggirare la limitazione di chrome a max 10 download contemporanei
 - `fix#189`: Ridurre lista iscritti stage pcto 
-- ridotta lista studenti visualizzatio per stage e corso sicurezza
+- ridotta lista studenti visualizzato per stage e corso sicurezza
 - aggiunto parametro size per decidere il numero di immagini da visualizzare in tabella
 - `fix#186`: Aggiungi modale apre l'aggiornamento in alcuni casi
 -  Se l'utente chiude il modale update, i dati non vengono puliti così quando premerà crea $action rimarrà l'update.
@@ -574,7 +579,7 @@
 
 ## v0.25.0 – 22 Febbraio 2023
 - `fix#176`
-- aggiunto dashbopard in home page
+- aggiunto dashboard in home page
 - creato componente per KPI number
 - creata tabella per KPI summary
 - creato script per aggiornamento KPI
@@ -589,16 +594,16 @@
 - rilassato vincoli date protocollo azienda PCTO
 - rilassato vincoli campi obbligatori azienda PCTO
 - fix tipo in aziende server side
-- update regex per indirizo azienda pcto
+- update regex per indirizzo azienda pcto
 
 ## v0.22.0 – 16 Febbraio 2023
 - `fix#173`: Page bar in tabella con troppe pagine 
 - `fix#172`: Nome Utenti occupa troppo spazio in tabella 
-- Aggiunto parametro size alla tabella per definire la dimesnione di un campo stringa
+- Aggiunto parametro size alla tabella per definire la dimensione di un campo stringa
 - Modificata la page bar della tabella in modo da visualizzare sempre al massimo 20 pagine
 - Aggiunti spazi in nome e cognome utente
 - Aggiunto classe alla tabella utenti
-- Aggiunto excelt to prisma
+- Aggiunto excel to prisma
 - Script permette di caricare un file Excel generato dal registro elettronico nel nostro DB
 -  prisma connection limits DEV and PRODUCTION
 
@@ -619,12 +624,12 @@
 - aggiornata policy per supportare TUTOR-SICUREZZA
 - aggiunto ruolo TUTOR-SICUREZZA
 - completato associazione classi utenti
-- completato sviluppo stampa attestati coraso di sicurezza generico e specifico
+- completato sviluppo stampa attestati corso di sicurezza generico e specifico
 - caricati template per attestati corso sicurezza
 - aggiunti campi natoA, natoIl e codiceF per Utente
 - aggiunta tabella Classe
 - aggiunta relazione tra Utente e Classe
-- aggiuinta stampa attestati corso sicurezza
+- aggiunta stampa attestati corso sicurezza
 - aggiunta Applicazioni Corso di Sicurezza
 - aggiunta tabella corsi
 - aggiunta relazione tra Utente e Corsi di Sicurezza
@@ -644,7 +649,7 @@
 - `fix#139`: PCTO presenze nome studente errato
 - fix student relation in Presenza
 - modificato la migration siccome resettava il DB
-- modificata il front-end di presenze la tabell in modo che stampa nome e cognome
+- modificata il front-end di presenze la tabella in modo che stampa nome e cognome
 
 ## v0.14.0 – 20 Gennaio 2023
 - fix piccoli problemi
@@ -693,7 +698,7 @@
 - la granularità è per il singolo ruolo sulla singola risorsa per la singola azione
 - aggiunto il target policy in package.json per generare le policy RBAC
 - le policy sono definite nel file server_static/rbac/acl.yml
-- vengono convertite automaticamente in JSON dutante dev o build
+- vengono convertite automaticamente in JSON durante dev o build
 - creato il SEED del DB prisma
 - aggiunto comando npx prisma db seed
 - aggiunto creazione utenti developers
@@ -705,26 +710,26 @@
 - Refactoring generazione DOCX  
 - spostato i file rilevanti da static a server_static
 - aggiunto gestione eccezione in caso il file non possa essere generato
-- aggiunti diretory e nome template in .env
+- aggiunti directory e nome template in .env
 - generazione del file lato client così da evitare il salvataggio lato server
 - `fix #86`: eliminazione del proprio stesso profilo
 - rimosso tasto delete per il proprio utente
 - `fix #60`: Aggiungere gestione delle eccezioni 
 - aggiunto gestione eccezioni per tutte le viste (lato server)
-- aggiunti messagig di errore nei form delle viste in caso di fallimento lato server
+- aggiunti messaging di errore nei form delle viste in caso di fallimento lato server
 - aggiunta di pagine 500 con codice e messaggio di errore per l'utente finale
 
 ## v0.9.0 – 27 Dicembre 2022
 - `fix #50`: multiuser
-- aggiunto il supproto multiuser lato server
-- gli utenti con ruolo ADMIN (specificato in .env) possono evdere tutto
+- aggiunto il supporto multiuser lato server
+- gli utenti con ruolo ADMIN (specificato in .env) possono vedere tutto
 - gli altri utenti vedono solo i loro dati (multitenancy)
 - `fix #109`: vista aziende e segnalazioni non funzionante
 
 ## v0.8.0 – 26 Dicembre 2022
 - preparato l'ambiente per il deploy in produzione
 - create config di NGINX
-- modeifiche a SARP per girare in produzione
+- modifiche a SARP per girare in produzione
 - aggiornato wiki con la sezione deployment
 - fix problema estetico in FAQ
 
@@ -829,7 +834,7 @@
 - Cleanup project
 - Add stabler component and fix a problem with modal
 - Risolto bug tremendo in tabler.js - aggiunto store per comunicazione tra componenti - reso parametrico il pre-title, title e il tasto azione - creato lo skeleton per la pagina convenzioni
-- aggiunta la directory tabler che contiene tutti i file della dist originale di tabler - aggiunto il layout di SERP
+- aggiunta la directory tabler che contiene tutti i file della dist originale di tabler - aggiunto il layout di SARP
 - aggiunto mockup
 - obiettivi iniziali
  
