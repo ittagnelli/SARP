@@ -40,7 +40,12 @@ export async function load({ locals }) {
             templates: await SARP.programmazione_Template.findMany({
                 where: multi_user_field_where('creatoDa', locals),
                 include: {
-                    materia: true
+                    materia: true,
+                    docente: {
+                        select: {
+                            cognome: true
+                        }
+                    }
                 }
             }),
             materie: filter_array_for_id(insegnamenti, "materia")
