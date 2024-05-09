@@ -48,8 +48,7 @@ async function add_pdp(idDocente, idInsegnamento, idStudente, as) {
                 anno: as,
                 dispensative: misure_dispensative,
                 compensative: misure_compensative,
-                valutative: misure_valutative,
-                altro: ''
+                valutative: misure_valutative
             }       
         });
     } catch(e) {

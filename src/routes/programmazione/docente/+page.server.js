@@ -1,7 +1,7 @@
 // @ts-ignore
 // @ts-ignore
 import { PrismaDB } from "$js/prisma_db.js";
-import { PUBLIC_PCTO_TEMPLATE_CONVENZIONE_STUDENTE, PUBLIC_PROGRAMMAZIONE_ANNUALE_TEMPLATE, PUBLIC_PROGRAMMAZIONE_ANNUALE_TEMPLATES_DIR } from "$env/static/public";
+import { PUBLIC_PROGRAMMAZIONE_ANNUALE_TEMPLATE, PUBLIC_PROGRAMMAZIONE_ANNUALE_TEMPLATES_DIR } from "$env/static/public";
 import { multi_user_field_where, access_protect, is_primo_quadrimestre, route_protect, upper_first_letter, titlecase, custom_tags_parser } from "$js/helper";
 import path from 'path';
 import fs from 'fs';
@@ -52,12 +52,15 @@ export async function load({ locals }) {
     // Client side non funziona quindi lo faccio nel server
     insegnamenti.forEach(insegnamento => {
         insegnamento.classe.classe += " " + insegnamento.classe.sezione + " " + insegnamento.classe.istituto;
-        // @ts-ignore
         insegnamento["programma_primo_quadrimestre_presente"] = insegnamento.programma_primo_quadrimestre != null;
-        // @ts-ignore
         //bug, come minimo,  di magia nera voodo e tranasologia assieme
         // se la proprietà si chiama programma_secondo_quadrimestre_presente l'icona si sposta a destra di 13 pixel
         insegnamento["programma_secondo_quadrimestre_presente_"] = insegnamento.programma_secondo_quadrimestre != null;
+        insegnamento['can_print'] = false;
+        if(is_primo_quadrimestre() && insegnamento.programma_primo_quadrimestre != null)
+            insegnamento['can_print'] = true;
+        if(!is_primo_quadrimestre() && insegnamento.programma_secondo_quadrimestre != null)
+            insegnamento['can_print'] = true;
     });
 
     return {
@@ -158,6 +161,7 @@ export const actions = {
 				materie_programmi = insegnamenti.map(insegnamento => {
 					const programma = JSON.parse(insegnamento.programma_secondo_quadrimestre);
 					const libri = programma[2].libri.split('~'); // Sappiamo che l'array è composto da:	Q1, Q2, Libri
+                    const note = programma[2].note;
                     return {
 						nome: insegnamento.materia.nome, 
 						professore: upper_first_letter(insegnamento.docente.nome).concat(" ").concat(upper_first_letter(insegnamento.docente.cognome)),
