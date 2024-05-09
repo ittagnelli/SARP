@@ -282,7 +282,7 @@ export const actions = {
 			return {
 				file: JSON.stringify(buf), // Convertiamo il buffer in stringa sennò sveltekit va in errore
 				// nome_documento: `PDP-${docx_programmazione_template.classe.replace(' ', '_')}.docx`
-                nome_documento: `PDP_${studente.cognome}_${studente.nome}.docx`
+                nome_documento: `PDP_${studente.cognome}_${studente.nome}.docx`.replace(' ', '_')
 			};
 		} catch (exception) {
             console.log(exception)
