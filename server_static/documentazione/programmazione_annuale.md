@@ -41,7 +41,11 @@ Descriviamo ora le colonne della tabella:
 - **MATERIA**: nome materia
 - **DOCENTE**: nome docente
 - **PROGRAMMAZIONE INIZIO/FINE ANNO PRESENTE/COMPLETA**: verra visualizzata una spunta se la programmazione di inizo anno è stata aggiunta, in caso contrario una x rossa
-- **AZIONI**: cliccando sull' icona sottostante sarà possibile creare o modificare il programma
+- **AZIONI**: cliccando sull' icona sottostante sarà possibile creare o modificare il programma, una volta finito bisogna contrassegano come completato con il selettore in basso a sinistra e confermare la scelta.
 - **FILTRI**: i filtri che sottosttano alle voci classe, materia e docente servono a filtrare le programmazioni in base al nome messo. ES: se voglio filtrare una determinata materia basterà scrivere nella casella il nome della materia, cosi facendo compariranno le programmazioni solo per quella materia 
 - **CHECK BOX**: le check box presenti sotto le varie programmazioni servono a filtrare le varie programmazioni se sono presenti oppure no. la prima check box (in colonna) ti fara vedere solo i contenuti filtrati, mentre la seconda nasconde tutte le programmazioni presenti sotto quella voce
 
+
+## PROGRAMMAZIONE CLASSE
+La schermata programmazione classe della sezione *PROGRAMMAZIONE ANNUALE* è una pagina che fa vedere le programmazioni di tutte le classi, suddivisa in inizio e fine anno. 
+se solo una delle due colonne è contrassegnata come completata in azioni vedremo solo un icona della stampante, se tutte e due le voci saranno contrassegante come completate compariranno due icone della stapante, rispettivamente per inizio e fine anno.
