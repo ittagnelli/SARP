@@ -7,7 +7,7 @@ La sezione dedicata alla programmazione annuale è stata progettata per consenti
 
 ## TEMPLATE DOCENTE
 
-La schermata template docente della sezione *PROGRAMMAZIONE ANNUALE* mostra una tabella con varie colonne contenenti la lista di tutte le programmazioni fatte fino a quel momento. In alto a destra vi è un <span class="button blue">bottone</span> per creare nuovi template.
+La schermata template docente della sezione *PROGRAMMAZIONE ANNUALE* mostra una tabella con varie colonne contenenti la lista di tutte le programmazioni fatte fino a quel momento. In alto a destra vi è un bottone <span class="button blue">+ Aggiungi template</span> per creare nuovi template.
 
 ![tabella_programmazioneannuale](/img/documentazione/programmazione-annuale/programmazione-annuale-01.png)
 
@@ -23,6 +23,7 @@ Contenuti delle colonne:
 
 
 ## nuovo template
+**COSA E' UN TEMPLATE?**: Un template è un modello predefinito che fornisce una struttura base su cui creare altri documenti. Nel nostro caso serve a creare documenti/file con la stessa struttura.
 
 ![tabella_programmazioneannuale](/img/documentazione/programmazione-annuale/programmazione-annuale-02.png)
 
