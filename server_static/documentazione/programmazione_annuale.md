@@ -25,6 +25,9 @@ Contenuti delle colonne:
 ## nuovo template
 **COSA E' UN TEMPLATE?**: Un template è un modello predefinito che fornisce una struttura base su cui creare altri documenti. Nel nostro caso serve a creare documenti/file con la stessa struttura.
 
+**TEMPLATE ASSOCIATI AD UNA SOLA MATERIA**: I template sono associati ad una sola materia. Ciò significa che quando si crea un template per una specifica materia, il docente in programmaizone classe dovrà accedere alla classe corrispondente alla materia del template creato per utilizzarlo.
+
+
 ![tabella_programmazioneannuale](/img/documentazione/programmazione-annuale/programmazione-annuale-02.png)
 
 - **NOME TEMPLATE**: nome del template
