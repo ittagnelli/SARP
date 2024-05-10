@@ -1,2 +1,0 @@
-Sul repository github del progetto è presente un <a href="https://github.com/ittagnelli/SARP/wiki" target="_blank">Wiki</a>
-che fornisce tutte le informazioni necessarie ad iniziare lo sviluppo e contribuire al progetto

@@ -7,7 +7,7 @@ p {
     margin-bottom: -1.0rem;
 }
 
-img {
+img[src$='#img-doc'] {
     display: block;
     margin: auto;
     padding: 1rem;

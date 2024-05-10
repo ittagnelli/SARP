@@ -208,8 +208,8 @@ export const actions = {
                     valutative_yes: valutative.length > 0,
                     valutative_no: valutative.length == 0,
                     has_obiettivi_minimi: studente.obiettivi_minimi,
-                    argomenti_q1: JSON.parse(p.obiettivi_minimi)[0],
-					argomenti_q2: JSON.parse(p.obiettivi_minimi)[1]
+                    argomenti_q1: studente.obiettivi_minimi ? JSON.parse(p.obiettivi_minimi)[0]: [],
+					argomenti_q2: studente.obiettivi_minimi ? JSON.parse(p.obiettivi_minimi)[1]: []
                 };                
                 let firma = { materia: materia.materia, docente: materia.docente};
                 
@@ -282,7 +282,7 @@ export const actions = {
 			return {
 				file: JSON.stringify(buf), // Convertiamo il buffer in stringa sennò sveltekit va in errore
 				// nome_documento: `PDP-${docx_programmazione_template.classe.replace(' ', '_')}.docx`
-                nome_documento: `PDP_${studente.cognome}_${studente.nome}.docx`
+                nome_documento: `PDP_${studente.cognome}_${studente.nome}.docx`.replace(' ', '_')
 			};
 		} catch (exception) {
             console.log(exception)

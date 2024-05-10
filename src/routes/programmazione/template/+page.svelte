@@ -1,5 +1,5 @@
 <script>
-	import { delay, remove_at_index, wait_fade_finish } from '$js/helper.js';
+	import { is_admin, remove_at_index, wait_fade_finish } from '$js/helper.js';
 	import { page_action_title, page_title, page_pre_title, page_action_modal } from '$js/store';
 	import Programmazione from '$lib/components/common/programmazione.svelte';
 	import Table from '$lib/components/common/table.svelte';
@@ -294,8 +294,9 @@
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
         { name: 'creatoDa', type: 'hidden', display: 'creatoDa' },
-		{ name: 'nome', type: 'string', display: 'nome', size: 50 },
-		{ name: 'materia', type: 'object', display: 'Materia', key: 'nome', size: 30 }
+		{ name: 'nome', type: 'string', display: 'nome', size: 60, search: true },
+		{ name: 'docente', type: is_admin(data) ? 'object': 'hidden', key: 'cognome', display: 'docente', size: 40, search: true},
+        { name: 'materia', type: 'object', display: 'Materia', key: 'nome', size: 40, search: true }
 	]}
 	page_size={10}
 	rows={data.templates}
