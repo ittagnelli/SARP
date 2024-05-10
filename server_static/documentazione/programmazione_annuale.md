@@ -29,7 +29,7 @@ Contenuti delle colonne:
 
 - **NOME TEMPLATE**: nome del template
 - **MATERIA**: nome della materia
-- **LIBRO DI TESTO**: nome del libro di testo, bisogna aggiungere tutti i parametri richiesti.
+- **LIBRO DI TESTO**: nome del libro di testo, bisogna aggiungere tutti i parametri richiesti nella riga sovrastante, dopo aver inserito tutti i parametri richiesti sarà possibile aggiungere un nuovo libro (con il tato **+** a destra del campo compilato) oppure eliminarlo.
 - **NOTE**: aggiunta di note della programmazione
 - **TRIMESTRE**: nella sezione trimestre si devono aggiungere tutti gli argomenti del trimestre
 - **PENTAMESTRE**: nella sezione pentamestre si devono aggiungere tutti gli argomenti del pentamestre
