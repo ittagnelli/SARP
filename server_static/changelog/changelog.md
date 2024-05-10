@@ -1,3 +1,15 @@
+## v4.7.1 – 10 Maggio 2024
+- `fix#541`: Cleanup main branch (#551)    
+- rimosso tabler
+- rimosse immagini utente in quanto non più aggiornate e non sistematico
+- aggiunto script per esportazione id tabelle per check vacuum
+- eseguito VACUUM del db in produzione
+- `fix#547`:Rimozione spazi dal nome documenti PDP (#548)
+- `fix#543`: Tabelle documento PDP generato (#546)
+- ora l'ordine delle risposte è riportato correttamente nelle tabelle del documento finale
+- `fix#544`: PDP errore stampa in mancanza di obiettivi minimi (#545)
+- risolto errore durante stampa PDP per studenti senza obiettivi minimi
+
 ## v4.7.0 – 05 Maggio 2024
 - `fix#532`: Documentazione sezione PCTO
 - Aggiunta documentazione relativa alla funzione Aziende dell'applicazione PCTO
