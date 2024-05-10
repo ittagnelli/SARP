@@ -2,11 +2,14 @@
     @import url(/css/doc-style.css);
 </style>
 
+## PROGRAMMAZIONE ANNUALE
+La sezione dedicata alla programmazione annuale è stata progettata per consentire ai docenti di creare template e pianificare la programmazione delle loro classi. Inoltre, è stata predisposta una sezione separata per la segreteria, che consente di stampare le programmazioni per tutte le classi.
+
 ## TEMPLATE DOCENTE
 
 La schermata template docente della sezione *PROGRAMMAZIONE ANNUALE* mostra una tabella con varie colonne contenenti la lista di tutte le programmazioni fatte fino a quel momento. In alto a destra vi è un <span class="button blue">bottone</span> per creare nuovi template.
 
-![tabella_programmazioneannuale](/img/documentazione/programmazione-annuale/prova1.png)
+![tabella_programmazioneannuale](/img/documentazione/programmazione-annuale/programmazione-annuale-01.png)
 
 
 Contenuti delle colonne:
@@ -21,7 +24,7 @@ Contenuti delle colonne:
 
 ## nuovo template
 
-![tabella_programmazioneannuale](/img/documentazione/programmazione-annuale/prova2.png)
+![tabella_programmazioneannuale](/img/documentazione/programmazione-annuale/programmazione-annuale-02.png)
 
 - **NOME TEMPLATE**: nome del template
 - **MATERIA**: nome della materia
@@ -33,7 +36,7 @@ Contenuti delle colonne:
 ## PROGRAMMAZIONE DOCENTE
 La schermata programmazione docente della sezione *PROGRAMMAZIONE ANNUALE* è una pagina per utilizzare i template precedentemente creati e visualizzare così la programmazione annuale aggiornata per ogni classe.
 
-![tabella_programmazioneannuale](/img/documentazione/programmazione-annuale/prova3.png)
+![tabella_programmazioneannuale](/img/documentazione/programmazione-annuale/programmazione-annuale-03.png)
 
 Descriviamo ora le colonne della tabella:
 - **CLASSE**: nome della classe
@@ -46,6 +49,6 @@ Descriviamo ora le colonne della tabella:
 
 ## PROGRAMMAZIONE CLASSE
 
-![tabella_programmazioneannuale](/img/documentazione/programmazione-annuale/prova4.png)
+![tabella_programmazioneannuale](/img/documentazione/programmazione-annuale/programmazione-annuale-04.png)
 
 La schermata programmazione classe della sezione *PROGRAMMAZIONE ANNUALE* è una pagina che mostra le programmazioni di tutte le classi, suddivise in inizio e fine anno. Se solo una delle due colonne è contrassegnata come completata (nella colonna azioni), vedremo solo un'icona della stampante; se entrambe le voci saranno contrassegnate come completate, compariranno due icone della stampante, rispettivamente per inizio e fine anno.
