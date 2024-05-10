@@ -281,8 +281,7 @@
         { name: 'dataInizio', type: 'date', display: 'Inizio' },
 		{ name: 'dataFine', type: 'date', display: 'Fine' },
         { name: 'dataTest', type: 'date', display: 'Test' },
-        { name: 'somministrato', type: 'boolean', display: 'somministrato', search: true},
-		{ name: 'seguitoDa', type: 'array', subtype: 'picture', key: 'picture', display: 'iscritti', size: 5 }
+        { name: 'somministrato', type: 'boolean', display: 'somministrato', search: true}
 	]}
 	rows={corsi}
 	page_size={6}
