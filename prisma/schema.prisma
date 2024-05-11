@@ -141,6 +141,7 @@ model Ticket {
     idUtente     Int
     applicazione String
     titolo       String
+    sede_stage   String?
     descrizione  String
     risolto      Boolean  @default(false)
 }
@@ -203,6 +204,7 @@ model pcto_Pcto {
     updatedAt           DateTime                    @updatedAt
     creatoDa            Int
     titolo              String
+    sede_stage          String?
     descrizione         String?
     tutor_aziendale     String?
     tutor_telefono      String?
@@ -302,6 +304,7 @@ model sicurezza_Corso {
     updatedAt     DateTime         @updatedAt
     creatoDa      Int
     titolo        String
+    sede_stage    String?
     dataInizio    DateTime
     dataFine      DateTime
     dataTest      DateTime?
