@@ -756,7 +756,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-lg-6">
+                            <div class="col-lg-12">
                                 <div class="mb-3">
                                     <label class="form-label">Indirizo sede di svolgimento</label>
                                     <input
