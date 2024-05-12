@@ -203,6 +203,7 @@ model pcto_Pcto {
     updatedAt           DateTime                    @updatedAt
     creatoDa            Int
     titolo              String
+    sede_stage          String?
     descrizione         String?
     tutor_aziendale     String?
     tutor_telefono      String?

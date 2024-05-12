@@ -129,6 +129,7 @@ export const actions = {
                 data: {
                     creatoDa: user_id(locals),
                     titolo: form_data.get('titolo'),
+                    sede_stage: form_data.get('sede_stage'),
                     descrizione: form_data.get('descrizione'),
                     anno_scolastico: +form_data.get('anno_scolastico'),
                     contabilizzato: form_data.get('contabilizzato') == "SI" ? true : false,
@@ -178,6 +179,7 @@ export const actions = {
                 where: { id: +id },
                 data: {
                     titolo: form_data.get('titolo'),
+                    sede_stage: form_data.get('sede_stage'),
                     descrizione: form_data.get('descrizione'),
                     anno_scolastico: +form_data.get('anno_scolastico'),
                     contabilizzato: form_data.get('contabilizzato') == "SI" ? true : false,
@@ -251,7 +253,8 @@ export const actions = {
             ddata['P_AS'] = String(helper.get_as());
             ddata['P_CONVENZIONE'] = pcto?.offertoDa.idConvenzione;
             ddata['A_NOME'] = pcto?.offertoDa.nome;
-            ddata['A_SEDE'] = pcto?.offertoDa.indirizzo;
+            ddata['A_SEDE_LEGALE'] = pcto?.offertoDa.indirizzo;
+            ddata['A_SEDE_SVOLGIMENTO'] = pcto?.sede_stage;            
             ddata['P_INIZIO'] = convert_date (pcto?.dataInizio);
             ddata['P_FINE'] = convert_date (pcto?.dataFine);
             ddata['P_ORARIO_ACCESSO'] = pcto?.orario_accesso;
