@@ -1,3 +1,7 @@
+## v4.7.2 – 12 Maggio 2024
+- `fix#533`: Documentazione sezione Programma Annuale  (#550)
+- creata la documentazione per la sezione programmazione annuale
+
 ## v4.7.1 – 10 Maggio 2024
 - `fix#541`: Cleanup main branch (#551)    
 - rimosso tabler
