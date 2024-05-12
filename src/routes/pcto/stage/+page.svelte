@@ -58,7 +58,6 @@
 		pcto_id: 0,
 		azienda: 0,
 		titolo: '',
-        sede_stage: '',
 		descrizione: '',
         contabilizzato: 'NO',
 		tutor_aziendale: '',
@@ -101,11 +100,6 @@
 		.required('Titolo PCTO necessatrio')
 		.matches(/^[a-zA-Z0-9\. -']{3,40}$/, "Titolo PCTO non valido"),
 
-        sede_stage: yup
-		.string()
-        .min(0, "Indirizzo azienda non valido")
-        .max(100, "Indirizzo azienda non valido"),
-
 		descrizione: yup
 		.string()
         .required('Descrizione PCTO necessaria')
@@ -138,7 +132,6 @@
 		pcto_id: 0,
 		azienda: 0,
 		titolo: '',
-        sede_stage: '',
 		descrizione: '',
         anno_scolastico: 0,
 		tutor_aziendale: '',
@@ -168,7 +161,6 @@
         svoltoDa.forEach(item => svolto.push(item.id));
 
 		form_values.titolo = stage.titolo;
-		form_values.sede_stage = stage.sede_stage;
 		form_values.descrizione = stage.descrizione;
         form_values.contabilizzato = stage.contabilizzato ? 'SI' : 'NO';
 		form_values.tutor_aziendale = stage.tutor_aziendale;
@@ -196,7 +188,6 @@
 				pcto_id: 0,
 				azienda: 0,
 				titolo: '',
-                sede_stage: '',
 				descrizione: '',
                 contabilizzato: 'NO',
 				tutor_aziendale: '',
@@ -291,7 +282,6 @@
             stage_modal_values.pcto_id = stage.id;
             stage_modal_values.azienda = stage.offertoDa.nome;
             stage_modal_values.titolo = stage.titolo;
-            stage_modal_values.sede_stage = stage.sede_stage;
             stage_modal_values.descrizione = stage.descrizione;
             stage_modal_values.anno_scolastico = stage.anno_scolastico;
             stage_modal_values.tutor_aziendale = stage.tutor_aziendale;
@@ -324,7 +314,6 @@
 		{ name: 'id', type: 'hidden', display: 'ID' },
         { name: 'creatoDa', type: 'hidden', display: 'creatoDa' },
 		{ name: 'titolo', type: 'string', display: 'titolo', size: 50, search: true },
-		{ name: 'sede_stage', type: 'string', display: 'sede_stage', size: 50, search: true },
 		{ name: 'descrizione', type: 'string', display: 'descrizione', size: 50 },
         { name: 'offertoDa', type: 'object', key: 'nome', display: 'azienda', size: 40, search: true },
         { name: 'classe', type: 'string', display: 'classe', size: 20, search: true},
@@ -488,16 +477,6 @@
 							/>
 						</div> 
                     </div>
-                    <div class="row">
-                        <div class="col-lg-12">
-							<InputText
-								label="Indirizzo sede di svolgimento"
-								name="sede_stage"
-								{errors}
-								placeholder="Indirizzo sede di svolgimento"
-								bind:val={form_values.sede_stage}
-							/>
-						</div>
                     <div class="row">
                         <div class="col-lg-12">
 							<InputText
@@ -769,18 +748,6 @@
                                 />
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Indirizzo sede di svolgimento</label>
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        value={stage_modal_values.sede_stage}
-                                        readonly
-                                    />
-                                </div>
-                            </div>
                         <div class="col-lg-3">
                             <div class="mb-3">
                                 <label class="form-label">Data Inizio</label>
