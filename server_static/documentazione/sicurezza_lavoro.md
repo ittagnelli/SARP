@@ -11,7 +11,7 @@ La sezione dedicata alla sicurezza sul lavoro è stata progettata per consentire
 La sezione dedicata alla **Sicurezza sul Lavoro** è composta da due funzioni e viste principali:
 
 1. **Corsi Sicurezza**: permette di creare a sistema un nuovo corso sulla sicurezza. Sono richiesti (anche se opzionali) i dati necessari per la creazione di un nuovo corso. I corsi possono essere manipolati solo dagli ADMIN e dai docenti responsabili
-2. **Test Sicurezza**: Permette di creare uno o più test per ogni corso presente a sistema. Informazioni fondamentali sono il tutor aziendale e quello scolastico. I test possono essere manipolati solo dagli ADMIN e dai docenti responsabili
+2. **Test Sicurezza**: Permette di creare uno o più test per ogni corso presente a sistema. Sono richiesti (anche se opzionali) i dati necessari per la creazione di un nuovo test. I test possono essere manipolati solo dagli ADMIN e dai docenti responsabili
 
 ## CORSI SICUREZZA - VISTA PRINCIPALE
 
