@@ -20,9 +20,9 @@
             <NavSubItem resource="menu_doc_utenti" text="Utenti" link="/documentazione/utenti" />
             <!-- <NavSubItem resource="menu_doc_classi" text="Classi" link="/documentazione/classi" /> -->
             <NavSubItem resource="menu_doc_pcto" text="PCTO" link="/documentazione/pcto" />
-            <!-- <NavSubItem resource="menu_doc_pdp" text="PDP" link="/documentazione/pdp" /> -->
+            <NavSubItem resource="menu_doc_pdp" text="PDP" link="/documentazione/pdp" />
             <NavSubItem resource="menu_doc_programmazione" text="Programmazione Annuale" link="/documentazione/programmazione_annuale" />
-            <!-- <NavSubItem resource="menu_doc_sicurezza" text="Sicurezza sul Lavoro" link="/documentazione/sicurezza_lavoro" /> -->
+            <NavSubItem resource="menu_doc_sicurezza" text="Sicurezza sul Lavoro" link="/documentazione/sicurezza_lavoro" />
             <!-- <NavSubItem resource="menu_doc_tools" text="Tools" link="/documentazione/tools" /> -->
 			</NavMenu>
             <NavItem resource="menu_utenti" text="Utenti" icon="users" link="/support/utenti" />
