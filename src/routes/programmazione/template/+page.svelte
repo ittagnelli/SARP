@@ -301,7 +301,7 @@
 	page_size={10}
 	rows={data.templates}
 	endpoint="programmazione/template"
-	footer="Presenze"
+	footer="Template"
 	actions={true}
     print={false}
     print_filter={false}
