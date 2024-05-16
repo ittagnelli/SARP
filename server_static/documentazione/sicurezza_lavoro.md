@@ -10,8 +10,8 @@ La sezione dedicata alla sicurezza sul lavoro è stata progettata per consentire
 
 La sezione dedicata alla **Sicurezza sul Lavoro** è composta da due funzioni e viste principali:
 
-1. **Corsi Sicurezza**: permette di creare a sistema un nuovo corso sulla sicurezza. Sono richiesti (anche se opzionali) i dati necessari per la creazione di un nuovo corso. I corsi possono essere manipolati solo dagli ADMIN e dai docenti responsabili
-2. **Test Sicurezza**: Permette di creare uno o più test per ogni corso presente a sistema. Sono richiesti (anche se opzionali) i dati necessari per la creazione di un nuovo test. I test possono essere manipolati solo dagli ADMIN e dai docenti responsabili
+1. **Corsi Sicurezza**: permette di creare a sistema un nuovo corso sulla sicurezza. Sono richiesti (anche se opzionali) i dati necessari per la creazione di un nuovo corso. I corsi possono essere manipolati solo dagli ADMIN e dal TUTOR-SICUREZZA
+2. **Test Sicurezza**: Permette di creare uno o più test per ogni corso presente a sistema. Sono richiesti (anche se opzionali) i dati necessari per la creazione di un nuovo test. I test possono essere manipolati solo dagli ADMIN e dal TUTOR-SICUREZZA
 
 ## CORSI SICUREZZA - VISTA PRINCIPALE
 
@@ -22,7 +22,7 @@ La tabella viene aggiornata automaticamente in caso di aggiunta, modifica o rimo
 
 Descriviamo ora le colonne di questa tabella:
 - **TITOLO**: titolo del corso
-- **TIPO**: tipologia di corso
+- **TIPO**: tipologia di corso che può essere *GENERICO* o *SPECIFICO*
 - **INIZIO**: data inizio corso
 - **FINE**: data fine corso
 - **TEST**: data di svolgimento del test
@@ -51,3 +51,41 @@ Una volta terminato l'inserimento di tutti i campi obbligatori e di altri campi 
 Se non ci sono errori, il form dati si chiuderà e la tabella sarà automaticamente aggiornata e includerà il nuovo corso.
 
 Se al contrario l'utente preme il pulsante <span class="button red">Cancel</span>, il form viene chiuso, NON viene inviata la richiesta di creazione o aggiornamento di un nuovo corso e la tabella non viene aggiornata.
+
+## TEST SICUREZZA - VISTA PRINCIPALE TUTOR-SICUREZZA
+
+La schermata principale della sezione *TEST SICUREZZA* per gli *ADMIN* e per *TUTOR-SICUREZZA* mostra una tabella, con varie colonne, contenente la lista di tutti i test presenti sul sistema.
+La tabella viene aggiornata automaticamente ogni volta che un test viene somministrato o eseguito.
+
+![Sicurezza_Corsi_tabella](/img/documentazione/sicurezza_lavoro/sicurezzaLavoro_test_01.png#img-doc)
+
+Descriviamo ora le colonne di questa tabella:
+- **STUDENTE**: nome studente
+- **ISTITUTO**: indirizzo che frequenta lo studente che può essere *ITT* o *LICEO*
+- **TIPO**: tipologia di corso che può essere *GENERICO* o *SPECIFICO*
+- **ESEGUITO**: data in cui è stato eseguito il test
+- **COMPLETO**: indica se il test è completo
+- **SUPERATO**: indica se il test è stato superato
+- **PUNTEGGIO**: punteggio effettuato dallo studente
+- **PUNTEGGIO MAX**: punteggio massimo del test
+- **AZIONI**: azioni che è possibile svolgere su ogni singolo test
+  - **Somministra test allo studente**: somministra il test ad al singolo studente
+
+## TEST SICUREZZA - VISTA PRINCIPALE STUDENTE
+
+La schermata principale della sezione *TEST SICUREZZA* per gli *STUDENTI* mostra una tabella, con varie colonne, contenente la lista di tutti i test che gli sono stati somministrati.
+La tabella viene aggiornata automaticamente ogni volta che un test viene somministrato o eseguito.
+
+![Sicurezza_Corsi_tabella](/img/documentazione/sicurezza_lavoro/sicurezzaLavoro_test_02.png#img-doc)
+
+Descriviamo ora le colonne di questa tabella:
+- **STUDENTE**: nome studente
+- **ISTITUTO**: indirizzo che frequenta lo studente che può essere *ITT* o *LICEO*
+- **TIPO**: tipologia di corso che può essere *GENERICO* o *SPECIFICO*
+- **ESEGUITO**: data in cui è stato eseguito il test
+- **COMPLETO**: indica se il test è completo
+- **SUPERATO**: indica se il test è stato superato
+- **PUNTEGGIO**: punteggio effettuato dallo studente
+- **PUNTEGGIO MAX**: punteggio massimo del test
+- **AZIONI**: azioni che è possibile svolgere su ogni singolo test
+  - **Esegui il test**: esegui il test somministrato
