@@ -1,3 +1,15 @@
+## v4.7.3 – 18 Maggio 2024
+- `fix#555`: Rimozione spazi documenti PDP PF e CS
+- `fix#554`: Footer Errato Programmazione Annuale -> Template 
+- `fix#534`: Documentazione sezione Sicurezza Lavoro
+- aggiunta documentazione relativa alla funzione Corsi Sicurezza della sezione Sicurezza sul Lavoro
+- fix#556: Documentazione PDP update (#557)
+- `fix#531`: Documentazione sezione PDP
+- documentazione della sezione PDP
+- `fix#532`: PCTO Stage aggiungere sede di svolgimento PCTO
+- aggiunto campo sede_stage a DB, a front_end e back_end
+- aggiornati template per includere sede legale e sede svolgimento del PCTO
+
 ## v4.7.2 – 12 Maggio 2024
 - `fix#533`: Documentazione sezione Programma Annuale  (#550)
 - creata la documentazione per la sezione programmazione annuale
