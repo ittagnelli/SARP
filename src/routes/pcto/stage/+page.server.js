@@ -289,11 +289,11 @@ export const actions = {
             
                 return_files.push({
                         file: JSON.stringify(generate_file(PUBLIC_PCTO_TEMPLATE_CONVENZIONE_STUDENTE, ddata)),
-                        name: `02-Convenzione_studente_${studente.cognome}_${studente.nome}.docx`
+                        name: `02-Convenzione_studente_${studente.cognome}_${studente.nome}.docx`.replace(' ', '_')
                     },
                     {
                         file: JSON.stringify(generate_file(PUBLIC_PCTO_TEMPLATE_PATTO_FORMATIVO, ddata)),
-                        name: `03-Patto_formativo_studente_${studente.cognome}_${studente.nome}.docx`
+                        name: `03-Patto_formativo_studente_${studente.cognome}_${studente.nome}.docx`.replace(' ', '_')
                     }
                 );
                     
