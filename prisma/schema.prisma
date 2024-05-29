@@ -330,6 +330,20 @@ model sicurezza_Test {
     idCorso   Int
 }
 
+// Tabelle specifiche per PCTOl'applicazione BIBLIOTECA
+
+model biblioteca_Libri {
+    id                Int                         @id @default(autoincrement())
+    createdAt         DateTime                    @default(now())
+    updatedAt         DateTime                    @updatedAt
+    autori            String
+    titolo            String
+    editore           String
+    anno              String
+    isbn              String
+    scheda_libro      Boolean     @default(false)
+}
+
 model kpi_Stats {
     id                     Int      @id @default(autoincrement())
     createdAt              DateTime @default(now())
