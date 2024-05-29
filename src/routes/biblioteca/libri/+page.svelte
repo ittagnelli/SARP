@@ -1,6 +1,6 @@
 <script>
     
-	import { page_pre_title, page_title, page_action_title, page_action_modal } from '$js/store';
+	/*import { page_pre_title, page_title, page_action_title, page_action_modal } from '$js/store';
     import InputText from '$lib/components/modal/input_text.svelte';
     import InputDate from '$lib/components/modal/input_date.svelte';
     import Table from '$lib/components/common/table.svelte';
@@ -36,7 +36,7 @@
     // quest'oggetto deve contenere tutti i valori presenti nel form per
     // le operazione di create e update
     let form_values = {
-        libri_id: 0,
+        book_id: 0,
         autori: "",
         titolo: "",      
         editore: "",
@@ -47,23 +47,23 @@
 
     // schema di validazione del form
     const form_schema = yup.object().shape({
-        nome: yup
+        autori: yup
         .string()
-        .required("Nome Azienda necessario")
-        .matches(/^[a-zA-Z0-9.@\- '&à-è-ì-ò-ù]{3,40}$/, "Nome azienda non valida"),
+        .required("Nome Autori necessario")
+        .matches(/^[a-zA-Z0-9.@\- '&à-è-ì-ò-ù]{3,40}$/, "Nome Autori non valido"),
         
-        indirizzo: yup
+        titolo: yup
         .string()
         .min(0, "Indirizzo azienda non valido")
         .max(100, "Indirizzo azienda non valido"),
 
-        piva: yup
+        editore: yup
         .string()
         .matches(/^$|^[0-9]{11}$|^[0-9A-Z]{16}$/, "Partita Iva non valida"),
 
-        telefono: yup
-		.string()
-        .matches(/^$|^[0-9]{10}$/, "Numero non valido [3331234567]"),
+        anno: yup
+		.date()
+        .min(new Date(1900), "Data antecedente al 1900"),
 
         email_privacy: yup
 			.string()
@@ -73,70 +73,28 @@
 				'Email non valida'
 			),
 
-        direttore_nome: yup
-        .string()
-        .matches(/^$|^[a-zA-Z à-è-ì-ò-ù']{3,30}$/, "Nome Direttore non valido [Nome Cognome]"),
-
-        direttore_natoA: yup
-        .string()
-        .matches(/^$|^[a-zA-Z à-è-ì-ò-ù]{3,30}$/, "Luogo di nascita non valido"),
-
-        direttore_codiceF: yup
-        .string()
-        .matches(/^$|^[0-9A-Z]{16}$/, "Codice fiscale non valido [LNSTVL69T28L219K]"),
-
-        idConvenzione: yup
-        .string()
-        .required("Numero Convenzione necessario"),
-        
         idUtente: yup
         .number()
         .positive(),
-        
-        direttore_natoIl: yup
-        .date(),
-        
-        dataConvenzione: yup
-        .date()
-        .min(new Date(2016, 1, 1), "Data antecedente al 01/01/2016"),
         
         dataProtocollo: yup
         .date()
         .min(new Date(2016, 1, 1), "Data antecedente al 01/01/2016")
     });
 
-    function calc_new_id_convenzione(id_convenzione) {
-        let year = id_convenzione.split('/')[0];
-        let serial =  id_convenzione.split('/')[1];
-        let current_year = year.substring(0, 2);
-        let as = String(helper.get_as()).substring(2, 4);
-
-        //return current_year == as ? `${year}/${+serial + 1}` : `${as}${+as + 1}/1`;
-        return `${as}${+as + 1}/${+serial + 1}` //fixing #448
-    }
-
     async function start_update(e) {
 		modal_action = 'update';
 		
-        form_values.company_id = e.detail.id;
+        form_values.book_id = e.detail.id;
 		//cerca l'azienda da fare update
-		let azienda = aziende.filter((item) => item.id == form_values.company_id)[0];
+		let libro = libri.filter((item) => item.id == form_values.book_id)[0];
 
-        form_values.nome = azienda.nome;
-		form_values.indirizzo = azienda.indirizzo;
-        form_values.piva = azienda.piva;
-        form_values.telefono = azienda.telefono;
-        form_values.email_privacy = azienda.email_privacy;
-        form_values.direttore_nome = azienda.direttore_nome;
-        form_values.direttore_natoA = azienda.direttore_natoA;
-        form_values.direttore_natoIl = helper.convert_date(azienda.direttore_natoIl);
-        form_values.direttore_codiceF = azienda.direttore_codiceF;
-        form_values.idConvenzione = azienda.idConvenzione;
-        form_values.idUtente = azienda.idUtente;
-		form_values.dataConvenzione = helper.convert_date(azienda.dataConvenzione);
-		form_values.dataProtocollo = helper.convert_date(azienda.dataProtocollo);
-        form_values.istituto = azienda.istituto;
-        form_values.firma_convenzione = azienda.firma_convenzione ? 'SI' : 'NO';
+        form_values.autori = libro.autori;
+		form_values.titolo = libro.titolo;
+        form_values.editore = libro.editore;
+        form_values.anno = libro.anno;
+        form_values.isbn = libro.isbn;
+        form_values.scheda_libro = libro.scheda_libro ? 'SI' : 'NO';
 	}
 
     async function cancel_action(){
@@ -144,21 +102,12 @@
             await helper.wait_fade_finish(150);
             modal_action = 'create';    // Reset model string
             form_values = { // Reset form values
-                company_id: 0,
-                nome: "",
-                indirizzo: "",      
-                piva: "",
-                telefono: "",
-                direttore_nome: "",
-                direttore_natoA: "",
-                direttore_natoIl: helper.convert_date(new Date()),
-                direttore_codiceF: "",
-                idConvenzione: "",
-                idUtente: undefined,
-                dataConvenzione: helper.convert_date(new Date()),
-                dataProtocollo: helper.convert_date(new Date()),
-                istituto: "ITT",
-                firma_convenzione: 'NO'
+                book_id: 0,
+                autori: "",
+                titolo: "",      
+                editore: "",
+                anno: "",
+                scheda_libro: 'NO'
             };
         }
     }
@@ -182,30 +131,23 @@
 <Table
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
-        { name: 'creatoDa', type: 'hidden', display: 'creatoDa' },
-		{ name: 'idConvenzione', type: 'string', display: 'NO.', size: 10, search: true },
-		{ name: 'nome', type: 'string', display: 'Azienda/Ente', size: 40, search: true },
-        { name: 'indirizzo', type: 'string', display: 'indirizzo', size: 30 },
-        { name: 'piva', type: 'string', display: 'piva', size: 12 },
-        { name: 'telefono', type: 'string', display: 'telefono', size: 14 },
-        { name: 'direttore_nome', type: 'string', display: 'Legale Rappresentante', size: 20 },
-		{ name: 'dataConvenzione', type: 'date', display: 'Data Convenzione' },
-		{ name: 'dataProtocollo', type: 'date', display: 'Data Protocollo' },
-		{ name: 'istituto', type: 'string', display: 'Istituto', size: 10 },
-        { name: 'firma_convenzione', type: 'boolean', display: 'Documentazione'}
+		{ name: 'autori', type: 'string', display: 'Autori', size: 10, search: true },
+		{ name: 'titolo', type: 'string', display: 'Titolo', size: 40, search: true },
+        { name: 'editore', type: 'string', display: 'Editore', size: 30, search: true },
+        { name: 'anno', type: 'string', display: 'Anno', size: 12 },
+        { name: 'isbn', type: 'string', display: 'ISBN', size: 14 },
+        { name: 'scheda_libro', type: 'boolean', display: 'Scheda Libro'}
 	]}
-	rows={aziende}
+	rows={libri}
 	page_size={11}
 	modal_name={$page_action_modal}
 	on:update_start={start_update}
-	endpoint="pcto/aziende"
-    footer="Aziende"
-    print={true}
+	endpoint="biblioteca/libri"
+    footer="Libri"
     actions={true}
-    print_tip="Stampa documento convenzione"
-    update_tip="Aggiorna convenzione"
-    trash_tip="Rimuovi convenzione"
-    resource="pcto_aziende"
+    update_tip="Aggiorna libro"
+    trash_tip="Rimuovi libro"
+    resource="biblioteca_libri"
 />
 
 <!-- Modal from Page action -->
@@ -218,15 +160,15 @@
 >
 	<form method="POST" action="?/{modal_action}" on:submit|preventDefault={handleSubmit} bind:this={modal_form}>
 		{#if modal_action == 'update'}
-			<input type="hidden" name="id" bind:value={form_values.company_id} />
+			<input type="hidden" name="id" bind:value={form_values.book_id} />
 		{/if}
 		<div class="modal-dialog modal-lg" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
 					{#if modal_action == 'create'}
-						<h5 class="modal-title">Nuova Azienda</h5>
+						<h5 class="modal-title">Nuovo Libro</h5>
 					{:else}
-						<h5 class="modal-title">Aggiorna Azienda</h5>
+						<h5 class="modal-title">Aggiorna Libro</h5>
 					{/if}
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" on:click={cancel_action}/>
 				</div>
@@ -237,180 +179,76 @@
 					<div class="row">
 						<div class="col-lg-4">
                             <InputText
-                            label="NO. Convenzione"
-                            name="idConvenzione"
+                            label="Nome Autori"
+                            name="autori"
                             {errors}
-                            placeholder="2223/01"
+                            placeholder="Nome autori"
                             readonly={true}
-                            bind:val={form_values.idConvenzione}
+                            bind:val={form_values.autori}
                         />
 						</div>
 						<div class="col-lg-8">
                             <InputText
-                            label="Azienda"
-                            name="nome"
+                            label="Titolo"
+                            name="titolo"
                             {errors}
-                            placeholder="Nome Azienda o Ente"
-                            bind:val={form_values.nome}
+                            placeholder="Titolo"
+                            bind:val={form_values.titolo}
                         />
 						</div>
 					</div>
                     <div class="row">
 						<div class="col-lg-12">
                             <InputText
-                                label="Indirizzo"
-                                name="indirizzo"
+                                label="Casa Editrice"
+                                name="editore"
                                 {errors}
-                                placeholder="Corso Unione Sovietica 312, 10135 Torino"
-                                bind:val={form_values.indirizzo}
+                                placeholder="Zanichelli"
+                                bind:val={form_values.editore}
                             />
 						</div>
 					</div>
                     <div class="row">
 						<div class="col-lg-4">
                             <InputText
-                                label="P.IVA"
-                                name="piva"
+                                label="Anno di pubblicazione"
+                                name="anno"
                                 {errors}
-                                placeholder="86334519757"
-                                bind:val={form_values.piva}
+                                placeholder="2000"
+                                bind:val={form_values.anno}
                             />
 						</div>
                         <div class="col-lg-3">
                             <InputText
-                                label="Telefono"
-                                name="telefono"
+                                label="Codice ISBN"
+                                name="isbn"
                                 {errors}
-                                placeholder="3331234567"
-                                bind:val={form_values.telefono}
+                                placeholder="ISBN"
+                                bind:val={form_values.isbn}
                             />
-						</div>
-                        <div class="col-lg-5">
-                            <InputText
-                                label="Email Privacy"
-                                name="email_privacy"
-                                {errors}
-                                placeholder="privacy@azienda.com"
-                                bind:val={form_values.email_privacy}
-                            />
-						</div>
-					</div>
-                    <div class="row">
-						<div class="col-lg-3">
-                            <InputText
-                                label="Legale Rappresentante"
-                                name="direttore_nome"
-                                {errors}
-                                placeholder="Nome e Cognome"
-                                bind:val={form_values.direttore_nome}
-                            />
-
-						</div>
-                        <div class="col-lg-3">
-                            <InputText
-                                label="Nato A"
-                                name="direttore_natoA"
-                                placeholder="Località"
-                                {errors}
-                                bind:val={form_values.direttore_natoA}
-                            />
-                        </div>
-                        <div class="col-lg-3">
-                            <InputDate
-                                label="Nato Il"
-                                name="direttore_natoIl"
-                                {errors}
-                                bind:val={form_values.direttore_natoIl}
-                            />
-						</div>
-                        <div class="col-lg-3">
-                            <InputText
-                                label="Codice Fiscale"
-                                name="direttore_codiceF"
-                                placeholder="LNSTVL69T28L219K"
-                                {errors}
-                                bind:val={form_values.direttore_codiceF}
-                            />
-                        </div>
-					</div>
-					<div class="row">
-						<div class="col-lg-4">
-                            <InputDate
-                                label="Data Convenzione"
-                                name="dataConvenzione"
-                                {errors}
-                                bind:val={form_values.dataConvenzione}
-                            />
-						</div>
-						<div class="col-lg-3">
-                            <InputDate
-                            label="Data Protocollo"
-                            name="dataProtocollo"
-                            {errors}
-                            bind:val={form_values.dataProtocollo}
-                        />
-						</div>
-						<div class="col-lg-5">
-							<div class="mb-3">
-								<label class="form-label">Istituto</label>
-								<div class="form-selectgroup">
-									<label class="form-selectgroup-item">
-										<input
-											type="radio"
-											name="istituto"
-											value="ITT"
-											class="form-selectgroup-input"
-											bind:group={form_values.istituto}
-										/>
-										<span class="form-selectgroup-label">ITI</span>
-									</label>
-									<label class="form-selectgroup-item">
-										<input
-											type="radio"
-											name="istituto"
-											value="LICEO"
-											class="form-selectgroup-input"
-											bind:group={form_values.istituto}
-										/>
-										<span class="form-selectgroup-label">LICEO</span>
-									</label>
-                                    <label class="form-selectgroup-item">
-										<input
-											type="radio"
-											name="istituto"
-											value="ITT-LICEO"
-											class="form-selectgroup-input"
-											bind:group={form_values.istituto}
-										/>
-										<span class="form-selectgroup-label">ITT-LICEO</span>
-									</label>
-								</div>
-							</div>
-						</div>
-					</div>
                     {#if helper.is_admin(data) == true}
                     <div class="row">
                         <div class="col-lg-4">
                             <div class="mb-3">
-                                <label class="form-label">Convenzione Firmata ?</label>
+                                <label class="form-label">Scheda Libro ?</label>
                                 <div class="form-selectgroup">
                                     <label class="form-selectgroup-item">
                                         <input
                                             type="radio"
-                                            name="firma_convenzione"
+                                            name="scheda_libro"
                                             value="SI"
                                             class="form-selectgroup-input"
-                                            bind:group={form_values.firma_convenzione}
+                                            bind:group={form_values.scheda_libro}
                                         />
                                         <span class="form-selectgroup-label">SI</span>
                                     </label>
                                     <label class="form-selectgroup-item">
                                         <input
                                             type="radio"
-                                            name="firma_convenzione"
+                                            name="scheda_libro"
                                             value="NO"
                                             class="form-selectgroup-input"
-                                            bind:group={form_values.firma_convenzione}
+                                            bind:group={form_values.scheda_libro}
                                         />
                                         <span class="form-selectgroup-label">NO</span>
                                     </label>
@@ -427,9 +265,9 @@
 					<button class="btn btn-success ms-auto">
 						<i class="ti ti-plus icon" />
 						{#if modal_action == 'create'}
-							<b>Crea Azienda</b>
+							<b>Crea Libro</b>
 						{:else}
-							<b>Aggiorna Azienda</b>
+							<b>Aggiorna Libro</b>
 						{/if}
 					</button>
 				</div>

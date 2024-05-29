@@ -1,4 +1,4 @@
-import { PrismaDB } from '$js/prisma_db';
+/*import { PrismaDB } from '$js/prisma_db';
 import PizZip from 'pizzip';
 import Docxtemplater from 'docxtemplater';
 import fs from 'fs';
