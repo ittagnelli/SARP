@@ -1,14 +1,11 @@
 <script>
-    
-	/*import { page_pre_title, page_title, page_action_title, page_action_modal } from '$js/store';
+	import { page_pre_title, page_title, page_action_title, page_action_modal } from '$js/store';
     import InputText from '$lib/components/modal/input_text.svelte';
     import InputDate from '$lib/components/modal/input_date.svelte';
     import Table from '$lib/components/common/table.svelte';
     import * as helper from '$js/helper';
     import * as yup from 'yup';
     import { Logger } from '$js/logger';
-	import { onMount } from 'svelte';
-    import { saveAs } from 'file-saver';
 	import ModalError from '$lib/components/common/modal_error.svelte';
 
     let logger = new Logger("client");
@@ -25,7 +22,7 @@
 	$page_action_title = 'Aggiungi Libro';
 	$page_action_modal = 'modal-add-libro';
 
-	let idConvenzione, nome, idUtente, indirizzo,piva, telefono;
+	let autori, titolo, editore, anno, isbn;
     let direttore, natoA, natoIl, codiceF;
 
 	let modal_action = 'create';
@@ -50,20 +47,27 @@
         autori: yup
         .string()
         .required("Nome Autori necessario")
-        .matches(/^[a-zA-Z0-9.@\- '&à-è-ì-ò-ù]{3,40}$/, "Nome Autori non valido"),
+        .matches(/^[a-zA-Z,à-è-ì-ò-ù]$/, "Nome Autori non valido"),
         
         titolo: yup
         .string()
-        .min(0, "Indirizzo azienda non valido")
-        .max(100, "Indirizzo azienda non valido"),
+        .required("Titolo necessario")
+        .min(0, "Titolo non valido")
+        .max(100, "Titolo non valido"),
 
         editore: yup
         .string()
-        .matches(/^$|^[0-9]{11}$|^[0-9A-Z]{16}$/, "Partita Iva non valida"),
+        .required("Editore necessario")
+        .matches(/^[a-zA-Z,à-è-ì-ò-ù]$/, "Editore non valido"),
 
         anno: yup
-		.date()
-        .min(new Date(1900), "Data antecedente al 1900"),
+        .date()
+        .min(new Date(1900), "Data antecedente al 1900")
+        .required("Anno di pubblicazione necessario"),
+
+        ibsn: yup
+        .string()
+        .required("Codice IBSN necessario"),
 
         email_privacy: yup
 			.string()
@@ -123,7 +127,7 @@
             errors = err.inner.reduce((acc, err) => {
                 return { ...acc, [err.path]: err.message };
             }, {});
-            logger.error(`Errori nella validazione del form aziende. Oggetto: ${JSON.stringify(form_values)} -- Errore: ${JSON.stringify(errors)}`);
+            logger.error(`Errori nella validazione del form libri. Oggetto: ${JSON.stringify(form_values)} -- Errore: ${JSON.stringify(errors)}`);
         }
     }
 </script>
@@ -139,7 +143,7 @@
         { name: 'scheda_libro', type: 'boolean', display: 'Scheda Libro'}
 	]}
 	rows={libri}
-	page_size={11}
+	page_size={10}
 	modal_name={$page_action_modal}
 	on:update_start={start_update}
 	endpoint="biblioteca/libri"
@@ -183,7 +187,6 @@
                             name="autori"
                             {errors}
                             placeholder="Nome autori"
-                            readonly={true}
                             bind:val={form_values.autori}
                         />
 						</div>
@@ -198,7 +201,7 @@
 						</div>
 					</div>
                     <div class="row">
-						<div class="col-lg-12">
+						<div class="col-lg-5">
                             <InputText
                                 label="Casa Editrice"
                                 name="editore"
@@ -207,8 +210,6 @@
                                 bind:val={form_values.editore}
                             />
 						</div>
-					</div>
-                    <div class="row">
 						<div class="col-lg-4">
                             <InputText
                                 label="Anno di pubblicazione"
@@ -218,7 +219,8 @@
                                 bind:val={form_values.anno}
                             />
 						</div>
-                        <div class="col-lg-3">
+                    </div>
+                        <div class="col-lg-4">
                             <InputText
                                 label="Codice ISBN"
                                 name="isbn"
@@ -227,8 +229,7 @@
                                 bind:val={form_values.isbn}
                             />
                     {#if helper.is_admin(data) == true}
-                    <div class="row">
-                        <div class="col-lg-4">
+                        <div class="col-lg-10">
                             <div class="mb-3">
                                 <label class="form-label">Scheda Libro ?</label>
                                 <div class="form-selectgroup">
@@ -255,7 +256,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
                     {/if}
 				</div>
 				<div class="modal-footer">

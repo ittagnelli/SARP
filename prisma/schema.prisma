@@ -330,7 +330,7 @@ model sicurezza_Test {
     idCorso   Int
 }
 
-// Tabelle specifiche per PCTOl'applicazione BIBLIOTECA
+// Tabelle specifiche per l'applicazione BIBLIOTECA
 
 model biblioteca_Libri {
     id                Int                         @id @default(autoincrement())

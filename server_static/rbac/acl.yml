@@ -537,3 +537,27 @@ menu_doc_tools:
 documentazione:
   read:
     - '*'
+
+menu_biblioteca:
+  view:
+      - ADMIN
+      - BIBLIOTECA
+
+menu_libri:
+  view:
+      - ADMIN
+      - BIBLIOTECA
+
+biblioteca_libri:
+  read:
+    - ADMIN
+    - BIBLIOTECA
+  create:
+    - ADMIN
+    - BIBLIOTECA
+  update:
+    - ADMIN
+    - BIBLIOTECA
+  delete:
+    - ADMIN
+    - BIBLIOTECA

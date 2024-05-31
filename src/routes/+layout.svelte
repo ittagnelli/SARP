@@ -56,6 +56,9 @@
             <NavMenu resource="menu_tools" text="Tools" icon="tools">
 				<NavSubItem resource="menu_convert_to_print" text="Convert to Print" link="/tools/convert-to-print" />
 			</NavMenu>
+			<NavMenu resource="menu_biblioteca" text="Biblioteca" icon="book">
+				<NavSubItem resource="menu_libri" text="Libri" link="/biblioteca/libri" />
+			</NavMenu>
 		</Navbar>
 
 		<!-- Page Header -->
