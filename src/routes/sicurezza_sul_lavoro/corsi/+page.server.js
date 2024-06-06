@@ -224,7 +224,7 @@ export const actions = {
 
                 return_files.push({
                     file: JSON.stringify(buf),
-                    name: `attestato_corso_${corso.tipo}_${studente.cognome}_${studente.nome}.docx`
+                    name: `attestato_corso_${corso.tipo}_${studente.cognome}_${studente.nome}.docx`.replace(" ", "_")
                 });
                 logger.info(`Generato attestato corso sicurezza per ${studente.cognome}_${studente.nome}`);
             }       
