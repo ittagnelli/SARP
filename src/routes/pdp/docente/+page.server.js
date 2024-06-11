@@ -54,6 +54,12 @@ export async function load({ locals }) {
                             select: {
                                 nome: true
                             }
+                        },
+                        docente: {
+                            select: {
+                                cognome: true,
+                                nome: true
+                            }
                         }
                     }
                 }
