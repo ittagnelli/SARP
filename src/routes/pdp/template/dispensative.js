@@ -28,7 +28,7 @@ let _misure_dispensative = [
         selected: false
     },
     {
-        text: 'Integrazione dei libri di testo con appunti su supporto registrato, digitalizzato o cartaceo stampato sintesi vocale, mappe, schemi, formulari',
+        text: "Integrazione dei libri di testo con materiale fornito dall'insegnante su supporto vario",
         selected: false
     },
     {
