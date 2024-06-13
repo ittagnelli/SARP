@@ -46,10 +46,10 @@ export const actions = {
 
         route_protect(locals);
         access_protect(200, locals, action, resource);
-
+        
         try {
             const form = await request.formData();
-
+            
             await SARP.pdp_Template.create({
                 data: {
                     creatoDa: user_id(locals),
@@ -57,6 +57,8 @@ export const actions = {
                     dispensative: form.get("dispensative"),
                     compensative: form.get("compensative"),
                     valutazione: form.get("valutative"),
+                    strategie_classe: form.get("strategie_classe"),
+                    strategie_didattiche: form.get("strategie_didattiche"),
                     altro_compensative: form.get("altro_compensative")?.toString(),
                     altro_dispensative: form.get("altro_dispensative")?.toString(),
                     altro_valutative: form.get("altro_valutative")?.toString(),
@@ -85,6 +87,8 @@ export const actions = {
                     dispensative: form.get("dispensative"),
                     compensative: form.get("compensative"),
                     valutazione: form.get("valutative"),
+                    strategie_classe: form.get("strategie_classe"),
+                    strategie_didattiche: form.get("strategie_didattiche"),
                     altro_compensative: form.get("altro_compensative")?.toString(),
                     altro_dispensative: form.get("altro_dispensative")?.toString(),
                     altro_valutative: form.get("altro_valutative")?.toString(),

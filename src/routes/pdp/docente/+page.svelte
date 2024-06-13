@@ -8,6 +8,8 @@
     import { misure_dispensative } from '../template/dispensative.js'
     import { misure_compensative } from '../template/compensative.js';
     import { misure_valutative } from '../template/valutative.js';
+    import { strategie_classe } from '../template/strategie_classe';
+    import { strategie_didattiche } from '../template/strategie_didattiche';
 
 	export let data;
     export let form;
@@ -29,6 +31,8 @@
     let current_dispensative = JSON.parse(misure_dispensative);
     let current_compensative = JSON.parse(misure_compensative);
     let current_valutative = JSON.parse(misure_valutative);
+    let current_strategie_classe = JSON.parse(strategie_classe);
+    let current_strategie_didattiche = JSON.parse(strategie_didattiche);
     let current_pdp = pdp[0];
 
     /* Page properties */
@@ -56,6 +60,8 @@
 		dispensative: '',
         compensative: '',
         valutative: '',
+        strategie_classe: '',
+        strategie_didattiche: '',
         altro_compensative: '',
         altro_dispensative: '',
         altro_valutative: '',
@@ -94,6 +100,8 @@
         current_dispensative = JSON.parse(current_pdp.dispensative);
         current_compensative = JSON.parse(current_pdp.compensative);
         current_valutative = JSON.parse(current_pdp.valutative);
+        current_strategie_classe = JSON.parse(current_pdp.strategie_classe);
+        current_strategie_didattiche = JSON.parse(current_pdp.strategie_didattiche);
         form_values.altro_compensative = current_pdp.altro_compensative;
         form_values.altro_dispensative = current_pdp.altro_dispensative;
         form_values.altro_valutative = current_pdp.altro_valutative;
@@ -109,6 +117,8 @@
             dispensative: '',
             compensative: '',
             valutative: '',
+            strategie_classe: '',
+            strategie_didattiche: '',
             altro_compensative: '',
             altro_dispensative: '',
             altro_valutative: '',
@@ -129,6 +139,8 @@
         form_values.dispensative = JSON.stringify(current_dispensative);
         form_values.compensative = JSON.stringify(current_compensative);
         form_values.valutative = JSON.stringify(current_valutative);
+        form_values.strategie_classe = JSON.stringify(current_strategie_classe);
+        form_values.strategie_didattiche = JSON.stringify(current_strategie_didattiche);
 
         //imposta i flag sintesi_vocale e tempo_esteso
         form_values.sintesi_vocale = current_pdp.insegnamento.materia.nome == MATERIA_SINTESI_VOCALE && current_compensative[1].selected;
@@ -162,6 +174,8 @@
         current_dispensative = JSON.parse(template.dispensative);
         current_compensative = JSON.parse(template.compensative);
         current_valutative = JSON.parse(template.valutazione);
+        current_strategie_classe = JSON.parse(template?.strategie_classe);
+        current_strategie_didattiche = JSON.parse(template?.strategie_didattiche);
         form_values.altro_compensative = template.altro_compensative;
         form_values.altro_dispensative = template.altro_dispensative;
         form_values.altro_valutative = template.altro_valutative;
@@ -224,6 +238,8 @@
         <input type="hidden" name="dispensative" bind:value={form_values.dispensative} />
         <input type="hidden" name="compensative" bind:value={form_values.compensative} />
         <input type="hidden" name="valutative" bind:value={form_values.valutative} />
+        <input type="hidden" name="strategie_classe" bind:value={form_values.strategie_classe} />
+        <input type="hidden" name="strategie_didattiche" bind:value={form_values.strategie_didattiche} />
         <input type="hidden" name="obiettivi_minimi" bind:value={form_values.obiettivi_minimi} />
         <input type="hidden" name="sintesi_vocale" bind:value={form_values.sintesi_vocale} />
         <input type="hidden" name="tempo_esteso" bind:value={form_values.tempo_esteso} />
@@ -401,6 +417,52 @@
                                     on:keydown={prevent_enter}
 								/>
 						</div>
+                    </div>
+                    <div class="row myfieldset">    
+                        <div class="form-label mylabel">Strategie Da Adottare In Classe</div>
+						<div class="col-lg-6">
+                            <div class="mb-3">
+                                    {#each current_strategie_classe.slice(0,3) as strat_classe,i}
+                                  <label class="form-check">
+                                    <input class="form-check-input" type="checkbox" bind:checked={current_strategie_classe[i].selected} >
+                                    <span class="form-check-label">{strat_classe.text}</span>
+                                  </label>
+                                  {/each}
+                              </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="mb-3">
+                                    {#each current_strategie_classe.slice(3) as strat_classe,i}
+                                  <label class="form-check">
+                                    <input class="form-check-input" type="checkbox" bind:checked={current_strategie_classe[i + 3].selected} >
+                                    <span class="form-check-label">{strat_classe.text}</span>
+                                  </label>
+                                  {/each}
+                              </div>
+                        </div>
+                    </div>
+                    <div class="row myfieldset">    
+                        <div class="form-label mylabel">Strategie Didattiche</div>
+						<div class="col-lg-6">
+                            <div class="mb-3">
+                                    {#each current_strategie_didattiche.slice(0,3) as strat_didattica,i}
+                                  <label class="form-check">
+                                    <input class="form-check-input" type="checkbox" bind:checked={current_strategie_didattiche[i].selected} >
+                                    <span class="form-check-label">{strat_didattica.text}</span>
+                                  </label>
+                                  {/each}
+                              </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="mb-3">
+                                    {#each current_strategie_didattiche.slice(3) as strat_didattica,i}
+                                  <label class="form-check">
+                                    <input class="form-check-input" type="checkbox" bind:checked={current_strategie_didattiche[i + 3].selected} >
+                                    <span class="form-check-label">{strat_didattica.text}</span>
+                                  </label>
+                                  {/each}
+                              </div>
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-lg-10">

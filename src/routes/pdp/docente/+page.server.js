@@ -107,6 +107,8 @@ export const actions = {
                     dispensative: form.get("dispensative"),
                     compensative: form.get("compensative"),
                     valutative: form.get("valutative"),
+                    strategie_classe: form.get("strategie_classe"),
+                    strategie_didattiche: form.get("strategie_didattiche"),
                     obiettivi_minimi: form.get("obiettivi_minimi"),
                     altro_compensative: form.get("altro_compensative")?.toString(),
                     altro_dispensative: form.get("altro_dispensative")?.toString(),
