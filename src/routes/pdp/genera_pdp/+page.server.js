@@ -124,7 +124,7 @@ export const actions = {
 
             //the document to render is made by many parts
             //one evaluation grid coming from the student object
-            //and 3 section (dispenative, compensative and valutative)
+            //and 5 sections (dispenative, compensative,valutative, strategie classe, strategie didattiche)
             //for each materia belonging to the class the student is subscribed
 
 			// get griglia osservativa for student
@@ -190,6 +190,8 @@ export const actions = {
                 let dispensative = JSON.parse(p.dispensative).filter(d => d.selected == true);
                 let compensative = JSON.parse(p.compensative).filter(d => d.selected == true);
                 let valutative = JSON.parse(p.valutative).filter(d => d.selected == true);
+                let strategie_classe = JSON.parse(p.strategie_classe).filter(d => d.selected == true);
+                let strategie_didattiche = JSON.parse(p.strategie_didattiche).filter(d => d.selected == true);
 
                 let materia = {
                     materia: p.insegnamento.materia.nome, 
@@ -207,6 +209,12 @@ export const actions = {
                     valutative: valutative,
                     valutative_yes: valutative.length > 0,
                     valutative_no: valutative.length == 0,
+                    strategie_classe: strategie_classe,
+                    strategie_classe_yes: strategie_classe.length > 0,
+                    strategie_classe_no: strategie_classe.length == 0,
+                    strategie_didattiche: strategie_didattiche,
+                    strategie_didattiche_yes: strategie_didattiche.length > 0,
+                    strategie_didattiche_no: strategie_didattiche.length == 0,
                     has_obiettivi_minimi: studente.obiettivi_minimi,
                     argomenti_q1: studente.obiettivi_minimi ? JSON.parse(p.obiettivi_minimi)[0]: [],
 					argomenti_q2: studente.obiettivi_minimi ? JSON.parse(p.obiettivi_minimi)[1]: []

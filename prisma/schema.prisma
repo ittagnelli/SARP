@@ -1,4 +1,4 @@
-// v 0.34.0 2024-04-09
+// v 0.35.0 2024-06-13
 
 generator client {
     provider = "prisma-client-js"
@@ -271,6 +271,8 @@ model PDP {
     dispensative          String
     compensative          String
     valutative            String
+    strategie_classe      String?
+    strategie_didattiche  String?
     obiettivi_minimi      String?
     altro_compensative    String?
     altro_dispensative    String?
@@ -291,6 +293,8 @@ model pdp_Template {
     dispensative          String
     compensative          String
     valutazione           String
+    strategie_classe      String?
+    strategie_didattiche  String?
     altro_compensative    String?
     altro_dispensative    String?
     altro_valutative      String?

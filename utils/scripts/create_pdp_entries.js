@@ -2,7 +2,8 @@ import { PrismaClient } from '@prisma/client';
 import { misure_dispensative } from '../../src/routes/pdp/template/dispensative.js';
 import { misure_compensative } from '../../src/routes/pdp/template/compensative.js';
 import { misure_valutative } from '../../src/routes/pdp/template/valutative.js';
-
+import { strategie_classe }  from '../../src/routes/pdp/template/strategie_classe.js';
+import { strategie_didattiche }  from '../../src/routes/pdp/template/strategie_didattiche.js';
 
 // Istanzia il client per il SARP
 const SARP = new PrismaClient();
@@ -48,7 +49,9 @@ async function add_pdp(idDocente, idInsegnamento, idStudente, as) {
                 anno: as,
                 dispensative: misure_dispensative,
                 compensative: misure_compensative,
-                valutative: misure_valutative
+                valutative: misure_valutative,
+                strategie_classe: strategie_classe,
+                strategie_didattiche: strategie_didattiche
             }       
         });
     } catch(e) {
