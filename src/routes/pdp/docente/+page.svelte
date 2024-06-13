@@ -12,6 +12,9 @@
 	export let data;
     export let form;
 
+    // sintesi vocale flag trigger overall PDP sintesi vocale only if for Lettere Italiane is true
+    const MATERIA_SINTESI_VOCALE = 'Lettere Italiane';
+
     let obiettivi_minimi_templates = helper.data2arr(data.obiettivi_minimi_templates);
     let pdp = helper.data2arr(data.pdp);
     //add field for easier table visualization
@@ -128,7 +131,7 @@
         form_values.valutative = JSON.stringify(current_valutative);
 
         //imposta i flag sintesi_vocale e tempo_esteso
-        form_values.sintesi_vocale = current_dispensative[7].selected || current_compensative[1].selected;
+        form_values.sintesi_vocale = current_pdp.insegnamento.materia.nome == MATERIA_SINTESI_VOCALE && current_compensative[1].selected;
         form_values.tempo_esteso = false;
 
 		try {
