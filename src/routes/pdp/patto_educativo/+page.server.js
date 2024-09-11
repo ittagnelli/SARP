@@ -10,9 +10,9 @@ let resource = "pdp_patto_educativo"; // definisco il nome della risorsa di ques
 
 // @ts-ignore
 function catch_error(exception, type, code) {
-    if(exception instanceof PrismaClientValidationError)
+    if (exception instanceof PrismaClientValidationError)
         logger.error(exception.message);
-    else {  
+    else {
         logger.error(JSON.stringify(exception));
         logger.error(exception.message);
         logger.error(exception.stack);
@@ -27,14 +27,18 @@ export async function load({ locals }) {
     route_protect(locals);
     access_protect(5000, locals, action, resource);
 
-	try {
-        if(is_admin(locals) || is_tutor_bes(locals)) {
-            clausola_where = { bes:true };
-   
+    try {
+        if (is_admin(locals) || is_tutor_bes(locals)) {
+            clausola_where = {
+                tipo: 'STUDENTE',
+                bes: true,
+                can_login: true
+            };
+
             // query SQL al DB per tutte le entry nella tabella todo
             const studenti = await SARP.Utente.findMany({
                 orderBy: [{ tipo: 'desc' }],
-                where: clausola_where            
+                where: clausola_where
             });
 
             // restituisco il risultato della query SQL
@@ -42,36 +46,36 @@ export async function load({ locals }) {
                 studenti
             }
         }
-	} catch (exception) {
+    } catch (exception) {
         catch_error(exception, "la ricerca", 5000);
-	}
+    }
 }
 
 export const actions = {
-	update: async ({ cookies, request, locals }) => {
+    update: async ({ cookies, request, locals }) => {
         let action = 'update';
 
         route_protect(locals);
         access_protect(5001, locals, action, resource);
 
-		const form_data = await request.formData();
-		let student_id = form_data.get('student_id');
-       
+        const form_data = await request.formData();
+        let student_id = form_data.get('student_id');
+
         SARP.set_session(locals); // passa la sessione all'audit
-		try {
-			await SARP.Utente.update({
-				where: { id: +student_id },
-				data: {
+        try {
+            await SARP.Utente.update({
+                where: { id: +student_id },
+                data: {
                     griglia_pdp_c2: form_data.get('griglia_pdp_c2'),
                     griglia_pdp_c2_done: form_data.get("completo") === 'SI'
-				}
-			});		
-		} catch (exception) {
+                }
+            });
+        } catch (exception) {
             // @ts-ignore
-            if(exception.code != "P2002")
+            if (exception.code != "P2002")
                 catch_error(exception, "l'aggiornamento", 5002);
             else
                 return fail(400, { error_mex: "Griglia non univoca" });   // La richiesta fallisce
-		}
-	}
+        }
+    }
 };

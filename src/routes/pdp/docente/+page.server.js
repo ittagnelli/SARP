@@ -1,6 +1,6 @@
 import { PrismaDB } from "$js/prisma_db.js";
 import { PrismaClientValidationError } from '@prisma/client/runtime';
-import { user_id, multi_user_field_where, access_protect, route_protect, raise_error } from "$js/helper";
+import { user_id, multi_user_field_where, access_protect, route_protect, raise_error, get_as } from "$js/helper";
 import { Logger } from '$js/logger';
 
 let logger = new Logger("server"); //instanzia il logger
@@ -10,9 +10,9 @@ const resource = "pdp_docente";
 
 
 function catch_error(exception, code) {
-    if(exception instanceof PrismaClientValidationError)
+    if (exception instanceof PrismaClientValidationError)
         logger.error(exception.message);
-    else {  
+    else {
         logger.error(JSON.stringify(exception));
         logger.error(exception.message);
         logger.error(exception.stack);
@@ -29,6 +29,9 @@ export async function load({ locals }) {
     SARP.set_session(locals);
 
     let where_search = multi_user_field_where('idDocente', locals);
+    where_search['anno'] = {
+        gt: get_as() - 2
+    };
 
     try {
         let pdp = await SARP.PDP.findMany({
@@ -65,8 +68,8 @@ export async function load({ locals }) {
                 }
             },
             orderBy: [
-                {insegnamento: {classe: {id: 'asc'}}},
-                {studente: {cognome: 'asc'}}
+                { insegnamento: { classe: { id: 'asc' } } },
+                { studente: { cognome: 'asc' } }
             ]
         });
 
@@ -100,8 +103,8 @@ export const actions = {
         access_protect(200, locals, action, resource);
 
         try {
-            const form = await request.formData();	
-            
+            const form = await request.formData();
+
             await SARP.PDP.update({
                 data: {
                     dispensative: form.get("dispensative"),
@@ -123,9 +126,9 @@ export const actions = {
                 }
             });
 
-            return {action: action, status: 'ok'};
+            return { action: action, status: 'ok' };
         } catch (exception) {
             catch_error(exception, 2602);
-        } 
+        }
     },
 }

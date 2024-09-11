@@ -13,9 +13,9 @@ let logger = new Logger("server"); //instanzia il logger
 const SARP = new PrismaDB();
 
 function catch_error(exception, type, code) {
-    if(exception instanceof PrismaClientValidationError)
+    if (exception instanceof PrismaClientValidationError)
         logger.error(exception.message);
-    else {  
+    else {
         logger.error(JSON.stringify(exception));
         logger.error(exception.message);
         logger.error(exception.stack);
@@ -24,12 +24,12 @@ function catch_error(exception, type, code) {
 }
 
 function catch_error_pdf(exception, type, code) {
-	logger.error(JSON.stringify(exception)); //PROF: error è un oggetto ma serve qualcosa di più complicato. per il momento lascialo così. ho gia risolto in hooks nella versione 9.0
-	raise_error(
-		500,
-		code,
-		`${type} TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`
-	);
+    logger.error(JSON.stringify(exception)); //PROF: error è un oggetto ma serve qualcosa di più complicato. per il momento lascialo così. ho gia risolto in hooks nella versione 9.0
+    raise_error(
+        500,
+        code,
+        `${type} TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`
+    );
 }
 
 export async function load({ locals }) {
@@ -40,7 +40,7 @@ export async function load({ locals }) {
     SARP.set_session(locals);
 
     try {
-        if(is_admin(locals) || is_tutor_bes(locals)) {
+        if (is_admin(locals) || is_tutor_bes(locals)) {
             // get active BES students
             const studenti = await SARP.Utente.findMany({
                 select: {
@@ -67,13 +67,14 @@ export async function load({ locals }) {
                     classe: true
                 },
                 orderBy: [
-                    { classeId: 'asc'},
+                    { classeId: 'asc' },
                     { cognome: 'asc' }
                 ],
                 where: {
+                    tipo: 'STUDENTE',
                     bes: true,
-                    can_login: true    
-                }            
+                    can_login: true
+                }
             });
 
             return {
@@ -89,7 +90,7 @@ export async function load({ locals }) {
 function format_grid1_4d(grid) {
     grid.map((q) => {
         q.answers.forEach((a) => {
-            q[`dans_${a.aid}`] = a.aid == q.answer ? 'X' : ''; 
+            q[`dans_${a.aid}`] = a.aid == q.answer ? 'X' : '';
         })
     });
 
@@ -97,9 +98,9 @@ function format_grid1_4d(grid) {
 }
 
 function format_grid1_4s(grid1, grid2) {
-     grid1.map((q,i) => {
+    grid1.map((q, i) => {
         grid2[i].answers.forEach((a) => {
-            q[`sans_${a.aid}`] = a.aid == grid2[i].answer ? 'X' : ''; 
+            q[`sans_${a.aid}`] = a.aid == grid2[i].answer ? 'X' : '';
         })
     });
 
@@ -109,7 +110,7 @@ function format_grid1_4s(grid1, grid2) {
 //format the answer for SI/NO questions
 function format_grid_5d(grid) {
     grid.map((q) => {
-        q['dans'] = q.answer == 'a' ? 'SI' : 'NO'; 
+        q['dans'] = q.answer == 'a' ? 'SI' : 'NO';
     });
 
     return grid;
@@ -117,17 +118,17 @@ function format_grid_5d(grid) {
 
 export const actions = {
     pdf: async ({ cookies, request }) => {
-		let buf;
-		try {
-			const form_data = await request.formData();
-			const student_id = form_data.get('id');
+        let buf;
+        try {
+            const form_data = await request.formData();
+            const student_id = form_data.get('id');
 
             //the document to render is made by many parts
             //one evaluation grid coming from the student object
             //and 5 sections (dispenative, compensative,valutative, strategie classe, strategie didattiche)
             //for each materia belonging to the class the student is subscribed
 
-			// get griglia osservativa for student
+            // get griglia osservativa for student
             const studente = await SARP.Utente.findUnique({
                 where: { id: +student_id },
                 include: {
@@ -141,7 +142,7 @@ export const actions = {
                     }
                 }
             });
-                
+
             //prepare the valutazione grids
             //Qui è un gran casino in quanto stato fatto in fasi successive
             //In ogni acso prima preparo le varie griglie per con le risposte del tutor di classe
@@ -156,7 +157,7 @@ export const actions = {
             let dsgriglia4 = dvalutazione.slice(28, 32);
             let sgriglia4 = svalutazione.slice(8, 12);
             let dgriglia5 = dvalutazione.slice(32);
-            
+
             //set an X to the right answer column
             dgriglia1 = format_grid1_4d(dgriglia1);
             dsgriglia2 = format_grid1_4d(dsgriglia2);
@@ -169,7 +170,7 @@ export const actions = {
 
             //now get the section for the different materie
             const pdp = await SARP.PDP.findMany({
-                where: { 
+                where: {
                     idStudente: +student_id,
                     anno: get_as()
                 },
@@ -181,9 +182,9 @@ export const actions = {
                             docente: true
                         }
                     }
-                }          
+                }
             });
-                  
+
             let materie = [];
             let firme = [];
             pdp.forEach(p => {
@@ -194,7 +195,7 @@ export const actions = {
                 let strategie_didattiche = JSON.parse(p.strategie_didattiche).filter(d => d.selected == true);
 
                 let materia = {
-                    materia: p.insegnamento.materia.nome, 
+                    materia: p.insegnamento.materia.nome,
                     docente: `${p.insegnamento.docente.nome} ${p.insegnamento.docente.cognome}`,
                     prefix: '',
                     altro_compensative: p.altro_compensative,
@@ -216,15 +217,15 @@ export const actions = {
                     strategie_didattiche_yes: strategie_didattiche.length > 0,
                     strategie_didattiche_no: strategie_didattiche.length == 0,
                     has_obiettivi_minimi: studente.obiettivi_minimi,
-                    argomenti_q1: studente.obiettivi_minimi ? JSON.parse(p.obiettivi_minimi)[0]: [],
-					argomenti_q2: studente.obiettivi_minimi ? JSON.parse(p.obiettivi_minimi)[1]: []
-                };                
-                let firma = { materia: materia.materia, docente: materia.docente};
-                
+                    argomenti_q1: studente.obiettivi_minimi ? JSON.parse(p.obiettivi_minimi)[0] : [],
+                    argomenti_q2: studente.obiettivi_minimi ? JSON.parse(p.obiettivi_minimi)[1] : []
+                };
+                let firma = { materia: materia.materia, docente: materia.docente };
+
                 materie.push(materia);
                 firme.push(firma);
             });
-            
+
             //prepare the object to render the template
             let renderer = {};
             renderer['nome'] = studente.nome;
@@ -239,8 +240,8 @@ export const actions = {
             renderer['griglia4'] = dsgriglia4;
             renderer['griglia5'] = dgriglia5;
             renderer['materie'] = materie;
-            renderer['firme'] = firme; 
-            
+            renderer['firme'] = firme;
+
             //Preparo per il rendering della sezione Mi Presento al consiglio di classe
             //le chiavi hanno già il nome corretto, basta che le aggiungo alll'oggetto renderer
             let mipresento = JSON.parse(studente.griglia_pdp_a1);
@@ -249,7 +250,7 @@ export const actions = {
             let educativo = JSON.parse(studente.griglia_pdp_c2);
             educativo.forEach(q => {
                 renderer[`griglia_c2_${q.qid}`] = q.answer;
-                if(q.qid == 1) {
+                if (q.qid == 1) {
                     renderer['griglia_c2_1_disc'] = q.disc_1;
                     renderer['griglia_c2_1_cad'] = q.cadenza_1;
                     renderer['griglia_c2_2_disc'] = q.disc_2;
@@ -259,42 +260,42 @@ export const actions = {
                     renderer['griglia_c2_4_disc'] = q.disc_4;
                     renderer['griglia_c2_4_cad'] = q.cadenza_4;
                 }
-                if(q.qid == 17 || q.qid == 18) 
-                    renderer[`griglia_c2_${q.qid}_YN`] = q.answer.length > 0 ? 'SI' : 'NO'; 
+                if (q.qid == 17 || q.qid == 18)
+                    renderer[`griglia_c2_${q.qid}_YN`] = q.answer.length > 0 ? 'SI' : 'NO';
             });
 
             //griglia abilità B
             let griglia_abilita = JSON.parse(studente.griglia_pdp_b);
             renderer = Object.assign(renderer, griglia_abilita);
 
-			const content = fs.readFileSync(
-				path.resolve(PUBLIC_PDP_TEMPLATES_DIR, PUBLIC_PDP_TEMPLATE),
-				'binary'
-			);
+            const content = fs.readFileSync(
+                path.resolve(PUBLIC_PDP_TEMPLATES_DIR, PUBLIC_PDP_TEMPLATE),
+                'binary'
+            );
 
-			const zip = new PizZip(content);
+            const zip = new PizZip(content);
 
-			const doc = new Docxtemplater(zip, {
-				paragraphLoop: true,
-				linebreaks: true,
+            const doc = new Docxtemplater(zip, {
+                paragraphLoop: true,
+                linebreaks: true,
                 parser: custom_tags_parser
-			});
-            
-            doc.render(renderer);
-    
-			buf = doc.getZip().generate({
-				type: 'nodebuffer',
-				compression: 'DEFLATE'
-			});
+            });
 
-			return {
-				file: JSON.stringify(buf), // Convertiamo il buffer in stringa sennò sveltekit va in errore
-				// nome_documento: `PDP-${docx_programmazione_template.classe.replace(' ', '_')}.docx`
+            doc.render(renderer);
+
+            buf = doc.getZip().generate({
+                type: 'nodebuffer',
+                compression: 'DEFLATE'
+            });
+
+            return {
+                file: JSON.stringify(buf), // Convertiamo il buffer in stringa sennò sveltekit va in errore
+                // nome_documento: `PDP-${docx_programmazione_template.classe.replace(' ', '_')}.docx`
                 nome_documento: `PDP_${studente.cognome}_${studente.nome}.docx`.replace(' ', '_')
-			};
-		} catch (exception) {
+            };
+        } catch (exception) {
             console.log(exception)
-			catch_error_pdf(exception, 'la generazione', 204);
-		}
-	}
+            catch_error_pdf(exception, 'la generazione', 204);
+        }
+    }
 }
