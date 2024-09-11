@@ -1,5 +1,5 @@
 import { PrismaDB } from '$js/prisma_db';
-import { route_protect, user_id, multi_user_where, raise_error, access_protect, get_as  } from '$js/helper';
+import { route_protect, user_id, multi_user_where, raise_error, access_protect, get_as } from '$js/helper';
 import { Logger } from '$js/logger';
 import { PrismaClientValidationError } from '@prisma/client/runtime';
 import * as helper from '../../../js/helper';
@@ -15,9 +15,9 @@ let resource = "pcto_stage"; // definisco il nome della risorsa di questo endpoi
 
 // @ts-ignore
 function catch_error(exception, type, code) {
-    if(exception instanceof PrismaClientValidationError)
+    if (exception instanceof PrismaClientValidationError)
         logger.error(exception.message);
-    else {  
+    else {
         logger.error(JSON.stringify(exception));
         logger.error(exception.message);
         logger.error(exception.stack);
@@ -26,19 +26,19 @@ function catch_error(exception, type, code) {
 }
 
 function catch_error_pdf(exception, type, code) {
-	logger.error(JSON.stringify(exception)); 
-	raise_error(
-		500,
-		code,
-		`${type} TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`
-	);
+    logger.error(JSON.stringify(exception));
+    raise_error(
+        500,
+        code,
+        `${type} TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`
+    );
 }
 
 const convert_date = (d) => {
-	let data = d
-		.toLocaleDateString('it-IT', { year: 'numeric', month: '2-digit', day: '2-digit' })
-		.split('/');
-	return `${data[0]}-${data[1]}-${data[2]}`;
+    let data = d
+        .toLocaleDateString('it-IT', { year: 'numeric', month: '2-digit', day: '2-digit' })
+        .split('/');
+    return `${data[0]}-${data[1]}-${data[2]}`;
 };
 
 const generate_file = (template_file, data) => {
@@ -46,14 +46,14 @@ const generate_file = (template_file, data) => {
         path.resolve(PUBLIC_PCTO_TEMPLATES_DIR, template_file),
         'binary'
     );
-    
+
     const doc = new Docxtemplater(new PizZip(template), {
         paragraphLoop: true,
         linebreaks: true
     });
-    
+
     doc.render(data);
-    
+
     let buf = doc.getZip().generate({
         type: 'nodebuffer',
         compression: 'DEFLATE'
@@ -70,12 +70,15 @@ export async function load({ locals }) {
 
     try {
         let where_clause = multi_user_where(locals);
-        where_clause['anno_scolastico'] = get_as();
-        
+        //where_clause['anno_scolastico'] = get_as();
+        where_clause['anno_scolastico'] = {
+            gt: get_as() - 2 // visualizza gli stage anche dell'anno passato
+        }
+
         // query SQL al DB per tutte le entry nella tabella todo
         const stages = await SARP.pcto_Pcto.findMany({
             orderBy: [{ anno_scolastico: 'desc' }],
-            where: where_clause, 
+            where: where_clause,
             include: {
                 offertoDa: true,
                 svoltoDa: true,
@@ -89,7 +92,7 @@ export async function load({ locals }) {
 
         const utenti = await SARP.Utente.findMany({
             orderBy: [{ cognome: 'asc' }],
-            include: {ruoli: true}
+            include: { ruoli: true }
         });
 
         const classi = await SARP.classe.findMany();
@@ -107,19 +110,19 @@ export async function load({ locals }) {
 }
 
 export const actions = {
-	create: async ({ cookies, request, locals }) => {
+    create: async ({ cookies, request, locals }) => {
         let action = 'create';
 
         route_protect(locals);
         access_protect(501, locals, action, resource);
 
-		const form_data = await request.formData();
+        const form_data = await request.formData();
         let studenti = form_data.get('studenti').split(',')
         let ids = [];
-        
-        if(studenti != '') {
+
+        if (studenti != '') {
             studenti.forEach(element => {
-                ids.push({id: +element})
+                ids.push({ id: +element })
             });
         }
 
@@ -156,23 +159,23 @@ export const actions = {
         } catch (exception) {
             catch_error(exception, "l'inserimento", 301)
         }
-	},
+    },
 
-	update: async ({ cookies, request, locals }) => {
+    update: async ({ cookies, request, locals }) => {
         let action = 'update';
 
         route_protect(locals);
         access_protect(502, locals, action, resource);
 
-		const form_data = await request.formData();
+        const form_data = await request.formData();
         let id = form_data.get('id');
         let studenti = form_data.get('studenti').split(',');
         let ids = [];
 
         studenti.forEach(element => {
-            if(+element > 0) ids.push({id: +element})
+            if (+element > 0) ids.push({ id: +element })
         });
-        
+
         SARP.set_session(locals); // passa la sessione all'audit
         try {
             await SARP.pcto_Pcto.update({
@@ -206,37 +209,37 @@ export const actions = {
         } catch (exception) {
             catch_error(exception, "l'aggiornamento", 302);
         }
-	},
+    },
 
-	delete: async ({ cookies, request, locals }) => {
+    delete: async ({ cookies, request, locals }) => {
         let action = 'delete';
 
         route_protect(locals);
         access_protect(503, locals, action, resource);
 
-		const form_data = await request.formData();
-		const id = form_data.get('id');
+        const form_data = await request.formData();
+        const id = form_data.get('id');
 
         SARP.set_session(locals); // passa la sessione all'audit
         try {
             await SARP.pcto_Pcto.delete({
                 where: { id: +id }
-            });       
+            });
         } catch (exception) {
             catch_error(exception, "l'eliminazione", 303);
         }
 
-	},
+    },
 
     pdf: async ({ cookies, request }) => {
-		try {
-			const form_data = await request.formData();
-			const id = form_data.get('id');
+        try {
+            const form_data = await request.formData();
+            const id = form_data.get('id');
             let return_files = [];
-            
-			// preleva il PCTO dal DB
-			let pcto = await SARP.pcto_Pcto.findUnique({
-				where: { id: +id },
+
+            // preleva il PCTO dal DB
+            let pcto = await SARP.pcto_Pcto.findUnique({
+                where: { id: +id },
                 include: {
                     offertoDa: true,
                     tutor_scolastico: true,
@@ -246,7 +249,7 @@ export const actions = {
                         }
                     }
                 }
-			});
+            });
 
             //informazioni comuni per compilazione documento #2 convenzione stage
             let ddata = {};
@@ -254,9 +257,9 @@ export const actions = {
             ddata['P_CONVENZIONE'] = pcto?.offertoDa.idConvenzione;
             ddata['A_NOME'] = pcto?.offertoDa.nome;
             ddata['A_SEDE_LEGALE'] = pcto?.offertoDa.indirizzo;
-            ddata['A_SEDE_SVOLGIMENTO'] = pcto?.sede_stage;            
-            ddata['P_INIZIO'] = convert_date (pcto?.dataInizio);
-            ddata['P_FINE'] = convert_date (pcto?.dataFine);
+            ddata['A_SEDE_SVOLGIMENTO'] = pcto?.sede_stage;
+            ddata['P_INIZIO'] = convert_date(pcto?.dataInizio);
+            ddata['P_FINE'] = convert_date(pcto?.dataFine);
             ddata['P_ORARIO_ACCESSO'] = pcto?.orario_accesso;
             ddata['A_ATTIVITA_1'] = pcto?.task1;
             ddata['A_ATTIVITA_2'] = pcto?.task2;
@@ -272,7 +275,7 @@ export const actions = {
             ddata['P_DATA_STIPULA'] = convert_date(new Date());
 
             //genero il documento #2 per ogni studente con le informazioni specifiche
-            for(let studente of pcto?.svoltoDa) {
+            for (let studente of pcto?.svoltoDa) {
                 let uid = helper.get_uid();
                 ddata['N_PROTOCOLLO_CS'] = ddata['P_CONVENZIONE'] + '-CS-' + uid;
                 ddata['N_PROTOCOLLO_PF'] = ddata['P_CONVENZIONE'] + '-PF-' + uid;
@@ -286,23 +289,23 @@ export const actions = {
                 ddata['S_EMAIL'] = studente.email || '';
                 ddata['S_CLASSE'] = studente.classe.classe;
                 ddata['S_SEZIONE'] = studente.classe.sezione;
-            
+
                 return_files.push({
-                        file: JSON.stringify(generate_file(PUBLIC_PCTO_TEMPLATE_CONVENZIONE_STUDENTE, ddata)),
-                        name: `02-Convenzione_studente_${studente.cognome}_${studente.nome}.docx`.replace(' ', '_')
-                    },
+                    file: JSON.stringify(generate_file(PUBLIC_PCTO_TEMPLATE_CONVENZIONE_STUDENTE, ddata)),
+                    name: `02-Convenzione_studente_${studente.cognome}_${studente.nome}.docx`.replace(' ', '_')
+                },
                     {
                         file: JSON.stringify(generate_file(PUBLIC_PCTO_TEMPLATE_PATTO_FORMATIVO, ddata)),
                         name: `03-Patto_formativo_studente_${studente.cognome}_${studente.nome}.docx`.replace(' ', '_')
                     }
                 );
-                    
+
                 logger.info(`Generato Convezione Studente per ${studente.cognome}_${studente.nome}`);
                 logger.info(`Generato Patto Formativo per ${studente.cognome}_${studente.nome}`);
             }
-            return {files: return_files};
-		} catch (exception) {
-			catch_error_pdf(exception, 'la generazione', 304);
-		}
-	}
+            return { files: return_files };
+        } catch (exception) {
+            catch_error_pdf(exception, 'la generazione', 304);
+        }
+    }
 };

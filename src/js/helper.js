@@ -6,7 +6,7 @@ import { Logger } from './logger';
 import { browser } from '$app/environment';
 import { mb_type, mb_color, mb_title, mb_message, mb_show } from '$js/store';
 import tippy from 'tippy.js';
-import 'tippy.js/dist/tippy.css'; 
+import 'tippy.js/dist/tippy.css';
 
 // Istanzia il logger in funzione di dove viene chiamato
 let logger = browser ? new Logger('client') : new Logger('server');
@@ -99,9 +99,9 @@ export const is_admin = (data) => {
 };
 
 export const is_tutor = (data) => {
-	return ( user_ruolo(data).includes('TUTOR-SCOLASTICO') || 
-            user_ruolo(data).includes('TUTOR-AZIENDALE')
-            );
+	return (user_ruolo(data).includes('TUTOR-SCOLASTICO') ||
+		user_ruolo(data).includes('TUTOR-AZIENDALE')
+	);
 };
 
 export const is_tutor_sicurezza = (data) => {
@@ -161,23 +161,23 @@ export const multi_user_sicurezza_where = (data) => {
 export const pcto_valutazione_studenti_where = (data) => {
 	let clausola_where;
 
-	if (!is_admin(data)) clausola_where = { 
-        OR: [
-            { 
-                creatoDa: user_id(data)
-            },
-            {
-                idStagista: user_id(data)
-            },
-            {
-                pcto: {
-                    is: {
-                        idTutor: user_id(data),
-                    },
-                }
-            }
-        ]
-    };
+	if (!is_admin(data)) clausola_where = {
+		OR: [
+			{
+				creatoDa: user_id(data)
+			},
+			{
+				idStagista: user_id(data)
+			},
+			{
+				pcto: {
+					is: {
+						idTutor: user_id(data),
+					},
+				}
+			}
+		]
+	};
 	else clausola_where = { id: { gt: 0 } };
 
 	return clausola_where;
@@ -186,15 +186,19 @@ export const pcto_valutazione_studenti_where = (data) => {
 export const pcto_presenze_where = (data, as) => {
 	let clausola_where;
 
-    if (!is_admin(data)) {
-        if(is_studente(data))
-            clausola_where = { svoltoDa: user_id(data), as: as };
-        else if(is_tutor(data))
-            clausola_where = { creatoDa: user_id(data), as: as };
-    } else {
-        clausola_where = { id: { gt: 0 }, as: as };
-    }
-    
+	if (!is_admin(data)) {
+		if (is_studente(data))
+			clausola_where = { svoltoDa: user_id(data), as: as };
+		else if (is_tutor(data))
+			clausola_where = { creatoDa: user_id(data), as: as };
+	} else {
+		clausola_where = { id: { gt: 0 }, as: as };
+	}
+
+	clausola_where['as'] = {
+		gt: get_as() - 2 // visualizza gli stage anche dell'anno passato
+	}
+
 	return clausola_where;
 };
 
@@ -207,7 +211,7 @@ export const show_modal = () => {
 };
 
 export function get_modal(el_id) {
-    return new globalThis.bootstrap.Modal(document.getElementById(el_id));
+	return new globalThis.bootstrap.Modal(document.getElementById(el_id));
 }
 
 export const diff_time = (h1, h2) => {
@@ -256,17 +260,17 @@ export function delay(msec) {
 export const wait_fade_finish = async (d) => await delay(d); // Avoid graphic issue, wait for the finish of modal closing animation. 150 ms from Tabler css
 
 export const ore_pcto = (inizio, fine) => {
-    return ((new Date(fine) - new Date(inizio))/(60 * 60 * 1000));
+	return ((new Date(fine) - new Date(inizio)) / (60 * 60 * 1000));
 }
 
 export const filter_array_for_id = (array, key) => {
 	let filtered_set_name = new Map();
 	array.forEach(element => {
-        if(!filtered_set_name.has(element[key].nome)) {
-            filtered_set_name.set(element[key].nome, element[key].id)
-        }
-    });
-    return Array.from(filtered_set_name);																						
+		if (!filtered_set_name.has(element[key].nome)) {
+			filtered_set_name.set(element[key].nome, element[key].id)
+		}
+	});
+	return Array.from(filtered_set_name);
 };
 
 export const remove_at_index = (array, index) => {
@@ -276,25 +280,25 @@ export const remove_at_index = (array, index) => {
 
 //determina l'anno scolastico
 export const get_as = () => {
-    const n = new Date();
-    let year = n.getFullYear();
-    const month = n.getMonth()  + 1;
-    if(month >= 1 && month <= 8)
-        year--;
-    return year;
+	const n = new Date();
+	let year = n.getFullYear();
+	const month = n.getMonth() + 1;
+	if (month >= 1 && month <= 8)
+		year--;
+	return year;
 }
 
 //genera uno uid univoco
 export const get_uid = () => {
-    return (new Date().valueOf() + (Math.ceil((Math.random() * 1000000)))).toString(36);
+	return (new Date().valueOf() + (Math.ceil((Math.random() * 1000000)))).toString(36);
 }
 
 // trimestre: agosto-dicembre
 // pentamestre: gennaio-luglio
 export const is_primo_quadrimestre = () => {
-    let month = new Date().getMonth() + 1; 
+	let month = new Date().getMonth() + 1;
 
-    return !(month >=1 && month <=7);
+	return !(month >= 1 && month <= 7);
 }
 
 function replace_char_at(str, index, replacement) {
@@ -303,7 +307,7 @@ function replace_char_at(str, index, replacement) {
 
 export const upper_first_letter = (str) => {
 	return replace_char_at(str, 0, str[0].toUpperCase());
-} 
+}
 
 //handle display of a MessageBox
 export const mbox_show = (type, title, message, delay, cb) => {
@@ -331,73 +335,73 @@ export const mbox_show = (type, title, message, delay, cb) => {
 
 	setTimeout(() => {
 		mb_show.set(false);
-        if(cb) cb();
+		if (cb) cb();
 	}, delay);
 };
 
-export const init_tippy =  () => {
-    tippy('[data-tippy-content]', {
-        arrow:true,
-        duration: 800,
-        hideOnClick: true,
-        trigger: 'mouseenter',
-        onShow(instance) {
-            setTimeout(() => instance.hide(), 1000)
-          },
-    });
+export const init_tippy = () => {
+	tippy('[data-tippy-content]', {
+		arrow: true,
+		duration: 800,
+		hideOnClick: true,
+		trigger: 'mouseenter',
+		onShow(instance) {
+			setTimeout(() => instance.hide(), 1000)
+		},
+	});
 }
 
 //we define a new tag @pageBreak which add a page break in a docx template rendition except last iteration in a loop
 export const custom_tags_parser = (tag, meta) => {
-    if (tag === "pageBreak") {
-        return {
-            get(scope, context) {
-                const totalLength =
-                    context.scopePathLength[
-                        context.scopePathLength.length - 1
-                    ];
-                const index =
-                    context.scopePathItem[
-                        context.scopePathItem.length - 1
-                    ];
-                const isLast = index === totalLength - 1;
-                if (!isLast) {
-                    return '<w:p> <w:r> <w:br w:type="page"/> </w:r> </w:p>';
-                } else {
-                    return "";
-                }
-            },
-        }
-    } else {
-        return {
-            get: function (scope, context) {
-                if (tag === ".") {
-                    return scope;
-                } else {
-                    return scope[tag];
-                }
-            },
-        };
-    }
+	if (tag === "pageBreak") {
+		return {
+			get(scope, context) {
+				const totalLength =
+					context.scopePathLength[
+					context.scopePathLength.length - 1
+					];
+				const index =
+					context.scopePathItem[
+					context.scopePathItem.length - 1
+					];
+				const isLast = index === totalLength - 1;
+				if (!isLast) {
+					return '<w:p> <w:r> <w:br w:type="page"/> </w:r> </w:p>';
+				} else {
+					return "";
+				}
+			},
+		}
+	} else {
+		return {
+			get: function (scope, context) {
+				if (tag === ".") {
+					return scope;
+				} else {
+					return scope[tag];
+				}
+			},
+		};
+	}
 }
 
 export const sanitize_text_form = (text) => {
-    return text ? text.replace(/\\\\\\n/g, '').replace(/\\\\n/g, '').replace(/\\n/g, '') : text;
+	return text ? text.replace(/\\\\\\n/g, '').replace(/\\\\n/g, '').replace(/\\n/g, '') : text;
 }
 
 
 export const titlecase = (string) => {
-    // https://en.wikipedia.org/wiki/Title_case
-    return string.
-           split(' ').
-           map(str => {
-            return str.charAt(0).toUpperCase() + str.slice(1);
-           }).
-           join(' ');
+	// https://en.wikipedia.org/wiki/Title_case
+	return string.
+		split(' ').
+		map(str => {
+			return str.charAt(0).toUpperCase() + str.slice(1);
+		}).
+		join(' ');
 }
 
 export const sort_strings = (s1, s2) => {
-    if(s1 > s2) return 1;
-    if(s1 < s2) return -1;
-    return 0;
+	if (s1 > s2) return 1;
+	if (s1 < s2) return -1;
+	return 0;
 }
