@@ -4,12 +4,13 @@
 # menu resources don't have CRUD acl but just view
 menu_home:
   view:
-    - '*'
+    - "*"
 
 menu_utenti:
   view:
     - ADMIN
     - TUTOR-SCOLASTICO
+    - TUTOR-BES
 
 menu_classi:
   view:
@@ -117,7 +118,7 @@ pdp_template:
   delete:
     - ADMIN
     - DOCENTE
-  
+
 menu_griglia_osservativa:
   view:
     - ADMIN
@@ -210,7 +211,7 @@ programmazione_template:
     - DEVELOPER
     - ADMIN
     - DOCENTE
-    
+
 menu_programmazione_docente:
   view:
     - DEVELOPER
@@ -243,7 +244,7 @@ programmazione_classe:
     - ADMIN
   delete:
     - ADMIN
-    
+
 menu_tools:
   view:
     - ADMIN
@@ -318,17 +319,17 @@ menu_verifica_stato:
 
 changelog:
   read:
-    - '*'
+    - "*"
 
 faq:
   read:
-    - '*'
+    - "*"
 
 ticket:
   read:
-    - '*'
+    - "*"
   create:
-    - '*'
+    - "*"
 
 utenti:
   create:
@@ -336,9 +337,13 @@ utenti:
   read:
     - ADMIN
     - TUTOR-SCOLASTICO
+    - TUTOR-BES
+
   update:
     - ADMIN
     - TUTOR-SCOLASTICO
+    - TUTOR-BES
+
   delete:
     - ADMIN
 
@@ -483,7 +488,7 @@ sicurezza_test:
     - TUTOR-SICUREZZA
     - STUDENTE
     - DOCENTE
-  
+
 verifica_stato:
   get:
     - DEVELOPER
@@ -500,40 +505,40 @@ convert_to_print:
 
 menu_doc:
   view:
-    - '*'
+    - "*"
 
 menu_doc_generale:
   view:
-    - '*'
+    - "*"
 
 menu_doc_utenti:
   view:
-    - '*'
+    - "*"
 
 menu_doc_classi:
   view:
-    - '*'
+    - "*"
 
 menu_doc_pcto:
   view:
-    - '*'
+    - "*"
 
 menu_doc_pdp:
   view:
-    - '*'
+    - "*"
 
 menu_doc_programmazione:
   view:
-    - '*'
+    - "*"
 
 menu_doc_sicurezza:
   view:
-    - '*'
+    - "*"
 
 menu_doc_tools:
   view:
-    - '*'
+    - "*"
 
 documentazione:
   read:
-    - '*'
+    - "*"
