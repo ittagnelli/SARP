@@ -10,9 +10,9 @@ let resource = "pdp_mipresento"; // definisco il nome della risorsa di questo en
 
 // @ts-ignore
 function catch_error(exception, type, code) {
-    if(exception instanceof PrismaClientValidationError)
+    if (exception instanceof PrismaClientValidationError)
         logger.error(exception.message);
-    else {  
+    else {
         logger.error(JSON.stringify(exception));
         logger.error(exception.message);
         logger.error(exception.stack);
@@ -22,59 +22,63 @@ function catch_error(exception, type, code) {
 
 export async function load({ locals }) {
     let action = 'read';
-    
+
     route_protect(locals);
     access_protect(3000, locals, action, resource);
 
     let clausola_where = { id: user_id(locals) };
 
-    if(is_admin(locals) || is_tutor_bes(locals)) {
+    if (is_admin(locals) || is_tutor_bes(locals)) {
         clausola_where = {
             id: { gt: 0 }
         }
     }
-    
-    try {
-		const studenti = await SARP.Utente.findMany({
-			orderBy: [{ tipo: 'desc' }],
-            where: clausola_where,            
-		});
 
-		// restituisco il risultato della query SQL
-		return {
-			studenti
-		}
-	} catch (exception) {
+    //filtra solo per studenti che sono iscritti
+    clausola_where['tipo'] = 'STUDENTE';
+    clausola_where['can_login'] = true;
+
+    try {
+        const studenti = await SARP.Utente.findMany({
+            orderBy: [{ tipo: 'desc' }],
+            where: clausola_where,
+        });
+
+        // restituisco il risultato della query SQL
+        return {
+            studenti
+        }
+    } catch (exception) {
         catch_error(exception, "la ricerca", 3000);
-	}
+    }
 }
 
 export const actions = {
-	update: async ({ cookies, request, locals }) => {
+    update: async ({ cookies, request, locals }) => {
         let action = 'update';
 
         route_protect(locals);
         access_protect(3302, locals, action, resource);
 
-		const form_data = await request.formData();
-		let student_id = form_data.get('student_id');
+        const form_data = await request.formData();
+        let student_id = form_data.get('student_id');
         // let out_griglia = update_griglia(form_data);
-        
+
         SARP.set_session(locals); // passa la sessione all'audit
-		try {
-			await SARP.Utente.update({
-				where: { id: +student_id },
-				data: {
+        try {
+            await SARP.Utente.update({
+                where: { id: +student_id },
+                data: {
                     griglia_pdp_a1: form_data.get('griglia_pdp_a1'),
                     griglia_pdp_a1_done: form_data.get("completo") === 'SI'
-				}
-			});		
-		} catch (exception) {
+                }
+            });
+        } catch (exception) {
             // @ts-ignore
-            if(exception.code != "P2002")
+            if (exception.code != "P2002")
                 catch_error(exception, "l'aggiornamento", 3002);
             else
                 return fail(400, { error_mex: "Griglia non univoca" });   // La richiesta fallisce
-		}
-	}
+        }
+    }
 };
