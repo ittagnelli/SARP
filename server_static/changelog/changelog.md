@@ -1,3 +1,11 @@
+## v4.8.0 - 12 Settembre 2024
+- Visualizza solo gli studenti BES dell'anno corrente e passato che sono attivi
+- PDP mi presento e autovalutazione solo per studenti iscritti
+- Visualizza PCTO stage e presenze anche dell'anno precedente
+- Programmazione annuale visualizza solo l'as corrente
+- Update e Fix layout PDP -> Mi Presento
+- Modifica permessi TUTOR-BES: update utenti
+
 ## v4.7.3 – 18 Maggio 2024
 - `fix#555`: Rimozione spazi documenti PDP PF e CS
 - `fix#554`: Footer Errato Programmazione Annuale -> Template 
