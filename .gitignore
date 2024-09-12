@@ -35,7 +35,7 @@ tmp/
 # Generated files from Excel to Prisma
 utils/scripts/*.txt
 
-*.xlsx
+#*.xlsx
 *.xls
 
 src/routes/sicurezza_sul_lavoro/test/qna_generico_db.js
