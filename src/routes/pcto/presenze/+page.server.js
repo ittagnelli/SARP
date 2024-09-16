@@ -9,9 +9,9 @@ let resource = "pcto_presenze"; // definisco il nome della risorsa di questo end
 
 // @ts-ignore
 function catch_error(exception, type, code) {
-    if(exception instanceof PrismaClientValidationError)
+    if (exception instanceof PrismaClientValidationError)
         logger.error(exception.message);
-    else {  
+    else {
         logger.error(JSON.stringify(exception));
         logger.error(exception.message);
         logger.error(exception.stack);
@@ -24,16 +24,16 @@ export async function load({ locals }) {
 
     route_protect(locals);
     access_protect(400, locals, action, resource);
-   
+
     //query with proper select reduce from 1.4MB to 384KB
     //not bad!!!
     try {
-		// query SQL al DB per tutte le entry nella tabella todo
-	
+        // query SQL al DB per tutte le entry nella tabella todo
+
         const presenze = await SARP.pcto_Presenza.findMany({
-			orderBy: [{ dataPresenza: 'desc' }],
-			where: pcto_presenze_where(locals, get_as()), 
-			select: {
+            orderBy: [{ dataPresenza: 'desc' }],
+            where: pcto_presenze_where(locals, get_as()),
+            select: {
                 id: true,
                 svoltoDa: true,
                 creatoDa: true,
@@ -48,7 +48,7 @@ export async function load({ locals }) {
                         id: true,
                         nome: true,
                         cognome: true,
-                    }                        
+                    }
                 },
                 lavoraPer: {
                     select: {
@@ -62,15 +62,17 @@ export async function load({ locals }) {
                     }
                 },
             }
-		});
+        });
 
         const stages = await SARP.pcto_Pcto.findMany({
-            where: { 
+            where: {
                 firma_pcto: true,
-                anno_scolastico: get_as()
+                anno_scolastico: {
+                    gt: get_as() - 2
+                }
             },
-			orderBy: [{ titolo: 'asc' }],
-			select: {
+            orderBy: [{ titolo: 'asc' }],
+            select: {
                 id: true,
                 titolo: true,
                 tutor_aziendale: true,
@@ -86,123 +88,123 @@ export async function load({ locals }) {
                         istituto: true,
                         classeId: true
                     }
-                }     
+                }
             }
-		});
-        
+        });
+
         return {
-			presenze: presenze,
-			stages: stages,
+            presenze: presenze,
+            stages: stages,
             session: locals.session
-		}
-	} catch (exception) {
-        catch_error(exception, "load", 400) ;
-	}
+        }
+    } catch (exception) {
+        catch_error(exception, "load", 400);
+    }
 }
 
 export const actions = {
-	create: async ({ cookies, request, locals }) => {
+    create: async ({ cookies, request, locals }) => {
         let action = 'create';
 
         route_protect(locals);
         access_protect(401, locals, action, resource);
 
-		const form_data = await request.formData();
+        const form_data = await request.formData();
         let hh_inizio = form_data.get('oraInizio').split(':')[0];
         let mm_inizio = form_data.get('oraInizio').split(':')[1];
         let hh_fine = form_data.get('oraFine').split(':')[0];
         let mm_fine = form_data.get('oraFine').split(':')[1];
-        
-        SARP.set_session(locals); // passa la sessione all'audit
-		try {
-			await SARP.pcto_Presenza.create({
-				data: {
-					creatoDa: user_id(locals),
-                    as: get_as(),
-					dataPresenza: new Date(form_data.get('dataPresenza')),
-					oraInizio: new Date(1970, 1, 1, hh_inizio, mm_inizio),
-					oraFine: new Date(1970,1 ,1, hh_fine, mm_fine),
-					svoltoDa: +form_data.get('studente'),
-					idPcto: +form_data.get('stage'),
-                    approvato: true
-				}
-			});	
-		} catch (exception) {
-			catch_error(exception, "l'inserimento", 401);
-		}
-	},
 
-	update: async ({ cookies, request, locals }) => {
+        SARP.set_session(locals); // passa la sessione all'audit
+        try {
+            await SARP.pcto_Presenza.create({
+                data: {
+                    creatoDa: user_id(locals),
+                    as: get_as(),
+                    dataPresenza: new Date(form_data.get('dataPresenza')),
+                    oraInizio: new Date(1970, 1, 1, hh_inizio, mm_inizio),
+                    oraFine: new Date(1970, 1, 1, hh_fine, mm_fine),
+                    svoltoDa: +form_data.get('studente'),
+                    idPcto: +form_data.get('stage'),
+                    approvato: true
+                }
+            });
+        } catch (exception) {
+            catch_error(exception, "l'inserimento", 401);
+        }
+    },
+
+    update: async ({ cookies, request, locals }) => {
         let action = 'update';
 
         route_protect(locals);
         access_protect(402, locals, action, resource);
 
-		const form_data = await request.formData();
-		let id = form_data.get('id');
+        const form_data = await request.formData();
+        let id = form_data.get('id');
         let hh_inizio = form_data.get('oraInizio').split(':')[0];
         let mm_inizio = form_data.get('oraInizio').split(':')[1];
         let hh_fine = form_data.get('oraFine').split(':')[0];
         let mm_fine = form_data.get('oraFine').split(':')[1];
-        
-        let update_obj = {id: +id};
-        let message = '';
-        if(user_ruolo(locals) == 'STUDENTE') 
-            update_obj['approvato'] = false;
-           
-        SARP.set_session(locals); // passa la sessione all'audit
-		try {
-			let res = await SARP.pcto_Presenza.updateMany({
-				where: update_obj,
-				data: {
-					dataPresenza: new Date(form_data.get('dataPresenza')),
-					oraInizio: new Date(1970, 1, 1, hh_inizio, mm_inizio),
-					oraFine: new Date(1970,1 ,1, hh_fine, mm_fine),
-					svoltoDa: +form_data.get('studente'),
-					idPcto: +form_data.get('stage'),
-                    approvato: true
-				}
-			});
 
-            if(res.count == 0)
+        let update_obj = { id: +id };
+        let message = '';
+        if (user_ruolo(locals) == 'STUDENTE')
+            update_obj['approvato'] = false;
+
+        SARP.set_session(locals); // passa la sessione all'audit
+        try {
+            let res = await SARP.pcto_Presenza.updateMany({
+                where: update_obj,
+                data: {
+                    dataPresenza: new Date(form_data.get('dataPresenza')),
+                    oraInizio: new Date(1970, 1, 1, hh_inizio, mm_inizio),
+                    oraFine: new Date(1970, 1, 1, hh_fine, mm_fine),
+                    svoltoDa: +form_data.get('studente'),
+                    idPcto: +form_data.get('stage'),
+                    approvato: true
+                }
+            });
+
+            if (res.count == 0)
                 message = 'Non puoi aggiornare una presenza già approvata!!!';
             return {
                 message: message
             }
-		} catch (exception) {
-			catch_error(exception, "l'aggiornamento", 402)
-		}
-	},
+        } catch (exception) {
+            catch_error(exception, "l'aggiornamento", 402)
+        }
+    },
 
-	delete: async ({ cookies, request, locals }) => {
+    delete: async ({ cookies, request, locals }) => {
         let action = 'delete';
 
         route_protect(locals);
         access_protect(403, locals, action, resource);
 
-		const form_data = await request.formData();
-		const id = form_data.get('id');
+        const form_data = await request.formData();
+        const id = form_data.get('id');
 
-        let delete_obj = {id: +id};
+        let delete_obj = { id: +id };
         let message = '';
-        if(user_ruolo(locals) == 'STUDENTE')
+        if (user_ruolo(locals) == 'STUDENTE')
             delete_obj['approvato'] = false;
 
         SARP.set_session(locals); // passa la sessione all'audit
         try {
-			let res = await SARP.pcto_Presenza.deleteMany({
-				where: delete_obj
-			});
+            let res = await SARP.pcto_Presenza.deleteMany({
+                where: delete_obj
+            });
 
-            if(res.count == 0)
+            if (res.count == 0)
                 message = 'Non puoi cancellare una presenza già approvata!!!';
             return {
                 message: message
             }
-		} catch (exception) {
-			catch_error(exception, "l'eliminazione", 403);
-		}
-	},
+        } catch (exception) {
+            catch_error(exception, "l'eliminazione", 403);
+        }
+    },
 
     bulk_create: async ({ cookies, request, locals }) => {
         let action = 'create';
@@ -210,40 +212,40 @@ export const actions = {
         route_protect(locals);
         access_protect(401, locals, action, resource);
 
-		const form_data = await request.formData();
+        const form_data = await request.formData();
         let hh_inizio = form_data.get('oraInizio').split(':')[0];
         let mm_inizio = form_data.get('oraInizio').split(':')[1];
         let hh_fine = form_data.get('oraFine').split(':')[0];
         let mm_fine = form_data.get('oraFine').split(':')[1];
-        
+
         SARP.set_session(locals); // passa la sessione all'audit
 
         let stage_id = +form_data.get('stage');
         const stage = await SARP.pcto_Pcto.findUnique({
-			where: { id: stage_id },
-			include: {
-				svoltoDa: true
-			}
-		});
+            where: { id: stage_id },
+            include: {
+                svoltoDa: true
+            }
+        });
         let studenti = stage?.svoltoDa;
-        
-		try {
-            studenti?.forEach(async (studente)  => {
+
+        try {
+            studenti?.forEach(async (studente) => {
                 await SARP.pcto_Presenza.create({
                     data: {
                         creatoDa: user_id(locals),
                         as: get_as(),
                         dataPresenza: new Date(form_data.get('dataPresenza')),
                         oraInizio: new Date(1970, 1, 1, hh_inizio, mm_inizio),
-                        oraFine: new Date(1970,1 ,1, hh_fine, mm_fine),
+                        oraFine: new Date(1970, 1, 1, hh_fine, mm_fine),
                         svoltoDa: studente.id,
                         idPcto: +form_data.get('stage'),
                         approvato: true
                     }
-                });	
+                });
             });
-		} catch (exception) {
+        } catch (exception) {
             catch_error(exception, "l'inserimento", 404);
-		}
-	}
+        }
+    }
 };
