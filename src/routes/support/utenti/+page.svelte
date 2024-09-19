@@ -4,7 +4,7 @@
 	import * as helper from '$js/helper';
 	import * as yup from 'yup';
 	import InputText from '$lib/components/modal/input_text.svelte';
-    import InputDate from '$lib/components/modal/input_date.svelte';
+	import InputDate from '$lib/components/modal/input_date.svelte';
 	import ModalError from '$lib/components/common/modal_error.svelte';
 	import { Logger } from '$js/logger';
 	import { onMount } from 'svelte';
@@ -16,16 +16,20 @@
 	let utenti = helper.data2arr(data.utenti);
 	let tipi_utente = helper.data2arr(data.tipi_utente);
 	let ruoli_utente = helper.data2arr(data.ruoli_utente);
-    let classi = helper.data2arr(data.classi);
+	let classi = helper.data2arr(data.classi);
 
-    // aggiungo la classe come stringa agli utenti per poi stamparlo nella tabella
-    utenti.forEach((item, idx) => { 
-        if(utenti[idx]?.classe?.id == undefined)
-            utenti[idx]['classe_str'] = utenti[idx].istituto;
-        else
-        utenti[idx]['classe_str'] = utenti[idx].istituto.concat(" ", utenti[idx].classe.classe, " ", utenti[idx].classe.sezione);
-    });
-    
+	// aggiungo la classe come stringa agli utenti per poi stamparlo nella tabella
+	utenti.forEach((item, idx) => {
+		if (utenti[idx]?.classe?.id == undefined) utenti[idx]['classe_str'] = utenti[idx].istituto;
+		else
+			utenti[idx]['classe_str'] = utenti[idx].istituto.concat(
+				' ',
+				utenti[idx].classe.classe,
+				' ',
+				utenti[idx].classe.sezione
+			);
+	});
+
 	//configura la pagina pre-titolo, titolo e nome del modale
 	$page_pre_title = 'ADMIN';
 	$page_title = 'Utenti';
@@ -45,19 +49,19 @@
 		ruolo: [],
 		nome: '',
 		cognome: '',
-        natoA: '',
+		natoA: '',
 		provincia: '',
-        natoIl: '',
-        residenza: '',
-        codiceF: '',
-        cartaI: '',
+		natoIl: '',
+		residenza: '',
+		codiceF: '',
+		cartaI: '',
 		email: '',
 		telefono: '',
 		bes_select: 'NO',
-        obiettivi_minimi: 'NO',
+		obiettivi_minimi: 'NO',
 		can_login_select: 'SI',
 		istituto_select: 'ITT',
-        classe: 0
+		classe: 0
 	};
 
 	// schema di validazione del form
@@ -76,45 +80,31 @@
 			.required('Cognome utente necessario')
 			.matches(/^[A-Z][a-z A-Z]{2,20}$/, 'Cognome utente non valido'),
 
-        natoA: yup
-            .string()
-            .nullable()
-            .matches(/^$|^[a-zA-Z à-è-ì-ò-ù]{3,30}$/, "Luogo di nascita non valido"),
+		natoA: yup
+			.string()
+			.nullable()
+			.matches(/^$|^[a-zA-Z à-è-ì-ò-ù]{3,30}$/, 'Luogo di nascita non valido'),
 
-		provincia: yup
-            .string()
-            .nullable()
-            .length(2, "Provincia non valida"),
+		provincia: yup.string().nullable().length(2, 'Provincia non valida'),
 
-        natoIl: yup
-            .date()
-            .min(new Date(1950,1,1), "Data Invalida"),
+		natoIl: yup.date().min(new Date(1950, 1, 1), 'Data Invalida'),
 
-        codiceF: yup
-            .string()
-            .nullable()
-            .matches(/^$|^[0-9A-Z]{16}$/, "Codice fiscale non valido [LNSTVL69T28L219K]"),
+		codiceF: yup
+			.string()
+			.nullable()
+			.matches(/^$|^[0-9A-Z]{16}$/, 'Codice fiscale non valido [LNSTVL69T28L219K]'),
 
 		email: yup
 			.string()
 			.required('Email necessaria')
-            .matches(
-				/^$|^.*@.*$/,
-				'Email non valida'
-			),
+			.matches(/^$|^.*@.*$/, 'Email non valida'),
 
-		telefono: yup
-			.string()
-            .nullable()
-			.matches(/^$|^[0-9]{3}\.[0-9]{3}\.[0-9]{2}\.[0-9]{2}$/, 'Numero non valido [333.123.45.67]'),
+		telefono: yup.string().nullable(),
+		// .matches(/^$|^[0-9]{3}\.[0-9]{3}\.[0-9]{2}\.[0-9]{2}$/, 'Numero non valido [333.123.45.67]'),
 
-        classe: yup
-            .number()
-            .min(1, 'Selezionare una classe'),
-        
-        residenza: yup
-            .string()
-            .nullable()
+		classe: yup.number().min(1, 'Selezionare una classe'),
+
+		residenza: yup.string().nullable()
 	});
 
 	onMount(() => {
@@ -135,28 +125,29 @@
 
 		form_values.nome = utente.nome;
 		form_values.cognome = utente.cognome;
-        form_values.natoA = utente.natoA;
+		form_values.natoA = utente.natoA;
 		form_values.provincia = utente.provincia;
-        form_values.natoIl = helper.convert_date(utente.natoIl);
-        form_values.residenza = utente.residenza;
-        form_values.codiceF = utente.codiceF;
-        form_values.cartaI = utente.cartaI;
+		form_values.natoIl = helper.convert_date(utente.natoIl);
+		form_values.residenza = utente.residenza;
+		form_values.codiceF = utente.codiceF;
+		form_values.cartaI = utente.cartaI;
 		form_values.email = utente.email;
 		form_values.telefono = utente.telefono;
 		form_values.tipo = utente.tipo;
 		form_values.ruolo = utente.ruoli.map((role) => String(role.id));
 		form_values.istituto_select = utente.istituto;
 		form_values.bes_select = utente.bes ? 'SI' : 'NO';
-        form_values.obiettivi_minimi = utente.obiettivi_minimi ? 'SI' : 'NO',
-		form_values.can_login_select = utente.can_login ? 'SI' : 'NO';
-        form_values.classe = utente.classe.id;
+		(form_values.obiettivi_minimi = utente.obiettivi_minimi ? 'SI' : 'NO'),
+			(form_values.can_login_select = utente.can_login ? 'SI' : 'NO');
+		form_values.classe = utente.classe.id;
 	}
 
-	async function cancel_action(){
-		if(modal_action == 'update'){
+	async function cancel_action() {
+		if (modal_action == 'update') {
 			await helper.wait_fade_finish(150);
-			modal_action = 'create';	// Reset model string
-			form_values = {	// Reset form values
+			modal_action = 'create'; // Reset model string
+			form_values = {
+				// Reset form values
 				user_id: 0,
 				tipo: '',
 				ruolo: [],
@@ -165,13 +156,13 @@
 				natoA: '',
 				provincia: '',
 				natoIl: '',
-                residenza: '',
+				residenza: '',
 				codiceF: '',
-                cartaI: '',
+				cartaI: '',
 				email: '',
 				telefono: '',
 				bes_select: 'NO',
-                obiettivi_minimi: 'NO',
+				obiettivi_minimi: 'NO',
 				can_login_select: 'SI',
 				istituto_select: 'ITT',
 				classe: 0
@@ -184,7 +175,7 @@
 			await form_schema.validate(form_values, { abortEarly: false });
 			errors = {};
 			localStorage.setItem('form', JSON.stringify(form_values)); // Nel caso l'inserimento fallisse abbiamo il "backup" nel localstorage
-            modal_form.submit();
+			modal_form.submit();
 		} catch (err) {
 			errors = err.inner.reduce((acc, err) => {
 				return { ...acc, [err.path]: err.message };
@@ -204,25 +195,25 @@
 		{ name: 'picture', type: 'hidden', display: 'Utente' },
 		{ name: 'cognome', type: 'string', display: 'Cognome', size: 40, search: true },
 		{ name: 'nome', type: 'string', display: 'Nome', size: 40, search: true },
-        { name: 'natoIl', type: 'date', display: 'Nato il' },
-        { name: 'tipo', type: 'string', display: 'Tipo', size: 10, search: true },
-        { name: 'classe_str', type: 'string', display: 'Classe', size: 20, search: true },
-        { name: 'ruoli', type: 'array', subtype: 'object', key: 'ruolo', display: 'Ruolo' },
+		{ name: 'natoIl', type: 'date', display: 'Nato il' },
+		{ name: 'tipo', type: 'string', display: 'Tipo', size: 10, search: true },
+		{ name: 'classe_str', type: 'string', display: 'Classe', size: 20, search: true },
+		{ name: 'ruoli', type: 'array', subtype: 'object', key: 'ruolo', display: 'Ruolo' },
 		{ name: 'email', type: 'string', display: 'email', size: 40 },
 		{ name: 'bes', type: 'boolean', display: 'pdp', search: true },
-        { name: 'obiettivi_minimi', type: 'boolean', display: 'obiettivi minimi', search: true },
-		{ name: 'can_login', type: 'boolean', display: 'can_login'}
+		{ name: 'obiettivi_minimi', type: 'boolean', display: 'obiettivi minimi', search: true },
+		{ name: 'can_login', type: 'boolean', display: 'can_login' }
 	]}
 	rows={utenti}
 	page_size={10}
 	modal_name={$page_action_modal}
 	on:update_start={start_update}
 	footer="Utenti"
-    endpoint="support/utenti"
+	endpoint="support/utenti"
 	actions={true}
-    update_tip="Aggiorna anagrafica utente"
-    trash_tip="Rimuovi anagrafica utente"
-    resource="utenti"
+	update_tip="Aggiorna anagrafica utente"
+	trash_tip="Rimuovi anagrafica utente"
+	resource="utenti"
 />
 
 <!-- Modal from Page action -->
@@ -250,7 +241,13 @@
 					{:else}
 						<h5 class="modal-title">Aggiorna Utente</h5>
 					{/if}
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" on:click={cancel_action}/>
+					<button
+						type="button"
+						class="btn-close"
+						data-bs-dismiss="modal"
+						aria-label="Close"
+						on:click={cancel_action}
+					/>
 				</div>
 				<div class="modal-body">
 					{#if form}
@@ -258,12 +255,24 @@
 					{/if}
 					<div class="row">
 						<div class="col-lg-2">
-							<InputText label="Nome" name="nome" placeholder="Nome" bind:val={form_values.nome} {errors} />
+							<InputText
+								label="Nome"
+								name="nome"
+								placeholder="Nome"
+								bind:val={form_values.nome}
+								{errors}
+							/>
 						</div>
 						<div class="col-lg-2">
-							<InputText label="Cognome" name="cognome" placeholder="Cognome" bind:val={form_values.cognome} {errors} />
+							<InputText
+								label="Cognome"
+								name="cognome"
+								placeholder="Cognome"
+								bind:val={form_values.cognome}
+								{errors}
+							/>
 						</div>
-                        <div class="col-lg-2">
+						<div class="col-lg-2">
 							<InputText
 								label="Nato A"
 								name="natoA"
@@ -281,16 +290,11 @@
 								{errors}
 							/>
 						</div>
-                        <div class="col-lg-2">
-                            <InputDate
-                                label="Nato Il"
-                                name="natoIl"
-                                {errors}
-                                bind:val={form_values.natoIl}
-                            />
+						<div class="col-lg-2">
+							<InputDate label="Nato Il" name="natoIl" {errors} bind:val={form_values.natoIl} />
 						</div>
-                        <div class="col-lg-3">
-                            <InputText
+						<div class="col-lg-3">
+							<InputText
 								label="Residente in"
 								name="residenza"
 								placeholder="via Torino 93 - TORINO"
@@ -300,24 +304,24 @@
 						</div>
 					</div>
 					<div class="row">
-                        <div class="col-lg-3">
-                            <InputText
-                                label="Codice Fiscale"
-                                name="codiceF"
-                                placeholder="LNSTVL69T28L219K"
-                                {errors}
-                                bind:val={form_values.codiceF}
-                            />
-                        </div>
-                        <div class="col-lg-3">
-                            <InputText
-                                label="Carta Identità"
-                                name="cartaI"
-                                placeholder="DS12345RF"
-                                {errors}
-                                bind:val={form_values.cartaI}
-                            />
-                        </div>
+						<div class="col-lg-3">
+							<InputText
+								label="Codice Fiscale"
+								name="codiceF"
+								placeholder="LNSTVL69T28L219K"
+								{errors}
+								bind:val={form_values.codiceF}
+							/>
+						</div>
+						<div class="col-lg-3">
+							<InputText
+								label="Carta Identità"
+								name="cartaI"
+								placeholder="DS12345RF"
+								{errors}
+								bind:val={form_values.cartaI}
+							/>
+						</div>
 						<div class="col-lg-3">
 							<InputText
 								label="Email"
@@ -356,7 +360,7 @@
 								{/if}
 							</div>
 						</div>
-                        <div class="col-lg-2">
+						<div class="col-lg-2">
 							<div class="mb-3">
 								<div class="form-label select_text">Classe</div>
 								<select
@@ -366,7 +370,9 @@
 									bind:value={form_values.classe}
 								>
 									{#each classi as classe}
-										<option value={classe.id}>{classe.istituto} {classe.classe} {classe.sezione}</option>
+										<option value={classe.id}
+											>{classe.istituto} {classe.classe} {classe.sezione}</option
+										>
 									{/each}
 								</select>
 								{#if errors.classe}
@@ -374,7 +380,7 @@
 								{/if}
 							</div>
 						</div>
-                        <div class="col-lg-3">
+						<div class="col-lg-3">
 							<div class="mb-3">
 								<label class="form-label">Istituto</label>
 								<div class="form-selectgroup">
@@ -398,7 +404,7 @@
 										/>
 										<span class="form-selectgroup-label">LICEO</span>
 									</label>
-                                    <label class="form-selectgroup-item">
+									<label class="form-selectgroup-item">
 										<input
 											type="radio"
 											name="istituto"
@@ -412,30 +418,30 @@
 							</div>
 						</div>
 					</div>
-                    <div class="row">
-                        <div class="col-lg-12">
+					<div class="row">
+						<div class="col-lg-12">
 							<label class="form-label">Ruolo</label>
 							<div class="form-selectgroup">
-                                {#each ruoli_utente as ruolo}
-                                    <label class="form-selectgroup-item">
-                                        <input
-                                            type="checkbox"
-                                            name="ruolo"
-                                            value="{String(ruolo.id)}"
-                                            class="form-selectgroup-input"
-                                            bind:group={form_values.ruolo}
-                                        />
-                                        <span class="form-selectgroup-label">{ruolo.ruolo}</span>
-                                    </label>
-                                {/each}
+								{#each ruoli_utente as ruolo}
+									<label class="form-selectgroup-item">
+										<input
+											type="checkbox"
+											name="ruolo"
+											value={String(ruolo.id)}
+											class="form-selectgroup-input"
+											bind:group={form_values.ruolo}
+										/>
+										<span class="form-selectgroup-label">{ruolo.ruolo}</span>
+									</label>
+								{/each}
 							</div>
 							<br />
 							{#if errors.ruolo}
 								<span class="feedback-invalid">{errors.ruolo}</span>
 							{/if}
 						</div>
-                    </div>
-                    <br>
+					</div>
+					<br />
 					<div class="row">
 						<div class="col-lg-4">
 							<div class="mb-3">
@@ -492,7 +498,7 @@
 									</div>
 								</div>
 							</div>
-                            <div class="col-lg-4">
+							<div class="col-lg-4">
 								<div class="mb-3">
 									<label class="form-label">Obiettivi Minimi</label>
 									<div class="form-selectgroup">

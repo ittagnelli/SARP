@@ -10,9 +10,13 @@ const name_row = "Nome";
 const cognome_row = "Cognome";
 const nascita_row = "Nato il";
 const nato_a = "Nato a";
+const residenza_row = "Residenza";
+const indirizzo_row = "Indirizzo residenza";
+const telefono_row = "Cell. madre";
 const cf_row = "Cod. Fis.";
 const email_row = "E-mail studente";
 const pdp_row = "PDP";
+const obiettivi_row = "Obiettivi Minimi";
 const class_row = "Classe:";
 
 
@@ -147,9 +151,13 @@ async function main(filename) {
         const cognome_index = rows[index_of_type].indexOf(cognome_row);
         const nascita_index = rows[index_of_type].indexOf(nascita_row);
         const nato_a_index = rows[index_of_type].indexOf(nato_a);
+        const residenza_index = rows[index_of_type].indexOf(residenza_row);
+        const indirizzo_index = rows[index_of_type].indexOf(indirizzo_row);
+        const telefono_index = rows[index_of_type].indexOf(telefono_row);
         const cf_index = rows[index_of_type].indexOf(cf_row);
         const email_index = rows[index_of_type].indexOf(email_row);
-        const bes_index = rows[index_of_type].indexOf(pdp_row);
+        const pdp_index = rows[index_of_type].indexOf(pdp_row);
+        const obiettivi_index = rows[index_of_type].indexOf(obiettivi_row);
 
         // let classe_db; // La classe che stiamo scrivendo nel DB
         let studenti_invalid = [];
@@ -188,16 +196,20 @@ async function main(filename) {
                                 sezione: excel_to_db(sezione)
                             }
                         });
+
                         await prisma.utente.upsert({
                             create: {   // Creaiamo un nuovo record secondo la regola di parsing spiegata sopra
                                 nome: capitalize(row[nome_index].replace("'", "").toLowerCase()),
                                 cognome: capitalize(row[cognome_index].replace("'", "")),
                                 natoIl: row[nascita_index],
                                 natoA: capitalize(row[nato_a_index].replace("'", "").split("(")[0]), // Splittiamo la frase al primo (   TORINO(TO) [TORINO, TO)]
+                                provincia: row[nato_a_index].replace("'", "").split("(")[1].split(')')[0],
+                                residenza: row[indirizzo_index].concat(' ', row[residenza_index]),
+                                telefono: String(row[telefono_index]),
                                 codiceF: row[cf_index],
                                 email: row[email_index],
-                                bes: mastercom_bool_to_real_bool(row[bes_index]),
-                                picture: 'img/avatar.png',
+                                bes: mastercom_bool_to_real_bool(row[pdp_index]),
+                                obiettivi_minimi: mastercom_bool_to_real_bool(row[obiettivi_index]),
                                 can_login: true,
                                 creatoDa: 1,
                                 classeId: classe.id,
@@ -206,20 +218,25 @@ async function main(filename) {
                                     connect: {
                                         id: ruolo_studente.id
                                     }
-                                },
-                                telefono: null
+                                }
                             },
                             update: {   // Aggiorniamo il record se esiste, modificando solo i campi necessari
                                 classeId: classe.id,
-                                bes: mastercom_bool_to_real_bool(row[bes_index]),
-                                email: row[email_index]
+                                residenza: row[indirizzo_index].concat(' ', row[residenza_index]),
+                                natoA: capitalize(row[nato_a_index].replace("'", "").split("(")[0]), // Splittiamo la frase al primo (   TORINO(TO) [TORINO, TO)]
+                                provincia: row[nato_a_index].replace("'", "").split("(")[1].split(')')[0],
+                                telefono: String(row[telefono_index]),
+                                email: row[email_index],
+                                bes: mastercom_bool_to_real_bool(row[pdp_index]),
+                                obiettivi_minimi: mastercom_bool_to_real_bool(row[obiettivi_index]),
+                                istituto: classe.istituto,
+                                can_login: true,
                             },
                             where: {
                                 email: row[email_index]
                             }
                         });
                     }
-
                 }
             }
         });
