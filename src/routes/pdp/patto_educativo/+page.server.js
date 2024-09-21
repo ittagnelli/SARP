@@ -37,7 +37,7 @@ export async function load({ locals }) {
 
             // query SQL al DB per tutte le entry nella tabella todo
             const studenti = await SARP.Utente.findMany({
-                orderBy: [{ tipo: 'desc' }],
+                orderBy: [{ cognome: 'asc' }],
                 where: clausola_where
             });
 
