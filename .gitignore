@@ -55,4 +55,5 @@ utils/scripts/PICTURES/
 utils/scripts/prisma_tester.js
 utils/scripts/update_img.js
 .vscode/
+*.xlsx
 
