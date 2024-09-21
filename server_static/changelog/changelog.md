@@ -1,3 +1,14 @@
+## v4.8.2 - 21 Settembre 2024
+- file studenti 2024
+- aggiornato documento 03 del PCTO per gestire il caso di residenza o campi vuoti
+- aggiornato script import utenti
+- creato script disabilita tutti studenti
+- aggiornato script per disabilitare studenti vecchie V
+- fix#571: PCTO presenze anno passato
+- modifica ed aggiornamento agli script di inserimwento studenti, docenti e insegnamenti
+- generazione dei template per la segreteria in formato xlsx
+
+
 ## v4.8.0 - 12 Settembre 2024
 - Visualizza solo gli studenti BES dell'anno corrente e passato che sono attivi
 - PDP mi presento e autovalutazione solo per studenti iscritti
