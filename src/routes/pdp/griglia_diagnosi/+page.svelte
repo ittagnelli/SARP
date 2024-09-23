@@ -158,6 +158,15 @@
 										>
 									</tr>
 									<tr>
+										<td class="center" colspan="3">
+											<input
+												class="input"
+												type="text"
+												bind:value={form_values.griglia_pdp_b['lettura_altro']}
+											/>
+										</td>
+									</tr>
+									<tr>
 										<td class="header" colspan="3">COMPRENSIONE</td>
 									</tr>
 									<tr>
@@ -251,7 +260,7 @@
 											/>
 										</td>
 										<td class="center">
-											Numeri in parole
+											Numeri in parole <br />
 											<input
 												class="input"
 												type="text"
@@ -295,6 +304,12 @@
 												type="text"
 												bind:value={form_values.griglia_pdp_b['senso_numero']}
 											/><br />
+											TOTALE <br />
+											<input
+												class="input"
+												type="text"
+												bind:value={form_values.griglia_pdp_b['senso_totale']}
+											/>
 										</td>
 									</tr>
 									<tr>
@@ -376,7 +391,14 @@
 										</td>
 									</tr>
 									<tr>
-										<td class="center" />
+										<td class="center">
+											Fatti numerici<br />
+											<input
+												class="input"
+												type="text"
+												bind:value={form_values.griglia_pdp_b['calcolo_fatti']}
+											/>
+										</td>
 										<td class="center">
 											Operazioni scritte<br />
 											<input
@@ -385,7 +407,23 @@
 												bind:value={form_values.griglia_pdp_b['calcolo_scritte']}
 											/>
 										</td>
-										<td class="center" />
+										<td class="center">
+											Problemi aritmetici<br />
+											<input
+												class="input"
+												type="text"
+												bind:value={form_values.griglia_pdp_b['calcolo_aritmetici']}
+											/>
+										</td>
+									</tr>
+									<tr>
+										<td class="center" colspan="3">
+											<input
+												class="input"
+												type="text"
+												bind:value={form_values.griglia_pdp_b['calcolo_altro']}
+											/>
+										</td>
 									</tr>
 								</table>
 								<br />

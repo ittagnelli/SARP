@@ -55,7 +55,6 @@ export const actions = {
         access_protect(3402, locals, action, resource);
 
         const form_data = await request.formData();
-        console.log(form_data)
         let student_id = form_data.get('student_id');
         // let out_griglia = update_griglia(form_data);
 
