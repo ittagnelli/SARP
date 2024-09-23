@@ -33,6 +33,19 @@ menu_pdp:
     - TUTOR-BES
     - STUDENTE
 
+menu_sezionea:
+  view:
+    - ADMIN
+    - TUTOR-BES
+
+pdp_sezionea:
+  read:
+    - ADMIN
+    - TUTOR-BES
+  update:
+    - ADMIN
+    - TUTOR-BES
+
 menu_mipresento:
   view:
     - ADMIN

@@ -1,12 +1,12 @@
 import { PrismaDB } from '$js/prisma_db';
-import { route_protect, raise_error, is_admin, user_id, access_protect, is_tutor_classe, is_tutor_bes } from '$js/helper';
+import { route_protect, raise_error, access_protect, is_admin, is_tutor_bes, user_id } from '$js/helper';
 import { Logger } from '$js/logger';
 import { fail } from '@sveltejs/kit';
 import { PrismaClientValidationError } from '@prisma/client/runtime';
 
 let logger = new Logger("server"); //instanzia il logger
 const SARP = new PrismaDB(); //Istanzia il client SARP DB
-let resource = "pdp_griglia_diagnosi"; // definisco il nome della risorsa di questo endpoint
+let resource = "pdp_mipresento"; // definisco il nome della risorsa di questo endpoint
 
 // @ts-ignore
 function catch_error(exception, type, code) {
@@ -22,32 +22,28 @@ function catch_error(exception, type, code) {
 
 export async function load({ locals }) {
     let action = 'read';
-    let clausola_where;
 
     route_protect(locals);
-    access_protect(6000, locals, action, resource);
+    access_protect(3400, locals, action, resource);
+
+    let clausola_where = {
+        tipo: 'STUDENTE',
+        can_login: true,
+        bes: true
+    };
 
     try {
-        if (is_admin(locals) || is_tutor_bes(locals)) {
-            clausola_where = {
-                tipo: 'STUDENTE',
-                bes: true,
-                can_login: true
-            };
+        const studenti = await SARP.Utente.findMany({
+            orderBy: [{ cognome: 'asc' }],
+            where: clausola_where,
+        });
 
-            // query SQL al DB per tutte le entry nella tabella todo
-            const studenti = await SARP.Utente.findMany({
-                orderBy: [{ cognome: 'asc' }],
-                where: clausola_where
-            });
-
-            // restituisco il risultato della query SQL
-            return {
-                studenti
-            }
+        // restituisco il risultato della query SQL
+        return {
+            studenti
         }
     } catch (exception) {
-        catch_error(exception, "la ricerca", 5000);
+        catch_error(exception, "la ricerca", 3400);
     }
 }
 
@@ -56,24 +52,26 @@ export const actions = {
         let action = 'update';
 
         route_protect(locals);
-        access_protect(6001, locals, action, resource);
+        access_protect(3402, locals, action, resource);
 
         const form_data = await request.formData();
+        console.log(form_data)
         let student_id = form_data.get('student_id');
+        // let out_griglia = update_griglia(form_data);
 
         SARP.set_session(locals); // passa la sessione all'audit
         try {
             await SARP.Utente.update({
                 where: { id: +student_id },
                 data: {
-                    griglia_pdp_b: form_data.get('griglia_pdp_b'),
-                    griglia_pdp_b_done: form_data.get("completo") === 'SI'
+                    griglia_pdp_a: form_data.get('griglia_pdp_a'),
+                    griglia_pdp_a_done: form_data.get("completo") === 'SI'
                 }
             });
         } catch (exception) {
             // @ts-ignore
             if (exception.code != "P2002")
-                catch_error(exception, "l'aggiornamento", 6002);
+                catch_error(exception, "l'aggiornamento", 3402);
             else
                 return fail(400, { error_mex: "Griglia non univoca" });   // La richiesta fallisce
         }

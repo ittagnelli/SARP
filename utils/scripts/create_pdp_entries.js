@@ -2,8 +2,8 @@ import { PrismaClient } from '@prisma/client';
 import { misure_dispensative } from '../../src/routes/pdp/template/dispensative.js';
 import { misure_compensative } from '../../src/routes/pdp/template/compensative.js';
 import { misure_valutative } from '../../src/routes/pdp/template/valutative.js';
-import { strategie_classe }  from '../../src/routes/pdp/template/strategie_classe.js';
-import { strategie_didattiche }  from '../../src/routes/pdp/template/strategie_didattiche.js';
+import { strategie_classe } from '../../src/routes/pdp/template/strategie_classe.js';
+import { strategie_didattiche } from '../../src/routes/pdp/template/strategie_didattiche.js';
 
 // Istanzia il client per il SARP
 const SARP = new PrismaClient();
@@ -23,7 +23,7 @@ async function get_insegnamenti(as) {
             anno: +as,
             NOT: {
                 idMateria: {
-                    in: [32, 35, 36] //Scienze Motorie, CLIL e Educazione Civica
+                    in: [32, 35, 36] //Escludo Scienze Motorie, CLIL e Educazione Civica che non hanno PDP
                 }
             }
         }
@@ -34,7 +34,8 @@ async function get_studenti_bes(idClasse) {
     return await SARP.utente.findMany({
         where: {
             bes: true,
-            classeId: +idClasse
+            classeId: +idClasse,
+            can_login: true
         }
     });
 }
@@ -52,22 +53,24 @@ async function add_pdp(idDocente, idInsegnamento, idStudente, as) {
                 valutative: misure_valutative,
                 strategie_classe: strategie_classe,
                 strategie_didattiche: strategie_didattiche
-            }       
+            }
         });
-    } catch(e) {
+    } catch (e) {
         console.log(e);
     }
 }
 
 
-async function main(argv){
-    if(argv.length != 3){
+async function main(argv) {
+    if (argv.length != 3) {
         console.log("Usage: node create_pdp_entries.js <as>");
         return 255;
     }
-    
+
+    let as = argv[2];
+
     //prelevo gli insegmaneti dell'anno as
-    let insegnamenti = await get_insegnamenti(2023);
+    let insegnamenti = await get_insegnamenti(+as);
 
     //per ogni insegnamento, determino la lista degli studenti
     //e per ogni studente BES creo un entry PDP

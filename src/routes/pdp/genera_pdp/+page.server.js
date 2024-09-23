@@ -49,6 +49,8 @@ export async function load({ locals }) {
                     cognome: true,
                     griglia_valutazione: true,
                     griglia_valutazione_done: true,
+                    griglia_pdp_a: true,
+                    griglia_pdp_a_done: true,
                     griglia_pdp_a1: true,
                     griglia_pdp_a1_done: true,
                     griglia_pdp_c1: true,
@@ -241,6 +243,13 @@ export const actions = {
             renderer['griglia5'] = dgriglia5;
             renderer['materie'] = materie;
             renderer['firme'] = firme;
+
+            //sezione A
+            let sezionea = JSON.parse(studente.griglia_pdp_a);
+            renderer = Object.assign(renderer, sezionea);
+            //metto apposto le date facendo una porcata per mancanza di tempo
+            renderer['relazione_ssn_data'] = renderer['relazione_ssn_data'].length != 10 ? '' : renderer['relazione_ssn_data'];
+            renderer['relazione_altro_data'] = renderer['relazione_altro_data'].length != 10 ? '' : renderer['relazione_altro_data'];
 
             //Preparo per il rendering della sezione Mi Presento al consiglio di classe
             //le chiavi hanno già il nome corretto, basta che le aggiungo alll'oggetto renderer

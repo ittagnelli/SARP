@@ -40,7 +40,7 @@ export async function load({ locals }) {
 
     try {
         const studenti = await SARP.Utente.findMany({
-            orderBy: [{ tipo: 'desc' }],
+            orderBy: [{ cognome: 'asc' }],
             where: clausola_where
         });
 

@@ -4,3 +4,4 @@
 
 # Don't leak user image
 *.pdf
+*.xlsx

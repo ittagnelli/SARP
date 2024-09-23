@@ -1,4 +1,4 @@
-// v 0.35.0 2024-06-13
+// v 0.36.0 2024-09-21
 
 generator client {
     provider = "prisma-client-js"
@@ -19,54 +19,56 @@ model Versione {
 }
 
 model Utente {
-    id                       Int                         @id @default(autoincrement())
-    createdAt                DateTime                    @default(now())
-    updatedAt                DateTime                    @updatedAt
-    creatoDa                 Int
-    tipo                     String                      @default("STUDENTE")
-    nome                     String
-    cognome                  String
-    natoA                    String?
-    provincia                String?
-    natoIl                   DateTime?
-    codiceF                  String?
-    cartaI                   String?
-    email                    String                      @unique
-    telefono                 String?
-    residenza                String?
-    picture                  String?
-    bes                      Boolean?
-    obiettivi_minimi         Boolean                     @default(false)
-    can_login                Boolean                     @default(false)
-    istituto                 String?
-    valuta                   pcto_Valutazione[]
-    valutatoPerPCTO          pcto_Valutazione_Studente[]
-    presente                 pcto_Presenza[]
-    stabilisce               pcto_Azienda[]
-    iscritto                 pcto_Pcto[]                 @relation("iscritto")
-    Session                  Session[]
-    Ticket                   Ticket[]
-    ruoli                    ruolo_Utente[]
-    iscritto_corso_sicurezza sicurezza_Corso[]
-    classe                   Classe?                     @relation(fields: [classeId], references: [id], name: "iscritto")
-    classeId                 Int?
-    tutor_pcto               pcto_Pcto[]                 @relation("tutor")
-    insegna_in               Insegnamenti[]
-    template                 programmazione_Template[]
-    quiz_sicurezza           sicurezza_Test[]
-    coordina                 Classe[]                    @relation("coordinatore")
-    griglia_valutazione      String?                     //griglia valutazione a cura del tutor
-    griglia_valutazione_done Boolean                     @default(false)
-    griglia_pdp_a1           String?                     //griglia A1 a cura dello studente
-    griglia_pdp_a1_done      Boolean                     @default(false)
-    griglia_pdp_c1           String?                     //griglia C1 a cura dello studente
-    griglia_pdp_c1_done      Boolean                     @default(false)
-    griglia_pdp_c2           String?                     //griglia C2 a cura dello studente
-    griglia_pdp_c2_done      Boolean                     @default(false)
-    griglia_pdp_b            String?                     //griglia B a cura del referente BES
-    griglia_pdp_b_done       Boolean                     @default(false)
-    pdp_Template             pdp_Template[]
-    pdp                      PDP[]
+    id                          Int                         @id @default(autoincrement())
+    createdAt                   DateTime                    @default(now())
+    updatedAt                   DateTime                    @updatedAt
+    creatoDa                    Int
+    tipo                        String                      @default("STUDENTE")
+    nome                        String
+    cognome                     String
+    natoA                       String?
+    provincia                   String?
+    natoIl                      DateTime?
+    codiceF                     String?
+    cartaI                      String?
+    email                       String                      @unique
+    telefono                    String?
+    residenza                   String?
+    picture                     String?
+    bes                         Boolean?
+    obiettivi_minimi            Boolean                     @default(false)
+    can_login                   Boolean                     @default(false)
+    istituto                    String?
+    valuta                      pcto_Valutazione[]
+    valutatoPerPCTO             pcto_Valutazione_Studente[]
+    presente                    pcto_Presenza[]
+    stabilisce                  pcto_Azienda[]
+    iscritto                    pcto_Pcto[]                 @relation("iscritto")
+    Session                     Session[]
+    Ticket                      Ticket[]
+    ruoli                       ruolo_Utente[]
+    iscritto_corso_sicurezza    sicurezza_Corso[]
+    classe                      Classe?                     @relation(fields: [classeId], references: [id], name: "iscritto")
+    classeId                    Int?
+    tutor_pcto                  pcto_Pcto[]                 @relation("tutor")
+    insegna_in                  Insegnamenti[]
+    template                    programmazione_Template[]
+    quiz_sicurezza              sicurezza_Test[]
+    coordina                    Classe[]                    @relation("coordinatore")
+    griglia_valutazione         String?                     //griglia valutazione a cura del tutor
+    griglia_valutazione_done    Boolean                     @default(false)
+    griglia_pdp_a               String?                     //griglia A a cura del tutor BES
+    griglia_pdp_a_done          Boolean                     @default(false)
+    griglia_pdp_a1              String?                     //griglia A1 a cura dello studente
+    griglia_pdp_a1_done         Boolean                     @default(false)
+    griglia_pdp_c1              String?                     //griglia C1 a cura dello studente
+    griglia_pdp_c1_done         Boolean                     @default(false)
+    griglia_pdp_c2              String?                     //griglia C2 a cura dello studente
+    griglia_pdp_c2_done         Boolean                     @default(false)
+    griglia_pdp_b               String?                     //griglia B a cura del referente BES
+    griglia_pdp_b_done          Boolean                     @default(false)
+    pdp_Template                pdp_Template[]
+    pdp                         PDP[]
 }
 
 model Classe {
