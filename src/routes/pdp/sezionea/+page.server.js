@@ -55,6 +55,7 @@ export const actions = {
         access_protect(3402, locals, action, resource);
 
         const form_data = await request.formData();
+        console.log(form_data)
         let student_id = form_data.get('student_id');
         // let out_griglia = update_griglia(form_data);
 
@@ -63,8 +64,8 @@ export const actions = {
             await SARP.Utente.update({
                 where: { id: +student_id },
                 data: {
-                    griglia_pdp_a1: form_data.get('griglia_pdp_a1'),
-                    griglia_pdp_a1_done: form_data.get("completo") === 'SI'
+                    griglia_pdp_a: form_data.get('griglia_pdp_a'),
+                    griglia_pdp_a_done: form_data.get("completo") === 'SI'
                 }
             });
         } catch (exception) {

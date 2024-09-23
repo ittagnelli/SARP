@@ -1,26 +1,27 @@
 <script>
 	import { page_pre_title, page_title, page_action_title, page_action_modal } from '$js/store';
 	import Table from '$lib/components/common/table.svelte';
+	import InputText from '$lib/components/modal/input_text.svelte';
+	import InputDate from '$lib/components/modal/input_date.svelte';
 	import * as helper from '$js/helper';
 	import { Logger } from '$js/logger';
-	import { onMount } from 'svelte';
-	import { griglia_pdp_a1 } from './griglia_pdp_a1.js';
+	import { griglia_pdp_a } from './griglia_pdp_a.js';
 
 	export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
 	export let form; // Risposta del form dal server
 
 	let logger = new Logger('client');
 	let studenti = helper.data2arr(data.studenti);
-	let current_griglia_pdp_a1 = {};
+	let current_griglia_pdp_a = {};
 
-	//set default griglia_a1 for students never evaluated
+	//set default griglia_a for students never evaluated
 	studenti.forEach((s) => {
-		if (s.griglia_pdp_a1 == null) s.griglia_pdp_a1 = griglia_pdp_a1;
+		if (s.griglia_pdp_a == null) s.griglia_pdp_a = griglia_pdp_a;
 	});
 
 	//configura la pagina pre-titolo, titolo e nome del modale
 	$page_pre_title = 'STUDENTE';
-	$page_title = 'Mi Presento';
+	$page_title = 'Sezione A';
 	$page_action_title = '';
 	$page_action_modal = 'modal-update-griglia';
 
@@ -40,8 +41,8 @@
 		form_values.student_id = e.detail.id;
 		//cerca l'utente da fare update
 		let studente = studenti.filter((item) => item.id == form_values.student_id)[0];
-		form_values.completo = studente.griglia_pdp_a1_done ? 'SI' : 'NO';
-		current_griglia_pdp_a1 = JSON.parse(studente.griglia_pdp_a1);
+		form_values.completo = studente.griglia_pdp_a_done ? 'SI' : 'NO';
+		current_griglia_pdp_a = JSON.parse(studente.griglia_pdp_a);
 	}
 
 	async function cancel_action() {
@@ -65,7 +66,7 @@
 		{ name: 'natoIl', type: 'date', display: 'Nato il' },
 		{ name: 'email', type: 'string', display: 'email', size: 30 },
 		{ name: 'bes', type: 'boolean', display: 'pdp', search: true },
-		{ name: 'griglia_pdp_a1_done', type: 'boolean', display: 'competo', search: true }
+		{ name: 'griglia_pdp_a_done', type: 'boolean', display: 'competo', search: true }
 	]}
 	rows={studenti}
 	page_size={10}
@@ -77,7 +78,7 @@
 	trash={false}
 	print={false}
 	print_filter={false}
-	update_tip="Compila Presentazione al Consiglio di Classe"
+	update_tip="Compila la seziona A del PDP per lo studente selezionato"
 	resource="pdp_mipresento"
 />
 
@@ -91,174 +92,114 @@
 	<form method="POST" action="?/{modal_action}" bind:this={modal_form}>
 		<div class="modal-dialog modal-lg" role="document">
 			<input type="hidden" name="student_id" bind:value={form_values.student_id} />
-			<input type="hidden" name="griglia_pdp_a1" value={JSON.stringify(current_griglia_pdp_a1)} />
+			<input type="hidden" name="griglia_pdp_a" value={JSON.stringify(current_griglia_pdp_a)} />
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">Mi Presento al Consiglio di Classe</h5>
+					<h5 class="modal-title">Sezione A</h5>
 				</div>
 				<div class="modal-body">
 					<div class="row">
-						<div class="col-lg-12">
-							<div class="mb-3">
-								Io sono <input
-									size="14"
-									class="input"
-									type="text"
-									name="nome"
-									placeholder="Nome Cognome"
-									bind:value={current_griglia_pdp_a1['mipresento_nome']}
-								/>
-								ho
-								<input
-									class="input"
-									type="number"
-									id="anni"
-									min="12"
-									max="22"
-									bind:value={current_griglia_pdp_a1['mipresento_anni']}
-								/>
-								anni e frequento la classe
-								<input
-									size="14"
-									class="input"
-									type="text"
-									name="classe"
-									placeholder="3 ITT INFO"
-									bind:value={current_griglia_pdp_a1['mipresento_classe']}
-								/>
-							</div>
+						<div class="col-lg-3">
+							<InputText
+								label="Lingua Madre"
+								name="lingua_madre"
+								bind:val={current_griglia_pdp_a['lingua_madre']}
+							/>
 						</div>
-					</div>
-					<div class="row">
-						<div class="col-lg-12">
-							<div class="mb-3">
-								<label class="form-label"
-									>Chi sono; quali sono i miei interessi, le difficoltà, le attività preferite</label
-								>
-								<textarea
-									name="testo_1"
-									cols="80"
-									rows="3"
-									bind:value={current_griglia_pdp_a1['mipresento_testo_1']}
-								/>
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-lg-12">
-							<div class="mb-3">
-								<label class="form-label">Quando sono soddisfatto; quando sto bene?</label>
-								<textarea
-									name="testo_1"
-									cols="80"
-									rows="3"
-									bind:value={current_griglia_pdp_a1['mipresento_testo_2']}
-								/>
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-lg-12">
-							<div class="mb-3">
-								<label class="form-label"
-									>Che cosa non mi piace; che cosa mi è di aiuto; che cosa mi è difficile?</label
-								>
-								<textarea
-									name="testo_1"
-									cols="80"
-									rows="3"
-									bind:value={current_griglia_pdp_a1['mipresento_testo_3']}
-								/>
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-lg-12">
-							<div class="mb-3">
-								<label class="form-label"
-									>Che cosa vorrei che succedesse; che cosa mi aspetto dalla scuola, dagli
-									insegnanti, dai compagni.</label
-								>
-								<textarea
-									name="testo_1"
-									cols="80"
-									rows="3"
-									bind:value={current_griglia_pdp_a1['mipresento_testo_4']}
-								/>
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-lg-12">
-							<div class="mb-3">
-								<label class="form-label"
-									>Quali sono i miei interessi, sport, hobby, attività, ….</label
-								>
-								<textarea
-									name="testo_1"
-									cols="80"
-									rows="3"
-									bind:value={current_griglia_pdp_a1['mipresento_testo_5']}
-								/>
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-lg-12">
-							<div class="mb-3">
-								<label class="form-label">A che gruppi extra scolastici partecipo?</label>
-								<textarea
-									name="testo_1"
-									cols="80"
-									rows="3"
-									bind:value={current_griglia_pdp_a1['mipresento_testo_6']}
-								/>
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-lg-12">
-							<div class="mb-3">
-								<label class="form-label">I miei punti di forza</label>
-								<textarea
-									name="testo_1"
-									cols="80"
-									rows="3"
-									bind:value={current_griglia_pdp_a1['mipresento_testo_7']}
-								/>
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-lg-12">
-							<div class="mb-3">
-								<label class="form-label">Le mie fragilità</label>
-								<textarea
-									name="testo_1"
-									cols="80"
-									rows="3"
-									bind:value={current_griglia_pdp_a1['mipresento_testo_8']}
-								/>
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-lg-12">
-							<div class="mb-3">
-								<label class="form-label">Bisogni : che cosa chiedo ai miei insegnanti?</label>
-								<textarea
-									name="testo_1"
-									cols="80"
-									rows="3"
-									bind:value={current_griglia_pdp_a1['mipresento_testo_9']}
-								/>
+						<div class="col-lg-4">
+							<label class="form-label">Bilingue</label>
+							<div class="form-selectgroup">
+								<label class="form-selectgroup-item">
+									<input
+										type="radio"
+										name="bilingue"
+										value="SI"
+										class="form-selectgroup-input"
+										bind:group={current_griglia_pdp_a['bilingue']}
+									/>
+									<span class="form-selectgroup-label">SI</span>
+								</label>
+								<label class="form-selectgroup-item">
+									<input
+										type="radio"
+										name="bilingue"
+										value="NO"
+										class="form-selectgroup-input"
+										bind:group={current_griglia_pdp_a['bilingue']}
+									/>
+									<span class="form-selectgroup-label">NO</span>
+								</label>
 							</div>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-lg-4">
+							<InputText
+								label="Codice SSN ICD10"
+								name="relazione_ssn_icd10"
+								bind:val={current_griglia_pdp_a['relazione_ssn_icd10']}
+							/>
+						</div>
+						<div class="col-lg-4">
+							<InputText
+								label="Redattore SSN"
+								name="relazione_ssn_redattore"
+								bind:val={current_griglia_pdp_a['relazione_ssn_redattore']}
+							/>
+						</div>
+						<div class="col-lg-4">
+							<InputDate
+								label="Rilasciata il"
+								name="relazione_ssn_data"
+								bind:val={current_griglia_pdp_a['relazione_ssn_data']}
+								errors={{}}
+							/>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-4">
+							<InputText
+								label="SSN Aggiornamenti Diagnostici"
+								name="relazione_ssn_aggiornamenti"
+								bind:val={current_griglia_pdp_a['relazione_ssn_aggiornamenti']}
+							/>
+						</div>
+						<div class="col-lg-4">
+							<InputText
+								label="SSN Altre Relazioni Cliniche"
+								name="relazione_ssn_altre"
+								bind:val={current_griglia_pdp_a['relazione_ssn_altre']}
+							/>
+						</div>
+						<div class="col-lg-4">
+							<InputText
+								label="SSN Interventi Riabilitativi"
+								name="relazione_ssrelazione_ssn_interventi_altre"
+								bind:val={current_griglia_pdp_a['relazione_ssn_interventi']}
+							/>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-4">
+							<InputText
+								label="Altro Redattore"
+								name="relazione_altro_redattore"
+								bind:val={current_griglia_pdp_a['relazione_altro_redattore']}
+							/>
+						</div>
+						<div class="col-lg-4">
+							<InputDate
+								label="Altra Data"
+								name="relazione_altro_data"
+								bind:val={current_griglia_pdp_a['relazione_altro_data']}
+								errors={{}}
+							/>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-4">
 							<br />
-							<label class="form-label">Presentazione Completa</label>
+							<label class="form-label">Sezione A Completa</label>
 							<div class="form-selectgroup">
 								<label class="form-selectgroup-item">
 									<input
