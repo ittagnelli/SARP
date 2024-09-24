@@ -1,3 +1,15 @@
+## v4.9.0 - 24 Settembre 2024
+- fix#574: PDP Modifica template Diagnosi 
+- fix#573: PDP Sezione A
+- Aggiuna PDP sezioneA al DB
+- Aggiunto menu e ACL PDP sezioneA
+- Creata migrazione per PDP sezioneA
+- Ordinate in ordine alfabetico gli studenti nella sezione PDP
+- Fix pdp generation script
+- Aggiornato template PDP per sezione A
+- Aggiunta compilazione Sezione A del PDP da parte del tutor BES
+
+
 ## v4.8.2 - 21 Settembre 2024
 - file studenti 2024
 - aggiornato documento 03 del PCTO per gestire il caso di residenza o campi vuoti
