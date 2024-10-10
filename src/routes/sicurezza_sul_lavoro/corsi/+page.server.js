@@ -1,16 +1,18 @@
 import { PrismaDB } from '../../../js/prisma_db';
-import { route_protect, user_id, multi_user_where, raise_error, access_protect, titlecase  } from '../../../js/helper';
+import { route_protect, user_id, multi_user_where, raise_error, access_protect, titlecase, get_as } from '../../../js/helper';
 import { Logger } from '../../../js/logger';
 import { PrismaClientValidationError } from '@prisma/client/runtime';
 import PizZip from 'pizzip';
 import Docxtemplater from 'docxtemplater';
 import fs from 'fs';
 import path from 'path';
-import { PUBLIC_SICUREZZA_TEMPLATES_DIR, 
-         PUBLIC_SICUREZZA_CORSO_GENERICO, 
-         PUBLIC_SICUREZZA_CORSO_SPECIFICO,
-         PUBLIC_SICUREZZA_PRESENZE_GENERICO,
-         PUBLIC_SICUREZZA_PRESENZE_SPECIFICO } from '$env/static/public';
+import {
+    PUBLIC_SICUREZZA_TEMPLATES_DIR,
+    PUBLIC_SICUREZZA_CORSO_GENERICO,
+    PUBLIC_SICUREZZA_CORSO_SPECIFICO,
+    PUBLIC_SICUREZZA_PRESENZE_GENERICO,
+    PUBLIC_SICUREZZA_PRESENZE_SPECIFICO
+} from '$env/static/public';
 
 
 let logger = new Logger("server"); //instanzia il logger
@@ -19,9 +21,9 @@ let resource = "sicurezza_corso"; // definisco il nome della risorsa di questo e
 
 // @ts-ignore
 function catch_error(exception, type, code) {
-    if(exception instanceof PrismaClientValidationError)
+    if (exception instanceof PrismaClientValidationError)
         logger.error(exception.message);
-    else {  
+    else {
         logger.error(JSON.stringify(exception));
         logger.error(exception.message);
         logger.error(exception.stack);
@@ -30,12 +32,12 @@ function catch_error(exception, type, code) {
 }
 
 function catch_error_pdf(exception, type, code) {
-	logger.error(JSON.stringify(exception)); //PROF: error è un oggetto ma serve qualcosa di più complicato. per il momento lascialo così. ho gia risolto in hooks nella versione 9.0
-	raise_error(
-		500,
-		code,
-		`${type} TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`
-	);
+    logger.error(JSON.stringify(exception)); //PROF: error è un oggetto ma serve qualcosa di più complicato. per il momento lascialo così. ho gia risolto in hooks nella versione 9.0
+    raise_error(
+        500,
+        code,
+        `${type} TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`
+    );
 }
 
 export async function load({ locals }) {
@@ -72,58 +74,58 @@ export async function load({ locals }) {
 }
 
 export const actions = {
-	create: async ({ cookies, request, locals }) => {
+    create: async ({ cookies, request, locals }) => {
         let action = 'create';
 
         route_protect(locals);
         access_protect(501, locals, action, resource);
 
-		const form_data = await request.formData();
+        const form_data = await request.formData();
         let studenti = form_data.get('studenti').split(',')
         let ids = [];
-        
-        if(studenti != '') {
+
+        if (studenti != '') {
             studenti.forEach(element => {
-                ids.push({id: +element})
+                ids.push({ id: +element })
             });
         }
 
         SARP.set_session(locals); // passa la sessione all'audit
         try {
-        await SARP.sicurezza_Corso.create({
-			data: {
-                creatoDa: user_id(locals),
-                titolo: form_data.get('titolo'),
-                tipo: form_data.get('tipo'),
-                dataInizio: new Date(form_data.get('dataInizio')),
-				dataFine: new Date(form_data.get('dataFine')),
-                dataTest: new Date(form_data.get('dataTest')),
-                seguitoDa: {
-                    connect: ids
+            await SARP.sicurezza_Corso.create({
+                data: {
+                    creatoDa: user_id(locals),
+                    titolo: form_data.get('titolo'),
+                    tipo: form_data.get('tipo'),
+                    dataInizio: new Date(form_data.get('dataInizio')),
+                    dataFine: new Date(form_data.get('dataFine')),
+                    dataTest: new Date(form_data.get('dataTest')),
+                    seguitoDa: {
+                        connect: ids
+                    }
                 }
-        }
-    });
+            });
         } catch (exception) {
             catch_error(exception, "l'inserimento", 801)
         }
 
-	},
+    },
 
-	update: async ({ cookies, request, locals }) => {
+    update: async ({ cookies, request, locals }) => {
         let action = 'update';
 
         route_protect(locals);
         access_protect(502, locals, action, resource);
 
-		const form_data = await request.formData();
-		let id = form_data.get('id');
+        const form_data = await request.formData();
+        let id = form_data.get('id');
         let studenti = form_data.get('studenti').split(',');
         let ids = [];
 
         studenti.forEach(element => {
-            if(+element > 0) ids.push({id: +element})
+            if (+element > 0) ids.push({ id: +element })
         });
-        
+
         SARP.set_session(locals); // passa la sessione all'audit
         try {
             await SARP.sicurezza_Corso.update({
@@ -143,50 +145,50 @@ export const actions = {
             catch_error(exception, "l'aggiornamento", 802);
         }
 
-	},
+    },
 
-	delete: async ({ cookies, request, locals }) => {
+    delete: async ({ cookies, request, locals }) => {
         let action = 'delete';
 
         route_protect(locals);
         access_protect(503, locals, action, resource);
 
-		const form_data = await request.formData();
-		const id = form_data.get('id');
+        const form_data = await request.formData();
+        const id = form_data.get('id');
 
         SARP.set_session(locals); // passa la sessione all'audit
         try {
             await SARP.sicurezza_Corso.delete({
                 where: { id: +id }
-            });       
+            });
         } catch (exception) {
             catch_error(exception, "l'eliminazione", 803);
         }
 
-	},
+    },
 
     pdf: async ({ cookies, request }) => {
-		try {
-			const form_data = await request.formData();
-			const id = form_data.get('id');
+        try {
+            const form_data = await request.formData();
+            const id = form_data.get('id');
             let return_files = [];
 
-			// preleva il corso dal DB
-			let corso = await SARP.sicurezza_Corso.findUnique({
-				where: { id: +id },
+            // preleva il corso dal DB
+            let corso = await SARP.sicurezza_Corso.findUnique({
+                where: { id: +id },
                 include: {
                     seguitoDa: {
                         include: {
                             classe: true
                         }
-                    } 
+                    }
                 }
-			});
+            });
 
-            for(let studente of corso?.seguitoDa) {
+            for (let studente of corso?.seguitoDa) {
                 let filler = {};
                 filler['nome'] = studente.nome;
-                filler['cognome'] = studente.cognome 
+                filler['cognome'] = studente.cognome
                 filler['natoA'] = studente.natoA;
                 filler['natoIl'] = studente.natoIl.toLocaleDateString("it-IT");
                 filler['codiceF'] = studente.codiceF;
@@ -195,12 +197,12 @@ export const actions = {
                 filler['sezione'] = studente.classe.sezione;
                 filler['today'] = corso.dataTest.toLocaleDateString("it-IT");
                 filler['dataInizio'] = corso?.dataInizio.toLocaleDateString("it-IT");
-                filler['dataFine'] = corso?.dataFine.toLocaleDateString("it-IT");   
+                filler['dataFine'] = corso?.dataFine.toLocaleDateString("it-IT");
                 filler['has_provincia'] = studente.provincia?.length > 0;
                 filler['provincia'] = studente.provincia;
 
                 let TEMPLATE_FILE;
-                if(corso.tipo == 'SPECIFICO')
+                if (corso.tipo == 'SPECIFICO')
                     TEMPLATE_FILE = PUBLIC_SICUREZZA_CORSO_SPECIFICO;
                 else
                     TEMPLATE_FILE = PUBLIC_SICUREZZA_CORSO_GENERICO;
@@ -211,12 +213,12 @@ export const actions = {
                 );
 
                 const zip = new PizZip(template);
-			    const doc = new Docxtemplater(zip, {
+                const doc = new Docxtemplater(zip, {
                     paragraphLoop: true,
                     linebreaks: true
-			    });
+                });
 
-			    doc.render(filler);
+                doc.render(filler);
                 let buf = doc.getZip().generate({
                     type: 'nodebuffer',
                     compression: 'DEFLATE'
@@ -227,37 +229,39 @@ export const actions = {
                     name: `attestato_corso_${corso.tipo}_${studente.cognome}_${studente.nome}.docx`.replace(" ", "_")
                 });
                 logger.info(`Generato attestato corso sicurezza per ${studente.cognome}_${studente.nome}`);
-            }       
+            }
 
-            return {files: return_files};
-		} catch (exception) {
-			catch_error_pdf(exception, 'la generazione', 804);
-		}
-	},
+            return { files: return_files };
+        } catch (exception) {
+            catch_error_pdf(exception, 'la generazione', 804);
+        }
+    },
 
     pdf_presenze: async ({ cookies, request }) => {
-		try {
+        try {
             const form_data = await request.formData();
             const idCorso = form_data.get('idCorso');
             let return_files = [];
 
-			// // preleva il corso dal DB
-			let corso = await SARP.sicurezza_Corso.findUnique({
-				where: { id: +idCorso },
+            // // preleva il corso dal DB
+            let corso = await SARP.sicurezza_Corso.findUnique({
+                where: { id: +idCorso },
                 include: {
                     seguitoDa: {
                         include: {
                             classe: true
                         }
-                    } 
+                    }
                 }
-			});
+            });
 
             let filler = {};
+            let as = get_as();
+            filler['as'] = `${as} - ${as + 1}`;
             filler['classe'] = corso?.seguitoDa[0].classe.classe;
             filler['istituto'] = corso?.seguitoDa[0].classe.istituto;
             filler['sezione'] = corso?.seguitoDa[0].classe.sezione;
-            filler['studenti'] =  corso?.seguitoDa.sort((a,b) => a.cognome <= b.cognome ? -1:1); //ordina per cognome
+            filler['studenti'] = corso?.seguitoDa.sort((a, b) => a.cognome <= b.cognome ? -1 : 1); //ordina per cognome
 
             // add student index
             corso?.seguitoDa.map((studente, idx) => {
@@ -268,7 +272,7 @@ export const actions = {
             });
 
             let TEMPLATE_FILE;
-            if(corso?.tipo == 'SPECIFICO')
+            if (corso?.tipo == 'SPECIFICO')
                 TEMPLATE_FILE = PUBLIC_SICUREZZA_PRESENZE_SPECIFICO;
             else
                 TEMPLATE_FILE = PUBLIC_SICUREZZA_PRESENZE_GENERICO;
@@ -294,11 +298,11 @@ export const actions = {
                 file: JSON.stringify(buf),
                 name: `registro_presenze_${corso?.tipo}.docx`
             });
-            logger.info('Generato registro presenze');  
+            logger.info('Generato registro presenze');
 
-            return {files: return_files};
-		} catch (exception) {
-			catch_error_pdf(exception, 'la generazione', 804);
-		}
-	}
+            return { files: return_files };
+        } catch (exception) {
+            catch_error_pdf(exception, 'la generazione', 804);
+        }
+    }
 };
