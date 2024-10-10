@@ -1,3 +1,7 @@
+## v4.9.1 - 10 Ottobre 2024
+- `fix#577`: Registro presenze sicurezza a.s. errato
+
+
 ## v4.9.0 - 24 Settembre 2024
 - fix#574: PDP Modifica template Diagnosi 
 - fix#573: PDP Sezione A
