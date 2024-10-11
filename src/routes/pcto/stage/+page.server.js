@@ -91,6 +91,7 @@ export async function load({ locals }) {
         });
 
         const utenti = await SARP.Utente.findMany({
+            where: { can_login: true },
             orderBy: [{ cognome: 'asc' }],
             include: { ruoli: true }
         });
