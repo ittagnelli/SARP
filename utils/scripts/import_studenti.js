@@ -124,6 +124,10 @@ function capitalize(phrase) {
     return phrase.charAt(0).toUpperCase() + phrase.slice(1).toLowerCase();
 }
 
+// all'inizio dell'anno settare tutti gli studenti a can_login=false
+// poi fare ingestion
+// ora settare tutti gli studenti con can_login=false a classeId=1
+// In questo modo gli studenti non sono più iscritti alla vecchia classe
 async function main(filename) {
     const ruolo_studente = await prisma.ruolo_Utente.findFirst({
         where: {

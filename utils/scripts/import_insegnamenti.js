@@ -9,11 +9,11 @@ const prisma = new PrismaClient(); // Inizializzo il client di SARP
 const is_titolare = (sign) => sign == 'X';
 
 const find_docente = (docenti, cognome) => {
-    return docenti.filter(docente => docente.cognome == cognome)[0];
+    return docenti.filter(docente => docente.cognome.toLowerCase() == cognome.toLowerCase())[0];
 }
 
 const find_materia = (meterie, materia) => {
-    return meterie.filter(mat => mat.nome == materia)[0];
+    return meterie.filter(mat => mat.nome.toLowerCase() == materia.toLowerCase())[0];
 }
 
 const find_classe = (classi, classe, istituto, sezione) => {
@@ -35,7 +35,8 @@ async function main(filename) {
     const insegnamenti = await prisma.insegnamenti.findMany();
     const docenti = await prisma.utente.findMany({
         where: {
-            tipo: 'DOCENTE'
+            tipo: 'DOCENTE',
+            can_login: true
         }
     });
 
@@ -54,6 +55,7 @@ async function main(filename) {
     */
 
 
+    let counter = 0;
     rows.slice(1).forEach(async (row) => {
         let [cognome, materia, as, classe, istituto, sezione, titolare, dainserire] = row;
         let Docente = find_docente(docenti, cognome);
@@ -63,28 +65,59 @@ async function main(filename) {
         if (dainserire == 'X') {
             if (Docente && Classe && Materia) {
                 let Insegnamento = find_insegnamento(insegnamenti, Docente.id, Materia.id, Classe.id, as);
-                await prisma.insegnamenti.upsert({
-                    create: {
 
-                        idDocente: Docente.id,
-                        idMateria: Materia.id,
-                        idClasse: Classe.id,
-                        titolare: is_titolare(titolare),
-                        anno: as
-
-                    },
-                    update: {
-                        idDocente: Docente.id,
-                        idMateria: Materia.id,
-                        idClasse: Classe.id,
-                        titolare: is_titolare(titolare),
-                        anno: as
-                    },
-                    where: {
-                        id: Insegnamento ? Insegnamento.id : 0
+                try {
+                    if (Insegnamento) {
+                        //update
+                        await prisma.insegnamenti.update({
+                            where: {
+                                id: Insegnamento.id
+                            },
+                            data: {
+                                idDocente: Docente.id,
+                                idMateria: Materia.id,
+                                idClasse: Classe.id,
+                                titolare: is_titolare(titolare),
+                                anno: as
+                            }
+                        });
+                    } else {
+                        //create
+                        await prisma.insegnamenti.create({
+                            data: {
+                                idDocente: Docente.id,
+                                idMateria: Materia.id,
+                                idClasse: Classe.id,
+                                titolare: is_titolare(titolare),
+                                anno: as
+                            }
+                        })
                     }
-                });
-                console.log(`Inserito Insegnamento: ${Docente?.cognome} - ${Classe?.classe} ${Classe?.istituto} ${Classe?.sezione} - ${Materia?.nome}`);
+                } catch (e) {
+                    console.log(e);
+                }
+
+                // console.log(Insegnamento)
+                // await prisma.insegnamenti.upsert({
+                //     where: {
+                //         id: Insegnamento ? Insegnamento.id : 0
+                //     },
+                //     update: {
+                //         idDocente: Docente.id,
+                //         idMateria: Materia.id,
+                //         idClasse: Classe.id,
+                //         titolare: is_titolare(titolare),
+                //         anno: as
+                //     },
+                //     create: {
+                //         idDocente: Docente.id,
+                //         idMateria: Materia.id,
+                //         idClasse: Classe.id,
+                //         titolare: is_titolare(titolare),
+                //         anno: as
+                //     }
+                // });
+                console.log(`Inserito Insegnamento [${++counter}]: ${Docente?.cognome} - ${Classe?.classe} ${Classe?.istituto} ${Classe?.sezione} - ${Materia?.nome}`);
             } else {
                 console.log("ERROR:", row);
                 console.log("DOCENTE:", Docente);

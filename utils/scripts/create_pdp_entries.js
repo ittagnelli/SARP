@@ -1,23 +1,57 @@
 import { PrismaClient } from '@prisma/client';
-import { misure_dispensative } from '../../src/routes/pdp/template/dispensative.js';
-import { misure_compensative } from '../../src/routes/pdp/template/compensative.js';
-import { misure_valutative } from '../../src/routes/pdp/template/valutative.js';
-import { strategie_classe } from '../../src/routes/pdp/template/strategie_classe.js';
-import { strategie_didattiche } from '../../src/routes/pdp/template/strategie_didattiche.js';
+//DEV
+// import { misure_dispensative } from '../../src/routes/pdp/template/dispensative.js';
+// import { misure_compensative } from '../../src/routes/pdp/template/compensative.js';
+// import { misure_valutative } from '../../src/routes/pdp/template/valutative.js';
+// import { strategie_classe } from '../../src/routes/pdp/template/strategie_classe.js';
+// import { strategie_didattiche } from '../../src/routes/pdp/template/strategie_didattiche.js';
+
+
+//PROD
+import { misure_dispensative } from './dispensative.js';
+import { misure_compensative } from './compensative.js';
+import { misure_valutative } from './valutative.js';
+import { strategie_classe } from './strategie_classe.js';
+import { strategie_didattiche } from './strategie_didattiche.js';
+
 
 // Istanzia il client per il SARP
 const SARP = new PrismaClient();
 const argv = process.argv;
 
+// async function get_insegnamenti(as) {
+//     return await SARP.Insegnamenti.findMany({
+//         select: {
+//             id: true,
+//             idDocente: true,
+//             idMateria: true,
+//             idClasse: true,
+//             titolare: true,
+//             anno: true
+//         },
+//         where: {
+//             anno: +as,
+//             NOT: {
+//                 idMateria: {
+//                     in: [32, 35, 36] //Escludo Scienze Motorie, CLIL e Educazione Civica che non hanno PDP
+//                 }
+//             }
+//         }
+//     })
+// }
+
 async function get_insegnamenti(as) {
-    return await SARP.Insegnamenti.findMany({
-        select: {
-            id: true,
-            idDocente: true,
-            idMateria: true,
-            idClasse: true,
-            titolare: true,
-            anno: true
+    let insegnamenti = await SARP.Insegnamenti.findMany({
+        // select: {
+        //     id: true,
+        //     idDocente: true,
+        //     idMateria: true,
+        //     idClasse: true,
+        //     titolare: true,
+        //     anno: true
+        // },
+        include: {
+            classe: true,
         },
         where: {
             anno: +as,
@@ -27,8 +61,11 @@ async function get_insegnamenti(as) {
                 }
             }
         }
-    })
+    });
+
+    return insegnamenti.filter(ins => ins.classe.classe == 'I' || ins.classe.classe == 'III');
 }
+
 
 async function get_studenti_bes(idClasse) {
     return await SARP.utente.findMany({
@@ -75,6 +112,7 @@ async function main(argv) {
     //per ogni insegnamento, determino la lista degli studenti
     //e per ogni studente BES creo un entry PDP
     insegnamenti.forEach(async insegnamento => {
+        // console.log(insegnamento)
         let studenti = await get_studenti_bes(insegnamento.idClasse);
         studenti.forEach(async studente => {
             console.log(`adding PDP for insegnamento [${insegnamento.id}] - studente [${studente.id}]`);
