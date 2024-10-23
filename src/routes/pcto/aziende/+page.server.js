@@ -21,14 +21,14 @@ let resource = 'pcto_aziende'; // definisco il nome della risorsa di questo endp
 
 // @ts-ignore
 function catch_error(exception, type, code) {
-    if(exception instanceof PrismaClientValidationError)
-        logger.error(exception.message);
-    else {  
-        logger.error(JSON.stringify(exception));
-        logger.error(exception.message);
-        logger.error(exception.stack);
-    }
-    raise_error(
+	if (exception instanceof PrismaClientValidationError)
+		logger.error(exception.message);
+	else {
+		logger.error(JSON.stringify(exception));
+		logger.error(exception.message);
+		logger.error(exception.stack);
+	}
+	raise_error(
 		500,
 		code,
 		`Errore irreversibile durante ${type} dell'azienda. TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`
@@ -59,19 +59,38 @@ export async function load({ locals }) {
 			where: multi_user_where(locals)
 		});
 
-        const last_id_convenzione = await SARP.pcto_Azienda.findMany({
+		// /nel as 24 ho cambiato il modo di calcolare l'id convenzione resettando il seriale a 1 nel nuovo anno
+		// siccome esiste gia una convenzione 2425/35 devo fare un pasticcio
+		// nel 25 metto apposto tutto siccome non è necessario gestire questo caso particolare
+
+		//da riabilitare nel 25
+		// const last_id_convenzione = await SARP.pcto_Azienda.findMany({
+		// 	orderBy: [{ id: 'desc' }],
+		//     take: 1,
+		//     select: {
+		//         idConvenzione: true
+		//     }
+		// });
+
+		//da rimuovere nel 205
+		const last_id_convenzione = await SARP.pcto_Azienda.findMany({
+			where: {
+				NOT: {
+					idConvenzione: '2425/35'
+				}
+			},
 			orderBy: [{ id: 'desc' }],
-            take: 1,
-            select: {
-                idConvenzione: true
-            }
+			take: 1,
+			select: {
+				idConvenzione: true
+			}
 		});
 
 		// restituisco il risultato della query SQL
-		return { 
-            aziende: companies,
-            last_id_convenzione: last_id_convenzione
-        };
+		return {
+			aziende: companies,
+			last_id_convenzione: last_id_convenzione
+		};
 	} catch (exception) {
 		catch_error(exception, 'la ricerca', 200);
 	}
@@ -97,7 +116,7 @@ export const actions = {
 					indirizzo: form_data.get('indirizzo'),
 					piva: form_data.get('piva'),
 					telefono: form_data.get('telefono'),
-                    email_privacy: form_data.get('email_privacy'),
+					email_privacy: form_data.get('email_privacy'),
 					direttore_nome: form_data.get('direttore_nome'),
 					direttore_natoA: form_data.get('direttore_natoA'),
 					direttore_natoIl: new Date(form_data.get('direttore_natoIl')),
@@ -105,7 +124,7 @@ export const actions = {
 					dataConvenzione: new Date(form_data.get('dataConvenzione')),
 					dataProtocollo: new Date(form_data.get('dataProtocollo')),
 					istituto: form_data.get('istituto'),
-                    firma_convenzione: form_data.get('firma_convenzione') == "SI" ? true : false
+					firma_convenzione: form_data.get('firma_convenzione') == "SI" ? true : false
 				}
 			});
 		} catch (exception) {
@@ -135,7 +154,7 @@ export const actions = {
 					indirizzo: form_data.get('indirizzo'),
 					piva: form_data.get('piva'),
 					telefono: form_data.get('telefono'),
-                    email_privacy: form_data.get('email_privacy'),
+					email_privacy: form_data.get('email_privacy'),
 					direttore_nome: form_data.get('direttore_nome'),
 					direttore_natoA: form_data.get('direttore_natoA'),
 					direttore_natoIl: new Date(form_data.get('direttore_natoIl')),
@@ -143,7 +162,7 @@ export const actions = {
 					dataConvenzione: new Date(form_data.get('dataConvenzione')),
 					dataProtocollo: new Date(form_data.get('dataProtocollo')),
 					istituto: form_data.get('istituto'),
-                    firma_convenzione: form_data.get('firma_convenzione') == "SI" ? true : false
+					firma_convenzione: form_data.get('firma_convenzione') == "SI" ? true : false
 				}
 			});
 		} catch (exception) {
@@ -184,9 +203,9 @@ export const actions = {
 				where: { id: +id }
 			});
 			//arricchisce l'oggetto
-            let dc = company['dataConvenzione']; //data convenzione
-			company['today'] = `${dc.getDate()}/${dc.getMonth()  + 1}/${dc.getFullYear()}`;
-            company['direttore_natoIl'] = company['direttore_natoIl'].toLocaleDateString();
+			let dc = company['dataConvenzione']; //data convenzione
+			company['today'] = `${dc.getDate()}/${dc.getMonth() + 1}/${dc.getFullYear()}`;
+			company['direttore_natoIl'] = company['direttore_natoIl'].toLocaleDateString();
 
 			const content = fs.readFileSync(
 				path.resolve(PUBLIC_PCTO_TEMPLATES_DIR, PUBLIC_PCTO_TEMPLATE_AZIENDE),
