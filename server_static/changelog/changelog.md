@@ -1,3 +1,10 @@
+## v4.9.2 - 23 Ottobre 2024
+- `fix#581`:PCTO codice convenzione progressivo per anno (#582)
+- update of main management scripts
+- `fix#579`: Possibile inserire studenti non più frequenanti ad uno stage (#580)
+- Ora possono essere aggiunti ad un PCTO solo gli studenti che possono fare il login
+
+
 ## v4.9.1 - 10 Ottobre 2024
 - `fix#577`: Registro presenze sicurezza a.s. errato
 
