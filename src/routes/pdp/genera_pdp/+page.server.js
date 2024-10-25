@@ -249,7 +249,11 @@ export const actions = {
             renderer = Object.assign(renderer, sezionea);
             //metto apposto le date facendo una porcata per mancanza di tempo
             renderer['relazione_ssn_data'] = renderer['relazione_ssn_data'].length != 10 ? '' : renderer['relazione_ssn_data'];
-            renderer['relazione_altro_data'] = renderer['relazione_altro_data'].length != 10 ? '' : renderer['relazione_altro_data'];
+            renderer['relazione_altro_data1'] = renderer['relazione_altro_data1'].length != 10 ? '' : renderer['relazione_altro_data1'];
+            renderer['relazione_altro_data2'] = renderer['relazione_altro_data2'].length != 10 ? '' : renderer['relazione_altro_data2'];
+            renderer['relazione_altro_data3'] = renderer['relazione_altro_data3'].length != 10 ? '' : renderer['relazione_altro_data3'];
+            renderer['relazione_altro_data4'] = renderer['relazione_altro_data4'].length != 10 ? '' : renderer['relazione_altro_data4'];
+            renderer['relazione_altro_data5'] = renderer['relazione_altro_data5'].length != 10 ? '' : renderer['relazione_altro_data5'];
 
             //Preparo per il rendering della sezione Mi Presento al consiglio di classe
             //le chiavi hanno già il nome corretto, basta che le aggiungo alll'oggetto renderer

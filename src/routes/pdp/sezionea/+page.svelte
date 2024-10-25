@@ -157,41 +157,111 @@
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-lg-4">
+						<div class="col-lg-12">
 							<InputText
 								label="SSN Aggiornamenti Diagnostici"
 								name="relazione_ssn_aggiornamenti"
 								bind:val={current_griglia_pdp_a['relazione_ssn_aggiornamenti']}
 							/>
 						</div>
-						<div class="col-lg-4">
+					</div>
+					<div class="row">
+						<div class="col-lg-6">
 							<InputText
-								label="SSN Altre Relazioni Cliniche"
+								label="Altre Relazioni Cliniche"
 								name="relazione_ssn_altre"
 								bind:val={current_griglia_pdp_a['relazione_ssn_altre']}
 							/>
 						</div>
-						<div class="col-lg-4">
+						<div class="col-lg-6">
 							<InputText
-								label="SSN Interventi Riabilitativi"
+								label="Interventi Riabilitativi"
 								name="relazione_ssrelazione_ssn_interventi_altre"
 								bind:val={current_griglia_pdp_a['relazione_ssn_interventi']}
 							/>
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-lg-4">
+						<div class="col-lg-8">
 							<InputText
 								label="Altro Redattore"
 								name="relazione_altro_redattore"
-								bind:val={current_griglia_pdp_a['relazione_altro_redattore']}
+								bind:val={current_griglia_pdp_a['relazione_altro_redattore1']}
 							/>
 						</div>
 						<div class="col-lg-4">
 							<InputDate
 								label="Altra Data"
 								name="relazione_altro_data"
-								bind:val={current_griglia_pdp_a['relazione_altro_data']}
+								bind:val={current_griglia_pdp_a['relazione_altro_data1']}
+								errors={{}}
+							/>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-8">
+							<InputText
+								label="Altro Redattore"
+								name="relazione_altro_redattore"
+								bind:val={current_griglia_pdp_a['relazione_altro_redattore2']}
+							/>
+						</div>
+						<div class="col-lg-4">
+							<InputDate
+								label="Altra Data"
+								name="relazione_altro_data"
+								bind:val={current_griglia_pdp_a['relazione_altro_data2']}
+								errors={{}}
+							/>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-8">
+							<InputText
+								label="Altro Redattore"
+								name="relazione_altro_redattore"
+								bind:val={current_griglia_pdp_a['relazione_altro_redattore3']}
+							/>
+						</div>
+						<div class="col-lg-4">
+							<InputDate
+								label="Altra Data"
+								name="relazione_altro_data"
+								bind:val={current_griglia_pdp_a['relazione_altro_data3']}
+								errors={{}}
+							/>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-8">
+							<InputText
+								label="Altro Redattore"
+								name="relazione_altro_redattore"
+								bind:val={current_griglia_pdp_a['relazione_altro_redattore4']}
+							/>
+						</div>
+						<div class="col-lg-4">
+							<InputDate
+								label="Altra Data"
+								name="relazione_altro_data"
+								bind:val={current_griglia_pdp_a['relazione_altro_data4']}
+								errors={{}}
+							/>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-8">
+							<InputText
+								label="Altro Redattore"
+								name="relazione_altro_redattore"
+								bind:val={current_griglia_pdp_a['relazione_altro_redattore5']}
+							/>
+						</div>
+						<div class="col-lg-4">
+							<InputDate
+								label="Altra Data"
+								name="relazione_altro_data"
+								bind:val={current_griglia_pdp_a['relazione_altro_data5']}
 								errors={{}}
 							/>
 						</div>
