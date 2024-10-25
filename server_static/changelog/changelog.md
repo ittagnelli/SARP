@@ -1,3 +1,6 @@
+## v4.9.3 - 25 Ottobre 2024
+- `fix#583`: PDP aggiornamento sezione 
+
 ## v4.9.2 - 23 Ottobre 2024
 - `fix#581`:PCTO codice convenzione progressivo per anno (#582)
 - update of main management scripts
