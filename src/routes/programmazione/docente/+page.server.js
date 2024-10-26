@@ -116,6 +116,8 @@ export const actions = {
     },
     pdf: async ({ cookies, request }) => {
         let buf;
+        let periodo = 'inizio';
+
         try {
             const form_data = await request.formData();
             const id = form_data.get('id');
@@ -159,6 +161,7 @@ export const actions = {
                     }
                 });
             } else {
+                periodo = 'fine';
                 materie_programmi = insegnamenti.map(insegnamento => {
                     const programma = JSON.parse(insegnamento.programma_secondo_quadrimestre);
                     const libri = programma[2].libri.split('~'); // Sappiamo che l'array è composto da:	Q1, Q2, Libri
@@ -198,6 +201,8 @@ export const actions = {
                 docenti: docenti_name,
                 studenti: studenti_name,
                 materie: materie_programmi,
+                as: `${get_as()} - ${get_as() + 1}`,
+                periodo: periodo
             }
 
             const content = fs.readFileSync(
