@@ -1,30 +1,35 @@
 <script>
-	import { page_pre_title, page_title, page_action_title, page_action_modal } from '../../../js/store';
+	import {
+		page_pre_title,
+		page_title,
+		page_action_title,
+		page_action_modal
+	} from '../../../js/store';
 	import Table from '$lib/components/common/table.svelte';
 	import InputText from '$lib/components/modal/input_text.svelte';
 	import InputDate from '$lib/components/modal/input_date.svelte';
-    import InputSelect from '$lib/components/modal/input_select.svelte';
-    import InputArea from '$lib/components/modal/input_area.svelte';
-    import * as helper from '../../../js/helper';
+	import InputSelect from '$lib/components/modal/input_select.svelte';
+	import InputArea from '$lib/components/modal/input_area.svelte';
+	import * as helper from '../../../js/helper';
 	import Select from 'svelte-select';
 	import * as yup from 'yup';
-    import { Logger } from '../../../js/logger';
-    import { onMount } from 'svelte';
-    import { saveAs } from 'file-saver';
-    import MessageBox from '$lib/components/common/message_box.svelte';
+	import { Logger } from '../../../js/logger';
+	import { onMount } from 'svelte';
+	import { saveAs } from 'file-saver';
+	import MessageBox from '$lib/components/common/message_box.svelte';
 
-    let logger = new Logger("client");
+	let logger = new Logger('client');
 	export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
-    export let form; // Risposta del form dal server
+	export let form; // Risposta del form dal server
 	let corsi = helper.data2arr(data.corsi);
 
-    let tipi_corso = ['GENERICO', 'SPECIFICO'];
-    let utenti = helper.data2arr(data.utenti);
+	let tipi_corso = ['GENERICO', 'SPECIFICO'];
+	let utenti = helper.data2arr(data.utenti);
 	let classi = helper.data2arr(data.classi);
 	let classi_iscritte = [];
 	let old_studenti = [];
-    let form_presenze; 
-    let idCorso;
+	let form_presenze;
+	let idCorso;
 
 	classi = helper.db_to_select(classi);
 
@@ -40,7 +45,7 @@
 		if (modal_action == 'create') seguitoDa = [];
 	}
 
-    //configura la pagina pre-titolo, titolo e nome del modale
+	//configura la pagina pre-titolo, titolo e nome del modale
 	$page_pre_title = 'Sicurezza sul Lavoro';
 	$page_title = 'Corsi';
 	$page_action_title = 'Aggiungi corso';
@@ -59,19 +64,17 @@
 		tipo: '',
 		dataInizio: helper.convert_date(new Date()),
 		dataFine: helper.convert_date(new Date()),
-        dataTest: helper.convert_date(new Date()),
+		dataTest: helper.convert_date(new Date())
 	};
 
 	// schema di validazione del form
 	const form_schema = yup.object().shape({
 		titolo: yup
-		.string()
-		.required('Titolo Corso necessario')
-		.matches(/^[a-zA-Z0-9\. -']{3,40}$/, "Titolo Corso non valido"),
+			.string()
+			.required('Titolo Corso necessario')
+			.matches(/^[a-zA-Z0-9\. -']{3,40}$/, 'Titolo Corso non valido'),
 
-        tipo: yup
-        .string()
-        .required('Tipo Corso necessario')
+		tipo: yup.string().required('Tipo Corso necessario')
 	});
 
 	async function start_update(e) {
@@ -80,46 +83,49 @@
 		form_values.corso_id = e.detail.id;
 		//cerca l'azienda da fare update
 		let corso = corsi.filter((item) => item.id == form_values.corso_id)[0];
-        if(!corso.somministrato) {
-            corso.seguitoDa.forEach((utente) => {
-                utente['label'] = utente.cognome.concat(' ', utente.nome);
-                utente['value'] = utente.id;
-            });
-            seguitoDa = corso.seguitoDa;
 
-            form_values.titolo = corso.titolo;
-            form_values.tipo = corso.tipo;
-            form_values.dataInizio = helper.convert_date(corso.dataInizio);
-            form_values.dataFine = helper.convert_date(corso.dataFine);
-            form_values.dataTest = helper.convert_date(corso.dataTest);
-        } else {
-            //very dirty trick, I will change when I will find a better solution
-            await helper.wait_fade_finish(500);
-            const btn = document.getElementById('btn-cancel');
-            btn.click();
-            helper.mbox_show(
-                'warning',
-                'Attenzione',
-                'Non puoi modificare un corso con test già somministrati',
-                3000
-            );
-        }
+		// issue#587
+		// if (!corso.somministrato) {
+		corso.seguitoDa.forEach((utente) => {
+			utente['label'] = utente.cognome.concat(' ', utente.nome);
+			utente['value'] = utente.id;
+		});
+		seguitoDa = corso.seguitoDa;
+
+		form_values.titolo = corso.titolo;
+		form_values.tipo = corso.tipo;
+		form_values.dataInizio = helper.convert_date(corso.dataInizio);
+		form_values.dataFine = helper.convert_date(corso.dataFine);
+		form_values.dataTest = helper.convert_date(corso.dataTest);
+		// }
+		// else {
+		//     //very dirty trick, I will change when I will find a better solution
+		//     await helper.wait_fade_finish(500);
+		//     const btn = document.getElementById('btn-cancel');
+		//     btn.click();
+		//     helper.mbox_show(
+		//         'warning',
+		//         'Attenzione',
+		//         'Non puoi modificare un corso con test già somministrati',
+		//         3000
+		//     );
+		// }
 	}
 
 	function handleSelect(event) {
 		let user_selected = event.detail;
-       	seguito = [];
+		seguito = [];
 		let i = 0;
-        if(user_selected) {
-            user_selected.forEach((item) => {
-                seguito = [...seguito, item.value];
-            });
+		if (user_selected) {
+			user_selected.forEach((item) => {
+				seguito = [...seguito, item.value];
+			});
 			let removed = helper.findDeselectedItem(user_selected, old_studenti);
-			if(old_studenti.length != 0){
-				let classi_ids = classi_iscritte.map(classe => classe.id);
-				if(removed){
-					let users_id = user_selected.map(user => user.classeId);
-					if(users_id.indexOf(removed.classeId) != -1){
+			if (old_studenti.length != 0) {
+				let classi_ids = classi_iscritte.map((classe) => classe.id);
+				if (removed) {
+					let users_id = user_selected.map((user) => user.classeId);
+					if (users_id.indexOf(removed.classeId) != -1) {
 						let index_to_remove = classi_ids.indexOf(removed.classeId);
 						classi_iscritte.splice(index_to_remove, 1);
 						classi_iscritte = classi_iscritte;
@@ -127,16 +133,15 @@
 				}
 			}
 			old_studenti = user_selected;
-        }else {
+		} else {
 			classi_iscritte = [];
 		}
 	}
 
 	function handleSelect_classi(event) {
 		let classe_selected = event.detail;
-		if(classe_selected == null)
-			seguitoDa = [];
-		if(classe_selected){
+		if (classe_selected == null) seguitoDa = [];
+		if (classe_selected) {
 			classi_iscritte = classe_selected;
 			classe_selected.forEach((item) => {
 				let utenti_partecipanti = utenti.filter((utente) => {
@@ -148,7 +153,7 @@
 	}
 
 	async function handleSubmit() {
-        try {
+		try {
 			// valida il form prima del submit
 			await form_schema.validate(form_values, { abortEarly: false });
 			errors = {};
@@ -157,12 +162,16 @@
 			errors = err.inner.reduce((acc, err) => {
 				return { ...acc, [err.path]: err.message };
 			}, {});
-			logger.error(`Errori nella validazione del form corso sicurezza. Oggetto: ${JSON.stringify(form_values)} -- Errore: ${JSON.stringify(errors)}`);
+			logger.error(
+				`Errori nella validazione del form corso sicurezza. Oggetto: ${JSON.stringify(
+					form_values
+				)} -- Errore: ${JSON.stringify(errors)}`
+			);
 		}
 	}
 
-	async function cancel_action(){
-		if(modal_action == 'update'){
+	async function cancel_action() {
+		if (modal_action == 'update') {
 			await helper.wait_fade_finish(150);
 			modal_action = 'create';
 			form_values = {
@@ -171,135 +180,140 @@
 				tipo: '',
 				dataInizio: helper.convert_date(new Date()),
 				dataFine: helper.convert_date(new Date()),
-                dataTest: helper.convert_date(new Date()),
+				dataTest: helper.convert_date(new Date())
 			};
 		}
 	}
 
-    onMount(async () => { // Controlliamo che l'inserimento sia andato a buon fine, usiamo on mount per richiamare le funzioni del DOM
-        helper.init_tippy();
-        if (form != null) {
-            if (form.files != null) { // è stato richiesto la generazione di uno o più file
-                for(let doc of form.files) {
-                    const buffer = new Uint8Array(JSON.parse(doc.file).data); // Convertiamo la stringa in un oggetto che conterrà il nostro array di bytes che verrà poi convertito in Uint8Array, necessario all'oggetto Blob
-                    var blob = new Blob([buffer], { type: 'application/msword' });
-                    saveAs(blob, doc.name);
-                    await helper.delay(100); //chrome can download max 10 files at the time
-                }
-            } else { // file è null quindi l'unico caso possibile è la violazione della chiave unique nel DB
-                form_values = JSON.parse(localStorage.getItem('form')); // Riempiamo il modale
-                helper.show_modal();
-            }
-        } else {
-            // non c'è risposta dal server, tutto è andato a buon fine
-            localStorage.removeItem('form'); //PROF: rimuoviamo il form dal localstorage
-        }
-    });
+	onMount(async () => {
+		// Controlliamo che l'inserimento sia andato a buon fine, usiamo on mount per richiamare le funzioni del DOM
+		helper.init_tippy();
+		if (form != null) {
+			if (form.files != null) {
+				// è stato richiesto la generazione di uno o più file
+				for (let doc of form.files) {
+					const buffer = new Uint8Array(JSON.parse(doc.file).data); // Convertiamo la stringa in un oggetto che conterrà il nostro array di bytes che verrà poi convertito in Uint8Array, necessario all'oggetto Blob
+					var blob = new Blob([buffer], { type: 'application/msword' });
+					saveAs(blob, doc.name);
+					await helper.delay(100); //chrome can download max 10 files at the time
+				}
+			} else {
+				// file è null quindi l'unico caso possibile è la violazione della chiave unique nel DB
+				form_values = JSON.parse(localStorage.getItem('form')); // Riempiamo il modale
+				helper.show_modal();
+			}
+		} else {
+			// non c'è risposta dal server, tutto è andato a buon fine
+			localStorage.removeItem('form'); //PROF: rimuoviamo il form dal localstorage
+		}
+	});
 
-    async function custom_action_handler(e) {
-        switch(e.detail.action) {
-            // case 'view':
-            //     view_results(e.detail.row_id);
-            //     break;
-            case 'issue':
-                issue_test(e.detail.row_id);
-                break;
-            case 'presenze':
-                print_presenze(e.detail.row_id);
-                break;
-        }
-    }
+	async function custom_action_handler(e) {
+		switch (e.detail.action) {
+			// case 'view':
+			//     view_results(e.detail.row_id);
+			//     break;
+			case 'issue':
+				issue_test(e.detail.row_id);
+				break;
+			case 'presenze':
+				print_presenze(e.detail.row_id);
+				break;
+		}
+	}
 
-    // async function view_results(id) {
-    //     console.log("VIEW:", id)
-    //     const get_response = await fetch(`/sicurezza_sul_lavoro/test?corso=${id}`);
-    //     let res = await get_response.json();
-    //     console.log("GET RES:", res)
+	// async function view_results(id) {
+	//     console.log("VIEW:", id)
+	//     const get_response = await fetch(`/sicurezza_sul_lavoro/test?corso=${id}`);
+	//     let res = await get_response.json();
+	//     console.log("GET RES:", res)
 
-    // }
+	// }
 
-    async function issue_test(id) {
-        let corso = corsi.filter(c => c.id == id)[0];
-        let studenti = corso.seguitoDa.map(s => s.id);
-        
-        if(!corso.somministrato) {
-            const res = await fetch(`/sicurezza_sul_lavoro/test`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    corso: id,
-                    type: corso.tipo,
-                    studenti: studenti
-                })
-            });
+	async function issue_test(id) {
+		let corso = corsi.filter((c) => c.id == id)[0];
+		let studenti = corso.seguitoDa.map((s) => s.id);
 
-            if (res.ok) {
-                helper.mbox_show(
-                    'success',
-                    'Conferma',
-                    'I test per questo corso sono stati somministrati correttamente',
-                    3000,
-                    () => location.reload()
-                );
-            } else {
-                helper.mbox_show(
-                    'danger',
-                    `Errore [${res.status} - ${res.statusText}]`,
-                    'Non è stato possibile somministrare i test per questo corso.',
-                    3000
-                );
-            }
-        } else {
-            helper.mbox_show(
-                'warning',
-                'Attenzione',
-                'I test per questo corso sono già stati somministrati',
-                3000
-            );
-        }
-    }
+		if (!corso.somministrato) {
+			const res = await fetch(`/sicurezza_sul_lavoro/test`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					corso: id,
+					type: corso.tipo,
+					studenti: studenti
+				})
+			});
 
-    async function print_presenze(id) {
-        // let corso = corsi.filter(c => c.id == id)[0];
-        // let studenti = corso.seguitoDa.map(s => s.id);
-        // set the id of the classes to print
-        // send the hidden form
-        idCorso.value = id;
-        form_presenze.submit();
-    }
+			if (res.ok) {
+				helper.mbox_show(
+					'success',
+					'Conferma',
+					'I test per questo corso sono stati somministrati correttamente',
+					3000,
+					() => location.reload()
+				);
+			} else {
+				helper.mbox_show(
+					'danger',
+					`Errore [${res.status} - ${res.statusText}]`,
+					'Non è stato possibile somministrare i test per questo corso.',
+					3000
+				);
+			}
+		} else {
+			helper.mbox_show(
+				'warning',
+				'Attenzione',
+				'I test per questo corso sono già stati somministrati',
+				3000
+			);
+		}
+	}
+
+	async function print_presenze(id) {
+		// let corso = corsi.filter(c => c.id == id)[0];
+		// let studenti = corso.seguitoDa.map(s => s.id);
+		// set the id of the classes to print
+		// send the hidden form
+		idCorso.value = id;
+		form_presenze.submit();
+	}
 </script>
 
-<MessageBox/>
+<MessageBox />
 
 <Table
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
 		{ name: 'titolo', type: 'string', display: 'titolo', size: 50, search: true },
-        { name: 'tipo', type: 'string', display: 'tipo', size: 20, search: true },
-        { name: 'dataInizio', type: 'date', display: 'Inizio' },
+		{ name: 'tipo', type: 'string', display: 'tipo', size: 20, search: true },
+		{ name: 'dataInizio', type: 'date', display: 'Inizio' },
 		{ name: 'dataFine', type: 'date', display: 'Fine' },
-        { name: 'dataTest', type: 'date', display: 'Test' },
-        { name: 'somministrato', type: 'boolean', display: 'somministrato', search: true}
+		{ name: 'dataTest', type: 'date', display: 'Test' },
+		{ name: 'somministrato', type: 'boolean', display: 'somministrato', search: true }
 	]}
 	rows={corsi}
 	page_size={6}
 	modal_name={$page_action_modal}
 	on:update_start={start_update}
 	endpoint="sicurezza_sul_lavoro/corsi"
-    footer="Corsi di Sicurezza"
-    actions={true}
-    print={true}
-    print_tip="Stampa attestato del corso"
-    update_tip="Aggiorna corso"
-    trash_tip="Rimuovi corso"
-    resource="sicurezza_corso"
-    custom_actions={[{action: 'issue', icon:'checklist', tip: 'Somministra test agli studenti'}, {action: 'presenze', icon:'users', tip: 'Stampa modulo presenze'}]}
-    on:custom_action={custom_action_handler}
+	footer="Corsi di Sicurezza"
+	actions={true}
+	print={true}
+	print_tip="Stampa attestato del corso"
+	update_tip="Aggiorna corso"
+	trash_tip="Rimuovi corso"
+	resource="sicurezza_corso"
+	custom_actions={[
+		{ action: 'issue', icon: 'checklist', tip: 'Somministra test agli studenti' },
+		{ action: 'presenze', icon: 'users', tip: 'Stampa modulo presenze' }
+	]}
+	on:custom_action={custom_action_handler}
 />
 <!-- custom_actions={[{action: 'view', icon: 'eye'}, {action: 'issue', icon:'checklist'}]} -->
-
 
 <!-- Modal from Page action -->
 <div
@@ -327,37 +341,49 @@
 					{:else}
 						<h5 class="modal-title">Aggiorna Corso</h5>
 					{/if}
-					<button id="btn-cancel" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" on:click={cancel_action}/>
+					<button
+						id="btn-cancel"
+						type="button"
+						class="btn-close"
+						data-bs-dismiss="modal"
+						aria-label="Close"
+						on:click={cancel_action}
+					/>
 				</div>
 				<div class="modal-body">
 					<div class="row">
 						<div class="col-lg-8">
 							<div class="mb-3">
 								<InputText
-								label="Titolo"
-								name="titolo"
-								{errors}
-								placeholder="Titolo Corso"
-								bind:val={form_values.titolo}
-							/>
+									label="Titolo"
+									name="titolo"
+									{errors}
+									placeholder="Titolo Corso"
+									bind:val={form_values.titolo}
+								/>
 							</div>
 						</div>
-                        <div class="col-lg-4">
+						<div class="col-lg-4">
 							<div class="mb-3">
 								<div class="form-label select_text">Tipo</div>
-                                <select class="form-select" class:is-invalid="{errors.tipo}" name="tipo" bind:value={form_values.tipo}>
-                                    {#each tipi_corso as tipo_corso}
-                                        <option value={tipo_corso}>{tipo_corso}</option>
-                                    {/each}
-                                </select>
-                                {#if errors.tipo}
-                                    <span class="invalid-feedback">{errors.tipo}</span>
-                                {/if}	
+								<select
+									class="form-select"
+									class:is-invalid={errors.tipo}
+									name="tipo"
+									bind:value={form_values.tipo}
+								>
+									{#each tipi_corso as tipo_corso}
+										<option value={tipo_corso}>{tipo_corso}</option>
+									{/each}
+								</select>
+								{#if errors.tipo}
+									<span class="invalid-feedback">{errors.tipo}</span>
+								{/if}
 							</div>
 						</div>
 					</div>
 					<div class="row">
-                        <div class="col-lg-4">
+						<div class="col-lg-4">
 							<InputDate
 								label="Data Inizio"
 								name="dataInizio"
@@ -365,7 +391,7 @@
 								bind:val={form_values.dataInizio}
 							/>
 						</div>
-                        <div class="col-lg-4">
+						<div class="col-lg-4">
 							<InputDate
 								label="Data Fine"
 								name="dataFine"
@@ -373,7 +399,7 @@
 								bind:val={form_values.dataFine}
 							/>
 						</div>
-                        <div class="col-lg-4">
+						<div class="col-lg-4">
 							<InputDate
 								label="Data Test"
 								name="dataTest"
@@ -435,6 +461,11 @@
 
 <!-- huge workaround since due to a bug in undici cannot send formData with POST
 so having an hidden form used to trigger the backend action to generate document creation -->
-<form bind:this={form_presenze} id="form-presenze" method="POST" action={'/sicurezza_sul_lavoro/corsi?/pdf_presenze'}>
-    <input bind:this={idCorso} type="hidden" id="idCorso" name="idCorso" value=0 />
+<form
+	bind:this={form_presenze}
+	id="form-presenze"
+	method="POST"
+	action={'/sicurezza_sul_lavoro/corsi?/pdf_presenze'}
+>
+	<input bind:this={idCorso} type="hidden" id="idCorso" name="idCorso" value="0" />
 </form>

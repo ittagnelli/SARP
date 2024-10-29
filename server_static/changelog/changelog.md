@@ -1,3 +1,9 @@
+## v4.9.4 - 29 Ottobre 2024
+- `fix#587`: Sicurezza completamento corso manuale
+- E' possibiel editare un corso già somministrato.
+- `fix#585`: Programmazione aggiornamento AS (#586)
+- anno scolastico aggiornato in frontespizio e bottom header
+
 ## v4.9.3 - 25 Ottobre 2024
 - `fix#583`: PDP aggiornamento sezione 
 
