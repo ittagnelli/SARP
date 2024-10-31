@@ -433,37 +433,39 @@
 							</div>
 						</div>
 					</div>
-					{#if helper.is_admin(data) == true}
-						<div class="row">
-							<div class="col-lg-4">
-								<div class="mb-3">
-									<label class="form-label">Convenzione Firmata ?</label>
-									<div class="form-selectgroup">
-										<label class="form-selectgroup-item">
-											<input
-												type="radio"
-												name="firma_convenzione"
-												value="SI"
-												class="form-selectgroup-input"
-												bind:group={form_values.firma_convenzione}
-											/>
-											<span class="form-selectgroup-label">SI</span>
-										</label>
-										<label class="form-selectgroup-item">
-											<input
-												type="radio"
-												name="firma_convenzione"
-												value="NO"
-												class="form-selectgroup-input"
-												bind:group={form_values.firma_convenzione}
-											/>
-											<span class="form-selectgroup-label">NO</span>
-										</label>
-									</div>
+					<!-- {#if helper.is_admin(data) == true} 
+					issue-588 
+					-->
+					<div class="row">
+						<div class="col-lg-4">
+							<div class="mb-3">
+								<label class="form-label">Convenzione Firmata ?</label>
+								<div class="form-selectgroup">
+									<label class="form-selectgroup-item">
+										<input
+											type="radio"
+											name="firma_convenzione"
+											value="SI"
+											class="form-selectgroup-input"
+											bind:group={form_values.firma_convenzione}
+										/>
+										<span class="form-selectgroup-label">SI</span>
+									</label>
+									<label class="form-selectgroup-item">
+										<input
+											type="radio"
+											name="firma_convenzione"
+											value="NO"
+											class="form-selectgroup-input"
+											bind:group={form_values.firma_convenzione}
+										/>
+										<span class="form-selectgroup-label">NO</span>
+									</label>
 								</div>
 							</div>
 						</div>
-					{/if}
+					</div>
+					<!-- {/if} -->
 				</div>
 				<div class="modal-footer">
 					<a href="#" class="btn btn-danger" data-bs-dismiss="modal" on:click={cancel_action}>
