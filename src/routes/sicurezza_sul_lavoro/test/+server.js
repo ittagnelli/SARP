@@ -4,15 +4,16 @@ import { route_protect, raise_error, user_id } from '$js/helper';
 import { PrismaClientValidationError } from '@prisma/client/runtime';
 import { qna_generico_db_str } from './qna_generico_db.js';
 import { qna_specifico_db_str } from './qna_specifico_db.js';
+import { qna_alto_rischio_db_str } from './qna_alto_rischio_db.js';
 import { Logger } from '$js/logger';
 
 let logger = new Logger("server"); //instanzia il logger
 const SARP = new PrismaDB(); //Istanzia il client SARP DB
 
 function catch_error(exception, code) {
-    if(exception instanceof PrismaClientValidationError)
+    if (exception instanceof PrismaClientValidationError)
         logger.error(exception.message);
-    else {  
+    else {
         logger.error(JSON.stringify(exception));
         logger.error(exception.message);
         logger.error(exception.stack);
@@ -29,21 +30,25 @@ export async function GET({ request, url, locals }) {
 
 async function generate_scrambled_questions(type) {
     let questions;
-    
+
+    console.log(type)
     //deep copy the right qna set and remove the correct answer
-    if(type == 'GENERICO') {
+    if (type == 'GENERICO') {
         const qna_generico_db = JSON.parse(qna_generico_db_str);
-        questions = qna_generico_db.map(qna => { delete qna.answer; return qna});
-    } else {
+        questions = qna_generico_db.map(qna => { delete qna.answer; return qna });
+    } else if (type == 'SPECIFICO') {
         const qna_specifico_db = JSON.parse(qna_specifico_db_str);
-        questions = qna_specifico_db.map(qna => { delete qna.answer; return qna});
+        questions = qna_specifico_db.map(qna => { delete qna.answer; return qna });
+    } else if (type == 'ALTO RISCHIO') {
+        const qna_alto_rischio_db = JSON.parse(qna_specifico_db_str);
+        questions = qna_alto_rischio_db.map(qna => { delete qna.answer; return qna });
     }
 
     //shuffle the questions array
     questions = questions.sort(() => 0.5 - Math.random());
 
-    return {questions: questions, n_questions: questions.length};
-}       
+    return { questions: questions, n_questions: questions.length };
+}
 
 // crea un test di sicurezza per ogni studente di un dato corso
 export async function POST({ request, url, locals }) {
@@ -54,6 +59,8 @@ export async function POST({ request, url, locals }) {
     try {
         json_data.studenti.forEach(async studente => {
             const { questions, n_questions } = await generate_scrambled_questions(json_data.type);
+            console.log("XXXXXXXXXXXXXXX:", n_questions)
+
             await SARP.sicurezza_Test.create({
                 data: {
                     creatoDa: user_id(locals),
@@ -66,12 +73,12 @@ export async function POST({ request, url, locals }) {
             });
         });
 
-        await SARP.sicurezza_Corso.update({
-            where: { id: +json_data.corso },
-            data: {
-                somministrato: true
-            }
-        }); 
+        // await SARP.sicurezza_Corso.update({
+        //     where: { id: +json_data.corso },
+        //     data: {
+        //         somministrato: true
+        //     }
+        // }); 
     } catch (exception) {
         console.log("EXCEPTION:", exception)
         catch_error(exception, 1001);
