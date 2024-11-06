@@ -10,8 +10,10 @@ import {
     PUBLIC_SICUREZZA_TEMPLATES_DIR,
     PUBLIC_SICUREZZA_CORSO_GENERICO,
     PUBLIC_SICUREZZA_CORSO_SPECIFICO,
+    PUBLIC_SICUREZZA_CORSO_ALTO_RISCHIO,
     PUBLIC_SICUREZZA_PRESENZE_GENERICO,
-    PUBLIC_SICUREZZA_PRESENZE_SPECIFICO
+    PUBLIC_SICUREZZA_PRESENZE_SPECIFICO,
+    PUBLIC_SICUREZZA_PRESENZE_ALTO_RISCHIO
 } from '$env/static/public';
 
 
@@ -204,8 +206,10 @@ export const actions = {
                 let TEMPLATE_FILE;
                 if (corso.tipo == 'SPECIFICO')
                     TEMPLATE_FILE = PUBLIC_SICUREZZA_CORSO_SPECIFICO;
-                else
+                else if (corso.tipo == 'GENERICO')
                     TEMPLATE_FILE = PUBLIC_SICUREZZA_CORSO_GENERICO;
+                else if (corso.tipo == 'ALTO RISCHIO')
+                    TEMPLATE_FILE = PUBLIC_SICUREZZA_CORSO_ALTO_RISCHIO;
 
                 const template = fs.readFileSync(
                     path.resolve(PUBLIC_SICUREZZA_TEMPLATES_DIR, TEMPLATE_FILE),
@@ -274,8 +278,10 @@ export const actions = {
             let TEMPLATE_FILE;
             if (corso?.tipo == 'SPECIFICO')
                 TEMPLATE_FILE = PUBLIC_SICUREZZA_PRESENZE_SPECIFICO;
-            else
+            else if (corso?.tipo == 'GENERICO')
                 TEMPLATE_FILE = PUBLIC_SICUREZZA_PRESENZE_GENERICO;
+            else if (corso?.tipo == 'ALTO RISCHIO')
+                TEMPLATE_FILE = PUBLIC_SICUREZZA_PRESENZE_ALTO_RISCHIO;
 
             const template = fs.readFileSync(
                 path.resolve(PUBLIC_SICUREZZA_TEMPLATES_DIR, TEMPLATE_FILE),

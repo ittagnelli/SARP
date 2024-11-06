@@ -40,7 +40,7 @@ async function generate_scrambled_questions(type) {
         const qna_specifico_db = JSON.parse(qna_specifico_db_str);
         questions = qna_specifico_db.map(qna => { delete qna.answer; return qna });
     } else if (type == 'ALTO RISCHIO') {
-        const qna_alto_rischio_db = JSON.parse(qna_specifico_db_str);
+        const qna_alto_rischio_db = JSON.parse(qna_alto_rischio_db_str);
         questions = qna_alto_rischio_db.map(qna => { delete qna.answer; return qna });
     }
 
@@ -59,7 +59,6 @@ export async function POST({ request, url, locals }) {
     try {
         json_data.studenti.forEach(async studente => {
             const { questions, n_questions } = await generate_scrambled_questions(json_data.type);
-            console.log("XXXXXXXXXXXXXXX:", n_questions)
 
             await SARP.sicurezza_Test.create({
                 data: {
@@ -73,12 +72,12 @@ export async function POST({ request, url, locals }) {
             });
         });
 
-        // await SARP.sicurezza_Corso.update({
-        //     where: { id: +json_data.corso },
-        //     data: {
-        //         somministrato: true
-        //     }
-        // }); 
+        await SARP.sicurezza_Corso.update({
+            where: { id: +json_data.corso },
+            data: {
+                somministrato: true
+            }
+        });
     } catch (exception) {
         console.log("EXCEPTION:", exception)
         catch_error(exception, 1001);
