@@ -1,3 +1,12 @@
+## v4.10.0 - 6 Novembre 2024
+- `fix#590`:Test sicurezza alto rischio 
+- aggiunto nuovo test sicurezza ad alto rischio
+- aggiuni nuovi moduli presenza e attestato per corso alto rischio
+- add script to remove PDP for a single student
+- add script to create a single student PDP
+- `fix#591`: PDP docente typo in update module 
+- `fix#588`: PCTO tutor non può accettare convenzione
+
 ## v4.9.4 - 29 Ottobre 2024
 - `fix#587`: Sicurezza completamento corso manuale
 - E' possibiel editare un corso già somministrato.
