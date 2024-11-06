@@ -23,7 +23,7 @@
 	export let form; // Risposta del form dal server
 	let corsi = helper.data2arr(data.corsi);
 
-	let tipi_corso = ['GENERICO', 'SPECIFICO'];
+	let tipi_corso = ['GENERICO', 'SPECIFICO', 'ALTO RISCHIO'];
 	let utenti = helper.data2arr(data.utenti);
 	let classi = helper.data2arr(data.classi);
 	let classi_iscritte = [];
