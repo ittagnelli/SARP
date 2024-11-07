@@ -1,18 +1,18 @@
 import { PrismaClient } from '@prisma/client';
 //DEV
-// import { misure_dispensative } from '../../src/routes/pdp/template/dispensative.js';
-// import { misure_compensative } from '../../src/routes/pdp/template/compensative.js';
-// import { misure_valutative } from '../../src/routes/pdp/template/valutative.js';
-// import { strategie_classe } from '../../src/routes/pdp/template/strategie_classe.js';
-// import { strategie_didattiche } from '../../src/routes/pdp/template/strategie_didattiche.js';
+import { misure_dispensative } from '../../src/routes/pdp/template/dispensative.js';
+import { misure_compensative } from '../../src/routes/pdp/template/compensative.js';
+import { misure_valutative } from '../../src/routes/pdp/template/valutative.js';
+import { strategie_classe } from '../../src/routes/pdp/template/strategie_classe.js';
+import { strategie_didattiche } from '../../src/routes/pdp/template/strategie_didattiche.js';
 
 
 //PROD
-import { misure_dispensative } from './dispensative.js';
-import { misure_compensative } from './compensative.js';
-import { misure_valutative } from './valutative.js';
-import { strategie_classe } from './strategie_classe.js';
-import { strategie_didattiche } from './strategie_didattiche.js';
+// import { misure_dispensative } from './dispensative.js';
+// import { misure_compensative } from './compensative.js';
+// import { misure_valutative } from './valutative.js';
+// import { strategie_classe } from './strategie_classe.js';
+// import { strategie_didattiche } from './strategie_didattiche.js';
 
 
 // Istanzia il client per il SARP
@@ -64,7 +64,8 @@ async function get_insegnamenti(as, idClasse) {
         }
     });
 
-    return insegnamenti.filter(ins => ins.classe.classe == 'I' || ins.classe.classe == 'III');
+    // return insegnamenti.filter(ins => ins.classe.classe == 'I' || ins.classe.classe == 'III');
+    return insegnamenti;
 }
 
 
@@ -110,14 +111,14 @@ async function main(argv) {
     let idStudente = argv[3];
     let idClasse = argv[4];
 
-    console.log(as)
-    console.log(idStudente);
+    console.log("AS:", as)
+    console.log("STUDENTE:", idStudente);
 
 
     //prelevo gli insegmaneti dell'anno as
     let insegnamenti = await get_insegnamenti(+as, idClasse);
 
-    console.log(insegnamenti.length)
+    console.log("INSEGNAMENTI:", insegnamenti.length)
 
     //per ogni insegnamento, determino la lista degli studenti
     //e per ogni studente BES creo un entry PDP
