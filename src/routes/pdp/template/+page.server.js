@@ -10,9 +10,9 @@ let logger = new Logger("server"); //instanzia il logger
 const SARP = new PrismaDB();
 
 function catch_error(exception, code) {
-    if(exception instanceof PrismaClientValidationError)
+    if (exception instanceof PrismaClientValidationError)
         logger.error(exception.message);
-    else {  
+    else {
         logger.error(JSON.stringify(exception));
         logger.error(exception.message);
         logger.error(exception.stack);
@@ -26,12 +26,12 @@ export async function load({ locals }) {
     route_protect(locals);
     access_protect(200, locals, action, resource);
     SARP.set_session(locals);
-   
+
     try {
         let pdp_templates = await SARP.pdp_Template.findMany({
             where: multi_user_field_where('creatoDa', locals)
         });
-        
+
         return {
             templates: pdp_templates
         }
@@ -46,11 +46,11 @@ export const actions = {
 
         route_protect(locals);
         access_protect(200, locals, action, resource);
-        
+
         try {
             const form = await request.formData();
-            
-            await SARP.pdp_Template.create({
+
+            let pdpTemplate = await SARP.pdp_Template.create({
                 data: {
                     creatoDa: user_id(locals),
                     nome: form.get("nome"),
@@ -66,7 +66,9 @@ export const actions = {
                 }
             });
 
-            return {action: action, status: 'ok'};
+            logger.debug(`[${locals.session.idUtente} - ${locals.session.login.cognome}] CREATO TEMPLATE PDP[${pdpTemplate.id}][${pdpTemplate.nome}]`);
+
+            return { action: action, status: 'ok' };
         } catch (exception) {
             catch_error(exception, 2502);
         }
@@ -78,7 +80,10 @@ export const actions = {
         access_protect(200, locals, action, resource);
 
         try {
-            const form = await request.formData();	
+            const form = await request.formData();
+
+            let idPDP = parseInt(form.get("id"));
+            logger.debug(`[${locals.session.idUtente} - ${locals.session.login.cognome}] INIZIO UPDATE TEMPLATE PDP[${idPDP}][${form.get("nome")}]`);
 
             await SARP.pdp_Template.update({
                 data: {
@@ -95,14 +100,14 @@ export const actions = {
                     note: form.get("note")?.toString()
                 },
                 where: {
-                    id: parseInt(form.get("id"))
+                    id: idPDP
                 }
             });
 
-            return {action: action, status: 'ok'};
+            return { action: action, status: 'ok' };
         } catch (exception) {
             catch_error(exception, 2503);
-        } 
+        }
     },
     delete: async ({ request, locals }) => {
         let action = 'delete';
@@ -113,6 +118,8 @@ export const actions = {
         try {
             const form_data = await request.formData();
             const id = form_data.get('id');
+
+            logger.debug(`[${locals.session.idUtente} - ${locals.session.login.cognome}] INIZIO DELETE TEMPLATE PDP[${parseInt(id)}]`);
 
             await SARP.pdp_Template.delete({
                 where: {

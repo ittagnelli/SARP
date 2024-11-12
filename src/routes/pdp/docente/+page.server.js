@@ -105,6 +105,8 @@ export const actions = {
         try {
             const form = await request.formData();
 
+            logger.debug(`[${locals.session.idUtente} - ${locals.session.login.cognome}] INIZIO UPDATE PDP DOCENTE[${parseInt(form.get("id"))}]`);
+
             await SARP.PDP.update({
                 data: {
                     dispensative: form.get("dispensative"),
