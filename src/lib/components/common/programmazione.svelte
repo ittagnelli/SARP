@@ -20,8 +20,8 @@
 		argomenti = argomenti;
 	}
 
-	function new_argomento() {
-		argomenti.push({
+	function new_argomento(index) {
+		argomenti.splice(index, 0, {
 			titolo: '',
 			sotto_argomenti: [
 				{
@@ -115,7 +115,7 @@
 						class="link-secondary"
 						title="Aggiungi argomento"
 						data-bs-toggle="tooltip"
-						on:click={() => new_argomento()}
+						on:click={() => new_argomento(index)}
 						><!-- Download SVG icon from http://tabler-icons.io/i/x -->
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
