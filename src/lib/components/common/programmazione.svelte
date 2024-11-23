@@ -41,6 +41,11 @@
 		argomenti = argomenti;
 	}
 
+	function moveArg(argomento, index, dir) {
+		argomenti[index] = argomenti[index - dir];
+		argomenti[index - dir] = argomento;
+	}
+
     const text_validation_str = `
     1234567890
     ABCDEFGHIJKLMNOPQRSTUVXYWZ
@@ -135,6 +140,28 @@
 						</svg>
 					</a>
 					{#if index > 0}
+						<a 
+						href="#"
+						class="link-secondary "
+						title="Sposta su argomento"
+						on:click={() => moveArg(argomento, index, 1)}
+						>
+							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+								<path d="M12 19V5"></path>
+								<polyline points="5 12 12 5 19 12"></polyline>
+							  </svg>							  
+						</a>
+						<a 
+						href="#"
+						class="link-secondary"
+						title="Sposta giù argomento"
+						on:click={() => moveArg(argomento, index, -1)}
+						>
+							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+								<path d="M12 5v14"></path>
+								<polyline points="19 12 12 19 5 12"></polyline>
+							  </svg>							  
+						</a>
 						<a
 							href="#"
 							class="link-secondary spacer"
