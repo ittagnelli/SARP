@@ -1,3 +1,14 @@
+## v4.11.0 - 25 Novembre 2024
+- `fix#595`: Movimento argomento programmazione
+- aggiunta icona freccia in su
+- aggiunta icona freccia in giu
+- aggiunta freccia giù per il primo elemento
+- aggiunta freccia su per l'ultimo elemento
+- `fix#597`: Rimozione tasto elimina libro in programmazione
+- `fix#594`: Inserimento argomento programmazione
+- aggiuntto log per debugging PDPD
+- rimossa limitazione PDP solo alle classi I e III
+
 ## v4.10.0 - 6 Novembre 2024
 - `fix#590`:Test sicurezza alto rischio 
 - aggiunto nuovo test sicurezza ad alto rischio
