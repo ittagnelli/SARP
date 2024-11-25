@@ -41,6 +41,11 @@
 		argomenti = argomenti;
 	}
 
+	function moveArg(argomento, index, dir) {
+		argomenti[index] = argomenti[index - dir];
+		argomenti[index - dir] = argomento;
+	}
+
     const text_validation_str = `
     1234567890
     ABCDEFGHIJKLMNOPQRSTUVXYWZ
@@ -134,7 +139,18 @@
 							<path d="M5 12l14 0" />
 						</svg>
 					</a>
-					{#if index > 0}
+					{#if index === argomenti.length - 1 && argomenti.length > 1}
+						<a 
+							href="#"
+							class="link-secondary "
+							title="Sposta su argomento"
+							on:click={() => moveArg(argomento, index, 1)}
+							>
+								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+									<path d="M12 19V5"></path>
+									<polyline points="5 12 12 5 19 12"></polyline>
+								  </svg>						  
+						</a>
 						<a
 							href="#"
 							class="link-secondary spacer"
@@ -166,6 +182,73 @@
 									fill="currentColor"
 								/>
 							</svg>
+						</a>
+					{:else if index > 0}
+						<a 
+						href="#"
+						class="link-secondary "
+						title="Sposta su argomento"
+						on:click={() => moveArg(argomento, index, 1)}
+						>
+							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+								<path d="M12 19V5"></path>
+								<polyline points="5 12 12 5 19 12"></polyline>
+							  </svg>							  
+						</a>
+						<a 
+						href="#"
+						class="link-secondary"
+						title="Sposta giù argomento"
+						on:click={() => moveArg(argomento, index, -1)}
+						>
+							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+								<path d="M12 5v14"></path>
+								<polyline points="19 12 12 19 5 12"></polyline>
+							  </svg>							  
+						</a>
+						<a
+							href="#"
+							class="link-secondary spacer"
+							title="Rimuovi argomento"
+							data-bs-toggle="tooltip"
+							on:click={() => remove_argomento(index)}
+							><!-- Download SVG icon from http://tabler-icons.io/i/x -->
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								class="icon icon-tabler icon-tabler-trash-filled del-icon"
+								width="24"
+								height="24"
+								viewBox="0 0 24 24"
+								stroke-width="2"
+								stroke="currentColor"
+								fill="none"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+							>
+								<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+								<path
+									d="M20 6a1 1 0 0 1 .117 1.993l-.117 .007h-.081l-.919 11a3 3 0 0 1 -2.824 2.995l-.176 .005h-8c-1.598 0 -2.904 -1.249 -2.992 -2.75l-.005 -.167l-.923 -11.083h-.08a1 1 0 0 1 -.117 -1.993l.117 -.007h16z"
+									stroke-width="0"
+									fill="currentColor"
+								/>
+								<path
+									d="M14 2a2 2 0 0 1 2 2a1 1 0 0 1 -1.993 .117l-.007 -.117h-4l-.007 .117a1 1 0 0 1 -1.993 -.117a2 2 0 0 1 1.85 -1.995l.15 -.005h4z"
+									stroke-width="0"
+									fill="currentColor"
+								/>
+							</svg>
+						</a>
+					{:else}
+						<a 
+						href="#"
+						class="link-secondary"
+						title="Sposta giù argomento"
+						on:click={() => moveArg(argomento, index, -1)}
+						>
+							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+								<path d="M12 5v14"></path>
+								<polyline points="19 12 12 19 5 12"></polyline>
+							  </svg>							  
 						</a>
 					{/if}
 				</span>
