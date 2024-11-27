@@ -57,7 +57,7 @@ async function get_insegnamenti(as) {
             anno: +as,
             NOT: {
                 idMateria: {
-                    in: [32, 35, 36] //Escludo Scienze Motorie, CLIL e Educazione Civica che non hanno PDP
+                    in: [9, 32, 35, 36, 48] //Escludo Religione, Scienze Motorie, CLIL e Educazione Civica, Robotica che non hanno PDP
                 }
             }
         }
