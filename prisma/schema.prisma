@@ -90,6 +90,7 @@ model Materia {
     nome         String                    @unique
     insegnata_in Insegnamenti[]
     template     programmazione_Template[]
+    has_pdp      Boolean                   @default(true)
 }
 
 model Insegnamenti {
