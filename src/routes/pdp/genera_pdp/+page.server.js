@@ -145,6 +145,9 @@ export const actions = {
                 }
             });
 
+            //In DATA 29/11/2024 faccio delle modifiche al volo (porcate) per
+            //mettere a posto la situazione dei PDP da stampare ma non completi da parte del referente bes
+
             //prepare the valutazione grids
             //Qui è un gran casino in quanto stato fatto in fasi successive
             //In ogni acso prima preparo le varie griglie per con le risposte del tutor di classe
@@ -153,21 +156,21 @@ export const actions = {
             let svalutazione = JSON.parse(studente.griglia_pdp_c1);
             let dgriglia1 = dvalutazione.slice(0, 20);
             let dsgriglia2 = dvalutazione.slice(20, 23);
-            let sgriglia2 = svalutazione.slice(0, 3);
+            let sgriglia2 = svalutazione ? svalutazione.slice(0, 3) : null;
             let dsgriglia3 = dvalutazione.slice(23, 28);
-            let sgriglia3 = svalutazione.slice(3, 8);
+            let sgriglia3 = svalutazione ? svalutazione.slice(3, 8) : null;
             let dsgriglia4 = dvalutazione.slice(28, 32);
-            let sgriglia4 = svalutazione.slice(8, 12);
+            let sgriglia4 = svalutazione ? svalutazione.slice(8, 12) : null;
             let dgriglia5 = dvalutazione.slice(32);
 
             //set an X to the right answer column
             dgriglia1 = format_grid1_4d(dgriglia1);
             dsgriglia2 = format_grid1_4d(dsgriglia2);
-            dsgriglia2 = format_grid1_4s(dsgriglia2, sgriglia2);
+            //dsgriglia2 = sgriglia2 ? format_grid1_4s(dsgriglia2, sgriglia2) : null;
             dsgriglia3 = format_grid1_4d(dsgriglia3);
-            dsgriglia3 = format_grid1_4s(dsgriglia3, sgriglia3);
+            ///dsgriglia3 = sgriglia3 ? format_grid1_4s(dsgriglia3, sgriglia3) : null;
             dsgriglia4 = format_grid1_4d(dsgriglia4);
-            dsgriglia4 = format_grid1_4s(dsgriglia4, sgriglia4);
+            //dsgriglia4 = sgriglia4 ? format_grid1_4s(dsgriglia4, sgriglia4) : null;
             dgriglia5 = format_grid_5d(dgriglia5);
 
             //now get the section for the different materie
@@ -247,35 +250,46 @@ export const actions = {
             //sezione A
             let sezionea = JSON.parse(studente.griglia_pdp_a);
             renderer = Object.assign(renderer, sezionea);
+
             //metto apposto le date facendo una porcata per mancanza di tempo
-            renderer['relazione_ssn_data'] = renderer['relazione_ssn_data'].length != 10 ? '' : renderer['relazione_ssn_data'];
-            renderer['relazione_altro_data1'] = renderer['relazione_altro_data1'].length != 10 ? '' : renderer['relazione_altro_data1'];
-            renderer['relazione_altro_data2'] = renderer['relazione_altro_data2'].length != 10 ? '' : renderer['relazione_altro_data2'];
-            renderer['relazione_altro_data3'] = renderer['relazione_altro_data3'].length != 10 ? '' : renderer['relazione_altro_data3'];
-            renderer['relazione_altro_data4'] = renderer['relazione_altro_data4'].length != 10 ? '' : renderer['relazione_altro_data4'];
-            renderer['relazione_altro_data5'] = renderer['relazione_altro_data5'].length != 10 ? '' : renderer['relazione_altro_data5'];
+            //renderer['relazione_ssn_data'] = renderer['relazione_ssn_data'].length != 10 ? '' : renderer['relazione_ssn_data'];
+            renderer['relazione_ssn_data'] = '';
+            //renderer['relazione_altro_data1'] = renderer['relazione_altro_data1'].length != 10 ? '' : renderer['relazione_altro_data1'];
+            renderer['relazione_altro_data1'] = '';
+            //renderer['relazione_altro_data2'] = renderer['relazione_altro_data2'].length != 10 ? '' : renderer['relazione_altro_data2'];
+            renderer['relazione_altro_data2'] = '';
+            //renderer['relazione_altro_data3'] = renderer['relazione_altro_data3'].length != 10 ? '' : renderer['relazione_altro_data3'];
+            renderer['relazione_altro_data3'] = '';
+            //renderer['relazione_altro_data4'] = renderer['relazione_altro_data4'].length != 10 ? '' : renderer['relazione_altro_data4'];
+            renderer['relazione_altro_data4'] = '';
+            //renderer['relazione_altro_data5'] = renderer['relazione_altro_data5'].length != 10 ? '' : renderer['relazione_altro_data5'];
+            renderer['relazione_altro_data5'] = '';
+
 
             //Preparo per il rendering della sezione Mi Presento al consiglio di classe
             //le chiavi hanno già il nome corretto, basta che le aggiungo alll'oggetto renderer
             let mipresento = JSON.parse(studente.griglia_pdp_a1);
             renderer = Object.assign(renderer, mipresento);
 
-            let educativo = JSON.parse(studente.griglia_pdp_c2);
-            educativo.forEach(q => {
-                renderer[`griglia_c2_${q.qid}`] = q.answer;
-                if (q.qid == 1) {
-                    renderer['griglia_c2_1_disc'] = q.disc_1;
-                    renderer['griglia_c2_1_cad'] = q.cadenza_1;
-                    renderer['griglia_c2_2_disc'] = q.disc_2;
-                    renderer['griglia_c2_2_cad'] = q.cadenza_2;
-                    renderer['griglia_c2_3_disc'] = q.disc_3;
-                    renderer['griglia_c2_3_cad'] = q.cadenza_3;
-                    renderer['griglia_c2_4_disc'] = q.disc_4;
-                    renderer['griglia_c2_4_cad'] = q.cadenza_4;
-                }
-                if (q.qid == 17 || q.qid == 18)
-                    renderer[`griglia_c2_${q.qid}_YN`] = q.answer.length > 0 ? 'SI' : 'NO';
-            });
+
+
+            //SEZIONE ELIMINATA PER EMERGENZA PDP 29/11/2024
+            // let educativo = JSON.parse(studente.griglia_pdp_c2);
+            // educativo.forEach(q => {
+            //     renderer[`griglia_c2_${q.qid}`] = q.answer;
+            //     if (q.qid == 1) {
+            //         renderer['griglia_c2_1_disc'] = q.disc_1;
+            //         renderer['griglia_c2_1_cad'] = q.cadenza_1;
+            //         renderer['griglia_c2_2_disc'] = q.disc_2;
+            //         renderer['griglia_c2_2_cad'] = q.cadenza_2;
+            //         renderer['griglia_c2_3_disc'] = q.disc_3;
+            //         renderer['griglia_c2_3_cad'] = q.cadenza_3;
+            //         renderer['griglia_c2_4_disc'] = q.disc_4;
+            //         renderer['griglia_c2_4_cad'] = q.cadenza_4;
+            //     }
+            //     if (q.qid == 17 || q.qid == 18)
+            //         renderer[`griglia_c2_${q.qid}_YN`] = q.answer.length > 0 ? 'SI' : 'NO';
+            // });
 
             //griglia abilità B
             let griglia_abilita = JSON.parse(studente.griglia_pdp_b);
