@@ -116,7 +116,7 @@ export const actions = {
             await SARP.sicurezza_Test.update({
                 where: { id: +id_test },
                 data: {
-                    svolto: false, //true,
+                    svolto: true,
                     superato: passed,
                     risposte: JSON.stringify(answers),
                     punti: tot_punti
