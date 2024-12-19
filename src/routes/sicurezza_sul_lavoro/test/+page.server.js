@@ -4,6 +4,7 @@ import { Logger } from '../../../js/logger';
 import { PrismaClientValidationError } from '@prisma/client/runtime';
 import { qna_generico_db_str } from './qna_generico_db';
 import { qna_specifico_db_str } from './qna_specifico_db';
+import { qna_alto_rischio_db_str } from './qna_alto_rischio_db';
 import { PUBLIC_POINT_MIN_GENERICO } from '$env/static/public';
 import { PUBLIC_POINT_MIN_SPECIFICO } from '$env/static/public';
 import { PUBLIC_POINT_MIN_ALTO_RISCHIO } from '$env/static/public';
@@ -55,9 +56,12 @@ function quiz_n_questions(type) {
     if (type == 'GENERICO') {
         const qna_generico_db = JSON.parse(qna_generico_db_str);
         return { q_end: qna_generico_db.length, qna_db: qna_generico_db };
-    } else {
+    } else if (type == 'SPECIFICO'){
         const qna_specifico_db = JSON.parse(qna_specifico_db_str);
         return { q_end: qna_specifico_db.length, qna_db: qna_specifico_db };
+    } else {
+        const qna_alto_rischio_db = JSON.parse(qna_alto_rischio_db_str);
+        return { q_end: qna_alto_rischio_db.length, qna_db: qna_alto_rischio_db };
     }
 }
 
@@ -112,7 +116,7 @@ export const actions = {
             await SARP.sicurezza_Test.update({
                 where: { id: +id_test },
                 data: {
-                    svolto: true,
+                    svolto: false, //true,
                     superato: passed,
                     risposte: JSON.stringify(answers),
                     punti: tot_punti
