@@ -31,6 +31,9 @@
     let custom_icon = helper.is_studente(data) || (helper.is_docente(data) && !helper.is_tutor_sicurezza(data))  ? 'checklist' : 'copy';
     let custom_tip = helper.is_studente(data) || (helper.is_docente(data) && !helper.is_tutor_sicurezza(data)) ? 'Esegui il test' : 'Somministra test allo studente';
 	
+    let wrongAnswers = []; //contiene le risposte sbagliate
+    let wrongQuestions = []; //contiene le domande sbagliate
+
     async function handleSubmit() {
         modal_form.submit();
 	}
@@ -94,6 +97,46 @@
                 }
             }
         }
+        if(e.detail.action == 'errors' && helper.is_studente(data)) {
+            if(current_test.svolto) {
+                can_render = true;
+                wrongAnswers = [];
+                wrongQuestions = [];
+                let errors_modal = helper.get_modal('modal-view-errori');
+                let answers = JSON.parse(current_test.risposte);
+                let questions = JSON.parse(current_test.domande);
+                
+                for (let answer of answers) {
+                    if(answer.correct == false)
+                        wrongAnswers.push(answer);
+                }
+
+                for (let answer of wrongAnswers) {
+                    if(answer.answer == "a")
+                        answer.aid = 0;
+                    else if(answer.answer == "b")
+                        answer.aid = 1;
+                    else
+                        answer.aid = 2;
+                }
+
+                for (let answer of wrongAnswers) {
+                    for (let question of questions) {
+                        if (answer.qid == question.qid)
+                            wrongQuestions.push(question);
+                    }
+                }
+
+                errors_modal.show();
+            } else {
+                helper.mbox_show(
+                    'warning',
+                    'Attenzione',
+                    'Non è possibile visualizzare gli errori di un test non ancora eseguito',
+                    3000
+                );
+            }
+        }
     }
 </script>
 
@@ -116,7 +159,7 @@
     actions={true}
     update={false}
     trash={false}
-    custom_actions={[{action: 'run', icon: custom_icon, tip: custom_tip}]}
+    custom_actions={[{action: 'run', icon: custom_icon, tip: custom_tip}, {action: 'errors', icon: custom_icon, tip: "Risposte errate"}]}
     on:custom_action={custom_action_handler}
 	endpoint="sicurezza_sul_lavoro/test"
     footer="Test di Sicurezza"
@@ -188,6 +231,64 @@
 	</form>
 </div>
 
+<!-- Modale per visualizzare gli errori -->
+<div
+	class="modal modal-blur fade"
+	id="modal-view-errori"
+	tabindex="-1"
+	role="dialog"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-xl" role="document">
+		{#if can_render}
+        <input type="hidden" name="id_test" bind:value={current_test.id} />
+        <input type="hidden" name="type_test" bind:value={current_test.tipo} />
+        <div class="modal-content">
+			<div class="modal-header">
+					<h5 class="modal-title">Test Sicurezza</h5>
+			</div>
+			<div class="modal-body">
+                {#if wrongQuestions && wrongQuestions.length > 0}
+                    {#each wrongQuestions as question, idx}
+                    <div class="row">
+				    	<div class="col-lg-12">
+				    		<div class="mb-3">
+                                <label class="form-label">{idx + 1}. {question.question} </label>
+                                <fieldset class="form-fieldset">
+                                    <div class="{question.img && question.img != '' ? 'question-container' : ''}">
+                                        {#if question.img && question.img != ''}
+                                        <div>
+                                            <img src="{question.img}" alt="cartello" />
+                                        </div>
+                                        {/if}
+                                        <div>
+                                            {#each question.answers as answer, idx2}
+                                                <label class="form-check no-pad">
+                                                    <span class="form-check-label {wrongAnswers[idx].aid == idx2 ? "grassetto" : ""}">{answer.answer}</span>
+                                                    {#if wrongAnswers[idx].aid == idx2}
+                                                        <span class="u-answer grassetto">La tua risposta</span>
+                                                    {/if}
+                                                </label>
+                                            {/each}
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+				    	</div>
+				    </div>
+                    {/each}
+                {/if}
+				<div class="modal-footer">
+					<a href="#" class="btn btn-danger" data-bs-dismiss="modal">
+						<b>Chiudi</b>
+					</a>
+				</div>
+			</div>
+		</div>
+    {/if}
+	</div>
+</div>
+
 <style>
     .question-container {
         display: grid;
@@ -195,5 +296,23 @@
         width: 500px;
         justify-items:flex-start;
         align-items: center;
+    }
+
+    .no-pad {
+        padding: 0px;
+    }
+
+    .inlinea {
+        display: inline;
+    }
+
+    .u-answer {
+        padding-top: 2%;
+        padding-bottom: 2%;
+        color: red;
+    }
+
+    .grassetto {
+        font-weight: bold;
     }
 </style>
