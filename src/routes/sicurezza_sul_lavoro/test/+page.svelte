@@ -97,7 +97,7 @@
                 }
             }
         }
-        if(e.detail.action == 'errors' && helper.is_studente(data)) {
+        if(e.detail.action == 'errors' && helper.is_studente(data) || helper.is_tutor_sicurezza(data) || helper.is_admin(data)) {
             if(current_test.svolto) {
                 can_render = true;
                 wrongAnswers = [];
@@ -159,7 +159,7 @@
     actions={true}
     update={false}
     trash={false}
-    custom_actions={[{action: 'run', icon: custom_icon, tip: custom_tip}, {action: 'errors', icon: custom_icon, tip: "Risposte errate"}]}
+    custom_actions={[{action: 'run', icon: custom_icon, tip: custom_tip}, {action: 'errors', icon: "zoom-exclamation", tip: "Risposte errate"}]}
     on:custom_action={custom_action_handler}
 	endpoint="sicurezza_sul_lavoro/test"
     footer="Test di Sicurezza"
@@ -245,7 +245,7 @@
         <input type="hidden" name="type_test" bind:value={current_test.tipo} />
         <div class="modal-content">
 			<div class="modal-header">
-					<h5 class="modal-title">Test Sicurezza</h5>
+					<h5 class="modal-title">Test Sicurezza - Domande errate</h5>
 			</div>
 			<div class="modal-body">
                 {#if wrongQuestions && wrongQuestions.length > 0}
@@ -263,11 +263,9 @@
                                         {/if}
                                         <div>
                                             {#each question.answers as answer, idx2}
-                                                <label class="form-check no-pad">
-                                                    <span class="form-check-label {wrongAnswers[idx].aid == idx2 ? "grassetto" : ""}">{answer.answer}</span>
-                                                    {#if wrongAnswers[idx].aid == idx2}
-                                                        <span class="u-answer grassetto">La tua risposta</span>
-                                                    {/if}
+                                                <label class="form-check">
+                                                    <input class="form-check-input" type="radio"  name="{question.qid}" value="{answer.aid}" checked={wrongAnswers[idx].aid == idx2 ? true : false}  disabled>
+                                                    <span class="form-check-label inlinea {wrongAnswers[idx].aid == idx2 ? "grassetto" : ""}">{answer.answer}</span>
                                                 </label>
                                             {/each}
                                         </div>
@@ -298,21 +296,8 @@
         align-items: center;
     }
 
-    .no-pad {
-        padding: 0px;
-    }
-
-    .inlinea {
-        display: inline;
-    }
-
-    .u-answer {
-        padding-top: 2%;
-        padding-bottom: 2%;
-        color: red;
-    }
-
     .grassetto {
         font-weight: bold;
+        color: red;
     }
 </style>
