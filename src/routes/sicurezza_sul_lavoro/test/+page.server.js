@@ -74,12 +74,19 @@ function correct_answers(q_end, form_data, qna_db) {
         if (form_data.has(q)) {
             let u_answer = form_data.get(q);
             let q_answer = qna_db.filter(quiz => quiz.qid == q)[0];
+            let correct;
 
-            if (u_answer == q_answer.answer) tot_punti++;
+            if (u_answer == q_answer.answer) {
+                tot_punti++;
+                correct = true;
+            }
+            else
+                correct = false;
 
             answers.push({
                 qid: q,
-                answer: u_answer
+                answer: u_answer,
+                correct: correct
             });
         }
     }
