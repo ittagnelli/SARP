@@ -1,3 +1,8 @@
+## v4.13.0 - 07 Gennaio 2025
+
+- `fix#602`: Visualizzazione domande errate test sicurezza
+- aggiunta feature visualizzazione errori test
+
 ## v4.12.0 - 20 Dicembre 2024
 
 - `fix#603`: Rating errato test sicurezza specifico
