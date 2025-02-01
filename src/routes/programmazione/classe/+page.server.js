@@ -64,7 +64,7 @@ export const actions = {
 		try {
 			const form_data = await request.formData();
 			const id = form_data.get('id');
-			const periodo = Number(form_data.get('periodo')) || 0;
+			const periodon = Number(form_data.get('periodo')) || 0;
 			let materie_programmi = null;
 
 			// preleva la classe dal DB
@@ -98,7 +98,7 @@ export const actions = {
 			//Educazione Civica nel primo trimestre non presenta un programma ma solo una frase fissa
 			//mentre nel pentamestre è una materia normale
 			//aggiunto il flag render per flessibilità futura 
-			if (periodo == 1) {
+			if (periodon == 1) {
 				materie_programmi = insegnamenti.map(insegnamento => {
 					const programma = JSON.parse(insegnamento.programma_primo_quadrimestre);
 					const libri = programma[2].libri.split('~'); // Sappiamo che l'array è composto da:	Q1, Q2, Libri
@@ -115,7 +115,7 @@ export const actions = {
 						render: insegnamento.materia.nome != 'Educazione Civica'
 					}
 				});
-			} else if (periodo == 2) {
+			} else if (periodon == 2) {
 				periodo = 'fine';
 				materie_programmi = insegnamenti.map(insegnamento => {
 					const programma = JSON.parse(insegnamento.programma_secondo_quadrimestre);
