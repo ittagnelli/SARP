@@ -5,6 +5,7 @@ import path from 'path';
 import fs from 'fs';
 import PizZip from "pizzip";
 import Docxtemplater from "docxtemplater";
+import { execSync } from 'child_process';
 
 const resource = "programmazione_classe";
 
@@ -70,7 +71,11 @@ export const actions = {
 			let classe = await SARP.classe.findUnique({
 				where: { id: +id },
 				include: {
-					insegnamenti: true,
+					insegnamenti: {
+						where: {
+							anno: get_as()
+						}
+					},
 					iscritti: true
 				}
 			});
@@ -78,7 +83,8 @@ export const actions = {
 			let insegnamenti = await SARP.insegnamenti.findMany({
 				where: {
 					idClasse: classe?.id,
-					titolare: true
+					titolare: true,
+					anno: get_as()
 				},
 				include: {
 					docente: true,
@@ -174,10 +180,26 @@ export const actions = {
 				compression: 'DEFLATE'
 			});
 
+			//convert to and return pdf
+			fs.writeFileSync(path.resolve(PUBLIC_PROGRAMMAZIONE_ANNUALE_TEMPLATES_DIR, "_tmp_programmazione.docx"), buf);
+			const cmd = `libreoffice --headless --convert-to pdf --outdir ${PUBLIC_PROGRAMMAZIONE_ANNUALE_TEMPLATES_DIR} ${PUBLIC_PROGRAMMAZIONE_ANNUALE_TEMPLATES_DIR}_tmp_programmazione.docx`;
+			execSync(cmd);
+		
+			let pdf_buf = Buffer.from(fs.readFileSync(`${PUBLIC_PROGRAMMAZIONE_ANNUALE_TEMPLATES_DIR}/_tmp_programmazione.pdf`, 'binary'), 'binary');
+			fs.unlinkSync(`${PUBLIC_PROGRAMMAZIONE_ANNUALE_TEMPLATES_DIR}/_tmp_programmazione.docx`);
+			fs.unlinkSync(`${PUBLIC_PROGRAMMAZIONE_ANNUALE_TEMPLATES_DIR}/_tmp_programmazione.pdf`);
+
 			return {
-				file: JSON.stringify(buf), // Convertiamo il buffer in stringa sennò sveltekit va in errore
-				nome_documento: `Programmazione-${docx_programmazione_template.classe.replace(' ', '_')}-periodo-${periodo}.docx`
+				file: JSON.stringify(pdf_buf), // Convertiamo il buffer in stringa sennò sveltekit va in errore
+				nome_documento: `Programmazione-${docx_programmazione_template.classe.replace(' ', '_')}-periodo-${periodo}.pdf`
 			};
+
+
+			//return word
+			// return {
+			// 	file: JSON.stringify(buf), // Convertiamo il buffer in stringa sennò sveltekit va in errore
+			// 	nome_documento: `Programmazione-${docx_programmazione_template.classe.replace(' ', '_')}-periodo-${periodo}.docx`
+			// };
 		} catch (exception) {
 			console.log(exception)
 			//catch_error_pdf(exception, 'la generazione', 204);

@@ -1,3 +1,8 @@
+## v4.14.0 - 01 Febbraio 2025
+
+- fix duplicazione programmazione
+- aggiunto pop up di generazione pdf per programmazione
+
 ## v4.13.0 - 07 Gennaio 2025
 
 - `fix#602`: Visualizzazione domande errate test sicurezza
