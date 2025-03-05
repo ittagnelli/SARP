@@ -88,7 +88,7 @@
 
 		piva: yup.string().matches(/^$|^[0-9]{11}$|^[0-9A-Z]{16}$/, 'Partita Iva non valida'),
 
-		telefono: yup.string().matches(/^$|^[0-9]{10}$/, 'Numero non valido [3331234567]'),
+		telefono: yup.string().matches(/^$|^[0-9]{6,10}$/, 'Da 6 a 10 cifre'),
 
 		email_privacy: yup
 			.string()
