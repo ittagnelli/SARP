@@ -1,3 +1,9 @@
+## v4.14.2 - 05 Marzo 2025
+
+- `fix#606`: PCTO convezione formato telefono
+- aggiornamento CF Bosco in template convenzione pcto
+- update tempplate programmazione
+
 ## v4.14.0 - 01 Febbraio 2025
 
 - fix duplicazione programmazione
