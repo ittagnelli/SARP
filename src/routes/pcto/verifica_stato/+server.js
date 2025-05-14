@@ -51,3 +51,20 @@ export async function GET({ request, url, locals }) {
         catch_error(exception, 901);
     }
 }
+
+
+export async function POST({ request, url, locals }) {
+    route_protect(locals);
+    const json_data = await request.json();
+
+    SARP.set_session(locals); // passa la sessione all'audit
+   
+    try {
+        console.log("POST:", json_data)
+    } catch (exception) {
+        console.log("EXCEPTION:", exception)
+        catch_error(exception, 1001);
+    }
+
+    return json('ok');
+}

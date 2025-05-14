@@ -36,6 +36,29 @@
         return '';
     }
 
+    async function stampa_report() {
+        console.log("STAMPA", pctos)
+        const res = await fetch(`/pcto/verifica_stato`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(
+                        {
+                            student: `${found_cognome} ${found_nome}`,
+                            pctos: pctos.slice(0, -2),
+                            total_hrs: pctos.slice(-1)[0].ore_totali
+                        }
+                    )
+                });
+                
+        if (res.ok) {
+            console.log("OK")
+        } else {
+            console.log("ERRORE")
+        }
+    }
+
     async function verifica_studente() {
         cognome = cognome ? cognome[0].toUpperCase().concat(cognome.slice(1).toLowerCase()) : '';
         nome = nome ? nome[0].toUpperCase().concat(nome.slice(1).toLowerCase()) : '';
@@ -51,6 +74,7 @@
             user_found = false;
         } else {
             let result = stato_pcto[0];
+            console.log("RESULT:", result)
             pctos = build_table_row(result);
             found_cognome = result.cognome;
             found_nome = result.nome;
@@ -60,6 +84,11 @@
             //la tabella correttamente e aggiornata
             setTimeout(() => user_found = true, 100);
         }
+    }
+
+    function formatDate(date) {
+        let ymd = date.split('T')[0].split('-');
+        return `${ymd[2]}/${ymd[1]}/${ymd[0]}`;
     }
 
     function build_table_row(pcto) {
@@ -79,6 +108,8 @@
             obj['id'] = item.id;
             obj['azienda'] = item.offertoDa.nome;
             obj['pcto'] = item.titolo;
+            obj['dataInizio'] = formatDate(item.dataInizio);
+            obj['dataFine'] = formatDate(item.dataFine);
            
             pcto
             .presente
@@ -109,7 +140,7 @@
         },
         {
             id: -1,
-            azienda: '---',
+            azienda: '',
             pcto: 'TOTALE',
             ore_totali: totale_ore_totali,
             ore_approvate: totale_ore_approvate,
@@ -172,7 +203,13 @@
 
 {#if user_found}
     <div class="info-header">
-        Stato PCTO per lo studente {found_cognome} {found_nome}
+        <div>Stato PCTO per lo studente {found_cognome} {found_nome}</div>
+        <div>
+            <button class="btn btn-success" on:click={stampa_report}>
+                <i class="ti ti-zoom-check icon" />
+                    <b>Stampa Report</b>
+            </button>
+        </div>
     </div>
 
     <Table
@@ -181,8 +218,7 @@
             { name: 'azienda', type: 'string', display: 'Azienda', size: 30 },
             { name: 'pcto', type: 'string', display: 'PCTO', size: 30 },
             { name: 'ore_contabilizzate', type: 'number', display: 'ORE REGISTRATE', size: 10 },
-            { name: 'ore_totali', type: 'number', display: 'ORE TOTALI', size: 10 },
-            { name: 'ore_approvate', type: 'number', display: 'ORE APPROVATE', size: 10 },
+            { name: 'ore_totali', type: 'number', display: 'ORE TOTALI', size: 10 }
         ]}
         rows={pctos}
         page_size={10}
@@ -209,8 +245,12 @@
     }
 
     .info-header {
-        margin-top: 1rem;
+        margin-top: 2rem;
+        margin-bottom: 0.5rem;
         font-size: 1.3rem;
         font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 2rem;
     }
 </style>
