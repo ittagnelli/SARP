@@ -1,3 +1,8 @@
+## v4.15.0 - 15 Maggio 2025
+
+- `fix#608`: Stampa prospetto PCTO per studente
+- Ora è possibile stampare il report complessivo delle attività PCTO
+
 ## v4.14.2 - 05 Marzo 2025
 
 - `fix#606`: PCTO convezione formato telefono

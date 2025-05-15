@@ -3,6 +3,8 @@
 	import Table from '$lib/components/common/table.svelte';
     import * as helper from '$js/helper';
     import { Logger } from '$js/logger';
+    import { saveAs } from 'file-saver';
+	import MessageBox from '$lib/components/common/message_box.svelte';
 
     let logger = new Logger("client");
     export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
@@ -37,25 +39,41 @@
     }
 
     async function stampa_report() {
-        console.log("STAMPA", pctos)
-        const res = await fetch(`/pcto/verifica_stato`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(
-                        {
-                            student: `${found_cognome} ${found_nome}`,
-                            pctos: pctos.slice(0, -2),
-                            total_hrs: pctos.slice(-1)[0].ore_totali
-                        }
-                    )
-                });
+        const res = await fetch(
+            `/pcto/verifica_stato`, 
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(
+                    {
+                        student: `${found_cognome} ${found_nome}`,
+                        pctos: pctos.slice(0, -2),
+                        total_hrs: pctos.slice(-1)[0].ore_totali
+                    }
+                )
+            }
+        );
                 
         if (res.ok) {
-            console.log("OK")
+            let pdf_file = await res.json();
+            const buffer = new Uint8Array(JSON.parse(pdf_file.file).data);
+            var blob = new Blob([buffer], { type: 'application/msword' });
+            saveAs(blob, pdf_file.nome_report);
+            helper.mbox_show(
+					'success',
+					`Success`,
+					'Report PCTO generato correttamente.',
+					3000
+            );
         } else {
-            console.log("ERRORE")
+            helper.mbox_show(
+					'danger',
+					`Errore`,
+					'Non è stato possibile generare il report PCTO.',
+					3000
+            );
         }
     }
 
@@ -74,7 +92,6 @@
             user_found = false;
         } else {
             let result = stato_pcto[0];
-            console.log("RESULT:", result)
             pctos = build_table_row(result);
             found_cognome = result.cognome;
             found_nome = result.nome;
@@ -120,14 +137,14 @@
             });
             ore_contabilizzate += item.contabilizzato ? ore_approvate : 0; 
 
-            obj['ore_totali'] = ore_totali;
-            obj['ore_approvate'] = ore_approvate;
-            obj['ore_contabilizzate'] = ore_contabilizzate;
+            obj['ore_totali'] = Math.round(ore_totali);
+            obj['ore_approvate'] = Math.round(ore_approvate);
+            obj['ore_contabilizzate'] = Math.round(ore_contabilizzate);
             pctos.push(obj);
 
-            totale_ore_totali += ore_totali;
-            totale_ore_approvate += ore_approvate;
-            totale_ore_contabilizzate += ore_contabilizzate;
+            totale_ore_totali += Math.round(ore_totali);
+            totale_ore_approvate += Math.round(ore_approvate);
+            totale_ore_contabilizzate += Math.round(ore_contabilizzate);
         });
 
         pctos.push({
@@ -148,7 +165,6 @@
         });
         return pctos;
     }
-    
 </script>
 
 {#if show_error_mex}
@@ -211,6 +227,8 @@
             </button>
         </div>
     </div>
+
+    <MessageBox />
 
     <Table
         columns={[
