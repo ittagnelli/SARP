@@ -3,6 +3,8 @@
 	import Table from '$lib/components/common/table.svelte';
     import * as helper from '$js/helper';
     import { Logger } from '$js/logger';
+    import { saveAs } from 'file-saver';
+	import MessageBox from '$lib/components/common/message_box.svelte';
 
     let logger = new Logger("client");
     export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
@@ -36,6 +38,45 @@
         return '';
     }
 
+    async function stampa_report() {
+        const res = await fetch(
+            `/pcto/verifica_stato`, 
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(
+                    {
+                        student: `${found_cognome} ${found_nome}`,
+                        pctos: pctos.slice(0, -2),
+                        total_hrs: pctos.slice(-1)[0].ore_totali
+                    }
+                )
+            }
+        );
+                
+        if (res.ok) {
+            let pdf_file = await res.json();
+            const buffer = new Uint8Array(JSON.parse(pdf_file.file).data);
+            var blob = new Blob([buffer], { type: 'application/msword' });
+            saveAs(blob, pdf_file.nome_report);
+            helper.mbox_show(
+					'success',
+					`Success`,
+					'Report PCTO generato correttamente.',
+					3000
+            );
+        } else {
+            helper.mbox_show(
+					'danger',
+					`Errore`,
+					'Non è stato possibile generare il report PCTO.',
+					3000
+            );
+        }
+    }
+
     async function verifica_studente() {
         cognome = cognome ? cognome[0].toUpperCase().concat(cognome.slice(1).toLowerCase()) : '';
         nome = nome ? nome[0].toUpperCase().concat(nome.slice(1).toLowerCase()) : '';
@@ -62,6 +103,11 @@
         }
     }
 
+    function formatDate(date) {
+        let ymd = date.split('T')[0].split('-');
+        return `${ymd[2]}/${ymd[1]}/${ymd[0]}`;
+    }
+
     function build_table_row(pcto) {
         let pctos = [];
         let totale_ore_totali = 0;
@@ -79,6 +125,8 @@
             obj['id'] = item.id;
             obj['azienda'] = item.offertoDa.nome;
             obj['pcto'] = item.titolo;
+            obj['dataInizio'] = formatDate(item.dataInizio);
+            obj['dataFine'] = formatDate(item.dataFine);
            
             pcto
             .presente
@@ -89,14 +137,14 @@
             });
             ore_contabilizzate += item.contabilizzato ? ore_approvate : 0; 
 
-            obj['ore_totali'] = ore_totali;
-            obj['ore_approvate'] = ore_approvate;
-            obj['ore_contabilizzate'] = ore_contabilizzate;
+            obj['ore_totali'] = Math.round(ore_totali);
+            obj['ore_approvate'] = Math.round(ore_approvate);
+            obj['ore_contabilizzate'] = Math.round(ore_contabilizzate);
             pctos.push(obj);
 
-            totale_ore_totali += ore_totali;
-            totale_ore_approvate += ore_approvate;
-            totale_ore_contabilizzate += ore_contabilizzate;
+            totale_ore_totali += Math.round(ore_totali);
+            totale_ore_approvate += Math.round(ore_approvate);
+            totale_ore_contabilizzate += Math.round(ore_contabilizzate);
         });
 
         pctos.push({
@@ -109,7 +157,7 @@
         },
         {
             id: -1,
-            azienda: '---',
+            azienda: '',
             pcto: 'TOTALE',
             ore_totali: totale_ore_totali,
             ore_approvate: totale_ore_approvate,
@@ -117,7 +165,6 @@
         });
         return pctos;
     }
-    
 </script>
 
 {#if show_error_mex}
@@ -172,8 +219,16 @@
 
 {#if user_found}
     <div class="info-header">
-        Stato PCTO per lo studente {found_cognome} {found_nome}
+        <div>Stato PCTO per lo studente {found_cognome} {found_nome}</div>
+        <div>
+            <button class="btn btn-success" on:click={stampa_report}>
+                <i class="ti ti-zoom-check icon" />
+                    <b>Stampa Report</b>
+            </button>
+        </div>
     </div>
+
+    <MessageBox />
 
     <Table
         columns={[
@@ -181,8 +236,7 @@
             { name: 'azienda', type: 'string', display: 'Azienda', size: 30 },
             { name: 'pcto', type: 'string', display: 'PCTO', size: 30 },
             { name: 'ore_contabilizzate', type: 'number', display: 'ORE REGISTRATE', size: 10 },
-            { name: 'ore_totali', type: 'number', display: 'ORE TOTALI', size: 10 },
-            { name: 'ore_approvate', type: 'number', display: 'ORE APPROVATE', size: 10 },
+            { name: 'ore_totali', type: 'number', display: 'ORE TOTALI', size: 10 }
         ]}
         rows={pctos}
         page_size={10}
@@ -209,8 +263,12 @@
     }
 
     .info-header {
-        margin-top: 1rem;
+        margin-top: 2rem;
+        margin-bottom: 0.5rem;
         font-size: 1.3rem;
         font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 2rem;
     }
 </style>
