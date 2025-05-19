@@ -66,6 +66,7 @@ export async function load({ locals }) {
 
     return {
         templates: await SARP.programmazione_Template.findMany({
+            where: multi_user_field_where('creatoDa', locals),
             include: {
                 materia: true
             }
