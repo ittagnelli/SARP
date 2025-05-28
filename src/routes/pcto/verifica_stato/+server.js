@@ -40,6 +40,8 @@ export async function GET({ request, url, locals }) {
     if(nome)
         whereobj['nome'] = nome;
     
+    whereobj['can_login'] = true;
+
     try {
         const studente = await SARP.utente.findMany({
             where: whereobj,
