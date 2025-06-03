@@ -13,7 +13,8 @@ const find_docente = (docenti, cognome) => {
 }
 
 const find_materia = (meterie, materia) => {
-    return meterie.filter(mat => mat.nome.toLowerCase() == materia.toLowerCase())[0];
+    let tmpMaterie = meterie.filter(mat => mat.nome.toLowerCase() == materia.toLowerCase());
+    return tmpMaterie.length > 0 ? tmpMaterie[0] : undefined;
 }
 
 const find_classe = (classi, classe, istituto, sezione) => {
@@ -48,15 +49,15 @@ async function main(filename) {
     }
 
     let rows = await readXlsxFile(filename);
-
+   
     console.log('Elaborazione XLSX...');
     /*
     Cognome	Materia	a.s.	Classe	Istituto	Sezione	Titolare	Compresenza/altro
     */
 
-
     let counter = 0;
-    rows.slice(1).forEach(async (row) => {
+
+    for(let row of rows.slice(1)) {
         let [cognome, materia, as, classe, istituto, sezione, titolare, dainserire] = row;
         let Docente = find_docente(docenti, cognome);
         let Classe = find_classe(classi, classe, istituto, sezione);
@@ -65,10 +66,10 @@ async function main(filename) {
         if (dainserire == 'X') {
             if (Docente && Classe && Materia) {
                 let Insegnamento = find_insegnamento(insegnamenti, Docente.id, Materia.id, Classe.id, as);
-
                 try {
                     if (Insegnamento) {
                         //update
+                        console.log("qui1")
                         await prisma.insegnamenti.update({
                             where: {
                                 id: Insegnamento.id
@@ -91,44 +92,23 @@ async function main(filename) {
                                 titolare: is_titolare(titolare),
                                 anno: as
                             }
-                        })
+                        });
                     }
                 } catch (e) {
                     console.log(e);
                 }
-
-                // console.log(Insegnamento)
-                // await prisma.insegnamenti.upsert({
-                //     where: {
-                //         id: Insegnamento ? Insegnamento.id : 0
-                //     },
-                //     update: {
-                //         idDocente: Docente.id,
-                //         idMateria: Materia.id,
-                //         idClasse: Classe.id,
-                //         titolare: is_titolare(titolare),
-                //         anno: as
-                //     },
-                //     create: {
-                //         idDocente: Docente.id,
-                //         idMateria: Materia.id,
-                //         idClasse: Classe.id,
-                //         titolare: is_titolare(titolare),
-                //         anno: as
-                //     }
-                // });
                 console.log(`Inserito Insegnamento [${++counter}]: ${Docente?.cognome} - ${Classe?.classe} ${Classe?.istituto} ${Classe?.sezione} - ${Materia?.nome}`);
             } else {
-                console.log("ERROR:", row);
-                console.log("DOCENTE:", Docente);
-                console.log("CLASSE:", Classe);
-                console.log("MATERIA:", Materia);
-                exit(1);
+                    console.log("ERROR:", row);
+                    // console.log("DOCENTE:", Docente);
+                    // console.log("CLASSE:", Classe);
+                    // console.log("MATERIA:", Materia);
+                    // exit(1);
             }
         } else {
             console.log(`Saltato Insegnamento: ${Docente?.cognome} - ${Classe.classe} ${Classe?.istituto} ${Classe?.sezione} - ${Materia?.nome}`);
         }
-    });
+    }
 }
 
 function xsl_to_xslx(filename) {
