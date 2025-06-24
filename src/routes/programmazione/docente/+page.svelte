@@ -87,7 +87,8 @@
             ),
 		primo_quadrimestre: yup.array().test((quadrimestre) => is_valid_quadrimestre(quadrimestre)),
 		secondo_quadrimestre: yup.array().test((quadrimestre) => is_valid_quadrimestre(quadrimestre)),
-        code_classroom: yup.string().nullable().length(7).required('Codice Classroom necessario'),
+        //code_classroom: yup.string().nullable().length(7).required('Codice Classroom necessario'),
+        code_classroom: yup.string().nullable().min(1).max(20).required('Codice Classroom necessario')
 	});
 
 	let modal_action = 'create';
@@ -485,7 +486,7 @@
                                 class="form-control mt-3"
                                 class:is-invalid="{errors['code_classroom']}"
                                 name="code_classroom"
-                                placeholder="abc123def oppure -------"
+                                placeholder="da 1 a 20 caratteri"
                                 bind:value={form_values.code_classroom}
                             />
                             {#if errors['code_classroom']}
