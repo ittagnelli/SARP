@@ -1,3 +1,10 @@
+## v4.15.2 - 24 Giugno 2025
+- ampliato campo codice classroom fino a 20 caratter- ampliato campo codice classroom fino a 20 caratteri
+- aggiunta integrazione con mastercom per insegnamenti
+- verifica stato per studenti can_login=true
+- filtrato template in programmazione
+- ora ogni docenet vede solo i suoi template
+
 ## v4.15.0 - 15 Maggio 2025
 
 - `fix#608`: Stampa prospetto PCTO per studente
