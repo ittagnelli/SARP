@@ -63,7 +63,11 @@ export async function load({ locals }) {
                         select: {
                             completo: true,
                             sintesi_vocale: true,
-                            tempo_esteso: true
+                            tempo_esteso: true,
+                            anno: true
+                        },
+                        where: {
+                            anno: get_as() //filtro i PDP per l'anno corrente
                         }
                     },
                     classe: true

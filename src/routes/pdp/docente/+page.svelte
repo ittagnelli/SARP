@@ -217,6 +217,7 @@
 />
 
 <!-- Modal from Page action -->
+{#if data.pdp.length > 0}
 <div
 	class="modal modal-blur fade"
 	id={$page_action_modal}
@@ -563,6 +564,7 @@
 		</div>
 	</form>
 </div>
+{/if}
 
 <style>
 	.disabled {
