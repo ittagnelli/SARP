@@ -1,3 +1,4 @@
+// v20250923
 import readXlsxFile from 'read-excel-file/node';
 import { PrismaClient } from '@prisma/client';
 import fs from 'fs';
@@ -34,19 +35,21 @@ const is_titolare = (sign) => sign == 'X';
 const find_docente = (docenti, cognome, nome) => {
     // let {cognome, nome} = parseNomeCognome(inCognomeNome);
 
-    return docenti.filter(docente => (
+    let tmpDocente = docenti.filter(docente => (
         docente.cognome.toLowerCase() == cognome.toLowerCase() &&
-        docente.nome.toLowerCase() == nome.toLowerCase())
-        ).length == 1;
+        docente.nome.toLowerCase() == nome.toLowerCase()));
+    
+    return tmpDocente.length == 1 ? tmpDocente[0] : undefined;
 }
 
 const find_materia = (meterie, materia) => {
     let tmpMaterie = meterie.filter(mat => mat.nome.toLowerCase() == materia.toLowerCase());
-    return tmpMaterie.length > 0 ? tmpMaterie[0] : undefined;
+    return tmpMaterie.length == 1 ? tmpMaterie[0] : undefined;
 }
 
 const find_classe = (classi, classe, istituto, sezione) => {
-    return classi.filter(c => c.classe == classe && c.istituto == istituto && c.sezione.toLowerCase().startsWith(sezione.toLowerCase())).length == 1;
+    let tmpClasse = classi.filter(c => c.classe == classe && c.istituto == istituto && c.sezione.toLowerCase().startsWith(sezione.toLowerCase()));
+    return tmpClasse.length == 1 ?  tmpClasse[0] : undefined;
 }
 
 const find_insegnamento = (insegnamenti, docente, materia, classe, as) => {
@@ -62,9 +65,9 @@ const verificaDocenti = (docenti, rows) => {
     let status = [];
     for(let row of rows.slice(1)) {
         let docenteFound = find_docente(docenti, row[0], row[1]);
-        status.push(docenteFound); 
-        if(!docenteFound)
-            console.log(`Non posso trovare il docente: ${row[0]} nel DB!!`);
+        status.push(docenteFound != undefined); 
+        if(docenteFound == undefined)
+            console.log(`Non posso trovare il docente: ${row[0]} ${row[1]} nel DB!!`);
     }
     return status.every(item => item == true);
 }
@@ -73,8 +76,8 @@ const verificaClassi = (classi, rows) => {
     let status = [];
     for(let row of rows.slice(1)) {
         let classeFound = find_classe(classi, row[4], row[5], row[6]);
-        status.push(classeFound); 
-        if(!classeFound)
+        status.push(classeFound != undefined); 
+        if(classeFound == undefined)
             console.log(`Non posso trovare la classe ${row[4]} ${row[5]} ${row[6]} nel DB!!`);
     }
     return status.every(item => item == true);
@@ -83,10 +86,9 @@ const verificaClassi = (classi, rows) => {
 const verificaMaterie = (materie, rows) => {
     let status = [];
     for(let row of rows.slice(1)) {
-        // console.log(row[2])
-        let classeFound = find_materia(materie, row[2]);
-        status.push(classeFound); 
-        if(!classeFound)
+        let materiaFound = find_materia(materie, row[2]);
+        status.push(materiaFound != undefined); 
+        if(materiaFound == undefined)
             console.log(`Non posso trovare la materia ${row[2]} nel DB!!`);
     }
     return status.every(item => item == true);
@@ -115,18 +117,19 @@ async function main(filename) {
     console.log('Elaborazione XLSX...');
     
     
-    // if(!verificaDocenti(docenti, rows)) {
-    //     console.log("Errore alcuni docenti non esistono nel DB!!!");
-    //     exit(1);
-    // }
-    // if(!verificaClassi(classi, rows)) {
-    //     console.log("Errore alcune classi non esistono nel DB!!!");
-    //     exit(1);
-    // }
+    if(!verificaDocenti(docenti, rows)) {
+        console.log("Errore alcuni docenti non esistono nel DB!!!");
+        exit(1);
+    }
+    if(!verificaClassi(classi, rows)) {
+        console.log("Errore alcune classi non esistono nel DB!!!");
+        exit(1);
+    }
     if(!verificaMaterie(materie, rows)) {
         console.log("Errore alcune materie non esistono nel DB!!!");
         exit(1);
     }
+
     /*
     Cognome	Materia	a.s.	Classe	Istituto	Sezione	Titolare	Compresenza/altro
     */
@@ -138,12 +141,6 @@ async function main(filename) {
         let Docente = find_docente(docenti, cognome,nome);
         let Classe = find_classe(classi, classe, istituto, sezione);
         let Materia = find_materia(materie, materia);
-
-        console.log("DOCENTE:",Docente)
-        console.log("CLASSE:",Classe)
-        console.log("MATERIA:",materia)
-
-        exit(1);
 
         if (dainserire == 'X') {
             if (Docente && Classe && Materia) {
@@ -160,7 +157,7 @@ async function main(filename) {
                                 idMateria: Materia.id,
                                 idClasse: Classe.id,
                                 titolare: is_titolare(titolare),
-                                anno: as
+                                anno: Number(as)
                             }
                         });
                     } else {
@@ -171,7 +168,7 @@ async function main(filename) {
                                 idMateria: Materia.id,
                                 idClasse: Classe.id,
                                 titolare: is_titolare(titolare),
-                                anno: as
+                                anno: Number(as)
                             }
                         });
                     }

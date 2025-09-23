@@ -1,3 +1,5 @@
+// v20250919-2
+
 import readXlsxFile from 'read-excel-file/node';
 import { PrismaClient } from '@prisma/client';
 import fs from 'fs';
@@ -20,7 +22,7 @@ const obiettivi_row = "Obiettivi Minimi";
 const class_row = "Classe:";
 
 
-const index_of_type = 6;    // Linea dei dettagli -1, Excel ragiona come una segretaria :)
+const index_of_type = 1;    // Linea dei dettagli -1, Excel ragiona come una segretaria :)
 
 const is_a_class = (record) => {
     if (record != null)
@@ -70,11 +72,12 @@ const get_section = (classe_raw) => {
 }
 
 const get_istituto = (classe_raw) => {
-    if (classe_raw[1] == "Liceo") { // Nel nostro DB Liceo va in uppercase
+    if (classe_raw[1] == "Liceo") // Nel nostro DB Liceo va in uppercase
         return "LICEO";
-    } else {
+    else if (classe_raw[1] == "Scuola")
+        return "MEDIE";
+    else 
         return "ITT";
-    }
 }
 
 const excel_to_db = (sezione) => {  // Convertiamo l'excel per adattarlo ad alcune incongruenze del nostro DB
@@ -124,9 +127,25 @@ function capitalize(phrase) {
     return phrase.charAt(0).toUpperCase() + phrase.slice(1).toLowerCase();
 }
 
-// all'inizio dell'anno settare tutti gli studenti a can_login=false
-// poi fare ingestion
+function get_natoa(luogo) {
+    if (luogo.replace("'", "").split("(").length > 1)
+        return luogo.replace("'", "").split("(")[0];
+    
+    return luogo;
+}
+
+function get_provincia(luogo) {
+    if (luogo.replace("'", "").split("(").length > 1)
+        return luogo.replace("'", "").split("(")[1].split(')')[0];
+    
+    return '--';
+}
+
+
+// all'inizio dell'anno settare tutti gli studenti a can_login=false (invoca disable_studenti_tutti.js)
+// poi fare ingestion (questo script)
 // ora settare tutti gli studenti con can_login=false a classeId=1
+// update Utente set classeId=1 where can_login=0 and tipo='STUDENTE';
 // In questo modo gli studenti non sono più iscritti alla vecchia classe
 async function main(filename) {
     const ruolo_studente = await prisma.ruolo_Utente.findFirst({
@@ -178,6 +197,10 @@ async function main(filename) {
                     anno = classe[0].slice(0, 1); // Prendiamo l'anno(terza, quarta...)
                     istituto = get_istituto(classe);  //  Prendiamo l'istituto
 
+                    console.log("Inserimento di:", classe, decimal_to_roman(+anno), istituto, excel_to_db(sezione))
+
+                    
+
                     // Qui l'await non aspetta il risultato e la classe risulta vuota, per il momento facciamo tutte la query dopo
 
                     //classe_db = await prisma.classe.findFirstOrThrow({ // Con le informazioni ricavate prendiamo la classe dal DB
@@ -206,10 +229,10 @@ async function main(filename) {
                                 nome: capitalize(row[nome_index].replace("'", "").toLowerCase()),
                                 cognome: capitalize(row[cognome_index].replace("'", "")),
                                 natoIl: row[nascita_index],
-                                natoA: capitalize(row[nato_a_index].replace("'", "").split("(")[0]), // Splittiamo la frase al primo (   TORINO(TO) [TORINO, TO)]
-                                provincia: row[nato_a_index].replace("'", "").split("(")[1].split(')')[0],
+                                natoA: capitalize(get_natoa(row[nato_a_index])), // Splittiamo la frase al primo (   TORINO(TO) [TORINO, TO)]
+                                provincia: get_provincia(row[nato_a_index]),
                                 residenza: row[indirizzo_index].concat(' ', row[residenza_index]),
-                                telefono: String(row[telefono_index]),
+                                telefono: String(row[telefono_index]) != 'null' ? String(row[telefono_index]) : '',
                                 codiceF: row[cf_index],
                                 email: row[email_index],
                                 bes: mastercom_bool_to_real_bool(row[pdp_index]),
@@ -226,13 +249,16 @@ async function main(filename) {
                             },
                             update: {   // Aggiorniamo il record se esiste, modificando solo i campi necessari
                                 classeId: classe.id,
+                                nome: capitalize(row[nome_index].replace("'", "").toLowerCase()),
+                                cognome: capitalize(row[cognome_index].replace("'", "")),
+                                natoIl: row[nascita_index],
+                                natoA: capitalize(get_natoa(row[nato_a_index])), // Splittiamo la frase al primo (   TORINO(TO) [TORINO, TO)]
+                                provincia: get_provincia(row[nato_a_index]),
                                 residenza: row[indirizzo_index].concat(' ', row[residenza_index]),
-                                natoA: capitalize(row[nato_a_index].replace("'", "").split("(")[0]), // Splittiamo la frase al primo (   TORINO(TO) [TORINO, TO)]
-                                provincia: row[nato_a_index].replace("'", "").split("(")[1].split(')')[0],
-                                telefono: String(row[telefono_index]),
+                                telefono: String(row[telefono_index]) != 'null' ? String(row[telefono_index]) : '',
                                 email: row[email_index],
-                                bes: mastercom_bool_to_real_bool(row[pdp_index]),
-                                obiettivi_minimi: mastercom_bool_to_real_bool(row[obiettivi_index]),
+                                // bes: mastercom_bool_to_real_bool(row[pdp_index]), //il flag PDP nel file segreteria non è sempre corretto quindi per evitare sovrascritture commento
+                                //obiettivi_minimi: mastercom_bool_to_real_bool(row[obiettivi_index]),
                                 istituto: classe.istituto,
                                 can_login: true,
                             },
