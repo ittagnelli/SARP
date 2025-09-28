@@ -3,56 +3,18 @@ import { PrismaDB } from '$js/prisma_db';
 import { route_protect, raise_error, get_as } from '$js/helper';
 import { PrismaClientValidationError } from '@prisma/client/runtime';
 import { Logger } from '$js/logger';
-import { dev } from '$app/environment';
+import { misure_dispensative } from '../../pdp/template/dispensative.js';
+import { misure_compensative } from '../../pdp/template/compensative.js';
+import { misure_valutative } from '../../pdp/template/valutative.js';
+import { strategie_classe } from '../../pdp/template/strategie_classe.js';
+import { strategie_didattiche } from '../../pdp/template/strategie_didattiche.js';
 
-// const { misure_dispensative } = await import(
-//     /* @vite-ignore */ 
-//     dev
-//       ? '../../pdp/template/dispensative.js'
-//       : './dispensative.js'
-//   );
-
-//   const { misure_compensative } = await import(
-//     /* @vite-ignore */ 
-//     dev
-//       ? '../../pdp/template/compensative.js'
-//       : './compensative.js'
-//   );
-
-//   const { misure_valutative } = await import(
-//     /* @vite-ignore */ 
-//     dev
-//       ? '../../pdp/template/valutative.js'
-//       : './valutative.js'
-//   );
-
-//   const { strategie_classe } = await import(
-//     /* @vite-ignore */ 
-//     dev
-//       ? '../../pdp/template/strategie_classe.js'
-//       : './strategie_classe.js'
-//   );
-
-//   const { strategie_didattiche } = await import(
-//     /* @vite-ignore */ 
-//     dev
-//       ? '../../pdp/template/strategie_didattiche.js'
-//       : './strategie_didattiche.js'
-//   );
-
-//DEV
-// import { misure_dispensative } from '../../pdp/template/dispensative.js';
-// import { misure_compensative } from '../../pdp/template/compensative.js';
-// import { misure_valutative } from '../../pdp/template/valutative.js';
-// import { strategie_classe } from '../../pdp/template/strategie_classe.js';
-// import { strategie_didattiche } from '../../pdp/template/strategie_didattiche.js';
-
-//PROD
-import { misure_dispensative } from './dispensative.js';
-import { misure_compensative } from './compensative.js';
-import { misure_valutative } from './valutative.js';
-import { strategie_classe } from './strategie_classe.js';
-import { strategie_didattiche } from './strategie_didattiche.js';
+// //PROD
+// import { misure_dispensative } from './dispensative.js';
+// import { misure_compensative } from './compensative.js';
+// import { misure_valutative } from './valutative.js';
+// import { strategie_classe } from './strategie_classe.js';
+// import { strategie_didattiche } from './strategie_didattiche.js';
 
 
 let logger = new Logger("server"); //instanzia il logger
