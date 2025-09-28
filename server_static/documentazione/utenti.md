@@ -46,6 +46,7 @@ Descriviamo ora le colonne di questa tabella:
 - **CAN LOGIN**: indica se l'utente può entrare nel sistema oppure no (gli studenti diplomati NON possono più accedere al sistema)
 - **AZIONI**: azioni che è possibile svolgere su ogni singolo utente
   - **Aggiorna anagrafica utente**: entra nella  modalità aggiornamento delle informazioni di un utente
+  - **Aggiungi PDP**: imposta lo studente come BES e permette di creare il PDP corrispondente 
   - **Rimuovi anagrafica utente**: rimuove un utente dal sistema (non è sempre possibile, es se un utente fa parte di una classe)
 
 ## CREAZIONE E AGGIORNAMENTO ANAGRAFICA UTENTE
