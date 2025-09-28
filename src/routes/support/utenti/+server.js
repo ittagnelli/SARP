@@ -41,19 +41,18 @@ import { dev } from '$app/environment';
 //   );
 
 //DEV
-import { misure_dispensative } from '../../pdp/template/dispensative.js';
-import { misure_compensative } from '../../pdp/template/compensative.js';
-import { misure_valutative } from '../../pdp/template/valutative.js';
-import { strategie_classe } from '../../pdp/template/strategie_classe.js';
-import { strategie_didattiche } from '../../pdp/template/strategie_didattiche.js';
-
+// import { misure_dispensative } from '../../pdp/template/dispensative.js';
+// import { misure_compensative } from '../../pdp/template/compensative.js';
+// import { misure_valutative } from '../../pdp/template/valutative.js';
+// import { strategie_classe } from '../../pdp/template/strategie_classe.js';
+// import { strategie_didattiche } from '../../pdp/template/strategie_didattiche.js';
 
 //PROD
-// import { misure_dispensative } from './dispensative.js';
-// import { misure_compensative } from './compensative.js';
-// import { misure_valutative } from './valutative.js';
-// import { strategie_classe } from './strategie_classe.js';
-// import { strategie_didattiche } from './strategie_didattiche.js';
+import { misure_dispensative } from './dispensative.js';
+import { misure_compensative } from './compensative.js';
+import { misure_valutative } from './valutative.js';
+import { strategie_classe } from './strategie_classe.js';
+import { strategie_didattiche } from './strategie_didattiche.js';
 
 
 let logger = new Logger("server"); //instanzia il logger
