@@ -6,6 +6,7 @@
 	import InputText from '$lib/components/modal/input_text.svelte';
 	import InputDate from '$lib/components/modal/input_date.svelte';
 	import ModalError from '$lib/components/common/modal_error.svelte';
+	import MessageBox from '$lib/components/common/message_box.svelte';
 	import { Logger } from '$js/logger';
 	import { onMount } from 'svelte';
 
@@ -19,6 +20,7 @@
 	let classi = helper.data2arr(data.classi);
 
 	// aggiungo la classe come stringa agli utenti per poi stamparlo nella tabella
+	// aggiungo anche not_bes per la visualizzazione dell'icona add_PDP per studenti NON PDP
 	utenti.forEach((item, idx) => {
 		if (utenti[idx]?.classe?.id == undefined) utenti[idx]['classe_str'] = utenti[idx].istituto;
 		else
@@ -28,6 +30,7 @@
 				' ',
 				utenti[idx].classe.sezione
 			);
+		utenti[idx]['not_bes'] = !utenti[idx]['bes']; 
 	});
 
 	//configura la pagina pre-titolo, titolo e nome del modale
@@ -187,7 +190,54 @@
 			);
 		}
 	}
+
+	async function create_pdp(idStudente) {
+		console.log("CREATE_PDP FOR:", idStudente)
+		const res = await fetch(`/support/utenti`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				idStudente
+			})
+		});
+
+		console.log(res.ok)
+
+		if (res.ok) {
+			helper.mbox_show(
+				'success',
+				'Conferma',
+				'Il PDP è stato creato correttamente.',
+				3000,
+				() => location.reload()
+			);
+		} else {
+			helper.mbox_show(
+				'danger',
+				`Errore [${res.status} - ${res.statusText}]`,
+				'Non è stato possibile creare il PDP per lo studente selezionato.',
+				3000
+			);
+		}
+	}
+
+	async function custom_action_handler(e) {
+		switch (e.detail.action) {
+			// case 'view':
+			//     view_results(e.detail.row_id);
+			//     break;
+			case 'pdp':
+				const idStudente = e.detail.row_id;
+				create_pdp(idStudente);
+				console.log("add pdp:", idStudente)
+				break;
+		}
+	}
 </script>
+
+<MessageBox />
 
 <Table
 	columns={[
@@ -200,7 +250,8 @@
 		{ name: 'classe_str', type: 'string', display: 'Classe', size: 20, search: true },
 		{ name: 'ruoli', type: 'array', subtype: 'object', key: 'ruolo', display: 'Ruolo' },
 		{ name: 'email', type: 'string', display: 'email', size: 40 },
-		{ name: 'bes', type: 'boolean', display: 'pdp', search: true },
+		{ name: 'bes', type: 'boolean', display: 'pdp', search: true },	
+		{ name: 'not_bes', type: 'hidden', display: 'not_pdp', search: true },	
 		{ name: 'obiettivi_minimi', type: 'boolean', display: 'obiettivi minimi', search: true },
 		{ name: 'can_login', type: 'boolean', display: 'can_login' }
 	]}
@@ -213,6 +264,10 @@
 	actions={true}
 	update_tip="Aggiorna anagrafica utente"
 	trash_tip="Rimuovi anagrafica utente"
+	custom_actions={[
+		{ action: 'pdp', icon: 'checklist', tip: 'Aggiungi PDP', condition: 'not_bes' },
+	]}
+	on:custom_action={custom_action_handler}
 	resource="utenti"
 />
 

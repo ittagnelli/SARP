@@ -326,6 +326,8 @@ onMount(async () => {
                                             <button class="icon-button" on:click={() => custom_action_handler(action.action, row.id)} data-tippy-content="{action.tip}">
                                                 <icon class="ti ti-{action.icon} icon" />
                                             </button>
+                                            {:else}
+                                                &nbsp; <!-- dirty trick to align icons -->
                                             {/if}
                                         {/each}
                                         <!-- delete action icon -->
