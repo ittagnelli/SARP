@@ -63,7 +63,11 @@ export async function load({ locals }) {
                         select: {
                             completo: true,
                             sintesi_vocale: true,
-                            tempo_esteso: true
+                            tempo_esteso: true,
+                            anno: true
+                        },
+                        where: {
+                            anno: get_as() //filtro i PDP per l'anno corrente
                         }
                     },
                     classe: true
@@ -246,6 +250,7 @@ export const actions = {
             renderer['griglia5'] = dgriglia5;
             renderer['materie'] = materie;
             renderer['firme'] = firme;
+            renderer['as'] = `${get_as()}-${get_as() + 1}`;
 
             //sezione A
             let sezionea = JSON.parse(studente.griglia_pdp_a);

@@ -1,3 +1,17 @@
+## v4.16.0 - 28 Settembre 2025
+
+- cleanup script create_pdp
+- aggiornato documentazione sezione Utenti
+- aggiunta icona a utenti che permette di creare il PDP per un singolo studente non BES
+- lo stato BES viene automaticamente aggiornato
+- refactor create_pdp_entries e create_pdp_singoli
+- PDP Docente e PDP Alunni visualizza solo i PDP dell'anno scolastico in corso
+- refactor import insegnamenti
+- refactor impor studenti
+- Aggiornamento anno scolastico in automatico in documento PDP
+- refactor import_insegnamenti e import_docenti
+
+
 ## v4.15.2 - 24 Giugno 2025
 - ampliato campo codice classroom fino a 20 caratter- ampliato campo codice classroom fino a 20 caratteri
 - aggiunta integrazione con mastercom per insegnamenti

@@ -29,9 +29,10 @@ export async function load({ locals }) {
     SARP.set_session(locals);
 
     let where_search = multi_user_field_where('idDocente', locals);
-    where_search['anno'] = {
-        gt: get_as() - 2
-    };
+    // where_search['anno'] = {
+    //     gt: get_as() - 2
+    // };
+    where_search['anno'] = get_as(); //visualizza solo i PDP dell'anno in corso
 
     try {
         let pdp = await SARP.PDP.findMany({
