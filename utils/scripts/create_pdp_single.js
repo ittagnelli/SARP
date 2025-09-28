@@ -19,54 +19,33 @@ import { strategie_didattiche } from '../../src/routes/pdp/template/strategie_di
 const SARP = new PrismaClient();
 const argv = process.argv;
 
-// async function get_insegnamenti(as) {
-//     return await SARP.Insegnamenti.findMany({
-//         select: {
-//             id: true,
-//             idDocente: true,
-//             idMateria: true,
-//             idClasse: true,
-//             titolare: true,
-//             anno: true
-//         },
-//         where: {
-//             anno: +as,
-//             NOT: {
-//                 idMateria: {
-//                     in: [32, 35, 36] //Escludo Scienze Motorie, CLIL e Educazione Civica che non hanno PDP
-//                 }
-//             }
-//         }
-//     })
-// }
+async function get_idClasse(idStudente) {
+    let studente = await SARP.utente.findUnique({
+        where: {
+            id: idStudente
+        }
+    })
+
+    return studente ? studente.classeId: 0;
+}
 
 async function get_insegnamenti(as, idClasse) {
     let insegnamenti = await SARP.Insegnamenti.findMany({
-        // select: {
-        //     id: true,
-        //     idDocente: true,
-        //     idMateria: true,
-        //     idClasse: true,
-        //     titolare: true,
-        //     anno: true
-        // },
         include: {
-            classe: true,
+            classe: true
         },
         where: {
             anno: +as,
             idClasse: +idClasse,
-            NOT: {
-                idMateria: {
-                    in: [32, 35, 36] //Escludo Scienze Motorie, CLIL e Educazione Civica che non hanno PDP
-                }
+            materia: {
+                has_pdp: true
             }
         }
     });
 
-    // return insegnamenti.filter(ins => ins.classe.classe == 'I' || ins.classe.classe == 'III');
     return insegnamenti;
 }
+
 
 
 // async function get_studenti_bes(idClasse, idStudente) {
@@ -101,15 +80,48 @@ async function add_pdp(idDocente, idInsegnamento, idStudente, as) {
 }
 
 
+// async function main(argv) {
+//     if (argv.length != 5) {
+//         console.log("Usage: node create_pdp_entries.js <as> <id studente> <id classe>");
+//         return 255;
+//     }
+
+//     let as = argv[2];
+//     let idStudente = argv[3];
+//     let idClasse = argv[4];
+
+//     console.log("AS:", as)
+//     console.log("STUDENTE:", idStudente);
+
+
+//     //prelevo gli insegmaneti dell'anno as
+//     let insegnamenti = await get_insegnamenti(+as, idClasse);
+
+//     //per ogni insegnamento, determino la lista degli studenti
+//     //e per ogni studente BES creo un entry PDP
+//     insegnamenti.forEach(async insegnamento => {
+//         // console.log(insegnamento)
+//         // let studenti = await get_studenti_bes(idClasse, idStudente);
+//         // console.log(studenti)
+//         // studenti.forEach(async studente => {
+//         console.log(`adding PDP for insegnamento [${insegnamento.id}] - studente [${idStudente}]`);
+//         await add_pdp(insegnamento.idDocente, insegnamento.id, +idStudente, insegnamento.anno);
+//         // })
+//     });
+// }
+
+// main(argv);
+
+
 async function main(argv) {
-    if (argv.length != 5) {
-        console.log("Usage: node create_pdp_entries.js <as> <id studente> <id classe>");
+    if (argv.length != 4) {
+        console.log("Usage: node create_pdp_entries.js <as> <id studente>");
         return 255;
     }
 
     let as = argv[2];
     let idStudente = argv[3];
-    let idClasse = argv[4];
+    let idClasse = await get_idClasse(+idStudente);
 
     console.log("AS:", as)
     console.log("STUDENTE:", idStudente);
@@ -118,19 +130,12 @@ async function main(argv) {
     //prelevo gli insegmaneti dell'anno as
     let insegnamenti = await get_insegnamenti(+as, idClasse);
 
-    console.log("INSEGNAMENTI:", insegnamenti.length)
-
     //per ogni insegnamento, determino la lista degli studenti
     //e per ogni studente BES creo un entry PDP
-    insegnamenti.forEach(async insegnamento => {
-        // console.log(insegnamento)
-        // let studenti = await get_studenti_bes(idClasse, idStudente);
-        // console.log(studenti)
-        // studenti.forEach(async studente => {
+    for(let insegnamento of insegnamenti) {
         console.log(`adding PDP for insegnamento [${insegnamento.id}] - studente [${idStudente}]`);
-        await add_pdp(insegnamento.idDocente, insegnamento.id, +idStudente, insegnamento.anno);
-        // })
-    });
+        await add_pdp(insegnamento.idDocente, insegnamento.id, +idStudente, +as);
+    }
 }
 
 main(argv);
