@@ -526,7 +526,9 @@
 							</div>
 						</div>
 						{#if form_values.tipo == 'STUDENTE'}
-							<div class="col-lg-4">
+							<!-- rimuovo la selezione per BES in quanto viene automaticamente impostato
+							se si crea un PDP per uno specifico studente -->
+							<!-- <div class="col-lg-4">
 								<div class="mb-3">
 									<label class="form-label">BES</label>
 									<div class="form-selectgroup">
@@ -552,7 +554,9 @@
 										</label>
 									</div>
 								</div>
-							</div>
+							</div> -->
+							<!-- obiettivi minimi solo per studenti BES con PDP -->
+							{#if form_values.bes_select == 'SI'}
 							<div class="col-lg-4">
 								<div class="mb-3">
 									<label class="form-label">Obiettivi Minimi</label>
@@ -580,6 +584,7 @@
 									</div>
 								</div>
 							</div>
+							{/if}
 						{/if}
 					</div>
 				</div>
