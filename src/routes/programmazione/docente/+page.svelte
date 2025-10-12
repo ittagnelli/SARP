@@ -23,6 +23,7 @@
     let insegnamenti = data.insegnamenti;
     let classi = data.insegnamenti.map((insegnamento) => insegnamento.classe);
 	let materie = data.insegnamenti.map((insegnamento) => insegnamento.materia);
+    let formProgrammazione, idProgrammazione, periodoProgrammazione;
 
     /* Page properties */
 	$page_action_title = '';
@@ -42,6 +43,12 @@
             const buffer = new Uint8Array(JSON.parse(form.file).data); // Convertiamo la stringa in un oggetto che conterrà il nostro array di bytes che verrà poi convertito in Uint8Array, necessario all'oggetto Blob
             var blob = new Blob([buffer], { type: 'application/msword' });
             saveAs(blob, form.nome_documento);        
+            mbox_show(
+                'success',
+                'Conferma',
+                'Documento programmazione generato correttamente',
+                3000
+            ); 
         }
     });
 
@@ -127,7 +134,7 @@
             periodo_completo = false;
         else {
             if (is_primo_quadrimestre())
-                periodo_completo = insegnamento.programma_primo_quadrimestre_completo
+                periodo_completo = insegnamento.programma_primo_quadrimestre_completo;
             else
                 periodo_completo = insegnamento.programma_secondo_quadrimestre_completo;
         }
@@ -339,6 +346,31 @@
     function prevent_enter(key) {
         if(key.key == 'Enter') key.preventDefault();
     }
+
+    async function printProgrammazione(id, periodo) {
+		console.log("PRINT PROGRAMMAZIONE:", id, periodo)
+        
+        idProgrammazione.value = id;
+        periodoProgrammazione.value = periodo;
+		formProgrammazione.submit();
+	}
+
+    async function custom_action_handler(e) {
+        const idProgrammazione = e.detail.row_id;
+        let periodo = 0;
+
+		switch (e.detail.action) {
+			case 'progr_periodo1':
+				console.log("print programmazione1:", idProgrammazione )
+                periodo = 1;
+				break;
+            case 'progr_periodo2':
+				console.log("print programmazione2:", idProgrammazione )
+                periodo = 2;
+				break;
+		}
+        printProgrammazione(idProgrammazione, periodo);
+	}    
 </script>
 
 <MessageBox />
@@ -374,9 +406,14 @@
             search: true
         },
         {
-			name: 'can_print',
+			name: 'can_print_periodo1',
 			type: 'hidden',
-			display: 'can print'
+			display: 'can print1'
+        },
+        {
+			name: 'can_print_periodo2',
+			type: 'hidden',
+			display: 'can print2'
         }
 	]}
 	page_size={10}
@@ -384,14 +421,16 @@
 	endpoint="programmazione/docente"
 	footer="Programmazione docente"
 	actions={true}
-    print={true}
-    print_filter={"can_print"}
-    print_tip="Visualizza programmazione per la materia selezionata"
     update_tip="Creo o aggiorna programmazione per il quadrimestre in corso"
 	resource="programmazione_docente"
 	modal_name={$page_action_modal}
 	on:update_start={start_update}
     trash={false}
+    custom_actions={[
+		{ action: 'progr_periodo1', icon: 'printer', tip: 'Stampa programmazione primo periodo', condition: 'can_print_periodo1' },
+        { action: 'progr_periodo2', icon: 'printer', tip: 'Stampa programmazione secondo periodo', condition: 'can_print_periodo2' },
+	]}
+	on:custom_action={custom_action_handler}
 />
 
 <!-- Modal from Page action -->
@@ -599,7 +638,7 @@
                                 class="form-label select_text mt-3 fs-3"
                                 class:is-invalid={errors.primo_quadrimestre}
                             >
-                                Trimestre
+                                Primo Periodo Didattico
                             </div>
                             {#if errors.primo_quadrimestre}
                                 <span class="invalid-feedback">Creare almeno un argomento e sotto argomento</span>
@@ -618,7 +657,7 @@
                                 class="form-label select_text mt-3 fs-3"
                                 class:is-invalid={errors.secondo_quadrimestre}
                             >
-                                Pentamestre
+                                Secondo Periodo Didattico
                             </div>
                             {#if errors.secondo_quadrimestre}
                                 <span class="invalid-feedback">Creare almeno un argomento e sotto argomento</span>
@@ -698,6 +737,22 @@
         </div>
     </form>
 </div>
+
+<!-- 
+Uso lo stesso workaround di corsi sicurezza
+anziche triggerare il form in JS che poi non genera correttamente un page reload
+uso un form nascosto 
+ -->
+<form
+	bind:this={formProgrammazione}
+	id="form-programmazione"
+	method="POST"
+	action={'/programmazione/docente?/pdf'}
+>
+	<input bind:this={idProgrammazione} type="hidden" id="idProgrammazione" name="idProgrammazione" value="0" />
+    <input bind:this={periodoProgrammazione} type="hidden" id="periodoProgrammazione" name="periodoProgrammazione" value="0" />
+</form>
+
 
 <style>
 	.disabled {

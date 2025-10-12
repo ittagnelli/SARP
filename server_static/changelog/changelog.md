@@ -1,3 +1,11 @@
+## v4.17.0 - 12 Ottobre 2025
+- possibilità di stampare la programmazione per entrambi i periodi didattici
+- aggiornato dizione periodi didattici in programmazione docente
+- rimosso possibilità di selezione del campo BES per gli studenti
+- gli obiettivi minimi sono solo impostabili per studenti BES
+- aggioranto dizione programmazione in primo e secondo periodo didattico
+- fix pdp import issue
+
 ## v4.16.0 - 28 Settembre 2025
 
 - cleanup script create_pdp
