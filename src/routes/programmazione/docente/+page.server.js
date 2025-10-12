@@ -54,14 +54,16 @@ export async function load({ locals }) {
     insegnamenti.forEach(insegnamento => {
         insegnamento.classe.classe += " " + insegnamento.classe.sezione + " " + insegnamento.classe.istituto;
         insegnamento["programma_primo_quadrimestre_presente"] = insegnamento.programma_primo_quadrimestre != null;
-        //bug, come minimo,  di magia nera voodo e tranasologia assieme
+        //bug, come minimo di magia nera voodo e tranasologia assieme
         // se la proprietà si chiama programma_secondo_quadrimestre_presente l'icona si sposta a destra di 13 pixel
         insegnamento["programma_secondo_quadrimestre_presente_"] = insegnamento.programma_secondo_quadrimestre != null;
-        insegnamento['can_print'] = false;
-        if (is_primo_quadrimestre() && insegnamento.programma_primo_quadrimestre != null)
-            insegnamento['can_print'] = true;
-        if (!is_primo_quadrimestre() && insegnamento.programma_secondo_quadrimestre != null)
-            insegnamento['can_print'] = true;
+        // insegnamento['can_print'] = false;
+        // if (is_primo_quadrimestre() && insegnamento.programma_primo_quadrimestre != null)
+        //     insegnamento['can_print'] = true;
+        // if (!is_primo_quadrimestre() && insegnamento.programma_secondo_quadrimestre != null)
+        //     insegnamento['can_print'] = true;
+        insegnamento['can_print_periodo1'] = insegnamento.programma_primo_quadrimestre != null;
+        insegnamento['can_print_periodo2'] = insegnamento.programma_secondo_quadrimestre != null;
     });
 
     return {
@@ -86,6 +88,7 @@ export const actions = {
         const primo_quadrimestre = form.get("argomenti_primo_quadrimestre");
         const secondo_quadrimestre = form.get("argomenti_secondo_quadrimestre");
         const quadrimestri = [JSON.parse(primo_quadrimestre), JSON.parse(secondo_quadrimestre)];
+        
         quadrimestri.push({ // Aggiungo i libri
             libri: form.get("libri"),
             note: form.get("note")
@@ -117,15 +120,17 @@ export const actions = {
     },
     pdf: async ({ cookies, request }) => {
         let buf;
-        let periodo = 'inizio';
+        let periodoStr = 'inizio';
 
+        console.log("INIZIO GENERAZIONE PDF DELLA PROGRAMMAZIONE")
         try {
             const form_data = await request.formData();
-            const id = form_data.get('id');
+            const id = Number(form_data.get('idProgrammazione'));
+            const periodo = Number(form_data.get('periodoProgrammazione'));
             let materie_programmi = null;
 
             let insegnamenti = await SARP.insegnamenti.findMany({
-                where: { id: +id },
+                where: { id: id },
                 include: {
                     docente: true,
                     materia: true
@@ -144,7 +149,8 @@ export const actions = {
             //Educazione Civica nel primo trimestre non presenta un programma ma solo una frase fissa
             //mentre nel pentamestre è una materia normale
             //aggiunto il flag render per flessibilità futura 
-            if (is_primo_quadrimestre()) {
+            //stampiamo la programmazione non in base al periodo dell'anno ma in base alla richiesta utente
+            if (periodo == 1) {
                 materie_programmi = insegnamenti.map(insegnamento => {
                     const programma = JSON.parse(insegnamento.programma_primo_quadrimestre);
                     const libri = programma[2].libri.split('~'); // Sappiamo che l'array è composto da:	Q1, Q2, Libri
@@ -161,8 +167,8 @@ export const actions = {
                         render: insegnamento.materia.nome != 'Educazione Civica'
                     }
                 });
-            } else {
-                periodo = 'fine';
+            } else if (periodo == 2) {
+                periodoStr = 'fine';
                 materie_programmi = insegnamenti.map(insegnamento => {
                     const programma = JSON.parse(insegnamento.programma_secondo_quadrimestre);
                     const libri = programma[2].libri.split('~'); // Sappiamo che l'array è composto da:	Q1, Q2, Libri
@@ -203,7 +209,7 @@ export const actions = {
                 studenti: studenti_name,
                 materie: materie_programmi,
                 as: `${get_as()} - ${get_as() + 1}`,
-                periodo: periodo
+                periodo: periodoStr
             }
 
             const content = fs.readFileSync(
@@ -226,6 +232,7 @@ export const actions = {
                 compression: 'DEFLATE'
             });
 
+            console.log("HO FINITO")
             return {
                 file: JSON.stringify(buf), // Convertiamo il buffer in stringa sennò sveltekit va in errore
                 nome_documento: `Programmazione-${docx_programmazione_template.classe.replace(' ', '_')}.docx`
