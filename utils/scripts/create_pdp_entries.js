@@ -1,20 +1,21 @@
+// v20251024
 // v20250928
 
 import { PrismaClient } from '@prisma/client';
 //DEV
-// import { misure_dispensative } from '../../src/routes/pdp/template/dispensative.js';
-// import { misure_compensative } from '../../src/routes/pdp/template/compensative.js';
-// import { misure_valutative } from '../../src/routes/pdp/template/valutative.js';
-// import { strategie_classe } from '../../src/routes/pdp/template/strategie_classe.js';
-// import { strategie_didattiche } from '../../src/routes/pdp/template/strategie_didattiche.js';
+import { misure_dispensative } from '../../src/routes/pdp/template/dispensative.js';
+import { misure_compensative } from '../../src/routes/pdp/template/compensative.js';
+import { misure_valutative } from '../../src/routes/pdp/template/valutative.js';
+import { strategie_classe } from '../../src/routes/pdp/template/strategie_classe.js';
+import { strategie_didattiche } from '../../src/routes/pdp/template/strategie_didattiche.js';
 
 
 //PROD
-import { misure_dispensative } from './dispensative.js';
-import { misure_compensative } from './compensative.js';
-import { misure_valutative } from './valutative.js';
-import { strategie_classe } from './strategie_classe.js';
-import { strategie_didattiche } from './strategie_didattiche.js';
+// import { misure_dispensative } from './dispensative.js';
+// import { misure_compensative } from './compensative.js';
+// import { misure_valutative } from './valutative.js';
+// import { strategie_classe } from './strategie_classe.js';
+// import { strategie_didattiche } from './strategie_didattiche.js';
 
 
 // Istanzia il client per il SARP
@@ -49,19 +50,30 @@ async function get_studenti_bes(idClasse) {
 
 async function add_pdp(idDocente, idInsegnamento, idStudente, as) {
     try {
-        await SARP.PDP.create({
-            data: {
-                idDocente: idDocente,
-                idInsegnamento: idInsegnamento,
-                idStudente: idStudente,
-                anno: as,
-                dispensative: misure_dispensative,
-                compensative: misure_compensative,
-                valutative: misure_valutative,
-                strategie_classe: strategie_classe,
-                strategie_didattiche: strategie_didattiche
+        let pdp = await SARP.PDP.findMany( {
+            where: {
+                idDocente: +idDocente,
+                idInsegnamento: +idInsegnamento,
+                idStudente: +idStudente,
+                anno: +as
             }
         });
+
+        if(pdp.length == 0) {
+            await SARP.PDP.create({
+                data: {
+                    idDocente: idDocente,
+                    idInsegnamento: idInsegnamento,
+                    idStudente: idStudente,
+                    anno: as,
+                    dispensative: misure_dispensative,
+                    compensative: misure_compensative,
+                    valutative: misure_valutative,
+                    strategie_classe: strategie_classe,
+                    strategie_didattiche: strategie_didattiche
+                }
+            });
+        }
     } catch (e) {
         console.log(e);
     }
