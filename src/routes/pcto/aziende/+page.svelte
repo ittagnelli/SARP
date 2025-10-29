@@ -9,7 +9,8 @@
 	import { onMount } from 'svelte';
 	import { saveAs } from 'file-saver';
 	import ModalError from '$lib/components/common/modal_error.svelte';
-
+	import { PUBLIC_PCTO_REPORT_STUDENTE } from '$env/static/public';
+	
 	let logger = new Logger('client');
 
 	export let data; //contiene l'oggetto restituito dalla funzione load() eseguita nel back-end
@@ -18,7 +19,9 @@
 	// inizializzo la lista delle aziende con il risultato della query SQL
 	let aziende = helper.data2arr(data.aziende); // alias per maggior leggibilità
 	let last_id_convenzione = helper.data2arr(data.last_id_convenzione)[0];
-	let new_id_convenzione = calc_new_id_convenzione(last_id_convenzione.idConvenzione);
+	// let new_id_convenzione = calc_new_id_convenzione(last_id_convenzione.idConvenzione);
+	let isAdmin = helper.user_ruolo(data).includes('ADMIN');
+
 
 	//configura la pagina pre-titolo, titolo e nome del modale
 	$page_pre_title = 'PCTO';
@@ -47,12 +50,13 @@
 		direttore_natoA: '',
 		direttore_natoIl: helper.convert_date(new Date()),
 		direttore_codiceF: '',
-		idConvenzione: new_id_convenzione,
+		idConvenzione: '',
 		idUtente: undefined,
 		dataConvenzione: helper.convert_date(new Date()),
 		dataProtocollo: helper.convert_date(new Date()),
 		istituto: 'ITT',
-		firma_convenzione: 'NO'
+		firma_convenzione: 'NO',
+		protocollata: 'NO'
 	};
 
 	onMount(() => {
@@ -107,8 +111,6 @@
 			.string()
 			.matches(/^$|^[0-9A-Z]{16}$/, 'Codice fiscale non valido [LNSTVL69T28L219K]'),
 
-		idConvenzione: yup.string().required('Numero Convenzione necessario'),
-
 		idUtente: yup.number().positive(),
 
 		direttore_natoIl: yup.date(),
@@ -121,6 +123,10 @@
 	// /nel as 24 ho cambiato il modo di calcolare l'id convenzione resettando il seriale a 1 nel nuovo anno
 	// siccome esiste gia una convenzione 2425/35 devo fare un pasticcio
 	// nel 25 metto apposto tutto siccome non è necessario gestire questo caso particolare
+	// nel 25 cambia il concetto di numero di convenzione
+	// non è più generato in automaticamente ma lo compila
+	// la segreteria in base al numero di protocollo digitale generato in mastercom
+	// la convenzione non è validà finchè questo numero non è presente 
 
 	//vecchia da rimuovere dal 25
 	// function calc_new_id_convenzione(id_convenzione) {
@@ -133,17 +139,18 @@
 	// 	return `${as}${+as + 1}/${+serial + 1}`; //fixing #448
 	// }
 
-	function calc_new_id_convenzione(id_convenzione) {
-		let year = id_convenzione.split('/')[0];
-		let serial = id_convenzione.split('/')[1];
-		let current_year = year.substring(0, 2);
-		let as = String(helper.get_as()).substring(2, 4);
+	// dal 25 non serve più
+	// function calc_new_id_convenzione(id_convenzione) {
+	// 	let year = id_convenzione.split('/')[0];
+	// 	let serial = id_convenzione.split('/')[1];
+	// 	let current_year = year.substring(0, 2);
+	// 	let as = String(helper.get_as()).substring(2, 4);
 
-		if (current_year != as) serial = 0;
-		if (serial == 34) serial++; //da rimuovere nel 2025
+	// 	if (current_year != as) serial = 0;
+	// 	if (serial == 34) serial++; //da rimuovere nel 2025
 
-		return `${as}${+as + 1}/${+serial + 1}`; //fixing #448
-	}
+	// 	return `${as}${+as + 1}/${+serial + 1}`; //fixing #448
+	// }
 
 	async function start_update(e) {
 		modal_action = 'update';
@@ -167,6 +174,7 @@
 		form_values.dataProtocollo = helper.convert_date(azienda.dataProtocollo);
 		form_values.istituto = azienda.istituto;
 		form_values.firma_convenzione = azienda.firma_convenzione ? 'SI' : 'NO';
+		form_values.protocollata = azienda.protocollata ? 'SI' : 'NO';
 	}
 
 	async function cancel_action() {
@@ -189,7 +197,8 @@
 				dataConvenzione: helper.convert_date(new Date()),
 				dataProtocollo: helper.convert_date(new Date()),
 				istituto: 'ITT',
-				firma_convenzione: 'NO'
+				firma_convenzione: 'NO',
+				protocollata: 'NO'
 			};
 		}
 	}
@@ -218,7 +227,7 @@
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
 		{ name: 'creatoDa', type: 'hidden', display: 'creatoDa' },
-		{ name: 'idConvenzione', type: 'string', display: 'NO.', size: 10, search: true },
+		{ name: 'idConvenzione', type: 'string', display: 'Protocollo N.', size: 10, search: true },
 		{ name: 'nome', type: 'string', display: 'Azienda/Ente', size: 40, search: true },
 		{ name: 'indirizzo', type: 'string', display: 'indirizzo', size: 30 },
 		{ name: 'piva', type: 'string', display: 'piva', size: 12 },
@@ -227,7 +236,8 @@
 		{ name: 'dataConvenzione', type: 'date', display: 'Data Convenzione' },
 		{ name: 'dataProtocollo', type: 'date', display: 'Data Protocollo' },
 		{ name: 'istituto', type: 'string', display: 'Istituto', size: 10 },
-		{ name: 'firma_convenzione', type: 'boolean', display: 'Documentazione' }
+		{ name: 'firma_convenzione', type: 'boolean', display: 'Firma' },
+		{ name: 'protocollata', type: 'boolean', display: 'Protocollo' }
 	]}
 	rows={aziende}
 	page_size={11}
@@ -280,18 +290,21 @@
 					{#if form}
 						<ModalError msg={form.error_mex} />
 					{/if}
+					{#if isAdmin}
 					<div class="row">
-						<div class="col-lg-4">
+						<div class="col-lg-12">
 							<InputText
-								label="NO. Convenzione"
+								label="N. Protocollo"
 								name="idConvenzione"
 								{errors}
 								placeholder="2223/01"
-								readonly={true}
 								bind:val={form_values.idConvenzione}
 							/>
 						</div>
-						<div class="col-lg-8">
+					</div>
+					{/if}
+					<div class="row">
+						<div class="col-lg-12">
 							<InputText
 								label="Azienda"
 								name="nome"
@@ -387,6 +400,7 @@
 								bind:val={form_values.dataConvenzione}
 							/>
 						</div>
+						{#if isAdmin}
 						<div class="col-lg-3">
 							<InputDate
 								label="Data Protocollo"
@@ -395,6 +409,7 @@
 								bind:val={form_values.dataProtocollo}
 							/>
 						</div>
+						{/if}
 						<div class="col-lg-5">
 							<div class="mb-3">
 								<label class="form-label">Istituto</label>
@@ -464,6 +479,35 @@
 								</div>
 							</div>
 						</div>
+						{#if isAdmin}
+						<div class="col-lg-4">
+							<div class="mb-3">
+								<label class="form-label">Convenzione Protocolata ?</label>
+								<div class="form-selectgroup">
+									<label class="form-selectgroup-item">
+										<input
+											type="radio"
+											name="protocollata"
+											value="SI"
+											class="form-selectgroup-input"
+											bind:group={form_values.protocollata}
+										/>
+										<span class="form-selectgroup-label">SI</span>
+									</label>
+									<label class="form-selectgroup-item">
+										<input
+											type="radio"
+											name="protocollata"
+											value="NO"
+											class="form-selectgroup-input"
+											bind:group={form_values.protocollata}
+										/>
+										<span class="form-selectgroup-label">NO</span>
+									</label>
+								</div>
+							</div>
+						</div>
+						{/if}
 					</div>
 					<!-- {/if} -->
 				</div>

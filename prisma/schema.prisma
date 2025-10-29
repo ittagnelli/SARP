@@ -1,4 +1,4 @@
-// v 0.36.0 2024-09-21
+// v 0.37.0 2025-10-29
 
 generator client {
     provider = "prisma-client-js"
@@ -198,6 +198,7 @@ model pcto_Azienda {
     istituto          String      @default("ITT")
     offre             pcto_Pcto[]
     firma_convenzione Boolean     @default(false)
+    protocollata      Boolean     @default(false)
 }
 
 model pcto_Pcto {
