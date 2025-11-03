@@ -87,7 +87,10 @@ export async function load({ locals }) {
         });
 
         const companies = await SARP.pcto_Azienda.findMany({
-            orderBy: [{ nome: 'asc' }]
+            orderBy: [{ nome: 'asc' }],
+            where: {
+                protocollata: true
+            }
         });
 
         const utenti = await SARP.Utente.findMany({
@@ -278,8 +281,10 @@ export const actions = {
             //genero il documento #2 per ogni studente con le informazioni specifiche
             for (let studente of pcto?.svoltoDa) {
                 let uid = helper.get_uid();
-                ddata['N_PROTOCOLLO_CS'] = ddata['P_CONVENZIONE'] + '-CS-' + uid;
-                ddata['N_PROTOCOLLO_PF'] = ddata['P_CONVENZIONE'] + '-PF-' + uid;
+                // con la nuova protocollazione del 2025 questi numero protocolli non servono 
+                // si inserisce solo un riferimento al protocollo/convenzione aziendale
+                // ddata['N_PROTOCOLLO_CS'] = ddata['P_CONVENZIONE'] + '-CS-' + uid;
+                // ddata['N_PROTOCOLLO_PF'] = ddata['P_CONVENZIONE'] + '-PF-' + uid;
                 ddata['S_NOME'] = studente.cognome + ' ' + studente.nome;
                 ddata['S_NATOA'] = studente.natoA || '';
                 ddata['S_NATOIL'] = convert_date(studente.natoIl);

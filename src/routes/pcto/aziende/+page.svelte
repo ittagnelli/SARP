@@ -227,9 +227,9 @@
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
 		{ name: 'creatoDa', type: 'hidden', display: 'creatoDa' },
-		{ name: 'idConvenzione', type: 'string', display: 'Protocollo N.', size: 10, search: true },
+		{ name: 'idConvenzione', type: 'string', display: 'Protocollo N.', size: 50, search: true },
 		{ name: 'nome', type: 'string', display: 'Azienda/Ente', size: 40, search: true },
-		{ name: 'indirizzo', type: 'string', display: 'indirizzo', size: 30 },
+		{ name: 'indirizzo', type: 'hidden', display: 'indirizzo', size: 30 },
 		{ name: 'piva', type: 'string', display: 'piva', size: 12 },
 		{ name: 'telefono', type: 'string', display: 'telefono', size: 14 },
 		{ name: 'direttore_nome', type: 'string', display: 'Legale Rappresentante', size: 20 },
