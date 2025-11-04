@@ -74,11 +74,11 @@ export async function load({ locals }) {
 
 		//da rimuovere nel 205
 		const last_id_convenzione = await SARP.pcto_Azienda.findMany({
-			where: {
-				NOT: {
-					idConvenzione: '2425/35'
-				}
-			},
+			// where: {
+			// 	NOT: {
+			// 		idConvenzione: '2425/35'
+			// 	}
+			// },
 			orderBy: [{ id: 'desc' }],
 			take: 1,
 			select: {
@@ -162,7 +162,8 @@ export const actions = {
 					dataConvenzione: new Date(form_data.get('dataConvenzione')),
 					dataProtocollo: new Date(form_data.get('dataProtocollo')),
 					istituto: form_data.get('istituto'),
-					firma_convenzione: form_data.get('firma_convenzione') == "SI" ? true : false
+					firma_convenzione: form_data.get('firma_convenzione') == "SI" ? true : false,
+					protocollata: form_data.get('protocollata') == "SI" ? true : false
 				}
 			});
 		} catch (exception) {
