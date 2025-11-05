@@ -242,6 +242,8 @@ export const actions = {
             renderer['griglia5'] = dgriglia5;
             renderer['materie'] = materie;
             renderer['firme'] = firme;
+            renderer['as'] = `${get_as()}-${get_as() + 1}`;
+
             // imposto anche il flag condizionale per stampare griglia osservativa docenti o griglia vuota
             renderer['dosservativa_present'] = studente.griglia_valutazione_done;
 
