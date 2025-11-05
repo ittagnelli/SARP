@@ -31,12 +31,12 @@
 			s['materie_col'] = `${materie_complete}/${tot_materie}`;
 			s['can_print'] =
 				materie_complete == tot_materie &&
-				tot_materie > 0 && //posso stampare solo se ci sono tutte le materi e sono >0
-				s.griglia_valutazione_done &&
-				s.griglia_pdp_a1_done &&
-				s.griglia_pdp_c1_done &&
-				s.griglia_pdp_c2_done &&
-				s.griglia_pdp_b_done;
+				tot_materie > 0 //&& //posso stampare solo se ci sono tutte le materi e sono >0
+				// s.griglia_valutazione_done &&
+				// s.griglia_pdp_a1_done &&
+				// s.griglia_pdp_c1_done &&
+				// s.griglia_pdp_c2_done &&
+				// s.griglia_pdp_b_done;
 			return s;
 		});
 	}
