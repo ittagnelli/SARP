@@ -1,3 +1,24 @@
+## v4.18.0 - 05 Novembre 2025
+- `fix#615`
+- Il PDP studente può essere stampato in qualsiasi condizione (#617)
+- Aggiornato pesantemente il template PDP
+- Anche senza nessuna sezione compilata si può stampare il PDP
+- Sono supportati anche tutte le combinazioni di sezioni
+- Le sezioni compilate per essere presenti nel PDP devono essere marcate come COMPLETE
+- `fix#614`
+- aggiunto campo protocollata a pcto_azienda
+- migrazione per aggiungere protocollata alla convenzione PCTO azienda
+- modificato funzionamento di idConvenzione
+- non viene generato automaticamente ma inserito da ADMIN
+- solo ADMIN può marcare una convenzione come protocollata
+- aggiornato template docx della convenzione per rimuovere numero protocollo
+- rimosso codice convnzione o protocollo
+- aggiunto riferimento al protocollo convenzione azienda
+- ripuliti documenti per un miglior look
+- Il tutor può creare un PCTO solo per aziende con convenzione correttamente protocollata
+- modifica a create_pdp_entries.js in modo che se si aggiunge un insegnamento non duplica i PDP
+- update template programmazione
+
 ## v4.17.0 - 12 Ottobre 2025
 - possibilità di stampare la programmazione per entrambi i periodi didattici
 - aggiornato dizione periodi didattici in programmazione docente
