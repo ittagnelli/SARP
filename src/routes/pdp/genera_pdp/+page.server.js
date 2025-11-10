@@ -7,6 +7,7 @@ import PizZip from "pizzip";
 import Docxtemplater from "docxtemplater";
 import { PrismaClientValidationError } from '@prisma/client/runtime';
 import { Logger } from '$js/logger';
+import { OLDPWD } from "$env/static/private";
 
 const resource = "genera_pdp";
 let logger = new Logger("server"); //instanzia il logger
@@ -148,27 +149,69 @@ export const actions = {
             //Qui è un gran casino in quanto stato fatto in fasi successive
             //In ogni acso prima preparo le varie griglie per con le risposte del tutor di classe
             //poi arricchisco la griglia con le risposte dello studente
+            let dgriglia1, dsgriglia2,sgriglia2,dsgriglia3,sgriglia3,dsgriglia4,sgriglia4,dgriglia5;
             let dvalutazione = JSON.parse(studente.griglia_valutazione) || [];
             let svalutazione = JSON.parse(studente.griglia_pdp_c1) || []; 
-            let dgriglia1 = dvalutazione.slice(0, 20);
-            let dsgriglia2 = dvalutazione.slice(20, 23);
-            let sgriglia2 = svalutazione.slice(0, 3);
-            let dsgriglia3 = dvalutazione.slice(23, 28);
-            let sgriglia3 = svalutazione.slice(3, 8);
-            let dsgriglia4 = dvalutazione.slice(28, 32);
-            let sgriglia4 = svalutazione.slice(8, 12);
-            let dgriglia5 = dvalutazione.slice(32);
+            
+            //OLD
+            // let dgriglia1 = dvalutazione.slice(0, 20);
+            // let dsgriglia2 = dvalutazione.slice(20, 23);
+            // let sgriglia2 = svalutazione.slice(0, 3);
+            // let dsgriglia3 = dvalutazione.slice(23, 28);
+            // let sgriglia3 = svalutazione.slice(3, 8);
+            // let dsgriglia4 = dvalutazione.slice(28, 32);
+            // let sgriglia4 = svalutazione.slice(8, 12);
+            // let dgriglia5 = dvalutazione.slice(32);
+            // OLD
+            // console.log("1")
+            // //set an X to the right answer column
+            // dgriglia1 = format_grid1_4d(dgriglia1);
+            // console.log("1a")
+            // dsgriglia2 = format_grid1_4d(dsgriglia2);
+            // console.log("1b")
+            // console.log(dsgriglia2)
+            // console.log(sgriglia2)
+            // dsgriglia2 = format_grid1_4s(dsgriglia2, sgriglia2);
+            // console.log("1c")
+            // dsgriglia3 = format_grid1_4d(dsgriglia3);
+            // dsgriglia3 = format_grid1_4s(dsgriglia3, sgriglia3);
+            // console.log("3")
+            // dsgriglia4 = format_grid1_4d(dsgriglia4);
+            // dsgriglia4 = format_grid1_4s(dsgriglia4, sgriglia4);
+            // console.log("4")
+            // dgriglia5 = format_grid_5d(dgriglia5);
+            // console.log("5")
 
+
+            //NEW
             //set an X to the right answer column
-            dgriglia1 = format_grid1_4d(dgriglia1);
-            dsgriglia2 = format_grid1_4d(dsgriglia2);
-            dsgriglia2 = format_grid1_4s(dsgriglia2, sgriglia2);
-            dsgriglia3 = format_grid1_4d(dsgriglia3);
-            dsgriglia3 = format_grid1_4s(dsgriglia3, sgriglia3);
-            dsgriglia4 = format_grid1_4d(dsgriglia4);
-            dsgriglia4 = format_grid1_4s(dsgriglia4, sgriglia4);
-            dgriglia5 = format_grid_5d(dgriglia5);
+            if(dvalutazione.length > 0) { //griglia valutazione docenti presente
+                dgriglia1 = dvalutazione.slice(0, 20);
+                dgriglia1 = format_grid1_4d(dgriglia1);
 
+                dsgriglia2 = dvalutazione.slice(20, 23);
+                dsgriglia2 = format_grid1_4d(dsgriglia2);
+
+                dsgriglia3 = dvalutazione.slice(23, 28);
+                dsgriglia3 = format_grid1_4d(dsgriglia3);
+
+                dsgriglia4 = dvalutazione.slice(28, 32);
+                dsgriglia4 = format_grid1_4d(dsgriglia4);
+
+                dgriglia5 = dvalutazione.slice(32);
+                dgriglia5 = format_grid_5d(dgriglia5);
+            }
+            if(svalutazione.length > 0) { //griglia valutazione studente presente
+                sgriglia2 = svalutazione.slice(0, 3);
+                dsgriglia2 = format_grid1_4s(dsgriglia2, sgriglia2);
+
+                sgriglia3 = svalutazione.slice(3, 8);
+                dsgriglia3 = format_grid1_4s(dsgriglia3, sgriglia3);
+
+                sgriglia4 = svalutazione.slice(8, 12);
+                dsgriglia4 = format_grid1_4s(dsgriglia4, sgriglia4);
+            }
+            
             //now get the section for the different materie
             const pdp = await SARP.PDP.findMany({
                 where: {
@@ -226,7 +269,7 @@ export const actions = {
                 materie.push(materia);
                 firme.push(firma);
             });
-
+            
             //prepare the object to render the template
             let renderer = {};
             renderer['nome'] = studente.nome;
@@ -235,11 +278,19 @@ export const actions = {
             renderer['nato_il'] = studente.natoIl.toLocaleDateString("it-IT");
             renderer['classe'] = `${studente.classe.classe} ${studente.classe.istituto} ${studente.classe.sezione}`;
             renderer['tutor'] = `${studente.classe.coordinatore.nome} ${studente.classe.coordinatore.cognome}`;
-            renderer['griglia1'] = dgriglia1;
-            renderer['griglia2'] = dsgriglia2;
-            renderer['griglia3'] = dsgriglia3;
-            renderer['griglia4'] = dsgriglia4;
-            renderer['griglia5'] = dgriglia5;
+            // OLD
+            // renderer['griglia1'] = dgriglia1;
+            //     renderer['griglia2'] = dsgriglia2;
+            //     renderer['griglia3'] = dsgriglia3;
+            //     renderer['griglia4'] = dsgriglia4;
+            //     renderer['griglia5'] = dgriglia5;
+            if(dvalutazione.length > 0) { //NEW
+                renderer['griglia1'] = dgriglia1;
+                renderer['griglia2'] = dsgriglia2;
+                renderer['griglia3'] = dsgriglia3;
+                renderer['griglia4'] = dsgriglia4;
+                renderer['griglia5'] = dgriglia5;
+            }
             renderer['materie'] = materie;
             renderer['firme'] = firme;
             renderer['as'] = `${get_as()}-${get_as() + 1}`;
@@ -263,14 +314,30 @@ export const actions = {
             let sezionea = JSON.parse(studente.griglia_pdp_a);
             renderer['a_present'] = studente.griglia_pdp_a_done;
             renderer = Object.assign(renderer, sezionea);
+            
+            //OLD
             //metto apposto le date facendo una porcata per mancanza di tempo
-            renderer['relazione_ssn_data'] = renderer['relazione_ssn_data'].length != 10 ? '' : renderer['relazione_ssn_data'];
-            renderer['relazione_altro_data1'] = renderer['relazione_altro_data1'].length != 10 ? '' : renderer['relazione_altro_data1'];
-            renderer['relazione_altro_data2'] = renderer['relazione_altro_data2'].length != 10 ? '' : renderer['relazione_altro_data2'];
-            renderer['relazione_altro_data3'] = renderer['relazione_altro_data3'].length != 10 ? '' : renderer['relazione_altro_data3'];
-            renderer['relazione_altro_data4'] = renderer['relazione_altro_data4'].length != 10 ? '' : renderer['relazione_altro_data4'];
-            renderer['relazione_altro_data5'] = renderer['relazione_altro_data5'].length != 10 ? '' : renderer['relazione_altro_data5'];
+            // console.log("9A:", renderer['relazione_ssn_data']?.length)
+            // renderer['relazione_ssn_data'] = renderer['relazione_ssn_data'].length != 10 ? '' : renderer['relazione_ssn_data'];
+            // console.log("9A:", renderer['relazione_ssn_data']) 
+            // console.log("9b")
+            // renderer['relazione_altro_data1'] = renderer['relazione_altro_data1'].length != 10 ? '' : renderer['relazione_altro_data1'];
+            // renderer['relazione_altro_data2'] = renderer['relazione_altro_data2'].length != 10 ? '' : renderer['relazione_altro_data2'];
+            // console.log("9c")
+            // renderer['relazione_altro_data3'] = renderer['relazione_altro_data3'].length != 10 ? '' : renderer['relazione_altro_data3'];
+            // renderer['relazione_altro_data4'] = renderer['relazione_altro_data4'].length != 10 ? '' : renderer['relazione_altro_data4'];
+            // renderer['relazione_altro_data5'] = renderer['relazione_altro_data5'].length != 10 ? '' : renderer['relazione_altro_data5'];
 
+            //NEW
+             if(renderer['a_present']) {
+                //metto apposto le date facendo una porcata per mancanza di tempo
+                renderer['relazione_ssn_data'] = renderer['relazione_ssn_data'].length != 10 ? '' : renderer['relazione_ssn_data'];
+                renderer['relazione_altro_data1'] = renderer['relazione_altro_data1'].length != 10 ? '' : renderer['relazione_altro_data1'];
+                renderer['relazione_altro_data2'] = renderer['relazione_altro_data2'].length != 10 ? '' : renderer['relazione_altro_data2'];
+                renderer['relazione_altro_data3'] = renderer['relazione_altro_data3'].length != 10 ? '' : renderer['relazione_altro_data3'];
+                renderer['relazione_altro_data4'] = renderer['relazione_altro_data4'].length != 10 ? '' : renderer['relazione_altro_data4'];
+                renderer['relazione_altro_data5'] = renderer['relazione_altro_data5'].length != 10 ? '' : renderer['relazione_altro_data5'];
+             }
             //Preparo per il rendering della sezione Mi Presento al consiglio di classe
             //le chiavi hanno già il nome corretto, basta che le aggiungo alll'oggetto renderer
             let mipresento = JSON.parse(studente.griglia_pdp_a1);
