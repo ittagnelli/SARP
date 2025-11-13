@@ -527,7 +527,14 @@
 						</div>
 						{#if form_values.tipo == 'STUDENTE'}
 							<!-- rimuovo la selezione per BES in quanto viene automaticamente impostato
-							se si crea un PDP per uno specifico studente -->
+							se si crea un PDP per uno specifico studente
+							devo aggiungere il campo come hidden altrimenti lato server lo setta al default false (issue-618) -->
+							<input
+								type="hidden"
+								name="bes"
+								class="form-selectgroup-input"
+								value={form_values.bes_select}
+							/>
 							<!-- <div class="col-lg-4">
 								<div class="mb-3">
 									<label class="form-label">BES</label>
