@@ -260,9 +260,12 @@ export const actions = {
                     strategie_didattiche: strategie_didattiche,
                     strategie_didattiche_yes: strategie_didattiche.length > 0,
                     strategie_didattiche_no: strategie_didattiche.length == 0,
-                    has_obiettivi_minimi: studente.obiettivi_minimi,
-                    argomenti_q1: studente.obiettivi_minimi ? JSON.parse(p.obiettivi_minimi)[0] : [],
-                    argomenti_q2: studente.obiettivi_minimi ? JSON.parse(p.obiettivi_minimi)[1] : []
+                    // has_obiettivi_minimi: studente.obiettivi_minimi,
+                    has_obiettivi_minimi: p.obiettivi_minimi, //issue-620
+                    //argomenti_q1: studente.obiettivi_minimi ? JSON.parse(p.obiettivi_minimi)[0] : [],
+                    //argomenti_q2: studente.obiettivi_minimi ? JSON.parse(p.obiettivi_minimi)[1] : []
+                    argomenti_q1: p.obiettivi_minimi ? JSON.parse(p.obiettivi_minimi)[0] : [], //issue-620
+                    argomenti_q2: p.obiettivi_minimi ? JSON.parse(p.obiettivi_minimi)[1] : []
                 };
                 let firma = { materia: materia.materia, docente: materia.docente };
 
