@@ -105,7 +105,7 @@ export const actions = {
 
         try {
             const form = await request.formData();
-
+            console.log(form)
             logger.debug(`[${locals.session.idUtente} - ${locals.session.login.cognome}] INIZIO UPDATE PDP DOCENTE[${parseInt(form.get("id"))}]`);
 
             await SARP.PDP.update({
@@ -115,7 +115,7 @@ export const actions = {
                     valutative: form.get("valutative"),
                     strategie_classe: form.get("strategie_classe"),
                     strategie_didattiche: form.get("strategie_didattiche"),
-                    obiettivi_minimi: form.get("obiettivi_minimi"),
+                    obiettivi_minimi: form.get("obiettivi_minimi")?.length > 0 ? form.get("obiettivi_minimi") : null, //issue-620
                     altro_compensative: form.get("altro_compensative")?.toString(),
                     altro_dispensative: form.get("altro_dispensative")?.toString(),
                     altro_valutative: form.get("altro_valutative")?.toString(),

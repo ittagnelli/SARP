@@ -74,11 +74,12 @@
 	// schema di validazione del form
 	const form_schema = yup.object().shape({
 		//keep it for compatibility and also it might be useful in future
-		has_obiettivi_minimi: yup.boolean(),
-		obiettivi_minimi: yup.string().when('has_obiettivi_minimi', {
-			is: true,
-			then: yup.string().required('Obiettivi Minimi necessari')
-		})
+		//issue-620: obiettivi minimi facoltativi per gestire i casi in cui gli obiettivi minimi sono solo per specifiche materie
+		// has_obiettivi_minimi: yup.boolean(),
+		// obiettivi_minimi: yup.string().when('has_obiettivi_minimi', {
+		// 	is: true,
+		// 	then: yup.string().required('Obiettivi Minimi necessari')
+		// })
 	});
 
 	let modal_action = 'create';
