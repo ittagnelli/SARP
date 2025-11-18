@@ -1,3 +1,12 @@
+## v4.19.0 - 18 Novembre 2025
+- `fix#620`: Obiettivi minimi facoltativi (#621)    
+- Gli obiettivi minimi diventano facoltativi
+- Ciò serve per gestire gli obiettivi minimi solo per specifiche materie
+- `fix#619`: Update Utente sovrascrive BES
+- reso generazione pdp più solida per gestire tutti i casi di tabelle mancanti
+- aggiunto as nel render di PDP
+- rimosso un page break in pdp template
+
 ## v4.18.0 - 05 Novembre 2025
 - `fix#615`
 - Il PDP studente può essere stampato in qualsiasi condizione (#617)
