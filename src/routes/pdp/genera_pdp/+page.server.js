@@ -7,7 +7,6 @@ import PizZip from "pizzip";
 import Docxtemplater from "docxtemplater";
 import { PrismaClientValidationError } from '@prisma/client/runtime';
 import { Logger } from '$js/logger';
-import { OLDPWD } from "$env/static/private";
 
 const resource = "genera_pdp";
 let logger = new Logger("server"); //instanzia il logger
@@ -119,6 +118,10 @@ function format_grid_5d(grid) {
     return grid;
 }
 
+function sanitize(val) {
+    return val ?? '';
+}
+
 export const actions = {
     pdf: async ({ cookies, request }) => {
         let buf;
@@ -126,6 +129,7 @@ export const actions = {
             const form_data = await request.formData();
             const student_id = form_data.get('id');
 
+            console.log("1")
             //the document to render is made by many parts
             //one evaluation grid coming from the student object
             //and 5 sections (dispenative, compensative,valutative, strategie classe, strategie didattiche)
@@ -145,6 +149,7 @@ export const actions = {
                 }
             });
 
+            console.log("2")
             //prepare the valutazione grids
             //Qui è un gran casino in quanto stato fatto in fasi successive
             //In ogni acso prima preparo le varie griglie per con le risposte del tutor di classe
@@ -153,6 +158,7 @@ export const actions = {
             let dvalutazione = JSON.parse(studente.griglia_valutazione) || [];
             let svalutazione = JSON.parse(studente.griglia_pdp_c1) || []; 
             
+            console.log("3")
             //OLD
             // let dgriglia1 = dvalutazione.slice(0, 20);
             // let dsgriglia2 = dvalutazione.slice(20, 23);
@@ -201,6 +207,9 @@ export const actions = {
                 dgriglia5 = dvalutazione.slice(32);
                 dgriglia5 = format_grid_5d(dgriglia5);
             }
+
+            console.log("4")
+
             if(svalutazione.length > 0) { //griglia valutazione studente presente
                 sgriglia2 = svalutazione.slice(0, 3);
                 dsgriglia2 = format_grid1_4s(dsgriglia2, sgriglia2);
@@ -212,6 +221,8 @@ export const actions = {
                 dsgriglia4 = format_grid1_4s(dsgriglia4, sgriglia4);
             }
             
+            console.log("5")
+
             //now get the section for the different materie
             const pdp = await SARP.PDP.findMany({
                 where: {
@@ -228,6 +239,8 @@ export const actions = {
                     }
                 }
             });
+
+            console.log("6")
 
             let materie = [];
             let firme = [];
@@ -273,6 +286,8 @@ export const actions = {
                 firme.push(firma);
             });
             
+            console.log("7")
+
             //prepare the object to render the template
             let renderer = {};
             renderer['nome'] = studente.nome;
@@ -281,6 +296,8 @@ export const actions = {
             renderer['nato_il'] = studente.natoIl.toLocaleDateString("it-IT");
             renderer['classe'] = `${studente.classe.classe} ${studente.classe.istituto} ${studente.classe.sezione}`;
             renderer['tutor'] = `${studente.classe.coordinatore.nome} ${studente.classe.coordinatore.cognome}`;
+
+            console.log("8")
             // OLD
             // renderer['griglia1'] = dgriglia1;
             //     renderer['griglia2'] = dsgriglia2;
@@ -294,12 +311,16 @@ export const actions = {
                 renderer['griglia4'] = dsgriglia4;
                 renderer['griglia5'] = dgriglia5;
             }
+            console.log("9")
+
             renderer['materie'] = materie;
             renderer['firme'] = firme;
             renderer['as'] = `${get_as()}-${get_as() + 1}`;
 
             // imposto anche il flag condizionale per stampare griglia osservativa docenti o griglia vuota
             renderer['dosservativa_present'] = studente.griglia_valutazione_done;
+
+            console.log("10")
 
             // per la sezione C ho 4 combinazioni
             // 1- valutazione docente Presente - valutazione alunno Presente
@@ -313,11 +334,16 @@ export const actions = {
             renderer['c1_option3'] = !studente.griglia_valutazione_done && studente.griglia_pdp_c1_done;
             renderer['c1_option4'] = !studente.griglia_valutazione_done && !studente.griglia_pdp_c1_done;
 
+            console.log("11")
+
             //sezione A
             let sezionea = JSON.parse(studente.griglia_pdp_a);
+            console.log(sezionea)
             renderer['a_present'] = studente.griglia_pdp_a_done;
             renderer = Object.assign(renderer, sezionea);
             
+            console.log("12")
+
             //OLD
             //metto apposto le date facendo una porcata per mancanza di tempo
             // console.log("9A:", renderer['relazione_ssn_data']?.length)
@@ -334,13 +360,42 @@ export const actions = {
             //NEW
              if(renderer['a_present']) {
                 //metto apposto le date facendo una porcata per mancanza di tempo
-                renderer['relazione_ssn_data'] = renderer['relazione_ssn_data'].length != 10 ? '' : renderer['relazione_ssn_data'];
-                renderer['relazione_altro_data1'] = renderer['relazione_altro_data1'].length != 10 ? '' : renderer['relazione_altro_data1'];
-                renderer['relazione_altro_data2'] = renderer['relazione_altro_data2'].length != 10 ? '' : renderer['relazione_altro_data2'];
-                renderer['relazione_altro_data3'] = renderer['relazione_altro_data3'].length != 10 ? '' : renderer['relazione_altro_data3'];
-                renderer['relazione_altro_data4'] = renderer['relazione_altro_data4'].length != 10 ? '' : renderer['relazione_altro_data4'];
-                renderer['relazione_altro_data5'] = renderer['relazione_altro_data5'].length != 10 ? '' : renderer['relazione_altro_data5'];
+                // renderer['relazione_ssn_data'] = renderer['relazione_ssn_data'].length != 10 ? '' : renderer['relazione_ssn_data'];
+                // console.log("12a")
+                // renderer['relazione_altro_data1'] = renderer['relazione_altro_data1'].length != 10 ? '' : renderer['relazione_altro_data1'];
+                // console.log(renderer['relazione_altro_data1'])
+                // console.log("12b")
+                // renderer['relazione_altro_data2'] = renderer['relazione_altro_data2'].length != 10 ? '' : renderer['relazione_altro_data2'];
+                // console.log("12c")
+                // renderer['relazione_altro_data3'] = renderer['relazione_altro_data3'].length != 10 ? '' : renderer['relazione_altro_data3'];
+                // console.log("12d")
+                // renderer['relazione_altro_data4'] = renderer['relazione_altro_data4'].length != 10 ? '' : renderer['relazione_altro_data4'];
+                // console.log("12e")
+                // renderer['relazione_altro_data5'] = renderer['relazione_altro_data5'].length != 10 ? '' : renderer['relazione_altro_data5'];
+                // console.log("12f")
+
+                renderer['relazione_ssn_data'] = sanitize(renderer['relazione_ssn_data']);
+                console.log("12a")
+                renderer['relazione_altro_data1'] = sanitize(renderer['relazione_altro_data1']);
+                console.log("12b")
+                renderer['relazione_altro_data2'] = sanitize(renderer['relazione_altro_data2']);
+                console.log("12c")
+                renderer['relazione_altro_data3'] = sanitize(renderer['relazione_altro_data3']);
+                console.log("12d")
+                renderer['relazione_altro_data4'] = sanitize(renderer['relazione_altro_data4']);
+                console.log("12e")
+                renderer['relazione_altro_data5'] = sanitize(renderer['relazione_altro_data5']);
+                console.log("12f")
+
+                renderer['relazione_altro_redattore1'] = sanitize(renderer['relazione_altro_redattore1']);
+                renderer['relazione_altro_redattore2'] = sanitize(renderer['relazione_altro_redattore2']);
+                renderer['relazione_altro_redattore3'] = sanitize(renderer['relazione_altro_redattore3']);
+                renderer['relazione_altro_redattore4'] = sanitize(renderer['relazione_altro_redattore4']);
+                renderer['relazione_altro_redattore5'] = sanitize(renderer['relazione_altro_redattore5']);
              }
+
+             console.log("13")
+
             //Preparo per il rendering della sezione Mi Presento al consiglio di classe
             //le chiavi hanno già il nome corretto, basta che le aggiungo alll'oggetto renderer
             let mipresento = JSON.parse(studente.griglia_pdp_a1);
