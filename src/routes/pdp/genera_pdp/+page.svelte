@@ -26,8 +26,9 @@
 			s['classe_col'] = `${s.classe.classe} ${s.classe.istituto} ${s.classe.sezione}`;
 			s['sintesi_vocale'] = s.pdp.some((i) => i.sintesi_vocale == true);
 			s['tempo_esteso'] = s.pdp.some((i) => i.tempo_esteso == true);
-			let tot_materie = s.pdp.length;
-			let materie_complete = s.pdp.filter((m) => m.completo == true).length;
+
+			let tot_materie = s.pdp.filter((m) => m.anno == helper.get_as()).length;
+			let materie_complete = s.pdp.filter((m) => m.completo == true && m.anno == helper.get_as()).length;
 			s['materie_col'] = `${materie_complete}/${tot_materie}`;
 			s['can_print'] =
 				materie_complete == tot_materie &&
