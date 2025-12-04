@@ -77,6 +77,9 @@
 	trash={false}
 	print={false}
 	print_filter={false}
+	update={true}
+	update_filter={helper.is_admin(data) ? '' : 'griglia_pdp_a1_done'}
+	update_compare={false}
 	update_tip="Compila Presentazione al Consiglio di Classe"
 	resource="pdp_mipresento"
 />

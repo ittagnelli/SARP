@@ -210,6 +210,9 @@
 	actions={true}
 	print={false}
 	print_filter={false}
+	update={true}
+	update_filter={helper.is_admin(data) ? '' : 'completo'}
+	update_compare={false}
 	update_tip="Creo o aggiorna PDP per lo studente e la materia selezionati"
 	resource="pdp_docente"
 	modal_name={$page_action_modal}

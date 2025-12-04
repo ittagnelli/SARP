@@ -76,6 +76,9 @@
 	trash={false}
 	print={false}
 	print_filter={false}
+	update={true}
+	update_filter={helper.is_admin(data) ? '' : 'griglia_pdp_b_done'}
+	update_compare={false}
 	update_tip="Aggiorna Patto Educativo"
 	resource="pdp_griglia_diagnosi"
 />

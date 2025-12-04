@@ -22,6 +22,8 @@ export let resource;
 export let trash = true;
 export let update = true;
 export let print_filter;    // Proprietà dell'oggetto che, se impostata su true farà vedere il tasto print
+export let update_filter; // Proprietà dell'oggetto che, se impostata su true farà vedere il tasto update ; '' mean no update filter
+export let update_compare = true; // valore da matchare per update_filter
 export let print_tip = 'stampa';
 export let update_tip = 'update';
 export let trash_tip = 'rimuovi';
@@ -306,8 +308,8 @@ onMount(async () => {
                                             {/if}
                                         {/if}
                                         {/if}
-                                        {#if update}
-                                            <!-- update action icon -->
+                                        {#if update == true}
+                                        {#if !update_filter}
                                             <a
                                                 href="##"
                                                 class=""
@@ -318,6 +320,20 @@ onMount(async () => {
                                                 >
                                                 <icon class="ti ti-edit icon" />
                                             </a>  
+                                        {:else}
+                                            {#if row[update_filter] == update_compare}
+                                            <a
+                                                href="##"
+                                                class=""
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#{modal_name}"
+                                                on:click={() => update_row(row.id)}
+                                                data-tippy-content={update_tip}
+                                                >
+                                                <icon class="ti ti-edit icon" />
+                                            </a>
+                                            {/if}
+                                        {/if}
                                         {/if}                                    
                                         <!-- custom action icon -->
                                         {#each custom_actions as action}
