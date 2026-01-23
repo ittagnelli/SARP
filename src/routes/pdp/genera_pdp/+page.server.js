@@ -123,6 +123,14 @@ function sanitize(val) {
     return val ?? '';
 }
 
+
+
+function sanitize_date(val) {
+    if(!val || val == '') return '';
+    const tmpDate = new Date(val);
+    return tmpDate.toLocaleDateString("it-IT");
+}
+
 export const actions = {
     pdf: async ({ cookies, request }) => {
         let buf;
@@ -381,22 +389,23 @@ export const actions = {
                 renderer['relazione_altro_redattore4'] = sanitize(renderer['relazione_altro_redattore4']);
                 renderer['relazione_altro_redattore5'] = sanitize(renderer['relazione_altro_redattore5']);
 
-                renderer['relazione_ssn_data'] = sanitize(renderer['relazione_ssn_data']);
-
+                // renderer['relazione_ssn_data'] = sanitize(renderer['relazione_ssn_data']);
+                renderer['relazione_ssn_data'] = sanitize_date(renderer['relazione_ssn_data']);
+           
 
                 //uno struno bug è apparso, quindi per mancanza di tempo faccio questo workaround
                 // le date delle relazione_altro è inizialmente ''
                 // se c'e' un redattore allora assegna la data effettiva
                 console.log("12a")                
-                renderer['relazione_altro_data1'] = renderer['relazione_altro_redattore1'].length > 0 ? sanitize(renderer['relazione_altro_data1']) : '';
+                renderer['relazione_altro_data1'] = renderer['relazione_altro_redattore1'].length > 0 ? sanitize_date(renderer['relazione_altro_data1']) : '';
                 console.log("12b")
-                renderer['relazione_altro_data2'] = renderer['relazione_altro_redattore2'].length > 0 ? sanitize(renderer['relazione_altro_data2']) : '';
+                renderer['relazione_altro_data2'] = renderer['relazione_altro_redattore2'].length > 0 ? sanitize_date(renderer['relazione_altro_data2']) : '';
                 console.log("12c")
-                renderer['relazione_altro_data3'] = renderer['relazione_altro_redattore3'].length > 0 ? sanitize(renderer['relazione_altro_data3']) : '';
+                renderer['relazione_altro_data3'] = renderer['relazione_altro_redattore3'].length > 0 ? sanitize_date(renderer['relazione_altro_data3']) : '';
                 console.log("12d")
-                renderer['relazione_altro_data4'] = renderer['relazione_altro_redattore4'].length > 0 ? sanitize(renderer['relazione_altro_data4']) : '';
+                renderer['relazione_altro_data4'] = renderer['relazione_altro_redattore4'].length > 0 ? sanitize_date(renderer['relazione_altro_data4']) : '';
                 console.log("12e")
-                renderer['relazione_altro_data5'] = renderer['relazione_altro_redattore5'].length > 0 ? sanitize(renderer['relazione_altro_data5']) : '';
+                renderer['relazione_altro_data5'] = renderer['relazione_altro_redattore5'].length > 0 ? sanitize_date(renderer['relazione_altro_data5']) : '';
                 console.log("12f")
              }
 
