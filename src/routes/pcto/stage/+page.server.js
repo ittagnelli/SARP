@@ -198,7 +198,6 @@ export const actions = {
                     dataFine: new Date(form_data.get('dataFine')),
                     durata_ore: +form_data.get('durata_ore'),
                     orario_accesso: form_data.get('orario_accesso'),
-                    idAzienda: +form_data.get('azienda'),
                     svoltoDa: {
                         set: ids
                     },
