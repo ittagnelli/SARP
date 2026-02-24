@@ -106,12 +106,13 @@ export const actions = {
 
 		const form_data = await request.formData();
 
+
 		SARP.set_session(locals); // passa la sessione all'audit
 		try {
 			await SARP.pcto_Azienda.create({
 				data: {
 					creatoDa: user_id(locals),
-					idConvenzione: form_data.get('idConvenzione'),
+					idConvenzione: form_data.get('idConvenzione') || '',
 					nome: form_data.get('nome'),
 					indirizzo: form_data.get('indirizzo'),
 					piva: form_data.get('piva'),
@@ -129,8 +130,9 @@ export const actions = {
 			});
 		} catch (exception) {
 			// @ts-ignore
-			if (exception.code != 'P2002') catch_error(exception, "l'inserimento", 201);
-			else return fail(400, { error_mex: 'Numero convenzione non univoco' }); // La richiesta fallisce
+			// if (exception.code != 'P2002') catch_error(exception, "l'inserimento", 201);
+			// else return fail(400, { error_mex: 'Numero convenzione non univoco' }); // La richiesta fallisce
+			catch_error(exception, "l'inserimento", 201);
 		}
 	},
 

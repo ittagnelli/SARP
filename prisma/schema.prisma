@@ -1,4 +1,4 @@
-// v 0.37.0 2025-10-29
+// v 0.38.0 2026-02-24
 
 generator client {
     provider = "prisma-client-js"
@@ -192,7 +192,7 @@ model pcto_Azienda {
     direttore_natoA   String?
     direttore_natoIl  DateTime?
     direttore_codiceF String?
-    idConvenzione     String      @unique
+    idConvenzione     String      
     dataConvenzione   DateTime    @default(now())
     dataProtocollo    DateTime    @default(now())
     istituto          String      @default("ITT")
