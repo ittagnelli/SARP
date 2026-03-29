@@ -214,7 +214,7 @@
 			errors = err.inner.reduce((acc, err) => {
 				return { ...acc, [err.path]: err.message };
 			}, {});
-			logger.error(
+			console.error(
 				`Errori nella validazione del form aziende. Oggetto: ${JSON.stringify(
 					form_values
 				)} -- Errore: ${JSON.stringify(errors)}`
@@ -290,7 +290,7 @@
 					{#if form}
 						<ModalError msg={form.error_mex} />
 					{/if}
-					{#if isAdmin}
+					<!-- {#if isAdmin} -->
 					<div class="row">
 						<div class="col-lg-12">
 							<InputText
@@ -299,10 +299,11 @@
 								{errors}
 								placeholder="2223/01"
 								bind:val={form_values.idConvenzione}
+								readonly={!isAdmin}
 							/>
 						</div>
 					</div>
-					{/if}
+					<!-- {/if} -->
 					<div class="row">
 						<div class="col-lg-12">
 							<InputText
@@ -400,16 +401,17 @@
 								bind:val={form_values.dataConvenzione}
 							/>
 						</div>
-						{#if isAdmin}
+						<!-- {#if isAdmin} -->
 						<div class="col-lg-3">
 							<InputDate
 								label="Data Protocollo"
 								name="dataProtocollo"
 								{errors}
 								bind:val={form_values.dataProtocollo}
+								readonly={!isAdmin}
 							/>
 						</div>
-						{/if}
+						<!-- {/if} -->
 						<div class="col-lg-5">
 							<div class="mb-3">
 								<label class="form-label">Istituto</label>

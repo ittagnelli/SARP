@@ -2,7 +2,8 @@
     export let val;
     export let label;
     export let name;
-    export let errors; 
+    export let errors;
+    export let readonly = false;
 </script>
 
 <div class="mb-3">
@@ -13,6 +14,7 @@
         class="form-control"
         class:is-invalid="{errors[name]}"
         bind:value={val}
+        readonly={readonly}
     />
     {#if errors[name]}
         <span class="invalid-feedback">{errors[name]}</span>
