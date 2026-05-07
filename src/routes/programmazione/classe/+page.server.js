@@ -180,9 +180,9 @@ export const actions = {
 			});
 
 			//convert to and return pdf
-			// fs.writeFileSync(path.resolve(PUBLIC_PROGRAMMAZIONE_ANNUALE_TEMPLATES_DIR, "_tmp_programmazione.docx"), docx_buf);
-			// const cmd = `libreoffice --headless --convert-to pdf --outdir ${PUBLIC_PROGRAMMAZIONE_ANNUALE_TEMPLATES_DIR}> ${PUBLIC_PROGRAMMAZIONE_ANNUALE_TEMPLATES_DIR}_tmp_programmazione.docx`;
-			// execSync(cmd);
+			fs.writeFileSync(path.resolve(PUBLIC_PROGRAMMAZIONE_ANNUALE_TEMPLATES_DIR, "_tmp_programmazione.docx"), docx_buf);
+			const cmd = `libreoffice --headless --convert-to pdf --outdir ${PUBLIC_PROGRAMMAZIONE_ANNUALE_TEMPLATES_DIR}> ${PUBLIC_PROGRAMMAZIONE_ANNUALE_TEMPLATES_DIR}_tmp_programmazione.docx`;
+			execSync(cmd);
 		
 			// let pdf_buf = Buffer.from(fs.readFileSync(`${PUBLIC_PROGRAMMAZIONE_ANNUALE_TEMPLATES_DIR}/_tmp_programmazione.pdf`, 'binary'), 'binary');
 			// fs.unlinkSync(`${PUBLIC_PROGRAMMAZIONE_ANNUALE_TEMPLATES_DIR}/_tmp_programmazione.docx`);
