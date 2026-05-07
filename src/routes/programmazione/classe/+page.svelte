@@ -33,8 +33,8 @@
 
             let docx_buffer = JSON.parse(JSON.parse(json.data)[1]);
             let docx_fname = JSON.parse(json.data)[2];
-            // let pdf_buffer = JSON.parse(JSON.parse(json.data)[3]);
-            // let pdf_fname = JSON.parse(json.data)[4];
+            let pdf_buffer = JSON.parse(JSON.parse(json.data)[3]);
+            let pdf_fname = JSON.parse(json.data)[4];
 
             //save to word
         	const buffer_docx = new Uint8Array(docx_buffer); // Convertiamo la stringa in un oggetto che conterrà il nostro array di bytes che verrà poi convertito in Uint8Array, necessario all'oggetto Blob
@@ -42,9 +42,9 @@
           saveAs(blob_docx, docx_fname);
 
             //save to pdf
-            // const buffer_pdf = new Uint8Array(pdf_buffer); // Convertiamo la stringa in un oggetto che conterrà il nostro array di bytes che verrà poi convertito in Uint8Array, necessario all'oggetto Blob
-            // var blob_pdf = new Blob([buffer_pdf], { type: 'application/pdf' });
-            // saveAs(blob_pdf, pdf_fname);
+            const buffer_pdf = new Uint8Array(pdf_buffer); // Convertiamo la stringa in un oggetto che conterrà il nostro array di bytes che verrà poi convertito in Uint8Array, necessario all'oggetto Blob
+            var blob_pdf = new Blob([buffer_pdf], { type: 'application/pdf' });
+            saveAs(blob_pdf, pdf_fname);
         }
         dismiss_button.click();
     }
