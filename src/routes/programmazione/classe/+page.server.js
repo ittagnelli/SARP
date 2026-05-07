@@ -58,7 +58,6 @@ export async function load({ locals }) {
 
 export const actions = {
 	pdf: async ({ cookies, request }) => {
-		let buf;
 		let periodo = 'inizio';
 
 		try {
@@ -175,14 +174,14 @@ export const actions = {
 
 			doc.render(docx_programmazione_template);
 
-			buf = doc.getZip().generate({
+			let docx_buf = doc.getZip().generate({
 				type: 'nodebuffer',
 				compression: 'DEFLATE'
 			});
 
 			//convert to and return pdf
-			fs.writeFileSync(path.resolve(PUBLIC_PROGRAMMAZIONE_ANNUALE_TEMPLATES_DIR, "_tmp_programmazione.docx"), buf);
-			const cmd = `libreoffice --headless --convert-to pdf --outdir ${PUBLIC_PROGRAMMAZIONE_ANNUALE_TEMPLATES_DIR} ${PUBLIC_PROGRAMMAZIONE_ANNUALE_TEMPLATES_DIR}_tmp_programmazione.docx`;
+			fs.writeFileSync(path.resolve(PUBLIC_PROGRAMMAZIONE_ANNUALE_TEMPLATES_DIR, "_tmp_programmazione.docx"), docx_buf);
+			const cmd = `libreoffice --headless --convert-to pdf --outdir ${PUBLIC_PROGRAMMAZIONE_ANNUALE_TEMPLATES_DIR}> ${PUBLIC_PROGRAMMAZIONE_ANNUALE_TEMPLATES_DIR}_tmp_programmazione.docx`;
 			execSync(cmd);
 		
 			let pdf_buf = Buffer.from(fs.readFileSync(`${PUBLIC_PROGRAMMAZIONE_ANNUALE_TEMPLATES_DIR}/_tmp_programmazione.pdf`, 'binary'), 'binary');
@@ -190,16 +189,11 @@ export const actions = {
 			fs.unlinkSync(`${PUBLIC_PROGRAMMAZIONE_ANNUALE_TEMPLATES_DIR}/_tmp_programmazione.pdf`);
 
 			return {
-				file: JSON.stringify(pdf_buf), // Convertiamo il buffer in stringa sennò sveltekit va in errore
-				nome_documento: `Programmazione-${docx_programmazione_template.classe.replace(' ', '_')}-periodo-${periodo}.pdf`
+				file_docx: JSON.stringify(JSON.parse(JSON.stringify(docx_buf)).data), // Convertiamo il buffer in stringa sennò sveltekit va in errore
+				nome_documento_docx: `Programmazione-${docx_programmazione_template.classe.replace(' ', '_')}-periodo-${periodo}.docx`,
+				file_pdf: JSON.stringify(JSON.parse(JSON.stringify(pdf_buf)).data),
+				nome_documento_pdf: `Programmazione-${docx_programmazione_template.classe.replace(' ', '_')}-periodo-${periodo}.pdf`
 			};
-
-
-			//return word
-			// return {
-			// 	file: JSON.stringify(buf), // Convertiamo il buffer in stringa sennò sveltekit va in errore
-			// 	nome_documento: `Programmazione-${docx_programmazione_template.classe.replace(' ', '_')}-periodo-${periodo}.docx`
-			// };
 		} catch (exception) {
 			console.log(exception)
 			//catch_error_pdf(exception, 'la generazione', 204);
