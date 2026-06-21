@@ -15,7 +15,7 @@ export class RBAC {
 		if (!(resource in this.acl)) return false;
 		if (!(action in this.acl[resource])) return false;
 		if (this.acl[resource][action] == null) return false;
-		if (this.acl[resource][action][0] == '*') return true;
+		if (this.acl[resource][action].includes('*')) return true;
 		return this.acl[resource][action].includes(role);
 	}
 }

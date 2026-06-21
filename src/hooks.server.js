@@ -14,7 +14,7 @@ export const handle = async ({ event, resolve }) => {
 		return await resolve(event);
 	}
 
-    // se il coockie è valido settiamo la sessione
+    // se il cookie è valido settiamo la sessione
 	if(session_id) {
 		let db_session = await SARP.Session.findUnique({
 			where: { session_id: session_id },
@@ -22,7 +22,14 @@ export const handle = async ({ event, resolve }) => {
 				login: {include: {ruoli: true}}
 			}
 		});
-        event.locals.session = db_session;
+
+		if (db_session && db_session.scadenza < new Date()) {
+			await SARP.Session.delete({ where: { session_id: session_id } });
+			event.cookies.delete('session', { path: '/' });
+			event.locals.session = undefined;
+		} else {
+			event.locals.session = db_session;
+		}
 	}
 	return await resolve(event);
 };
