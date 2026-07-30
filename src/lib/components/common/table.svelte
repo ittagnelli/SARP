@@ -474,7 +474,7 @@ a {
 }
 
 .badge-container {
-    width: 25vh;
+    width: 18vh;
 }
 
 .action-container {
