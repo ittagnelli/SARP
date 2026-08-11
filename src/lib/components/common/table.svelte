@@ -163,7 +163,6 @@ function table_filter(col, type, key) {
 onMount(async () => { 
     init_tippy();
 });
-
 </script>
 
 <div class="card">
@@ -176,7 +175,8 @@ onMount(async () => {
                             {#each columns as col}
                                 {#if col.type != 'hidden'}
                                 <th>
-                                    <button class="table-sort" data-sort="sort-{col.name}">{col.display}</button>
+                                    <!-- <button class="table-sort" data-sort="sort-{col.name}">{col.display}</button> -->
+                                    <span class="table-responsive wrap" data-sort="sort-{col.name}">{col.display}</span>
                                 </th>
                                 {/if}
                             {/each}
@@ -482,5 +482,9 @@ a {
     grid-auto-flow: column;
     justify-content:space-around;
     column-gap: 5px;
+}
+
+.wrap {
+  text-wrap: wrap;
 }
 </style>
