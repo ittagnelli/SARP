@@ -18,17 +18,41 @@
 	// let insegnamenti = helper.data2arr(data.insegnamenti);
 	// let classi = helper.data2arr(data.classi);
 	let studenti = helper.data2arr(data.studenti);
+  let insegnamenti = helper.data2arr(data.insegnamenti);
 	let pdp_studenti = is_pdp_complete(studenti);
+
+  console.log("INSEGNAMENTO:", insegnamenti)
+
+  function countMaterieClasse(classeId) {
+    return insegnamenti.filter(insegnamento => insegnamento.idClasse == classeId).length; 
+  }
+
+  function getMaterieClasse(classeId) {
+    return insegnamenti.filter(insegnamento => insegnamento.idClasse == classeId).map(insegnamento => insegnamento.idMateria)
+  }
 
 	function is_pdp_complete(studenti) {
 		return studenti.map((s, i) => {
+      if(s.cognome == 'Battaglia') {
+        console.log(s)
+        console.log(getMaterieClasse(s.classe.id))
+      }
+
 			s['studente_col'] = `${s.cognome} ${s.nome}`;
 			s['classe_col'] = `${s.classe.classe} ${s.classe.istituto} ${s.classe.sezione}`;
 			s['sintesi_vocale'] = s.pdp.some((i) => i.sintesi_vocale == true);
 			s['tempo_esteso'] = s.pdp.some((i) => i.tempo_esteso == true);
 
-			let tot_materie = s.pdp.filter((m) => m.anno == helper.get_as()).length;
-			let materie_complete = s.pdp.filter((m) => m.completo == true && m.anno == helper.get_as()).length;
+			// let tot_materie = s.pdp.filter((m) => m.anno == helper.get_as()).length;
+
+      //ora il totale materie sonoo quelle insegnate (vedi insegnamenti)
+      const materieClasse = getMaterieClasse(s.classe.id);
+      let tot_materie = countMaterieClasse(s.classe.id);
+		
+    // let materie_complete = s.pdp.filter((m) => m.completo == true && m.anno == helper.get_as()).length;
+      
+      //ora le materie complete sono le entry nel PDP la cui materia è nella lista delle materie dello studente
+			let materie_complete = s.pdp.filter((m) => m.completo == true && materieClasse.includes(m.idMateria)).length;
 			s['materie_col'] = `${materie_complete}/${tot_materie}`;
 			s['can_print'] =
 				materie_complete == tot_materie &&

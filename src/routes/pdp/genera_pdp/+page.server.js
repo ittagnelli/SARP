@@ -61,6 +61,7 @@ export async function load({ locals }) {
                     griglia_pdp_b_done: true,
                     pdp: {
                         select: {
+                            idMateria: true,
                             completo: true,
                             sintesi_vocale: true,
                             tempo_esteso: true,
@@ -80,8 +81,15 @@ export async function load({ locals }) {
                 }
             });
 
+            const insegnamenti = SARP.Insegnamenti.findMany({
+                where: {
+                  anno: get_as()
+                }
+            });
+
             return {
-                studenti
+                studenti,
+                insegnamenti
             }
         }
     } catch (exception) {
