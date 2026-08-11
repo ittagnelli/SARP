@@ -1,0 +1,295 @@
+import { PrismaDB } from "$js/prisma_db.js";
+import { PrismaClientValidationError } from '@prisma/client/runtime';
+import { user_id, multi_user_field_where, access_protect, route_protect, raise_error, get_as } from "$js/helper";
+import { Logger } from '$js/logger';
+
+import { misure_dispensative } from '../template/dispensative.js';
+import { misure_compensative } from '../template/compensative.js';
+import { misure_valutative } from '../template/valutative.js';
+import { strategie_classe } from '../template/strategie_classe';
+import { strategie_didattiche } from '../template/strategie_didattiche';
+
+let logger = new Logger("server"); //instanzia il logger
+const SARP = new PrismaDB();
+
+const resource = "pdp_docente";
+
+
+function catch_error(exception, code) {
+    if (exception instanceof PrismaClientValidationError)
+        logger.error(exception.message);
+    else {
+        logger.error(JSON.stringify(exception));
+        logger.error(exception.message);
+        logger.error(exception.stack);
+    }
+    raise_error(500, code, `Errore irreversibile nella gestione del PDP. TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`);
+}
+
+// @ts-ignore
+export async function load({ locals }) {
+    let action = 'read';
+
+    route_protect(locals);
+    access_protect(200, locals, action, resource);
+    SARP.set_session(locals);
+
+    let where_search = multi_user_field_where('idDocente', locals);
+    // where_search['anno'] = get_as(); //visualizza solo i PDP dell'anno in corso
+
+    
+    try {
+        const docenti = await SARP.Utente.findMany({
+          where: {
+            tipo: 'DOCENTE',
+            can_login: true
+          },
+          select: {
+              id: true,
+              nome: true,
+              cognome: true,
+          }
+        });
+
+        //mantengo la tabella PDP con le seguente modifiche:
+        // - rimuovo insegnamento
+        // - aggiungo idMateria
+        let pdp = await SARP.PDP.findMany({
+            where: where_search,
+            include: {
+                studente: {
+                    select: {
+                        nome: true,
+                        cognome: true,
+                        obiettivi_minimi: true
+                    }
+                },
+                materia: true
+            },
+            orderBy: [
+                { studente: { cognome: 'asc' } }
+            ]
+        });
+
+        //add informazioni docente al PDP
+        pdp.map(item => item['docente'] = docenti.filter(docente => docente.id == item.idDocente)[0])
+
+      console.log("NUM PDP:", pdp.length)
+
+        //trova insegnamenti del docente
+        const insegnamenti = await SARP.Insegnamenti.findMany({
+            where: {
+              idDocente: user_id(locals),
+              anno: get_as(),
+              titolare: true
+            },
+            select: {
+                idClasse: true,
+                idMateria: true,
+                materia: true,
+                docente: true
+            },
+            orderBy: [
+                { idClasse: 'asc' }
+            ]
+        });
+
+      console.log("NUM INSEGNAMENTI:", insegnamenti.length)
+
+      //lista di tutte le classi in cui insegna docente
+      const classi = Array.from(new Set(insegnamenti.map(item => item.idClasse)))
+      console.log("NUM CLASSI:", classi.length)
+
+        //trova tutti gli studenti bes attivi iscritti alle classi dove il docente insegna
+        //che non sono già presenti nella tabella pdp
+        //questi sono studenti bes per cui non esiste ancora un pdp
+        let studenti = await SARP.Utente.findMany({
+            where: {
+                tipo: 'STUDENTE',
+                bes: true,
+                can_login: true,
+                classeId: {
+                    in: classi
+                }
+            },
+            select: {
+                id: true,
+                nome: true,
+                cognome: true,
+                obiettivi_minimi: true,
+                classe: true
+            }
+        });
+        studenti = studenti.filter(studente => pdp.some(item => item.idStudente == studente.id) == false)
+      console.log("NUM STUDENTI VIRTUAL:", studenti.length)
+
+        //determino il join (in senso SQL) tra classi, materie e studenti 
+     
+        let newPdpEntries = [];
+
+        insegnamenti.forEach(insegnamento => {
+            console.log("INSEGNAMENTO:", insegnamento.idClasse, insegnamento.materia.nome)
+            const iscritti = studenti.filter(studente => studente.classe.id == insegnamento.idClasse) 
+          console.log("NUM ISCRITTI:", iscritti.length)
+            iscritti.forEach(iscritto => {
+              // console.log("ISCRITTO:", iscritto)
+                newPdpEntries.push({
+                  
+    id: Math.floor(Math.random() * (2**32)), //need an id for proper front-end behavior
+    createdAt: Date.now(),
+  updatedAt: Date.now(),
+  idDocente: insegnamento.docente.id,
+  idStudente: iscritto.id,
+  idMateria: insegnamento.materia.id,
+  anno: get_as(),
+  dispensative: misure_dispensative, 
+  compensative: misure_compensative,
+  valutative: misure_valutative,
+  strategie_classe: strategie_classe,
+  strategie_didattiche: strategie_didattiche,
+  obiettivi_minimi: null,
+  altro_compensative: '',
+  altro_dispensative: '',
+  altro_valutative: '',
+  note: '',
+  completo: false,
+  sintesi_vocale: false,
+  tempo_esteso: false,
+  studente: JSON.parse(JSON.stringify(iscritto, ['nome', 'cognome', 'obiettivi_minimi'])),
+  materia: insegnamento.materia,
+  docente: JSON.parse(JSON.stringify(insegnamento.docente, ['id', 'nome', 'cognome'])),
+  vPdp: true //virtualPDP are entries not present in PDP table
+
+                  // classe: `${iscritto.classe.classe} ${iscritto.classe.istituto} ${iscritto.classe.sezione}`,
+                  // studente: `${iscritto.cognome} ${iscritto.nome}`,
+                  // materia: insegnamento.materia.nome,
+                  // docente: `${insegnamento.docente.cognome} ${insegnamento.docente.nome}`,
+                  // as: get_as(),
+                  // obiettivi_minimi: iscritto.obiettivi_minimi
+               })
+            })
+            
+        }) 
+       
+       console.log("NUM PDP ENTRIES:", newPdpEntries.length)
+
+// NUM PDP: 5
+// NUM INSEGNAMENTI: 6
+// NUM CLASSI: 4
+// NUM STUDENTI VIRTUAL: 1
+// INSEGNAMENTO: 9 Telecomunicazioni
+// NUM ISCRITTI: 0
+// INSEGNAMENTO: 11 Sistemi Elettronici
+// NUM ISCRITTI: 0
+// INSEGNAMENTO: 12 Elettronica ed Elettrotecnica
+// NUM ISCRITTI: 1
+// INSEGNAMENTO: 12 Sistemi Elettronici
+// NUM ISCRITTI: 1
+// INSEGNAMENTO: 13 Elettronica ed Elettrotecnica
+// NUM ISCRITTI: 0
+// NUM PDP ENTRIES: 2
+
+        let pdpTemplates = await SARP.pdp_Template.findMany({
+            where: {
+                creatoDa: user_id(locals)
+            }
+        });
+
+        let obiettivi_minimi_templates = await SARP.programmazione_Template.findMany({
+            where: {
+                creatoDa: user_id(locals)
+            }
+        });
+
+        //merge pdp from table and virtual pdp into a single object
+        pdp = pdp.concat(newPdpEntries).sort((s1,s2) => s1.studente.cognome > s2.studente.cognome ? 1 : -1)
+        
+
+        return {
+            pdp,
+            pdpTemplates,
+            obiettivi_minimi_templates
+        };
+    } catch (exception) {
+        catch_error(exception, 2601);
+    }
+}
+
+export const actions = {
+    update: async ({ request, locals }) => {
+        let action = 'update';
+
+        route_protect(locals);
+        access_protect(200, locals, action, resource);
+
+        try {
+            const form = await request.formData();
+            console.log("FORM:",form)
+            logger.debug(`[${locals.session.idUtente} - ${locals.session.login.cognome}] INIZIO UPDATE PDP DOCENTE[${parseInt(form.get("id"))}]`);
+
+            await SARP.PDP.update({
+                data: {
+                    dispensative: form.get("dispensative"),
+                    compensative: form.get("compensative"),
+                    valutative: form.get("valutative"),
+                    strategie_classe: form.get("strategie_classe"),
+                    strategie_didattiche: form.get("strategie_didattiche"),
+                    obiettivi_minimi: form.get("obiettivi_minimi")?.length > 0 ? form.get("obiettivi_minimi") : null, //issue-620
+                    altro_compensative: form.get("altro_compensative")?.toString(),
+                    altro_dispensative: form.get("altro_dispensative")?.toString(),
+                    altro_valutative: form.get("altro_valutative")?.toString(),
+                    note: form.get("note")?.toString(),
+                    completo: form.get("completo") === 'SI',
+                    sintesi_vocale: form.get("sintesi_vocale") === 'true',
+                    tempo_esteso: form.get("tempo_esteso") === 'true'
+                },
+                where: {
+                    id: parseInt(form.get("id"))
+                }
+            });
+
+            return { action: action, status: 'ok' };
+        } catch (exception) {
+            catch_error(exception, 2602);
+        }
+    },
+    create: async ({ request, locals }) => {
+        let action = 'create';
+
+        route_protect(locals);
+        access_protect(200, locals, action, resource);
+        console.log("BACKEND CREATE")
+        try {
+            const form = await request.formData();
+            // console.log("FORM:",form)
+            console.log("=========================")
+            logger.debug(`[${locals.session.idUtente} - ${locals.session.login.cognome}] INIZIO CREATE PDP DOCENTE[${parseInt(form.get("id"))}]`);
+
+            await SARP.PDP.create({
+                data: {
+                    idDocente: Number(form.get("idDocente")),
+                    idStudente: Number(form.get("idStudente")),
+                    idMateria: Number(form.get("idMateria")),
+                    anno: get_as(),
+                    dispensative: form.get("dispensative"),
+                    compensative: form.get("compensative"),
+                    valutative: form.get("valutative"),
+                    strategie_classe: form.get("strategie_classe"),
+                    strategie_didattiche: form.get("strategie_didattiche"),
+                    obiettivi_minimi: form.get("obiettivi_minimi")?.length > 0 ? form.get("obiettivi_minimi") : null, //issue-620
+                    altro_compensative: form.get("altro_compensative")?.toString(),
+                    altro_dispensative: form.get("altro_dispensative")?.toString(),
+                    altro_valutative: form.get("altro_valutative")?.toString(),
+                    note: form.get("note")?.toString(),
+                    completo: form.get("completo") === 'SI',
+                    sintesi_vocale: form.get("sintesi_vocale") === 'true',
+                    tempo_esteso: form.get("tempo_esteso") === 'true'
+                }
+            });
+
+            return { action: action, status: 'ok' };
+        } catch (exception) {
+            catch_error(exception, 2603);
+        }
+    }
+}

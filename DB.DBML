@@ -1,0 +1,306 @@
+Table Versione {
+  versione varchar [pk]
+  createdAt datetime [pk]
+}
+
+Table Utente {
+  id int [pk]
+  createdAt datetime
+  updatedAt datetime
+  creatoDa int
+  tipo varchar
+  nome varchar
+  cognome varchar
+  natoA varchar [null]
+  provincia varchar [null]
+  natoIl datetime [null]
+  codiceF varchar [null]
+  cartaI varchar [null]
+  email varchar [unique]
+  telefono varchar [null]
+  residenza varchar [null]
+  picture varchar [null]
+  bes boolean [null]
+  obiettivi_minimi boolean
+  can_login boolean
+  istituto varchar [null]
+  classeId int [null]
+  griglia_valutazione varchar [null]
+  griglia_valutazione_done boolean
+  griglia_pdp_a varchar [null]
+  griglia_pdp_a_done boolean
+  griglia_pdp_a1 varchar [null]
+  griglia_pdp_a1_done boolean
+  griglia_pdp_c1 varchar [null]
+  griglia_pdp_c1_done boolean
+  griglia_pdp_c2 varchar [null]
+  griglia_pdp_c2_done boolean
+  griglia_pdp_b varchar [null]
+  griglia_pdp_b_done boolean
+}
+
+Table Classe {
+  id int [pk]
+  createdAt datetime
+  updatedAt datetime
+  classe varchar
+  istituto varchar
+  sezione varchar
+  coordinatoreId int [null]
+}
+
+Table Materia {
+  id int [pk]
+  nome varchar [unique]
+  has_pdp boolean
+}
+
+Table Insegnamenti {
+  id int [pk]
+  idDocente int
+  idMateria int
+  idClasse int
+  titolare boolean
+  anno int
+  code_classroom varchar [null]
+  programma_primo_quadrimestre varchar [null]
+  programma_secondo_quadrimestre varchar [null]
+  programma_primo_quadrimestre_completo boolean
+  programma_secondo_quadrimestre_completo boolean
+}
+
+Table Session {
+  id int [pk]
+  createdAt datetime
+  idUtente int [unique]
+  session_id varchar [unique]
+  scadenza datetime
+  mobile boolean
+}
+
+Table tipo_Utente {
+  id int [pk]
+  createdAt datetime
+  updatedAt datetime
+  tipo varchar [unique]
+}
+
+Table ruolo_Utente {
+  id int [pk]
+  createdAt datetime
+  updatedAt datetime
+  ruolo varchar [unique]
+}
+
+Table Ticket {
+  id int [pk]
+  createdAt datetime
+  updatedAt datetime
+  idUtente int
+  applicazione varchar
+  titolo varchar
+  descrizione varchar
+  risolto boolean
+}
+
+Table pcto_Presenza {
+  id int [pk]
+  createdAt datetime
+  updatedAt datetime
+  svoltoDa int
+  creatoDa int
+  as int [null]
+  dataPresenza datetime
+  oraInizio datetime [null]
+  oraFine datetime [null]
+  approvato boolean
+  idPcto int
+}
+
+Table pcto_Valutazione {
+  id int [pk]
+  createdAt datetime
+  updatedAt datetime
+  creatoDa int
+  idPcto int
+  qna varchar
+}
+
+Table pcto_Azienda {
+  id int [pk]
+  createdAt datetime
+  updatedAt datetime
+  creatoDa int
+  nome varchar
+  indirizzo varchar [null]
+  piva varchar [null]
+  telefono varchar [null]
+  email_privacy varchar [null]
+  direttore_nome varchar [null]
+  direttore_natoA varchar [null]
+  direttore_natoIl datetime [null]
+  direttore_codiceF varchar [null]
+  idConvenzione varchar [unique]
+  dataConvenzione datetime
+  dataProtocollo datetime
+  istituto varchar
+  firma_convenzione boolean
+}
+
+Table pcto_Pcto {
+  id int [pk]
+  createdAt datetime
+  updatedAt datetime
+  creatoDa int
+  titolo varchar
+  sede_stage varchar [null]
+  descrizione varchar [null]
+  tutor_aziendale varchar [null]
+  tutor_telefono varchar [null]
+  tutor_email varchar [null]
+  idTutor int [null]
+  dataInizio datetime
+  dataFine datetime
+  durata_ore int
+  orario_accesso varchar [null]
+  idAzienda int
+  contabilizzato boolean
+  anno_scolastico int [null]
+  idClasse int
+  firma_pcto boolean
+  task1 varchar [null]
+  task2 varchar [null]
+  task3 varchar [null]
+  task4 varchar [null]
+  attrezzature varchar [null]
+}
+
+Table pcto_Valutazione_Studente {
+  id int [pk]
+  createdAt datetime
+  updatedAt datetime
+  creatoDa int
+  idPcto int
+  idStagista int
+  valutazione varchar
+}
+
+Table programmazione_Template {
+  id int [pk]
+  createdAt datetime
+  updatedAt datetime
+  creatoDa int
+  nome varchar
+  template varchar
+  libro varchar
+  idMateria int
+  note varchar [null]
+}
+
+Table PDP {
+  id int [pk]
+  createdAt datetime
+  updatedAt datetime
+  idDocente int
+  idInsegnamento int
+  idStudente int
+  anno int
+  dispensative varchar
+  compensative varchar
+  valutative varchar
+  strategie_classe varchar [null]
+  strategie_didattiche varchar [null]
+  obiettivi_minimi varchar [null]
+  altro_compensative varchar [null]
+  altro_dispensative varchar [null]
+  altro_valutative varchar [null]
+  note varchar [null]
+  completo boolean
+  sintesi_vocale boolean
+  tempo_esteso boolean
+}
+
+Table pdp_Template {
+  id int [pk]
+  createdAt datetime
+  updatedAt datetime
+  creatoDa int
+  nome varchar
+  dispensative varchar
+  compensative varchar
+  valutazione varchar
+  strategie_classe varchar [null]
+  strategie_didattiche varchar [null]
+  altro_compensative varchar [null]
+  altro_dispensative varchar [null]
+  altro_valutative varchar [null]
+  note varchar [null]
+}
+
+Table sicurezza_Corso {
+  id int [pk]
+  createdAt datetime
+  updatedAt datetime
+  creatoDa int
+  titolo varchar
+  dataInizio datetime
+  dataFine datetime
+  dataTest datetime [null]
+  tipo varchar
+  somministrato boolean
+}
+
+Table sicurezza_Test {
+  id int [pk]
+  createdAt datetime
+  updatedAt datetime
+  creatoDa int
+  tipo varchar
+  svolto boolean
+  superato boolean
+  domande varchar [null]
+  risposte varchar [null]
+  punti int
+  punti_max int
+  svoltoDa int
+  idCorso int
+}
+
+Table kpi_Stats {
+  id int [pk]
+  createdAt datetime
+  updatedAt datetime
+  n_utenti int [null]
+  n_pcto_aziende_attive int [null]
+  n_pcto_attivi int [null]
+  n_studenti_pcto_attivi int [null]
+  n_ore_tot_pcto_attivi int [null]
+  n_ore_tot_pcto int [null]
+}
+
+// References
+Ref: Utente.classeId > Classe.id
+Ref: Classe.coordinatoreId > Utente.id
+Ref: Insegnamenti.idDocente > Utente.id
+Ref: Insegnamenti.idMateria > Materia.id
+Ref: Insegnamenti.idClasse > Classe.id
+Ref: Session.idUtente > Utente.id
+Ref: Ticket.idUtente > Utente.id
+Ref: pcto_Presenza.svoltoDa > Utente.id
+Ref: pcto_Presenza.idPcto > pcto_Pcto.id
+Ref: pcto_Valutazione.creatoDa > Utente.id
+Ref: pcto_Valutazione.idPcto > pcto_Pcto.id
+Ref: pcto_Azienda.creatoDa > Utente.id
+Ref: pcto_Pcto.idTutor > Utente.id
+Ref: pcto_Pcto.idAzienda > pcto_Azienda.id
+Ref: pcto_Pcto.idClasse > Classe.id
+Ref: pcto_Valutazione_Studente.idPcto > pcto_Pcto.id
+Ref: pcto_Valutazione_Studente.idStagista > Utente.id
+Ref: programmazione_Template.creatoDa > Utente.id
+Ref: programmazione_Template.idMateria > Materia.id
+Ref: PDP.idInsegnamento > Insegnamenti.id
+Ref: PDP.idStudente > Utente.id
+Ref: pdp_Template.creatoDa > Utente.id
+Ref: sicurezza_Test.svoltoDa > Utente.id
+Ref: sicurezza_Test.idCorso > sicurezza_Corso.id
+
