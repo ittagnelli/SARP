@@ -1,5 +1,5 @@
 import { PUBLIC_PDP_TEMPLATES_DIR, PUBLIC_PDP_TEMPLATE } from "$env/static/public";
-import { access_protect, raise_error, route_protect, custom_tags_parser, get_as, is_admin, is_tutor_bes } from "$js/helper";
+import { access_protect, raise_error, route_protect, custom_tags_parser, get_as, is_admin, is_tutor_bes, debugObj } from "$js/helper";
 import { PrismaDB } from "$js/prisma_db.js";
 import path from 'path';
 import fs from 'fs';
@@ -62,6 +62,7 @@ export async function load({ locals }) {
                     pdp: {
                         select: {
                             idMateria: true,
+                            idDocente: true,
                             completo: true,
                             sintesi_vocale: true,
                             tempo_esteso: true,
@@ -81,7 +82,7 @@ export async function load({ locals }) {
                 }
             });
 
-            const insegnamenti = SARP.Insegnamenti.findMany({
+            const insegnamenti = await SARP.Insegnamenti.findMany({
                 where: {
                   anno: get_as()
                 }
@@ -166,7 +167,7 @@ export const actions = {
                 }
             });
 
-            console.log("2")
+            console.log("2:")
             //prepare the valutazione grids
             //Qui è un gran casino in quanto stato fatto in fasi successive
             //In ogni acso prima preparo le varie griglie per con le risposte del tutor di classe
@@ -240,24 +241,59 @@ export const actions = {
             
             console.log("5")
 
-            //now get the section for the different materie
-            const pdp = await SARP.PDP.findMany({
+            const insegnamenti = await SARP.Insegnamenti.findMany({
                 where: {
-                    idStudente: +student_id,
-                    anno: get_as()
+                  anno: get_as(),
+                  idClasse: studente.classeId
                 },
                 include: {
-                    insegnamento: {
-                        select: {
-                            id: true,
-                            materia: true,
-                            docente: true
-                        }
-                    }
+                  materia: true,
+                  docente: true
                 }
             });
+           console.log("INSEGNA:", debugObj(insegnamenti, ['id', 'idMateria', 'idDocente']));
 
+            //now get the section for the different materie
+          //filtro i PDP solo per le materie e i docenti dell'anno
+          //per eliminare quelli vecchi non più necessari ma ancora presenti
+          // const materieIds = insegnamenti.map(insegnamento => insegnamento.idMateria);
+          // console.log(materieIds)
+            let pdp = await SARP.PDP.findMany({
+                where: {
+                    idStudente: +student_id,
+                    // idMateria: {
+                      // in: materieIds
+                    // }
+                },
+                // include: {
+                //     insegnamento: {
+                //         select: {
+                //             id: true,
+                //             materia: true,
+                //             docente: true
+                //         }
+                //     }
+                // }
+            });
+
+            console.log("PDP:", debugObj(pdp, ['id', 'idStudente', 'idDocente', 'idMateria']))
+            pdp = pdp.filter(entry => {
+              return insegnamenti.find(item => 
+                item.idMateria == entry.idMateria &&
+                item.idDocente == entry.idDocente) ? true : false;
+            })
+
+            //siccome insegnamento non fa più parte (PDP REFACTOR) del PDP
+            //arricchisco l'oggetto qui in modo che la parte di codice sottostante
+            //rimanga invariata
             console.log("6")
+            pdp.forEach(entry  => {
+              entry['insegnamento'] = insegnamenti.filter(insegnamento => 
+                insegnamento.idDocente == entry.idDocente &&
+                insegnamento.idMateria == entry.idMateria)[0]
+            })
+
+            console.log("PDP:", debugObj(pdp, ['id', 'idStudente', 'idDocente', 'idMateria']))
 
             let materie = [];
             let firme = [];
@@ -297,13 +333,18 @@ export const actions = {
                     argomenti_q1: p.obiettivi_minimi ? JSON.parse(p.obiettivi_minimi)[0] : [], //issue-620
                     argomenti_q2: p.obiettivi_minimi ? JSON.parse(p.obiettivi_minimi)[1] : []
                 };
+                console.log("MATERIA:", materia)
                 let firma = { materia: materia.materia, docente: materia.docente };
+                console.log("FIRMA:", firma)
 
                 materie.push(materia);
+                console.log("6a")
                 firme.push(firma);
+                console.log("6b")
             });
-            
+           
             console.log("7")
+
 
             //prepare the object to render the template
             let renderer = {};

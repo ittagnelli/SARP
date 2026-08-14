@@ -21,21 +21,28 @@
   let insegnamenti = helper.data2arr(data.insegnamenti);
 	let pdp_studenti = is_pdp_complete(studenti);
 
-  console.log("INSEGNAMENTO:", insegnamenti)
+  // console.log("INSEGNAMENTO:", insegnamenti)
 
   function countMaterieClasse(classeId) {
     return insegnamenti.filter(insegnamento => insegnamento.idClasse == classeId).length; 
   }
 
-  function getMaterieClasse(classeId) {
-    return insegnamenti.filter(insegnamento => insegnamento.idClasse == classeId).map(insegnamento => insegnamento.idMateria)
+  // function getMaterieClasse(classeId) {
+  //   return insegnamenti.filter(insegnamento => insegnamento.idClasse == classeId).map(insegnamento => insegnamento.idMateria)
+  // }
+
+  function pdpMatchInsegnamenti(idDocente, idMateria) {
+    return insegnamenti.filter(insegnamento => 
+              insegnamento.idDocente == idDocente &&
+              insegnamento.idMateria == idMateria).length == 1; 
   }
 
 	function is_pdp_complete(studenti) {
 		return studenti.map((s, i) => {
+      //TBR
       if(s.cognome == 'Battaglia') {
-        console.log(s)
-        console.log(getMaterieClasse(s.classe.id))
+        // console.log(s)
+        // console.log(getMaterieClasse(s.classe.id))
       }
 
 			s['studente_col'] = `${s.cognome} ${s.nome}`;
@@ -46,13 +53,24 @@
 			// let tot_materie = s.pdp.filter((m) => m.anno == helper.get_as()).length;
 
       //ora il totale materie sonoo quelle insegnate (vedi insegnamenti)
-      const materieClasse = getMaterieClasse(s.classe.id);
+      // const materieClasse = getMaterieClasse(s.classe.id);
       let tot_materie = countMaterieClasse(s.classe.id);
-		
+      //se tot materie è 0 allora non visualizzare pdp
+      s['can_show'] = tot_materie > 0;
     // let materie_complete = s.pdp.filter((m) => m.completo == true && m.anno == helper.get_as()).length;
       
-      //ora le materie complete sono le entry nel PDP la cui materia è nella lista delle materie dello studente
-			let materie_complete = s.pdp.filter((m) => m.completo == true && materieClasse.includes(m.idMateria)).length;
+      //ora le materie complete sono le entry nel PDP la cui materia è nella lista delle materie dello studente associata al docente dell'anno
+			// let materie_complete = s.pdp.filter((m) => m.completo == true && materieClasse.includes(m.idMateria)).length;
+         let materie_complete = s.pdp.filter(p => 
+          p.completo == true &&
+          pdpMatchInsegnamenti(p.idDocente, p.idMateria) == true
+          ).length;
+
+      if(s.cognome == 'Battaglia') {
+        // console.log(s.pdp)
+	      // console.log("TOT MATERIE:", tot_materie)
+        // console.log("MATERIE COMPLETE:", materie_complete)
+      }
 			s['materie_col'] = `${materie_complete}/${tot_materie}`;
 			s['can_print'] =
 				materie_complete == tot_materie &&
@@ -63,7 +81,7 @@
 				// s.griglia_pdp_c2_done &&
 				// s.griglia_pdp_b_done;
 			return s;
-		});
+		}).filter(p => p.can_show == true);
 	}
 
 	onMount(async () => {
