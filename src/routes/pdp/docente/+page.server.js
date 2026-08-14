@@ -35,9 +35,7 @@ export async function load({ locals }) {
     SARP.set_session(locals);
 
     let where_search = multi_user_field_where('idDocente', locals);
-    // where_search['anno'] = get_as(); //visualizza solo i PDP dell'anno in corso
     const idDocente = user_id(locals);
-    // console.log(locals)
     
     try {
         //prelevo informazioni docente 
@@ -54,16 +52,11 @@ export async function load({ locals }) {
           }
         });
 
-        console.log("NUM DOCENTI:",docente.length)
-      console.log("AS:",get_as())
-
-
         //devo creare una mappa con chiave insegnamento (classe,materia)
         //e valore una lista di studenti
         //Questi rappresentano tutti i PDP entries dello specifico docente
         //Un sottoinsieme (anche vuoto) di questi sono reali provenineti dalla tabella PDP
         //I restanti sono virtuali in quanto non presenti nella tabella PDP
-       
         const virtualPdps = new Map();
 
         //trova insegnamenti del docente
@@ -85,8 +78,6 @@ export async function load({ locals }) {
             ]
         });
 
-      console.log("NUM INSEGNAMENTI:", insegnamenti.length)
-
       //inizializzo virtual PDPs 
       insegnamenti.forEach(insegnamento => virtualPdps.set(
         {idClasse: insegnamento.idClasse, idMateria:insegnamento.idMateria},
@@ -95,54 +86,42 @@ export async function load({ locals }) {
 
       //determino le classi in cui il docente insegna
       const classiIds = Array.from(new Set(insegnamenti.map(item => item.idClasse)))
-      console.log("NUM CLASSI:", classiIds.length)
 
       //determino le materie insegnate dal docente
       const materieIds = Array.from(new Set(insegnamenti.map(item => item.idMateria)))
-      console.log("NUM MATERIE:", materieIds)
 
       //determino una mappa di classe -> materie insegnate in quella classe
       const class2materie = new Map();
       insegnamenti.forEach(insegnamento => {
-        console.log("INSEGNAMENTO:", JSON.parse(JSON.stringify(insegnamento, ['idClasse', 'idMateria'])))
-        console.log("prima:",class2materie)
         if(class2materie.has(insegnamento.idClasse)) {
             let listaMaterie = class2materie.get(insegnamento.idClasse);
-            console.log("LISTA MATERIE:", listaMaterie)
             listaMaterie.push(insegnamento.idMateria)
-            console.log("LISTA MATERIE:", listaMaterie)
             class2materie.set(insegnamento.idClasse, listaMaterie)
          } else {
             class2materie.set(insegnamento.idClasse, [insegnamento.idMateria])
-        console.log("dopo:", class2materie)
          }
       })
 
-      console.log("class2materie:", class2materie)
-
-        //trova tutti gli studenti bes attivi iscritti alle classi dove il docente insegna
-        let studenti = await SARP.Utente.findMany({
-            where: {
-                tipo: 'STUDENTE',
-                bes: true,
-                can_login: true,
-                classeId: {
-                    in: classiIds
-                }
-            },
-            select: {
-                id: true,
-                nome: true,
-                cognome: true,
-                obiettivi_minimi: true,
-                classe: true
-            }
-        });
-
-      console.log("NUM STUDENTI:", studenti.length)  
+      //trova tutti gli studenti bes attivi iscritti alle classi dove il docente insegna
+      let studenti = await SARP.Utente.findMany({
+          where: {
+              tipo: 'STUDENTE',
+              bes: true,
+              can_login: true,
+              classeId: {
+                  in: classiIds
+              }
+          },
+          select: {
+              id: true,
+              nome: true,
+              cognome: true,
+              obiettivi_minimi: true,
+              classe: true
+          }
+      });
 
       const studentiIds = Array.from(new Set(studenti.map(item => item.id)))
-      console.log("NUM STUDENTI IDS:", studentiIds.length)
 
       //mappa gli studenti trovati ai vari insegnamenti
       studenti.forEach(studente => {
@@ -151,52 +130,47 @@ export async function load({ locals }) {
             virtualPdps.get(k).push(studente.id)
         }
       })
-      // console.log("VIRTUAL PDP:", virtualPdps)
-
 
       //ora sottraggo da virtual PDPs i realPdps, cioè  quelli che già esistono nella tabella PDP
-        //mantengo la tabella PDP con le seguente modifiche:
-        // - rimuovo insegnamento
-        // - aggiungo idMateria
-        let realPdps = await SARP.PDP.findMany({
-            where: {
-              idDocente: idDocente,
+      //mantengo la tabella PDP con le seguente modifiche:
+      // - rimuovo insegnamento
+      // - aggiungo idMateria
+      let realPdps = await SARP.PDP.findMany({
+          where: {
+            idDocente: idDocente,
+            studente: {
+                can_login: true,
+                id: {
+                  in: studentiIds
+                }
+            },
+            materia: {
+              id: {
+                in: materieIds
+              }
+            }
+          },
+          include: {
               studente: {
-                  can_login: true,
-                  // bes: true,
-                  id: {
-                    in: studentiIds
+                  select: {
+                      nome: true,
+                      cognome: true,
+                      bes: true,
+                      obiettivi_minimi: true,
+                      classeId: true
                   }
               },
-              materia: {
-                id: {
-                  in: materieIds
-                }
-              }
-            },
-            include: {
-                studente: {
-                    select: {
-                        nome: true,
-                        cognome: true,
-                        bes: true,
-                        obiettivi_minimi: true,
-                        classeId: true
-                    }
-                },
-                materia: true,
-            },
-            orderBy: [
-                { studente: { cognome: 'asc' } }
-            ]
-        });
-         // console.log("PDPS:", realPdps)
-      // console.log(JSON.parse(JSON.stringify(realPdps, ['id','idDocente','idStudente','idMateria', ,'materia'])))
-        //add informazioni docente al PDP
-        realPdps.map(pdp => pdp['docente'] = docente[0]);
-        //only keep pdp for bes students as PDP table contain entries for students which were bes but not anymore
-        realPdps = realPdps.filter(realPdp => realPdp.studente.bes == true);
-      console.log("NUM REAL PDP FROM DB:", realPdps.length)
+              materia: true,
+          },
+          orderBy: [
+              { studente: { cognome: 'asc' } }
+          ]
+      });
+      
+      //add informazioni docente al PDP
+      realPdps.map(pdp => pdp['docente'] = docente[0]);
+      //only keep pdp for bes students as PDP table contain entries for students which were bes but not anymore
+      realPdps = realPdps.filter(realPdp => realPdp.studente.bes == true);
 
       //ora il PDP contiene entry non valide. per esempio io insegno tpis in 3 e reti in 4
       //allora la query pesca anche le entry esistenti di reti in 3 e tpsi in 4
@@ -207,24 +181,17 @@ export async function load({ locals }) {
         return class2materie.get(idClasse).includes(idMateria);
       });
 
-      console.log("NUM REAL PDP DOPO FILTRO:", realPdps.length)
-
-
-        for(let realPdp of realPdps) {
-          // console.log("PROCESSO:", realPdp.idMateria, realPdp.idStudente)
-          for(let [k,v] of virtualPdps) {
-            if(k.idMateria == realPdp.idMateria) {
-              let students = virtualPdps.get(k);
-              if(students.includes(realPdp.idStudente)) {
-                // console.log("STUDENTS K:", students)
-                students.splice(students.indexOf(realPdp.idStudente),1);
-              }
+      for(let realPdp of realPdps) {
+        for(let [k,v] of virtualPdps) {
+          if(k.idMateria == realPdp.idMateria) {
+            let students = virtualPdps.get(k);
+            if(students.includes(realPdp.idStudente)) {
+              students.splice(students.indexOf(realPdp.idStudente),1);
             }
           }
-          // console.log(virtualPdps)
         }
+      }
 
-        // console.log("VIRTUAL PDPDS FINAL:", virtualPdps)
       //creo le entry PDP virtualy 
       let virtualPdpEntries = [];
         for(let [k,vstudenti] of virtualPdps) {
@@ -252,7 +219,6 @@ export async function load({ locals }) {
               sintesi_vocale: false,
               tempo_esteso: false,
               studente: JSON.parse(JSON.stringify(studenti.filter(s => s.id == vstudente)[0], ['nome', 'cognome', 'obiettivi_minimi'])),
-               // materia: realPdps[realPdps.findLastIndex(realPdp => realPdp.materia.id == k.idMateria).materia],
               materia: insegnamenti[insegnamenti.findLastIndex(insegnamento => insegnamento.materia.id == k.idMateria)].materia,
               docente: JSON.parse(JSON.stringify(docente[0], ['id', 'nome', 'cognome'])),
               vPdp: true //virtualPDP are entries not present in PDP table
@@ -260,9 +226,6 @@ export async function load({ locals }) {
             }) 
           }
         }
-
-        console.log("NUM VIRTUAL PDP ENTRIES:", virtualPdpEntries.length)
-      // console.log(JSON.parse(JSON.stringify(insegnamenti)))
 
         let pdpTemplates = await SARP.pdp_Template.findMany({
             where: {
@@ -278,7 +241,6 @@ export async function load({ locals }) {
 
         //merge realPdps and virtualPdpEntries into a single object
         realPdps = realPdps.concat(virtualPdpEntries).sort((s1,s2) => s1.studente.cognome > s2.studente.cognome ? 1 : -1)
-        
 
         return {
             pdp: realPdps,
@@ -299,7 +261,6 @@ export const actions = {
 
         try {
             const form = await request.formData();
-            console.log("FORM:",form)
             logger.debug(`[${locals.session.idUtente} - ${locals.session.login.cognome}] INIZIO UPDATE PDP DOCENTE[${parseInt(form.get("id"))}]`);
 
             await SARP.PDP.update({
@@ -333,11 +294,8 @@ export const actions = {
 
         route_protect(locals);
         access_protect(200, locals, action, resource);
-        console.log("BACKEND CREATE")
         try {
             const form = await request.formData();
-            // console.log("FORM:",form)
-            console.log("=========================")
             logger.debug(`[${locals.session.idUtente} - ${locals.session.login.cognome}] INIZIO CREATE PDP DOCENTE[${parseInt(form.get("id"))}]`);
 
             await SARP.PDP.create({

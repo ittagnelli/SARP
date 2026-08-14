@@ -87,17 +87,14 @@
 	let errors = {};
 
 	async function start_editing(e) {
-		//modal_action = 'update';
-    console.log(e.detail)
-
 		form_values.template_id = 0;
 		form_values.id = e.detail.id;
 		current_pdp = pdp.filter((i) => i.id == e.detail.id)[0];
-    console.log(current_pdp)
 
-    //set the modal_action based on vPdp or not
+    //modal_action dipende dal tipo di PDP
+    //se è un PDP reale allora è un UPDATE 
+    //se invece e un vPDP allora è un CREATE in quanto la entry non esiste nella tabella PDP
     modal_action = current_pdp.hasOwnProperty('vPdp') ? 'create' : 'update';
-    console.log("vPDP:", modal_action)
 
     form_values.idDocente = current_pdp.idDocente;
     form_values.idStudente = current_pdp.idStudente;
@@ -137,7 +134,6 @@
 	}
 
 	async function handleSubmit() {
-    console.log("handleSubmit")
 		form_values.altro_compensative = helper.sanitize_text_form(form_values.altro_compensative);
 		form_values.altro_dispensative = helper.sanitize_text_form(form_values.altro_dispensative);
 		form_values.altro_valutative = helper.sanitize_text_form(form_values.altro_valutative);
@@ -150,8 +146,6 @@
 
 		//imposta i flag sintesi_vocale e tempo_esteso
 		form_values.sintesi_vocale =
-		  // current_pdp.insegnamento.materia.nome == MATERIA_SINTESI_VOCALE &&
-			// current_compensative[1].selected;
 		  current_pdp.idMateria == MATERIA_SINTESI_VOCALE_ID && current_compensative[1].selected;
 		form_values.tempo_esteso = false;
 
