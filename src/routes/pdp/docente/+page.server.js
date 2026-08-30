@@ -42,7 +42,7 @@ const getDocente = async (idDocente) => {
     });
 
     if(docente.length == 0) throw new Error(`Docente non trovato: ${idDocente}`);
-    return docente;
+    return docente[0];
 }
 
 //trova tutti gli studenti che sono iscritti in una classe della lista classi
@@ -70,10 +70,10 @@ const getStudentiOfClasses = async (classi) => {
 }
 
 //trova tutti gli insegnamenti dell'anno in corso per uno specifico docente in base al suo id
-const getInsegnamentiOfDocente = async (docente) => {
+const getInsegnamentiOfDocente = async (idDocente) => {
     const insegnamenti = await SARP.Insegnamenti.findMany({
         where: {
-            idDocente: docente, 
+            idDocente: idDocente, 
             anno: get_as(),
             titolare: true
         },
