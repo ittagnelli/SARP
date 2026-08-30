@@ -18,7 +18,7 @@
 	// const MATERIA_SINTESI_VOCALE = 'Lettere Italiane';
   const MATERIA_SINTESI_VOCALE_ID = 2;
 
-	let obiettivi_minimi_templates = helper.data2arr(data.obiettivi_minimi_templates);
+	let obiettivi_minimi_templates = helper.data2arr(data.obiettiviMinTemplates);
 	let pdp = helper.data2arr(data.pdp);
 	//add field for easier table visualization
 	pdp.forEach((p) => {

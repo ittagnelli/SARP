@@ -23,121 +23,95 @@ function catch_error(exception, code) {
         logger.error(exception.message);
         logger.error(exception.stack);
     }
-    raise_error(500, code, `Errore irreversibile nella gestione del PDP. TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`);
+    raise_error(500, code, `Errore irreversibile nella gestione del PDP [${exception.message}]. TIMESTAMP: ${new Date().toISOString()} Riportare questo messaggio agli sviluppatori`);
 }
 
-// @ts-ignore
-export async function load({ locals }) {
-    let action = 'read';
-
-    route_protect(locals);
-    access_protect(200, locals, action, resource);
-    SARP.set_session(locals);
-
-    let where_search = multi_user_field_where('idDocente', locals);
-    const idDocente = user_id(locals);
-    
-    try {
-        //prelevo informazioni docente 
-        const docente = await SARP.Utente.findMany({
-          where: {
+//trova lo specifico docente in base al suo id
+const getDocente = async (idDocente) => {
+    const docente = await SARP.Utente.findMany({
+        where: {
             tipo: 'DOCENTE',
             can_login: true,
             id: idDocente
-          },
-          select: {
-              id: true,
-              nome: true,
-              cognome: true,
-          }
-        });
-
-        //devo creare una mappa con chiave insegnamento (classe,materia)
-        //e valore una lista di studenti
-        //Questi rappresentano tutti i PDP entries dello specifico docente
-        //Un sottoinsieme (anche vuoto) di questi sono reali provenineti dalla tabella PDP
-        //I restanti sono virtuali in quanto non presenti nella tabella PDP
-        const virtualPdps = new Map();
-
-        //trova insegnamenti del docente
-        const insegnamenti = await SARP.Insegnamenti.findMany({
-            where: {
-              idDocente: idDocente, 
-              anno: get_as(),
-              titolare: true
-            },
-            select: {
-                idClasse: true,
-                idMateria: true,
-                materia: true,
-                docente: true,
-                materia: true
-            },
-            orderBy: [
-                { idClasse: 'asc' }
-            ]
-        });
-
-      //inizializzo virtual PDPs 
-      insegnamenti.forEach(insegnamento => virtualPdps.set(
-        {idClasse: insegnamento.idClasse, idMateria:insegnamento.idMateria},
-        []
-      ));
-
-      //determino le classi in cui il docente insegna
-      const classiIds = Array.from(new Set(insegnamenti.map(item => item.idClasse)))
-
-      //determino le materie insegnate dal docente
-      const materieIds = Array.from(new Set(insegnamenti.map(item => item.idMateria)))
-
-      //determino una mappa di classe -> materie insegnate in quella classe
-      const class2materie = new Map();
-      insegnamenti.forEach(insegnamento => {
-        if(class2materie.has(insegnamento.idClasse)) {
-            let listaMaterie = class2materie.get(insegnamento.idClasse);
-            listaMaterie.push(insegnamento.idMateria)
-            class2materie.set(insegnamento.idClasse, listaMaterie)
-         } else {
-            class2materie.set(insegnamento.idClasse, [insegnamento.idMateria])
-         }
-      })
-
-      //trova tutti gli studenti bes attivi iscritti alle classi dove il docente insegna
-      let studenti = await SARP.Utente.findMany({
-          where: {
-              tipo: 'STUDENTE',
-              bes: true,
-              can_login: true,
-              classeId: {
-                  in: classiIds
-              }
-          },
-          select: {
-              id: true,
-              nome: true,
-              cognome: true,
-              obiettivi_minimi: true,
-              classe: true
-          }
-      });
-
-      const studentiIds = Array.from(new Set(studenti.map(item => item.id)))
-
-      //mappa gli studenti trovati ai vari insegnamenti
-      studenti.forEach(studente => {
-        for(let [k,v] of virtualPdps) {
-          if(k.idClasse == studente.classe.id)
-            virtualPdps.get(k).push(studente.id)
+        },
+        select: {
+            id: true,
+            nome: true,
+            cognome: true,
         }
-      })
+    });
 
-      //ora sottraggo da virtual PDPs i realPdps, cioè  quelli che già esistono nella tabella PDP
-      //mantengo la tabella PDP con le seguente modifiche:
-      // - rimuovo insegnamento
-      // - aggiungo idMateria
-      let realPdps = await SARP.PDP.findMany({
-          where: {
-            idDocente: idDocente,
+    if(docente.length == 0) throw new Error(`Docente non trovato: ${idDocente}`);
+    return docente;
+}
+
+//trova tutti gli studenti che sono iscritti in una classe della lista classi
+const getStudentiOfClasses = async (classi) => {
+    const studenti = await SARP.Utente.findMany({
+        where: {
+            tipo: 'STUDENTE',
+            bes: true,
+            can_login: true,
+            classeId: {
+                in: classi
+            }
+        },
+        select: {
+            id: true,
+            nome: true,
+            cognome: true,
+            obiettivi_minimi: true,
+            classe: true
+        }
+    });
+    
+    if(studenti.length == 0) throw new Error(`Non ci sono studenti per le classi [${classiIds}]`);
+    return studenti;
+}
+
+//trova tutti gli insegnamenti dell'anno in corso per uno specifico docente in base al suo id
+const getInsegnamentiOfDocente = async (docente) => {
+    const insegnamenti = await SARP.Insegnamenti.findMany({
+        where: {
+            idDocente: docente, 
+            anno: get_as(),
+            titolare: true
+        },
+        select: {
+            idClasse: true,
+            idMateria: true,
+            materia: true,
+            docente: true,
+            materia: true
+        },
+        orderBy: [
+            { idClasse: 'asc' }
+        ]
+    });
+
+    if(insegnamenti.length == 0) throw new Error(`Non ci sono insegnamenti per il docente [${idDocente}]`);
+    return insegnamenti;
+}
+
+//preleva tutti i PDP esistenti per uno studente associati agli insegnamenti e docente
+//potrebbe essere una lista vuota per un uovo studente (NON HA ancora PDP)
+//potrebbe non includere tutte le linee della tabella PDP in quanto obsolete
+//in quanto il PDP per quella materia non è negli insegnamenti di questo anno
+//pensa a studente che dalla 2 passa alla 3
+const getRealPdps = async(docente, insegnamenti, studenti) => {
+    //determino le materie insegnate dal docente
+    const materieIds = Array.from(new Set(insegnamenti.map(item => item.idMateria)))
+
+    //determino gli studenti che necessitano un PDP per questo docente
+    const studentiIds = Array.from(new Set(studenti.map(item => item.id)))
+       
+    //mappo le materie alle classi relative
+    //creano una mappa: classe -> lista materie insegnate in quella classe
+    const class2materie = mapMaterieToClassi(insegnamenti);
+
+    let realPdps = await SARP.PDP.findMany({
+        where: {
+            idDocente: docente.id,
             studente: {
                 can_login: true,
                 id: {
@@ -149,103 +123,209 @@ export async function load({ locals }) {
                 in: materieIds
               }
             }
-          },
-          include: {
-              studente: {
-                  select: {
-                      nome: true,
-                      cognome: true,
-                      bes: true,
-                      obiettivi_minimi: true,
-                      classeId: true
-                  }
-              },
-              materia: true,
-          },
-          orderBy: [
-              { studente: { cognome: 'asc' } }
-          ]
-      });
-      
-      //add informazioni docente al PDP
-      realPdps.map(pdp => pdp['docente'] = docente[0]);
-      //only keep pdp for bes students as PDP table contain entries for students which were bes but not anymore
-      realPdps = realPdps.filter(realPdp => realPdp.studente.bes == true);
+        },
+        include: {
+            studente: {
+                select: {
+                    nome: true,
+                    cognome: true,
+                    bes: true,
+                    obiettivi_minimi: true,
+                    classeId: true
+                }
+            },
+            materia: true,
+        },
+        orderBy: [
+            { studente: { cognome: 'asc' } }
+        ]
+    });
 
-      //ora il PDP contiene entry non valide. per esempio io insegno tpis in 3 e reti in 4
-      //allora la query pesca anche le entry esistenti di reti in 3 e tpsi in 4
-      //che erano presenti dagli anni passati
-      realPdps = realPdps.filter(realPdp => {
-        const idMateria = realPdp.materia.id;
-        const idClasse = realPdp.studente.classeId;
-        return class2materie.get(idClasse).includes(idMateria);
-      });
+    //add informazioni docente al PDP per renderlo uniforme con virtualPdps
+    realPdps.map(pdp => pdp['docente'] = docente);
+  
+    //only keep pdp for bes students as PDP table contain entries for students which were bes but not anymore
+    realPdps = realPdps.filter(realPdp => realPdp.studente.bes == true);
 
-      for(let realPdp of realPdps) {
+    //ora il PDP contiene entry non valide. per esempio io insegno tpis in 3 e reti in 4
+    //allora la query pesca anche le entry esistenti di reti in 3 e tpsi in 4
+    //che erano presenti dagli anni passati
+    realPdps = realPdps.filter(realPdp => {
+      const idMateria = realPdp.materia.id;
+      const idClasse = realPdp.studente.classeId;
+      return class2materie.get(idClasse).includes(idMateria);
+    });
+  
+    //
+    //i realPDP possono non esistere. Per esempio per un nuovo studente
+    return realPdps;
+}
+
+//crea una mappa classe -> materie insegnate in quella classe
+const mapMaterieToClassi = (insegnamenti) => {
+    const class2materie = new Map();
+    insegnamenti.forEach(insegnamento => {
+        if(class2materie.has(insegnamento.idClasse)) {
+            let listaMaterie = class2materie.get(insegnamento.idClasse);
+            listaMaterie.push(insegnamento.idMateria)
+            class2materie.set(insegnamento.idClasse, listaMaterie)
+        } else {
+            class2materie.set(insegnamento.idClasse, [insegnamento.idMateria])
+        }
+    });
+  
+    return class2materie;
+}
+
+//preleva tutti i templates PDP del docente e 
+//i template programmazione per gli obiettivi minimi
+const getTemplatesOfDocente = async (docente) => {
+    const pdpTemplates = await SARP.pdp_Template.findMany({
+        where: {
+            creatoDa: docente
+        }
+    });
+
+    const obiettiviMinTemplates = await SARP.programmazione_Template.findMany({
+        where: {
+            creatoDa: docente
+        }
+    });
+
+    return {
+      pdpTemplates,
+      obiettiviMinTemplates
+    }
+}
+
+//inizializza i virtualPDP
+//struttura uguale ai PDP reali ma virtuali cioè che non 
+//hanno ancora una corrispondenza nella tabella PDP
+//pensa al caso studente dalla 2 alla 3.
+//Per TPSI non ha ancora un PDP reale ma deve averlo virtuale
+const initVirtualPdps = async (studenti, insegnamenti) => {
+    const virtualPdps = new Map();
+
+    //inizializzo virtual PDPs 
+    insegnamenti.forEach(insegnamento => virtualPdps.set(
+        {idClasse: insegnamento.idClasse, idMateria:insegnamento.idMateria},
+        []
+    ));
+
+    //mappa gli studenti trovati ai vari insegnamenti
+    studenti.forEach(studente => {
         for(let [k,v] of virtualPdps) {
-          if(k.idMateria == realPdp.idMateria) {
-            let students = virtualPdps.get(k);
-            if(students.includes(realPdp.idStudente)) {
-              students.splice(students.indexOf(realPdp.idStudente),1);
-            }
-          }
+            if(k.idClasse == studente.classe.id)
+                virtualPdps.get(k).push(studente.id)
         }
-      }
+    });
 
-      //creo le entry PDP virtualy 
-      let virtualPdpEntries = [];
-        for(let [k,vstudenti] of virtualPdps) {
-          if(vstudenti.length > 0) {
+    return virtualPdps;
+}
+
+//virtualPDPs - realPDPs
+const removeVirtualPdpFromRealPdp = async (realPdps, virtualPdps) => { 
+    for(let realPdp of realPdps) {
+        for(let [k,v] of virtualPdps) {
+            if(k.idMateria == realPdp.idMateria) {
+                let students = virtualPdps.get(k);
+                if(students.includes(realPdp.idStudente)) {
+                    students.splice(students.indexOf(realPdp.idStudente),1);
+                }
+            }
+        }
+    }
+}
+
+const createVirtualPdpsEntries = async (docente, studenti, insegnamenti, virtualPdps) => {
+    //creo le entry PDP virtualy 
+    let virtualPdpEntries = [];
+    for(let [k,vstudenti] of virtualPdps) {
+        if(vstudenti.length > 0) {
             vstudenti.forEach(vstudente => {
-              virtualPdpEntries.push({
-              id: Math.floor(Math.random() * (2**32)), //need an id for proper front-end behavior
-              createdAt: Date.now(),
-              updatedAt: Date.now(),
-              idDocente: idDocente,
-              idStudente: vstudente,
-              idMateria: k.idMateria,
-              anno: get_as(),
-              dispensative: misure_dispensative, 
-              compensative: misure_compensative,
-              valutative: misure_valutative,
-              strategie_classe: strategie_classe,
-              strategie_didattiche: strategie_didattiche,
-              obiettivi_minimi: null,
-              altro_compensative: '',
-              altro_dispensative: '',
-              altro_valutative: '',
-              note: '',
-              completo: false,
-              sintesi_vocale: false,
-              tempo_esteso: false,
-              studente: JSON.parse(JSON.stringify(studenti.filter(s => s.id == vstudente)[0], ['nome', 'cognome', 'obiettivi_minimi'])),
-              materia: insegnamenti[insegnamenti.findLastIndex(insegnamento => insegnamento.materia.id == k.idMateria)].materia,
-              docente: JSON.parse(JSON.stringify(docente[0], ['id', 'nome', 'cognome'])),
-              vPdp: true //virtualPDP are entries not present in PDP table
-              })
+                virtualPdpEntries.push({
+                    id: Math.floor(Math.random() * (2**32)), //need an id for proper front-end behavior
+                    createdAt: Date.now(),
+                    updatedAt: Date.now(),
+                    idDocente: docente.id,
+                    idStudente: vstudente,
+                    idMateria: k.idMateria,
+                    anno: get_as(),
+                    dispensative: misure_dispensative, 
+                    compensative: misure_compensative,
+                    valutative: misure_valutative,
+                    strategie_classe: strategie_classe,
+                    strategie_didattiche: strategie_didattiche,
+                    obiettivi_minimi: null,
+                    altro_compensative: '',
+                    altro_dispensative: '',
+                    altro_valutative: '',
+                    note: '',
+                    completo: false,
+                    sintesi_vocale: false,
+                    tempo_esteso: false,
+                    studente: JSON.parse(JSON.stringify(studenti.filter(s => s.id == vstudente)[0], ['nome', 'cognome', 'obiettivi_minimi'])),
+                    materia: insegnamenti[insegnamenti.findLastIndex(insegnamento => insegnamento.materia.id == k.idMateria)].materia,
+                    docente: JSON.parse(JSON.stringify(docente, ['id', 'nome', 'cognome'])),
+                    vPdp: true //virtualPDP are entries not present in PDP table
+                })
             }) 
-          }
         }
+    }
 
-        let pdpTemplates = await SARP.pdp_Template.findMany({
-            where: {
-                creatoDa: idDocente
-            }
-        });
+    return virtualPdpEntries;
+}
 
-        let obiettivi_minimi_templates = await SARP.programmazione_Template.findMany({
-            where: {
-                creatoDa: idDocente
-            }
-        });
+// @ts-ignore
+export async function load({ locals }) {
+    let action = 'read';
+
+    route_protect(locals);
+    access_protect(200, locals, action, resource);
+    SARP.set_session(locals);
+
+    try {
+        const idDocente = user_id(locals);
+
+        //prelevo l'oggetto docente 
+        const docente = await getDocente(idDocente);
+
+        //trova insegnamenti del docente
+        const insegnamenti = await getInsegnamentiOfDocente(idDocente);
+
+        //determino le classi in cui il docente insegna
+        const classiIds = Array.from(new Set(insegnamenti.map(item => item.idClasse)))
+
+        //trova tutti gli studenti bes attivi iscritti alle classi dove insegna il docente
+        const studenti = await getStudentiOfClasses(classiIds);
+
+        //preleva i template PDP e programmazione per lo specifico docente
+        const { pdpTemplates, obiettiviMinTemplates } = await getTemplatesOfDocente(idDocente);
+
+        //ottengo lista PDP reali, se presenti
+        let realPdps = await getRealPdps(docente, insegnamenti, studenti);
+
+        //devo creare una mappa con chiave insegnamento (classe,materia)
+        //e valore una lista di studenti
+        //Questi rappresentano tutti i PDP entries dello specifico docente
+        //Un sottoinsieme (anche vuoto) di questi sono reali provenineti dalla tabella PDP
+        //I restanti sono virtuali in quanto non presenti nella tabella PDP
+        const virtualPdps = await initVirtualPdps(studenti, insegnamenti);
+      
+        //virtualPDPs al mmento contiene entry reali e virtuali
+        //quindi sottraggo da virtual PDPs i realPdps, 
+        //cioè  quelli che già esistono nella tabella PDP
+        removeVirtualPdpFromRealPdp(realPdps, virtualPdps);
+
+        const virtualPdpEntries = await createVirtualPdpsEntries(docente, studenti, insegnamenti, virtualPdps);
 
         //merge realPdps and virtualPdpEntries into a single object
-        realPdps = realPdps.concat(virtualPdpEntries).sort((s1,s2) => s1.studente.cognome > s2.studente.cognome ? 1 : -1)
+        const computedPdps = realPdps.concat(virtualPdpEntries).sort((s1,s2) => s1.studente.cognome > s2.studente.cognome ? 1 : -1)
 
         return {
-            pdp: realPdps,
+            pdp: computedPdps,
             pdpTemplates,
-            obiettivi_minimi_templates
+            obiettiviMinTemplates
         };
     } catch (exception) {
         catch_error(exception, 2601);
