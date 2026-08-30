@@ -94,7 +94,8 @@
     //modal_action dipende dal tipo di PDP
     //se è un PDP reale allora è un UPDATE 
     //se invece e un vPDP allora è un CREATE in quanto la entry non esiste nella tabella PDP
-    modal_action = current_pdp.hasOwnProperty('vPdp') ? 'create' : 'update';
+    // modal_action = current_pdp.hasOwnProperty('vPdp') ? 'create' : 'update';
+    modal_action = current_pdp.hasOwnProperty('virtualPdp') ? 'create' : 'update';
 
     form_values.idDocente = current_pdp.idDocente;
     form_values.idStudente = current_pdp.idStudente;

@@ -9,7 +9,8 @@ import { misure_valutative } from '../template/valutative.js';
 import { strategie_classe } from '../template/strategie_classe';
 import { strategie_didattiche } from '../template/strategie_didattiche';
 
-let logger = new Logger("server"); //instanzia il logger
+// let logger = new Logger("server"); //instanzia il logger
+const logger = new Logger("server"); //instanzia il logger
 const SARP = new PrismaDB();
 
 const resource = "pdp_docente";
@@ -65,7 +66,8 @@ const getStudentiOfClasses = async (classi) => {
         }
     });
     
-    if(studenti.length == 0) throw new Error(`Non ci sono studenti per le classi [${classiIds}]`);
+    // if(studenti.length == 0) throw new Error(`Non ci sono studenti per le classi [${classiIds}]`);
+    if(studenti.length == 0) throw new Error(`Non ci sono studenti per le classi [${classi}]`);
     return studenti;
 }
 
@@ -80,8 +82,9 @@ const getInsegnamentiOfDocente = async (idDocente) => {
         select: {
             idClasse: true,
             idMateria: true,
-            materia: true,
             docente: true,
+            // materia: true,
+            // materia: true
             materia: true
         },
         orderBy: [
@@ -104,7 +107,7 @@ const getRealPdps = async(docente, insegnamenti, studenti) => {
 
     //determino gli studenti che necessitano un PDP per questo docente
     const studentiIds = Array.from(new Set(studenti.map(item => item.id)))
-       
+
     //mappo le materie alle classi relative
     //creano una mappa: classe -> lista materie insegnate in quella classe
     const class2materie = mapMaterieToClassi(insegnamenti);
@@ -115,13 +118,13 @@ const getRealPdps = async(docente, insegnamenti, studenti) => {
             studente: {
                 can_login: true,
                 id: {
-                  in: studentiIds
+                    in: studentiIds
                 }
             },
             materia: {
-              id: {
-                in: materieIds
-              }
+                id: {
+                    in: materieIds
+                }
             }
         },
         include: {
@@ -143,7 +146,7 @@ const getRealPdps = async(docente, insegnamenti, studenti) => {
 
     //add informazioni docente al PDP per renderlo uniforme con virtualPdps
     realPdps.map(pdp => pdp['docente'] = docente);
-  
+
     //only keep pdp for bes students as PDP table contain entries for students which were bes but not anymore
     realPdps = realPdps.filter(realPdp => realPdp.studente.bes == true);
 
@@ -151,11 +154,11 @@ const getRealPdps = async(docente, insegnamenti, studenti) => {
     //allora la query pesca anche le entry esistenti di reti in 3 e tpsi in 4
     //che erano presenti dagli anni passati
     realPdps = realPdps.filter(realPdp => {
-      const idMateria = realPdp.materia.id;
-      const idClasse = realPdp.studente.classeId;
-      return class2materie.get(idClasse).includes(idMateria);
+        const idMateria = realPdp.materia.id;
+        const idClasse = realPdp.studente.classeId;
+        return class2materie.get(idClasse).includes(idMateria);
     });
-  
+
     //
     //i realPDP possono non esistere. Per esempio per un nuovo studente
     return realPdps;
@@ -193,8 +196,8 @@ const getTemplatesOfDocente = async (docente) => {
     });
 
     return {
-      pdpTemplates,
-      obiettiviMinTemplates
+        pdpTemplates,
+        obiettiviMinTemplates
     }
 }
 
@@ -243,8 +246,10 @@ const createVirtualPdpsEntries = async (docente, studenti, insegnamenti, virtual
     for(let [k,vstudenti] of virtualPdps) {
         if(vstudenti.length > 0) {
             vstudenti.forEach(vstudente => {
+                const studenteFull = studenti.find(s => s.id == vstudente);
                 virtualPdpEntries.push({
-                    id: Math.floor(Math.random() * (2**32)), //need an id for proper front-end behavior
+                    // id: Math.floor(Math.random() * (2**32)), //need an id for proper front-end behavior
+                    id: `${vstudente}-${k.idMateria}`, //id deterministico e univoco per front-end behavior
                     createdAt: Date.now(),
                     updatedAt: Date.now(),
                     idDocente: docente.id,
@@ -264,10 +269,14 @@ const createVirtualPdpsEntries = async (docente, studenti, insegnamenti, virtual
                     completo: false,
                     sintesi_vocale: false,
                     tempo_esteso: false,
-                    studente: JSON.parse(JSON.stringify(studenti.filter(s => s.id == vstudente)[0], ['nome', 'cognome', 'obiettivi_minimi'])),
-                    materia: insegnamenti[insegnamenti.findLastIndex(insegnamento => insegnamento.materia.id == k.idMateria)].materia,
-                    docente: JSON.parse(JSON.stringify(docente, ['id', 'nome', 'cognome'])),
-                    vPdp: true //virtualPDP are entries not present in PDP table
+                    // studente: JSON.parse(JSON.stringify(studenti.filter(s => s.id == vstudente)[0], ['nome', 'cognome', 'obiettivi_minimi'])),
+                    studente: { nome: studenteFull.nome, cognome: studenteFull.cognome, obiettivi_minimi: studenteFull.obiettivi_minimi },
+                    // materia: insegnamenti[insegnamenti.findLastIndex(insegnamento => insegnamento.materia.id == k.idMateria)].materia,
+                    materia: insegnamenti[insegnamenti.findLastIndex(insegnamento => insegnamento.materia.id === k.idMateria)].materia,
+                    // docente: JSON.parse(JSON.stringify(docente, ['id', 'nome', 'cognome'])),
+                    docente: { id: docente.id, nome: docente.nome, cognome: docente.cognome },
+                    // vPdp: true //virtualPDP are entries not present in PDP table
+                    virtualPdp: true //virtualPDP are entries not present in PDP table
                 })
             }) 
         }
@@ -278,7 +287,8 @@ const createVirtualPdpsEntries = async (docente, studenti, insegnamenti, virtual
 
 // @ts-ignore
 export async function load({ locals }) {
-    let action = 'read';
+    // let action = 'read';
+    const action = 'read';
 
     route_protect(locals);
     access_protect(200, locals, action, resource);
@@ -311,7 +321,7 @@ export async function load({ locals }) {
         //Un sottoinsieme (anche vuoto) di questi sono reali provenineti dalla tabella PDP
         //I restanti sono virtuali in quanto non presenti nella tabella PDP
         const virtualPdps = await initVirtualPdps(studenti, insegnamenti);
-      
+
         //virtualPDPs al mmento contiene entry reali e virtuali
         //quindi sottraggo da virtual PDPs i realPdps, 
         //cioè  quelli che già esistono nella tabella PDP
@@ -332,9 +342,29 @@ export async function load({ locals }) {
     }
 }
 
+//costruisce l'oggetto data comune a create e update a partire dal form
+function buildPdpDataFromForm(form) {
+    return {
+        dispensative: form.get("dispensative"),
+        compensative: form.get("compensative"),
+        valutative: form.get("valutative"),
+        strategie_classe: form.get("strategie_classe"),
+        strategie_didattiche: form.get("strategie_didattiche"),
+        obiettivi_minimi: form.get("obiettivi_minimi")?.length > 0 ? form.get("obiettivi_minimi") : null, //issue-620
+        altro_compensative: form.get("altro_compensative")?.toString(),
+        altro_dispensative: form.get("altro_dispensative")?.toString(),
+        altro_valutative: form.get("altro_valutative")?.toString(),
+        note: form.get("note")?.toString(),
+        completo: form.get("completo") === 'SI',
+        sintesi_vocale: form.get("sintesi_vocale") === 'true',
+        tempo_esteso: form.get("tempo_esteso") === 'true'
+    };
+}
+
 export const actions = {
     update: async ({ request, locals }) => {
-        let action = 'update';
+        // let action = 'update';
+        const action = 'update';
 
         route_protect(locals);
         access_protect(200, locals, action, resource);
@@ -345,19 +375,20 @@ export const actions = {
 
             await SARP.PDP.update({
                 data: {
-                    dispensative: form.get("dispensative"),
-                    compensative: form.get("compensative"),
-                    valutative: form.get("valutative"),
-                    strategie_classe: form.get("strategie_classe"),
-                    strategie_didattiche: form.get("strategie_didattiche"),
-                    obiettivi_minimi: form.get("obiettivi_minimi")?.length > 0 ? form.get("obiettivi_minimi") : null, //issue-620
-                    altro_compensative: form.get("altro_compensative")?.toString(),
-                    altro_dispensative: form.get("altro_dispensative")?.toString(),
-                    altro_valutative: form.get("altro_valutative")?.toString(),
-                    note: form.get("note")?.toString(),
-                    completo: form.get("completo") === 'SI',
-                    sintesi_vocale: form.get("sintesi_vocale") === 'true',
-                    tempo_esteso: form.get("tempo_esteso") === 'true'
+                    // dispensative: form.get("dispensative"),
+                    // compensative: form.get("compensative"),
+                    // valutative: form.get("valutative"),
+                    // strategie_classe: form.get("strategie_classe"),
+                    // strategie_didattiche: form.get("strategie_didattiche"),
+                    // obiettivi_minimi: form.get("obiettivi_minimi")?.length > 0 ? form.get("obiettivi_minimi") : null, //issue-620
+                    // altro_compensative: form.get("altro_compensative")?.toString(),
+                    // altro_dispensative: form.get("altro_dispensative")?.toString(),
+                    // altro_valutative: form.get("altro_valutative")?.toString(),
+                    // note: form.get("note")?.toString(),
+                    // completo: form.get("completo") === 'SI',
+                    // sintesi_vocale: form.get("sintesi_vocale") === 'true',
+                    // tempo_esteso: form.get("tempo_esteso") === 'true'
+                    ...buildPdpDataFromForm(form)
                 },
                 where: {
                     id: parseInt(form.get("id"))
@@ -370,7 +401,8 @@ export const actions = {
         }
     },
     create: async ({ request, locals }) => {
-        let action = 'create';
+        // let action = 'create';
+        const action = 'create';
 
         route_protect(locals);
         access_protect(200, locals, action, resource);
@@ -384,19 +416,20 @@ export const actions = {
                     idStudente: Number(form.get("idStudente")),
                     idMateria: Number(form.get("idMateria")),
                     anno: get_as(),
-                    dispensative: form.get("dispensative"),
-                    compensative: form.get("compensative"),
-                    valutative: form.get("valutative"),
-                    strategie_classe: form.get("strategie_classe"),
-                    strategie_didattiche: form.get("strategie_didattiche"),
-                    obiettivi_minimi: form.get("obiettivi_minimi")?.length > 0 ? form.get("obiettivi_minimi") : null, //issue-620
-                    altro_compensative: form.get("altro_compensative")?.toString(),
-                    altro_dispensative: form.get("altro_dispensative")?.toString(),
-                    altro_valutative: form.get("altro_valutative")?.toString(),
-                    note: form.get("note")?.toString(),
-                    completo: form.get("completo") === 'SI',
-                    sintesi_vocale: form.get("sintesi_vocale") === 'true',
-                    tempo_esteso: form.get("tempo_esteso") === 'true'
+                    // dispensative: form.get("dispensative"),
+                    // compensative: form.get("compensative"),
+                    // valutative: form.get("valutative"),
+                    // strategie_classe: form.get("strategie_classe"),
+                    // strategie_didattiche: form.get("strategie_didattiche"),
+                    // obiettivi_minimi: form.get("obiettivi_minimi")?.length > 0 ? form.get("obiettivi_minimi") : null, //issue-620
+                    // altro_compensative: form.get("altro_compensative")?.toString(),
+                    // altro_dispensative: form.get("altro_dispensative")?.toString(),
+                    // altro_valutative: form.get("altro_valutative")?.toString(),
+                    // note: form.get("note")?.toString(),
+                    // completo: form.get("completo") === 'SI',
+                    // sintesi_vocale: form.get("sintesi_vocale") === 'true',
+                    // tempo_esteso: form.get("tempo_esteso") === 'true'
+                    ...buildPdpDataFromForm(form)
                 }
             });
 
