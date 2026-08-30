@@ -1,3 +1,29 @@
+## v4.20.0 - 01 Settembre 2026
+
+- Il PDP non è più legato all'anno scolastico ma solo
+legato allo studente, alla materia e al docente che la insegna 
+per l'anno scolastico corrente
+- ora ogni anno il docente eredita i PDP dall'anno precedente e se non ha modifiche non deve fare nulla
+Unica attenzione è verificare che il PDP sia marcato come completo
+- Refactor and cleanup PDP docente
+- Refactor generazione PDP
+- Adattamento generazione PDP a nuova logica e a tabelle modificate
+- Viene fatto un merge tra entri PDP reali e virtuali,
+in tal modo la PDP entry rimane valida anno dopo anno
+- Aggiornato metodo di calcolo per la determinazione della completezza di un pdp per la stampa
+- Cambia il modo di calcolare tot_materie e il numero di materie completate
+- Rimosso filtro su PDP Docente completo,
+ciò è necessario siccome ora il PDP si propaga attraverso gli anni
+- Il docente ha il pieno controllo di questo flag
+- Aggiunta gestione nuovo as()
+- Aggiunta gestione insegnamenti difefrenti da anno in anno
+- Aggiornata RBAC policy per permettere pdp update e create
+- Aggiornata gestione BES lato utente
+- Aggiornata sezione PDP Docente. Ora non è necessrio creare le entri nella tabella PDP
+- La gestione è automatica in funzione del flag BES nella tabella Utente
+- Tabella con header responsive e auto wrap
+- Ridimensionamento campo badges in Table
+
 ## v4.19.0 - 18 Novembre 2025
 - `fix#620`: Obiettivi minimi facoltativi (#621)    
 - Gli obiettivi minimi diventano facoltativi
@@ -1102,4 +1128,4 @@
 
 <br>
 
-## v0.0.0 – 26 Settembre 2022 – primo
+## v0.0.0 – 26 Settembre 2022 – primo commit
