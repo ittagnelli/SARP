@@ -285,7 +285,7 @@ export const get_as = () => {
 	const month = n.getMonth() + 1;
 	if (month >= 1 && month <= 8)
 		year--;
-	return year + 1; //TBR
+	return year; 
 }
 
 //genera uno uid univoco
