@@ -1,4 +1,4 @@
-## v4.20.0 - 01 Settembre 2026
+## v5.0.0 - 01 Settembre 2026
 
 - Il PDP non è più legato all'anno scolastico ma solo
 legato allo studente, alla materia e al docente che la insegna 
