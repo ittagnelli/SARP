@@ -1,5 +1,5 @@
 import { PUBLIC_PDP_TEMPLATES_DIR, PUBLIC_PDP_TEMPLATE } from "$env/static/public";
-import { access_protect, raise_error, route_protect, custom_tags_parser, get_as, is_admin, is_tutor_bes } from "$js/helper";
+import { access_protect, raise_error, route_protect, custom_tags_parser, get_as, is_admin, is_tutor_bes, debugObj } from "$js/helper";
 import { PrismaDB } from "$js/prisma_db.js";
 import path from 'path';
 import fs from 'fs';
@@ -61,6 +61,8 @@ export async function load({ locals }) {
                     griglia_pdp_b_done: true,
                     pdp: {
                         select: {
+                            idMateria: true,
+                            idDocente: true,
                             completo: true,
                             sintesi_vocale: true,
                             tempo_esteso: true,
@@ -80,8 +82,15 @@ export async function load({ locals }) {
                 }
             });
 
+            const insegnamenti = await SARP.Insegnamenti.findMany({
+                where: {
+                  anno: get_as()
+                }
+            });
+
             return {
-                studenti
+                studenti,
+                insegnamenti
             }
         }
     } catch (exception) {
@@ -123,8 +132,6 @@ function sanitize(val) {
     return val ?? '';
 }
 
-
-
 function sanitize_date(val) {
     if(!val || val == '') return '';
     const tmpDate = new Date(val);
@@ -138,7 +145,6 @@ export const actions = {
             const form_data = await request.formData();
             const student_id = form_data.get('id');
 
-            console.log("1")
             //the document to render is made by many parts
             //one evaluation grid coming from the student object
             //and 5 sections (dispenative, compensative,valutative, strategie classe, strategie didattiche)
@@ -158,7 +164,6 @@ export const actions = {
                 }
             });
 
-            console.log("2")
             //prepare the valutazione grids
             //Qui è un gran casino in quanto stato fatto in fasi successive
             //In ogni acso prima preparo le varie griglie per con le risposte del tutor di classe
@@ -167,38 +172,6 @@ export const actions = {
             let dvalutazione = JSON.parse(studente.griglia_valutazione) || [];
             let svalutazione = JSON.parse(studente.griglia_pdp_c1) || []; 
             
-            console.log("3")
-            //OLD
-            // let dgriglia1 = dvalutazione.slice(0, 20);
-            // let dsgriglia2 = dvalutazione.slice(20, 23);
-            // let sgriglia2 = svalutazione.slice(0, 3);
-            // let dsgriglia3 = dvalutazione.slice(23, 28);
-            // let sgriglia3 = svalutazione.slice(3, 8);
-            // let dsgriglia4 = dvalutazione.slice(28, 32);
-            // let sgriglia4 = svalutazione.slice(8, 12);
-            // let dgriglia5 = dvalutazione.slice(32);
-            // OLD
-            // console.log("1")
-            // //set an X to the right answer column
-            // dgriglia1 = format_grid1_4d(dgriglia1);
-            // console.log("1a")
-            // dsgriglia2 = format_grid1_4d(dsgriglia2);
-            // console.log("1b")
-            // console.log(dsgriglia2)
-            // console.log(sgriglia2)
-            // dsgriglia2 = format_grid1_4s(dsgriglia2, sgriglia2);
-            // console.log("1c")
-            // dsgriglia3 = format_grid1_4d(dsgriglia3);
-            // dsgriglia3 = format_grid1_4s(dsgriglia3, sgriglia3);
-            // console.log("3")
-            // dsgriglia4 = format_grid1_4d(dsgriglia4);
-            // dsgriglia4 = format_grid1_4s(dsgriglia4, sgriglia4);
-            // console.log("4")
-            // dgriglia5 = format_grid_5d(dgriglia5);
-            // console.log("5")
-
-
-            //NEW
             //set an X to the right answer column
             if(dvalutazione.length > 0) { //griglia valutazione docenti presente
                 dgriglia1 = dvalutazione.slice(0, 20);
@@ -217,8 +190,6 @@ export const actions = {
                 dgriglia5 = format_grid_5d(dgriglia5);
             }
 
-            console.log("4")
-
             if(svalutazione.length > 0) { //griglia valutazione studente presente
                 sgriglia2 = svalutazione.slice(0, 3);
                 dsgriglia2 = format_grid1_4s(dsgriglia2, sgriglia2);
@@ -230,26 +201,41 @@ export const actions = {
                 dsgriglia4 = format_grid1_4s(dsgriglia4, sgriglia4);
             }
             
-            console.log("5")
-
-            //now get the section for the different materie
-            const pdp = await SARP.PDP.findMany({
+            const insegnamenti = await SARP.Insegnamenti.findMany({
                 where: {
-                    idStudente: +student_id,
-                    anno: get_as()
+                  anno: get_as(),
+                  idClasse: studente.classeId
                 },
                 include: {
-                    insegnamento: {
-                        select: {
-                            id: true,
-                            materia: true,
-                            docente: true
-                        }
-                    }
+                  materia: true,
+                  docente: true
                 }
             });
 
-            console.log("6")
+            //now get the section for the different materie
+            //filtro i PDP solo per le materie e i docenti dell'anno
+            //per eliminare quelli vecchi non più necessari ma ancora presenti
+            // const materieIds = insegnamenti.map(insegnamento => insegnamento.idMateria);
+            let pdp = await SARP.PDP.findMany({
+                where: {
+                    idStudente: +student_id
+                },
+            });
+
+            pdp = pdp.filter(entry => {
+              return insegnamenti.find(item => 
+                item.idMateria == entry.idMateria &&
+                item.idDocente == entry.idDocente) ? true : false;
+            })
+
+            //siccome insegnamento non fa più parte (PDP REFACTOR) del PDP
+            //arricchisco l'oggetto qui in modo che la parte di codice sottostante
+            //rimanga invariata
+            pdp.forEach(entry  => {
+              entry['insegnamento'] = insegnamenti.filter(insegnamento => 
+                insegnamento.idDocente == entry.idDocente &&
+                insegnamento.idMateria == entry.idMateria)[0]
+            })
 
             let materie = [];
             let firme = [];
@@ -289,14 +275,12 @@ export const actions = {
                     argomenti_q1: p.obiettivi_minimi ? JSON.parse(p.obiettivi_minimi)[0] : [], //issue-620
                     argomenti_q2: p.obiettivi_minimi ? JSON.parse(p.obiettivi_minimi)[1] : []
                 };
+              
                 let firma = { materia: materia.materia, docente: materia.docente };
-
                 materie.push(materia);
                 firme.push(firma);
             });
-            
-            console.log("7")
-
+           
             //prepare the object to render the template
             let renderer = {};
             renderer['nome'] = studente.nome;
@@ -306,13 +290,6 @@ export const actions = {
             renderer['classe'] = `${studente.classe.classe} ${studente.classe.istituto} ${studente.classe.sezione}`;
             renderer['tutor'] = `${studente.classe.coordinatore.nome} ${studente.classe.coordinatore.cognome}`;
 
-            console.log("8")
-            // OLD
-            // renderer['griglia1'] = dgriglia1;
-            //     renderer['griglia2'] = dsgriglia2;
-            //     renderer['griglia3'] = dsgriglia3;
-            //     renderer['griglia4'] = dsgriglia4;
-            //     renderer['griglia5'] = dgriglia5;
             if(dvalutazione.length > 0) { //NEW
                 renderer['griglia1'] = dgriglia1;
                 renderer['griglia2'] = dsgriglia2;
@@ -320,7 +297,6 @@ export const actions = {
                 renderer['griglia4'] = dsgriglia4;
                 renderer['griglia5'] = dgriglia5;
             }
-            console.log("9")
 
             renderer['materie'] = materie;
             renderer['firme'] = firme;
@@ -328,8 +304,6 @@ export const actions = {
 
             // imposto anche il flag condizionale per stampare griglia osservativa docenti o griglia vuota
             renderer['dosservativa_present'] = studente.griglia_valutazione_done;
-
-            console.log("10")
 
             // per la sezione C ho 4 combinazioni
             // 1- valutazione docente Presente - valutazione alunno Presente
@@ -343,46 +317,13 @@ export const actions = {
             renderer['c1_option3'] = !studente.griglia_valutazione_done && studente.griglia_pdp_c1_done;
             renderer['c1_option4'] = !studente.griglia_valutazione_done && !studente.griglia_pdp_c1_done;
 
-            console.log("11")
-
             //sezione A
             let sezionea = JSON.parse(studente.griglia_pdp_a);
-            console.log(sezionea)
             renderer['a_present'] = studente.griglia_pdp_a_done;
             renderer = Object.assign(renderer, sezionea);
             
-            console.log("12")
-
-            //OLD
-            //metto apposto le date facendo una porcata per mancanza di tempo
-            // console.log("9A:", renderer['relazione_ssn_data']?.length)
-            // renderer['relazione_ssn_data'] = renderer['relazione_ssn_data'].length != 10 ? '' : renderer['relazione_ssn_data'];
-            // console.log("9A:", renderer['relazione_ssn_data']) 
-            // console.log("9b")
-            // renderer['relazione_altro_data1'] = renderer['relazione_altro_data1'].length != 10 ? '' : renderer['relazione_altro_data1'];
-            // renderer['relazione_altro_data2'] = renderer['relazione_altro_data2'].length != 10 ? '' : renderer['relazione_altro_data2'];
-            // console.log("9c")
-            // renderer['relazione_altro_data3'] = renderer['relazione_altro_data3'].length != 10 ? '' : renderer['relazione_altro_data3'];
-            // renderer['relazione_altro_data4'] = renderer['relazione_altro_data4'].length != 10 ? '' : renderer['relazione_altro_data4'];
-            // renderer['relazione_altro_data5'] = renderer['relazione_altro_data5'].length != 10 ? '' : renderer['relazione_altro_data5'];
-
-            //NEW
              if(renderer['a_present']) {
                 //metto apposto le date facendo una porcata per mancanza di tempo
-                // renderer['relazione_ssn_data'] = renderer['relazione_ssn_data'].length != 10 ? '' : renderer['relazione_ssn_data'];
-                // console.log("12a")
-                // renderer['relazione_altro_data1'] = renderer['relazione_altro_data1'].length != 10 ? '' : renderer['relazione_altro_data1'];
-                // console.log(renderer['relazione_altro_data1'])
-                // console.log("12b")
-                // renderer['relazione_altro_data2'] = renderer['relazione_altro_data2'].length != 10 ? '' : renderer['relazione_altro_data2'];
-                // console.log("12c")
-                // renderer['relazione_altro_data3'] = renderer['relazione_altro_data3'].length != 10 ? '' : renderer['relazione_altro_data3'];
-                // console.log("12d")
-                // renderer['relazione_altro_data4'] = renderer['relazione_altro_data4'].length != 10 ? '' : renderer['relazione_altro_data4'];
-                // console.log("12e")
-                // renderer['relazione_altro_data5'] = renderer['relazione_altro_data5'].length != 10 ? '' : renderer['relazione_altro_data5'];
-                // console.log("12f")
-
                 renderer['relazione_altro_redattore1'] = sanitize(renderer['relazione_altro_redattore1']);
                 renderer['relazione_altro_redattore2'] = sanitize(renderer['relazione_altro_redattore2']);
                 renderer['relazione_altro_redattore3'] = sanitize(renderer['relazione_altro_redattore3']);
@@ -391,25 +332,16 @@ export const actions = {
 
                 // renderer['relazione_ssn_data'] = sanitize(renderer['relazione_ssn_data']);
                 renderer['relazione_ssn_data'] = sanitize_date(renderer['relazione_ssn_data']);
-           
 
                 //uno struno bug è apparso, quindi per mancanza di tempo faccio questo workaround
                 // le date delle relazione_altro è inizialmente ''
                 // se c'e' un redattore allora assegna la data effettiva
-                console.log("12a")                
                 renderer['relazione_altro_data1'] = renderer['relazione_altro_redattore1'].length > 0 ? sanitize_date(renderer['relazione_altro_data1']) : '';
-                console.log("12b")
                 renderer['relazione_altro_data2'] = renderer['relazione_altro_redattore2'].length > 0 ? sanitize_date(renderer['relazione_altro_data2']) : '';
-                console.log("12c")
                 renderer['relazione_altro_data3'] = renderer['relazione_altro_redattore3'].length > 0 ? sanitize_date(renderer['relazione_altro_data3']) : '';
-                console.log("12d")
                 renderer['relazione_altro_data4'] = renderer['relazione_altro_redattore4'].length > 0 ? sanitize_date(renderer['relazione_altro_data4']) : '';
-                console.log("12e")
                 renderer['relazione_altro_data5'] = renderer['relazione_altro_redattore5'].length > 0 ? sanitize_date(renderer['relazione_altro_data5']) : '';
-                console.log("12f")
              }
-
-             console.log("13")
 
             //Preparo per il rendering della sezione Mi Presento al consiglio di classe
             //le chiavi hanno già il nome corretto, basta che le aggiungo alll'oggetto renderer
@@ -451,13 +383,11 @@ export const actions = {
             );
 
             const zip = new PizZip(content);
-
             const doc = new Docxtemplater(zip, {
                 paragraphLoop: true,
                 linebreaks: true,
                 parser: custom_tags_parser
             });
-
             doc.render(renderer);
 
             buf = doc.getZip().generate({
@@ -467,7 +397,6 @@ export const actions = {
 
             return {
                 file: JSON.stringify(buf), // Convertiamo il buffer in stringa sennò sveltekit va in errore
-                // nome_documento: `PDP-${docx_programmazione_template.classe.replace(' ', '_')}.docx`
                 nome_documento: `PDP_${studente.cognome}_${studente.nome}.docx`.replace(' ', '_')
             };
         } catch (exception) {

@@ -285,7 +285,7 @@ export const get_as = () => {
 	const month = n.getMonth() + 1;
 	if (month >= 1 && month <= 8)
 		year--;
-	return year;
+	return year; 
 }
 
 //genera uno uid univoco
@@ -405,3 +405,7 @@ export const sort_strings = (s1, s2) => {
 	if (s1 < s2) return -1;
 	return 0;
 }
+
+export const debugObj = (obj, keys) => {
+  return JSON.parse(JSON.stringify(obj, keys));
+} 

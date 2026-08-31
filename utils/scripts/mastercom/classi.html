@@ -1,0 +1,1203 @@
+
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <title>MasterCom Ver. 25.2.88 - Amministrazione Impostazioni Generali</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google" value="notranslate">
+    <link rel="shortcut icon" type="image/x-icon" href="icone/mastercom.ico">
+    <link rel="stylesheet" type="text/css" href="css/jquery-ui-1.8.16.custom.css" />
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsrsasign/8.0.20/jsrsasign-all-min.js"></script>
+
+    <script type="text/javascript" src="libs/jquery/jquery-3.7.1.min.js"></script>
+    <script type="text/javascript" src="libs/jquery-ui-1.14.1/jquery-ui.min.js"></script>
+
+    <script type="text/javascript" src="javascript/messenger.js?v=25.2.88"></script>
+    <script type="text/javascript" src="/mastertek-api/ckeditor-mastercom/ckeditor.js"></script>
+    <script type="text/javascript" src="javascript/anylink.js?v=25.2.88"></script>
+
+    <script type="module" src="javascript/custom_element/custom-elements.js?v=25.2.88"></script>
+
+    <link rel="stylesheet" href="libs/jqwidgets/styles/jqx.base.css" type="text/css" />
+    <link rel="stylesheet" href="libs/jqwidgets/styles/jqx.darkblue.css" type="text/css" />
+    <link rel="stylesheet" href="libs/jqwidgets/styles/jqx.bootstrap.css" type="text/css" />
+    <link rel="stylesheet" href="libs/jqwidgets/styles/jqx.material.css" type="text/css" />
+    <link rel="stylesheet" href="libs/jqwidgets/styles/jqx.office.css" type="text/css" />
+    <link rel="stylesheet" href="libs/jqwidgets/styles/jqx.metro.css" type="text/css" />
+
+    <link href="assets/plugins/font-awesome/5.0/css/fontawesome-all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="assets/fontawesome-free-5.5.0-web/css/all.css">
+    <!--link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"-->
+
+    <script type="text/javascript" src="libs/jqwidgets/jqx-all.js"></script>
+    <script type="text/javascript" src="libs/jqwidgets/globalization/globalize.js"></script>
+    <script type="text/javascript" src="libs/jqwidgets/globalization/globalize.culture.it-IT.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" href="css/style_microsoft.css">
+
+    <!--  Questo pezzo di javascript ha il compito di monitorare il tempo di caricamento complessivo di una pagina. In caso di login, invia l'informazione ad un webservice ajax per essere loggato nel db ed effettuare statistichee monitoraggio omogeneo del tempo di esecuzione delle pagine. -->
+    <script type="text/javascript">
+        var login_iniziale 	= '';
+        			var current_user 	= '3001798';
+        			var current_key 	= 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiJtY3VzZXJfMTczMDk3NjkwNC4xNjM3ZTYxMGUzYTNfYWduZWxsaS10byIsInR5cGUiOiJzZWdyZXRlcmlhIiwidGltZSI6MTc0ODUxMTY4OSwiY3JlYXRlZGJ5IjoibWN1c2VyXzE2MzEwMTM3MzkuOTIyMTM2MWY2YmMzX2FnbmVsbGktdG8iLCJleHBpcmF0aW9uIjoxNzQ4NTk4MDg5LCJkYXRlIjoiMjlcLzA1XC8yMDI1IDExOjQxIn0.LOlx_RlINiIaS3bsPqQKvkSDOKxbojmITz-H5CSjbUo';
+        			var tipo_utente 	= 'amministratore';
+        
+                    CLIENT_ID   = '412329167119-pqd3gkioesph8lnrlbnbp9mntcjoo4k8.apps.googleusercontent.com';
+                    API_KEY     = 'AIzaSyCk6yexLyFs-CKC7hXelWtYaXzyiUlqGNU';
+        
+        			
+                    function signOutGoogle() {
+                        /*{{{ */
+                        try {
+                            //var auth2 = gapi.auth2.getAuthInstance();
+        //
+                            //var isSignedIn = auth2.isSignedIn.get();
+                            //if (isSignedIn === true){
+                            //    auth2.signOut().then(function () {
+                            //        console.log('User signed out.');
+                            //        window.open("https://accounts.google.com/logout", "_blank");
+                            //    });
+                            //}
+                        } catch (e) { };
+                        /*}}}*/
+                    }
+        
+                    function updateLastTypeLogin(lastType){
+                        var nextapiPath = "../next-api/v1/";
+        
+                        return new Promise((resolve, reject) => {
+                            $.ajax({
+                                type: "POST",
+                                data: { },
+                                url: nextapiPath + "user/update_last_type_login/"+lastType,
+                                headers: { 'Authorization': current_key },
+                                success: function (data) {
+                                    resolve(data);
+                                },
+                                error: function (data) {
+                                    reject(data);
+                                },
+                                complete: function (data) {
+                                    resolve(data);
+                                }
+                            });
+                        });
+                    }
+        
+                    /*function initGoogle() {
+                        try {
+                            gapi.load('auth2', function(){
+                                gapi.auth2.init({client_id: "197393209516-tplrvljplria9qdl35ettvcbkke5r89r.apps.googleusercontent.com"});
+                                gapi.auth2.init({client_id: "412329167119-pqd3gkioesph8lnrlbnbp9mntcjoo4k8.apps.googleusercontent.com"});
+                            });
+                        } catch (e) { }
+                    }*/
+        
+        			window.addEventListener("load", loadTime, false);
+        			function loadTime() {
+        				var now = new Date().getTime();
+        				var tempo_caricamento = now - performance.timing.navigationStart;
+        				if (window.console ) console.log(tempo_caricamento);
+        				if(login_iniziale == 'SI') {
+        					var query = {
+        							current_user:  current_user,
+        							current_key: current_key,
+        							form_tipo_utente: tipo_utente,
+        							form_cosa:  tempo_caricamento,
+        							form_tipo: 'LOGIN LOAD TIME',
+        							form_azione: 'registra_log_storico'
+        						};
+        					$.ajax({ type: "POST",
+        						 url: "ajat_manager.php",
+        						 data: query,
+        						 cache: false,
+        						 success: function(response) {
+        						 },
+        						 complete: function(response) {
+        						 },
+        					});
+        				}
+        
+        			}
+        			
+        
+                    $(document).ready(function()
+                    {
+                                            initGoogle();
+                                    });
+    </script>
+    <!--  -->
+
+    <script type="text/javascript">
+        window.name = 'mastercom_main_window';
+    </script>
+    <link type="text/css" rel="stylesheet" href="css/dhtmlgoodies_calendar.css?random=20051112" media="screen" />
+    <script type="text/javascript" src="javascript/dhtmlgoodies_calendar.js?random=20060118"></script>
+    <style>
+        body {font-family: "Arial"; background-color: #aaa;}
+    </style>
+
+</head>
+
+<body>
+
+    <div id='header_mastercom'>
+
+        <input type='hidden' id='login_centralizzato' value='SI'>
+
+        <table width='100%' class='sfondo_scuro_generico bordo_superiore_rilievo'>
+            <tr>
+                <td width='1%'>
+                    <img src='images/logo2.png' height="40" width="69">
+                </td>
+                <td class="titolo_testo" height="54px" width="40%">
+                    <b>Amministrazione - Gestione Impostazioni - A.S. 2024/2025</b>
+                </td>
+                <td class="sottotitolo_testo" height="54px">
+
+                </td>
+                <td width='1%' align='right'>
+                </td>
+                <td width='1%' align='right'>
+                    <form method='post' action='/mastercom/index.php'>
+                        <button type="submit" class="mc-icon-2 margin-right16 ripples" onclick="updateLastTypeLogin('professore')">
+                                <div class="mc-icon-img-2">
+                                    <i class="fa fa-fw fa-chalkboard-teacher sfondo_viola_old"></i>
+                                </div>
+                                <div class="mc-icon-text sfondo_viola_old_op20 mc-icon-shadow">REGISTRO</div>
+                            </button>
+                        <input type='hidden' name='form_stato' value='accedi_come'>
+                        <input type='hidden' name='tipo_accesso' value='professore'>
+                        <input type='hidden' name='current_user' value='3001798'>
+                        <input type='hidden' name='current_key' value='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiJtY3VzZXJfMTczMDk3NjkwNC4xNjM3ZTYxMGUzYTNfYWduZWxsaS10byIsInR5cGUiOiJzZWdyZXRlcmlhIiwidGltZSI6MTc0ODUxMTY4OSwiY3JlYXRlZGJ5IjoibWN1c2VyXzE2MzEwMTM3MzkuOTIyMTM2MWY2YmMzX2FnbmVsbGktdG8iLCJleHBpcmF0aW9uIjoxNzQ4NTk4MDg5LCJkYXRlIjoiMjlcLzA1XC8yMDI1IDExOjQxIn0.LOlx_RlINiIaS3bsPqQKvkSDOKxbojmITz-H5CSjbUo'>
+                    </form>
+                </td>
+
+                <td width='1%' align='right'>
+                    <form method='post' action='/mastercom/index.php' target='new_tab_304'>
+                        <input type='image' value='Apri nuova finestra' src='icone/icona.php?icon=add&bullet=&size=32&label=--&label_bg=44621c' onmouseover="this.src='icone/icona.php?icon=add&bullet=&size=32&label=--&label_bg=44621c&glow=yes'" onmouseout="this.src='icone/icona.php?icon=add&bullet=&size=32&label=--&label_bg=44621c'" alt='Apri nuova finestra' title='Apri nuova finestra'>
+                        <input type='hidden' name='form_stato' value='amministratore'>
+                        <input type='hidden' name='current_user' value='3001798'>
+                        <input type='hidden' name='current_key' value='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiJtY3VzZXJfMTczMDk3NjkwNC4xNjM3ZTYxMGUzYTNfYWduZWxsaS10byIsInR5cGUiOiJzZWdyZXRlcmlhIiwidGltZSI6MTc0ODUxMTY4OSwiY3JlYXRlZGJ5IjoibWN1c2VyXzE2MzEwMTM3MzkuOTIyMTM2MWY2YmMzX2FnbmVsbGktdG8iLCJleHBpcmF0aW9uIjoxNzQ4NTk4MDg5LCJkYXRlIjoiMjlcLzA1XC8yMDI1IDExOjQxIn0.LOlx_RlINiIaS3bsPqQKvkSDOKxbojmITz-H5CSjbUo'>
+                    </form>
+                </td>
+                <!--td  width='1%' align='right'>
+                    <form method='post' action='documenti.php' target='_new'>
+                        <input 	type='image'
+								value='Note di rilascio'
+								src='icone/icona.php?icon=note&bullet=&size=32&label=--'
+								onmouseover="this.src='icone/icona.php?icon=note&bullet=&size=32&label=--&glow=yes'"
+                                onmouseout="this.src='icone/icona.php?icon=note&bullet=&size=32&label=--'"
+								alt='Note di rilascio'
+								title='Note di rilascio'
+								 >
+                        <input type='hidden' name='form_stato' value='amministratore'>
+                        <input type='hidden' name='form_azione' value='stampa_changelog'>
+                        <input type='hidden' name='current_user' value='3001798'>
+                        <input type='hidden' name='current_key' value='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiJtY3VzZXJfMTczMDk3NjkwNC4xNjM3ZTYxMGUzYTNfYWduZWxsaS10byIsInR5cGUiOiJzZWdyZXRlcmlhIiwidGltZSI6MTc0ODUxMTY4OSwiY3JlYXRlZGJ5IjoibWN1c2VyXzE2MzEwMTM3MzkuOTIyMTM2MWY2YmMzX2FnbmVsbGktdG8iLCJleHBpcmF0aW9uIjoxNzQ4NTk4MDg5LCJkYXRlIjoiMjlcLzA1XC8yMDI1IDExOjQxIn0.LOlx_RlINiIaS3bsPqQKvkSDOKxbojmITz-H5CSjbUo'>
+                    </form>
+                </td-->
+            </tr>
+        </table>
+        <table width='100%' class='sfondo_base_generico bordo_inferiore_rilievo'>
+            <tr valign='middle'>
+                <td>
+                    <form method='post' action='/mastercom/index.php'>
+                        <input type='image' value='Esci da Mastercom' src='icone/icona.php?icon=uscita&bullet=&size=48&label=ESCI&label_bg=d11a2e' onmouseover="this.src='icone/icona.php?icon=uscita&bullet=&size=48&label=ESCI&label_bg=d11a2e&glow=yes'" onmouseout="this.src='icone/icona.php?icon=uscita&bullet=&size=48&label=ESCI&label_bg=d11a2e'" onClick="signOutGoogle();" alt='Esci da Mastercom' title='Esci da Mastercom'>
+                        <input type='hidden' name='form_stato' value='logout'>
+                        <input type='hidden' name='stato_sesabilita' value='1'>
+                        <input type='hidden' name='current_user' value='3001798'>
+                        <input type='hidden' name='current_key' value='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiJtY3VzZXJfMTczMDk3NjkwNC4xNjM3ZTYxMGUzYTNfYWduZWxsaS10byIsInR5cGUiOiJzZWdyZXRlcmlhIiwidGltZSI6MTc0ODUxMTY4OSwiY3JlYXRlZGJ5IjoibWN1c2VyXzE2MzEwMTM3MzkuOTIyMTM2MWY2YmMzX2FnbmVsbGktdG8iLCJleHBpcmF0aW9uIjoxNzQ4NTk4MDg5LCJkYXRlIjoiMjlcLzA1XC8yMDI1IDExOjQxIn0.LOlx_RlINiIaS3bsPqQKvkSDOKxbojmITz-H5CSjbUo'>
+                    </form>
+                </td>
+
+                <td align='center'>
+                    <form method='post' action='/mastercom/index.php' name='form_cambio_pwd'>
+                        <img class='nobordoimage' src="icone/icona.php?icon=password&bullet=&size=48&label=PASSWORD&label_bg=cc5e00" onClick="if (confirm('Si desidera procedere al cambio password?'))
+                                    {
+                                        document.forms['form_cambio_pwd'].submit();
+                                    }" onmouseover="this.src='icone/icona.php?icon=password&bullet=&size=48&label=PASSWORD&label_bg=cc5e00&glow=yes'" onmouseout="this.src='icone/icona.php?icon=password&bullet=&size=48&label=PASSWORD&label_bg=cc5e00'" alt='' title=''>
+
+                        <input type='hidden' name='form_stato' value='form_stato'>
+                        <input type='hidden' name='stato_principale' value='cambio_password'>
+                        <input type='hidden' name='current_user' value='3001798'>
+                        <input type='hidden' name='current_key' value='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiJtY3VzZXJfMTczMDk3NjkwNC4xNjM3ZTYxMGUzYTNfYWduZWxsaS10byIsInR5cGUiOiJzZWdyZXRlcmlhIiwidGltZSI6MTc0ODUxMTY4OSwiY3JlYXRlZGJ5IjoibWN1c2VyXzE2MzEwMTM3MzkuOTIyMTM2MWY2YmMzX2FnbmVsbGktdG8iLCJleHBpcmF0aW9uIjoxNzQ4NTk4MDg5LCJkYXRlIjoiMjlcLzA1XC8yMDI1IDExOjQxIn0.LOlx_RlINiIaS3bsPqQKvkSDOKxbojmITz-H5CSjbUo'>
+                    </form>
+                </td>
+
+                <td width='50%'></td>
+
+                <td align='center'>
+                    <form method='post' action='/mastercom/index.php'>
+
+                        <input type='image' value='Impostazioni Generali' src='icone/icona.php?icon=setup&bullet=04&size=48&label=SETUP&label_bg=cc5e00' onmouseover="this.src='icone/icona.php?icon=setup&bullet=04&size=48&label=SETUP&label_bg=cc5e00&glow=yes'" onmouseout="this.src='icone/icona.php?icon=setup&bullet=04&size=48&label=SETUP&label_bg=cc5e00'" alt='Impostazioni Generali' title='Impostazioni Generali' id=''>
+                        <input type='hidden' name='form_stato' value='amministratore'>
+                        <input type='hidden' name='stato_principale' value='impostazioni_principale'>
+                        <input type='hidden' name='current_user' value='3001798'>
+                        <input type='hidden' name='current_key' value='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiJtY3VzZXJfMTczMDk3NjkwNC4xNjM3ZTYxMGUzYTNfYWduZWxsaS10byIsInR5cGUiOiJzZWdyZXRlcmlhIiwidGltZSI6MTc0ODUxMTY4OSwiY3JlYXRlZGJ5IjoibWN1c2VyXzE2MzEwMTM3MzkuOTIyMTM2MWY2YmMzX2FnbmVsbGktdG8iLCJleHBpcmF0aW9uIjoxNzQ4NTk4MDg5LCJkYXRlIjoiMjlcLzA1XC8yMDI1IDExOjQxIn0.LOlx_RlINiIaS3bsPqQKvkSDOKxbojmITz-H5CSjbUo'>
+                    </form>
+                </td>
+
+                <td align='center'>
+                    <form method='post' action='/mastercom/index.php'>
+
+                        <input type='image' value='Gestione Orario' src='icone/icona.php?icon=orario&bullet=05&size=48&label=ORARIO&label_bg=cc5e00' onmouseover="this.src='icone/icona.php?icon=orario&bullet=05&size=48&label=ORARIO&label_bg=cc5e00&glow=yes'" onmouseout="this.src='icone/icona.php?icon=orario&bullet=05&size=48&label=ORARIO&label_bg=cc5e00'" alt='Gestione Orario' title='Gestione Orario' id=''>
+                        <input type='hidden' name='form_stato' value='amministratore'>
+                        <input type='hidden' name='stato_principale' value='gestione_orario_principale'>
+                        <input type='hidden' name='current_user' value='3001798'>
+                        <input type='hidden' name='current_key' value='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiJtY3VzZXJfMTczMDk3NjkwNC4xNjM3ZTYxMGUzYTNfYWduZWxsaS10byIsInR5cGUiOiJzZWdyZXRlcmlhIiwidGltZSI6MTc0ODUxMTY4OSwiY3JlYXRlZGJ5IjoibWN1c2VyXzE2MzEwMTM3MzkuOTIyMTM2MWY2YmMzX2FnbmVsbGktdG8iLCJleHBpcmF0aW9uIjoxNzQ4NTk4MDg5LCJkYXRlIjoiMjlcLzA1XC8yMDI1IDExOjQxIn0.LOlx_RlINiIaS3bsPqQKvkSDOKxbojmITz-H5CSjbUo'>
+                    </form>
+                </td>
+
+                <td align='center'>
+                    <form method='post' action='/mastercom/index.php'>
+
+                        <input type='image' value='Sezione amministrativa dirigenti' src='icone/icona.php?icon=dirigenti&bullet=17&size=48&label=AMMIN.&label_bg=3c2f67' onmouseover="this.src='icone/icona.php?icon=dirigenti&bullet=17&size=48&label=AMMIN.&label_bg=3c2f67&glow=yes'" onmouseout="this.src='icone/icona.php?icon=dirigenti&bullet=17&size=48&label=AMMIN.&label_bg=3c2f67'" alt='Sezione amministrativa dirigenti' title='Sezione amministrativa dirigenti' id=''>
+                        <input type='hidden' name='form_stato' value='amministratore'>
+                        <input type='hidden' name='stato_principale' value='amministrazione_principale'>
+                        <input type='hidden' name='current_user' value='3001798'>
+                        <input type='hidden' name='current_key' value='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiJtY3VzZXJfMTczMDk3NjkwNC4xNjM3ZTYxMGUzYTNfYWduZWxsaS10byIsInR5cGUiOiJzZWdyZXRlcmlhIiwidGltZSI6MTc0ODUxMTY4OSwiY3JlYXRlZGJ5IjoibWN1c2VyXzE2MzEwMTM3MzkuOTIyMTM2MWY2YmMzX2FnbmVsbGktdG8iLCJleHBpcmF0aW9uIjoxNzQ4NTk4MDg5LCJkYXRlIjoiMjlcLzA1XC8yMDI1IDExOjQxIn0.LOlx_RlINiIaS3bsPqQKvkSDOKxbojmITz-H5CSjbUo'>
+                    </form>
+                </td>
+
+            </tr>
+
+        </table>
+    </div>
+
+    <style>
+        .popupDialog popupDialog-button{
+            width:80%;
+        }
+    </style>
+    <script type="text/javascript">
+        $(window).on("load", function() {
+            $('#messaggio_attesa').hide();
+            $('#classi_succ_completate').hide();
+    
+            for(var year = (new Date).getFullYear() - 10; year <= (new Date).getFullYear(); year++) {
+                setCampiStorici(year+'_'+(year+1));
+            }
+    
+            $('[id^=messaggio_]').hide();
+    
+            $('.vc').height( $('#vc').height() );
+            $('.opv').height( $('#opv').height() );
+            $('.rpv').height( $('#rpv').height() );
+            $('.smv').height( $('#smv').height() );
+    
+    
+            $('.collapse_header').click(function(){
+                $(this).nextUntil('tr.collapse_header').slideToggle(50);
+            });
+        });
+    
+        function setCampiStorici(year) {
+            var enabled = $('[name="abilita_parametri['+ year +'][ABILITA_VISUALIZZAZIONE_STORICA_PORTALE]"]').is(':checked');
+    
+            $.each($('[name^="parametri['+ year +']"]'), function(i, e){
+                if (enabled) {
+                    $(e).removeAttr('disabled');
+                } else {
+                    $(e).attr('disabled','disabled');
+                }
+            });
+    
+            $.each($('[name^="bottone['+ year +']"]'), function(i, e){
+                if (enabled) {
+                    $(e).removeAttr('disabled');
+                } else {
+                    $(e).attr('disabled','disabled');
+                }
+            });
+        }
+    
+        function openPopup(type, year, name) {
+            var field = $('[name="popup['+ year +']['+ name +']"]');
+    
+            $('#messaggio_'+ type +'_'+ year).dialog({
+                width:540,
+                position: { my: "center", at: "center", of: $('[name="bottone['+ year +']['+ name +']"]') },
+                buttons: {
+                    "Ok": function() {
+                        $('[name="parametri['+ year +']['+ name +']"]').val(field.val());
+                        $(this).dialog("close");
+                    },
+                    "Annulla": function() {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+    
+            field.val($('[name="parametri['+ year +']['+ name +']"]').val());
+        }
+    
+        function show_message() {
+            $('#messaggio_attesa').show();
+        }
+    
+        function show_table(table) {
+            if (table === 'view_table_abbinati') {
+                $('#classi_succ_completate').show();
+                $('#classi_succ_da_completare').hide();
+            } else {
+                $('#classi_succ_da_completare').show();
+                $('#classi_succ_completate').hide();
+            }
+        }
+    
+        function seleziona_tutti(obj) {
+            var cbs = document.getElementsByTagName('input');
+            for(var i=0; i < cbs.length; i++) {
+                if(cbs[i].type == 'checkbox') {
+                    cbs[i].checked = obj.checked;
+                }
+            }
+        }
+    
+        function genera_credenziali_parente(id)
+        {
+            var data = [
+                'current_user='+ $('#current_user').val(),
+                'current_key='+ $('#current_key').val(),
+                'form_tipo_utente=amministratore',
+                'form_azione=genera_credenziali_parente'
+            ];
+    
+            $.ajax({
+                url: 'ajat_manager.php?'+ data.join('&'),
+                async: false,
+                method: 'POST',
+                success: function (res)
+                {
+                    if (typeof (res) !== 'object') {
+                        return false;
+                    }
+    
+                    if (typeof res.utente !== 'undefined') {
+                        $('#parente_'+ id +'_utente').val(res.utente);
+                        $('#parente_'+ id +'_codice_attivazione').val(res.codice_attivazione);
+                        $('#parente_'+ id +'_commento').show();
+                    } else {
+                        alert("Problemi nella rigenerazione delle credenziali, riprovare più tardi");
+                    }
+                },
+                error: function () {
+                    alert("Problemi nella rigenerazione delle credenziali, riprovare più tardi");
+                }
+            });
+        }
+    
+        function checkByClass(className)
+        {
+            $("."+className).each(function(i) {
+                if (this.disabled !== true)
+                {
+                    this.checked = !this.checked;
+                }
+            });
+        }
+    
+        function updateOrarioPubblicazioneVotiPortale(selectedValue, idElementToReset)
+        {
+            let elementToReset = document.getElementById(idElementToReset);
+    
+            if (selectedValue != '') {
+                elementToReset.value = 0;
+                elementToReset.readOnly = true;
+            }
+            else {
+                elementToReset.readOnly = false;
+            }
+        }
+    
+        function confermaCambioParametroMinistero(select){
+            const value = select.value;
+            if (value == 'NO'){
+                if (!confirm("ATTENZIONE: stai per disabilitare le comunicazioni che il Ministero dell'Istruzione e del Merito invia tramite MasterCom.\nQuesta opzione è pensata esclusivamente per le scuole operanti al di fuori del territorio italiano.\nTi invitiamo a contattare preventivamente il Ministero dell'Istruzione e del Merito prima di procedere.\n\nConfermi di voler disattivare tali comunicazioni?")){
+                    select.value = 'SI';
+                } else {
+                    select.value = 'NO';
+                }
+            }
+        }
+    </script>
+
+    <script type="text/javascript" language="javascript" src="javascript/display_index_amministratore_impostazioni.js?v=25.2.88"></script>
+    <br>
+    <table width='100%' class="sfondo_base_generico bordo_generico_rilievo">
+        <tr>
+            <td align='center' class='setup_area_titolo'>
+                Gestione Impostazioni:
+            </td>
+        </tr>
+        <tr>
+            <td><br></td>
+        </tr>
+        <tr>
+            <td class="padding_cella_generica">
+
+                <script type="text/javascript" language="javascript">
+                    function add_new_subject_pairing(current_select)
+                    {
+                        /*{{{*/
+                        var int_index_row_button = document.getElementById('row_insert_abbinamenti').rowIndex,
+                                obj_table = document.getElementById('abbinamenti_template'),
+                                obj_new_row = obj_table.insertRow(int_index_row_button),
+                                obj_new_cell = obj_new_row.insertCell(0);
+                    
+                        obj_new_cell.colSpan = 4;
+                        current_select.onchange = function nulla() {
+                        };
+                    
+                        var obj_template_cell = document.getElementById('abbinamenti_template_cell');
+                    
+                        obj_new_cell.innerHTML = obj_template_cell.innerHTML;
+                        /*}}}*/
+                    }
+                    
+                    function copy_type_vote_default(current_select)
+                    {
+                        /*{{{ */
+                        try
+                        {
+                            var lista = document.getElementsByName('materia[]'),
+                                    cont = null;
+                    
+                            for (var i = 0; lista[i]; i++) {
+                                if (lista[i] == current_select) {
+                                    cont = i;
+                                }
+                            }
+                    
+                            var id_materia = lista[cont].value,
+                                    scritto = document.getElementsByName('scritto[]'),
+                                    orale = document.getElementsByName('orale[]'),
+                                    pratico = document.getElementsByName('pratico[]'),
+                                    unico = document.getElementsByName('unico[]');
+                    
+                            try {
+                                scritto[cont].value = mat_materie[id_materia].scritto;
+                            } catch (e) {
+                            }
+                    
+                            try {
+                                orale[cont].value = mat_materie[id_materia].orale;
+                            } catch (e) {
+                            }
+                    
+                            try {
+                                pratico[cont].value = mat_materie[id_materia].pratico;
+                            } catch (e) {
+                            }
+                    
+                            try {
+                                unico[cont].value = mat_materie[id_materia].unico;
+                            } catch (e) {
+                            }
+                        } catch (e) {
+                            alert('err ' + e);
+                        }
+                        /*}}}*/
+                    }
+                    
+                    function show_applica_orario(iterartion, type) {
+                        if (document.getElementById('td_privilegi_'+type).value !== 'ITP') {
+                            document.getElementById(iterartion).style.visibility='visible';
+                            document.getElementById(iterartion).style.display='block';
+                            document.getElementById(iterartion).style.backgroundColor = "rgb(255, 255, 153)";
+                        }
+                    }
+                    
+                    function toggleTable(tablename, sfondoBase, sfondoAcceso) {
+                            var lTable = document.getElementById(tablename);
+                            var lTitle = document.getElementById('pannello_'+tablename);
+                            var tabelle = document.getElementsByClassName('tabelle_personalizzazioni');
+                            var titoli = document.getElementsByClassName('td_titoli_pannelli');
+                            var stato = document.getElementById(tablename).style.display;
+                    
+                            for (var i = 0; i < tabelle.length; i++) {
+                                tabelle[i].style.display = "none";
+                                titoli[i].style.backgroundColor = sfondoBase;
+                                titoli[i].style.color = "black";
+                            }
+                    
+                            lTable.style.display = (stato === "") ? "none" : "";
+                            lTitle.style.backgroundColor = (stato === "") ? sfondoBase : sfondoAcceso;
+                            lTitle.style.color = (stato === "") ? "black" : "white";
+                        }
+                    
+                    function toggleSmartSelect(checkbox, id, cls='') {
+                            if(checkbox.checked === true){
+                                document.getElementById(id).removeAttribute("disabled");
+                                if (cls) {
+                                    $('.'+cls).removeAttr("disabled");
+                                }
+                            }else{
+                                document.getElementById(id).setAttribute("disabled", "disabled");
+                                if (cls) {
+                                    $('.'+cls).attr("disabled", true);
+                                }
+                            }
+                        }
+                    
+                    function toggleSmartDate(checkbox, id) {
+                            if(checkbox.checked === true){
+                                    document.getElementById(id+"_Day").removeAttribute("disabled");
+                                    document.getElementById(id+"_Month").removeAttribute("disabled");
+                                    document.getElementById(id+"_Year").removeAttribute("disabled");
+                            }else{
+                                document.getElementById(id+"_Day").setAttribute("disabled", "disabled");
+                                document.getElementById(id+"_Month").setAttribute("disabled", "disabled");
+                                document.getElementById(id+"_Year").setAttribute("disabled", "disabled");
+                            }
+                        }
+                    
+                    function settaDimensioni(img)
+                    {
+                        console.log(img.height);
+                        if (img.height > img.width)
+                        {
+                            img.style.height = '300px';
+                            img.style.width = 'auto';
+                        }
+                        else
+                        {
+                            img.style.width = '800px';
+                            img.style.height = 'auto';
+                        }
+                    }
+                    
+                    function updateOrarioPubblicazioneVotiPortale(selectedValue, idElementToReset)
+                    {
+                        let elementToReset = document.getElementById(idElementToReset);
+                    
+                        if (selectedValue != '') {
+                            elementToReset.value = 0;
+                            elementToReset.readOnly = true;
+                        }
+                        else {
+                            elementToReset.readOnly = false;
+                        }
+                    }
+                    
+                    
+                    // Scegliendo la materia "Comportamento" viene tolta la possibilità di pubblicare
+                    // il corso su Moodle, in quanto la select viene disabilitata
+                    /*$(document).ready(function()
+                    {
+                    	$('select[name="materia[]"]').change(function()
+                    	{
+                            var selectVal = $(this).find('option:selected').val();
+                    
+                            if (selectVal === '1000033') // Da cambiare il controllo, questo è solo per le prove
+                            {
+                                $(this).parent().parent()
+                                        .children('td')
+                                        .children('.labelId')
+                                        .css('color', '#7E7E7E');
+                                $(this).parent().parent()
+                                        .children('td')
+                                        .children('.moodleId')
+                                        .prop('disabled', true);
+                                $(this).parent().parent()
+                                        .children('td')
+                                        .children(".moodleId")
+                                        .val(0);
+                            }
+                            else
+                            {
+                                $(this).parent().parent()
+                                        .children('td')
+                                        .children('.labelId')
+                                        .css('color', '#000000');
+                                $(this).parent().parent()
+                                        .children('td')
+                                        .children('.moodleId')
+                                        .prop('disabled', false);
+                                $(this).parent().parent()
+                                        .children('td')
+                                        .children('.moodleId')
+                                        .val(1);
+                            }
+                    	});
+                    });
+                    */
+                    
+                    $(document).ready(function()
+                    {
+                        if ($("#elencoTemplatesPagelle").length) {
+                            // carica menu a tendina multiselezione per i modelli docx sulla classe
+                            var elenco_templates_pagelle_js = [];
+                            $("#elencoTemplatesPagelle").jqxDropDownList({
+                                source: elenco_templates_pagelle_js,
+                                displayMember: "nome",
+                                valueMember: "id_template",
+                                checkboxes: true,
+                                filterable: true,
+                                filterPlaceHolder: "Cerca...",
+                                theme: 'Bootstrap',
+                                searchMode: 'containsignorecase',
+                                placeHolder: "Seleziona modelli",
+                                selectedIndex: 0,
+                                width: 400,
+                                height: 27
+                            });
+                            // checka le opzioni di default parametri in base alla classe attuale
+                            if (typeof null !== 'undefined' && null > 0) {
+                                elenco_templates_pagelle_js.forEach(function(item) {
+                                    if (item.id_classi_selected && item.id_classi_selected.hasOwnProperty()) { 
+                                        $("#elencoTemplatesPagelle").jqxDropDownList('checkItem', item.id_template);
+                                    }
+                                });
+                            }
+                            // setta il nome dell'input del menu
+                            $("#elencoTemplatesPagelle").find('input[type="hidden"]').attr("name", "input_classe_template_pagelle");
+                        }
+                    });
+                    
+                    
+                    var mat_materie = JSON.parse("{\"1000073\":{\"id_materia\":\"1000073\",\"codice\":\"ANI\",\"descrizione\":\"ANIMAZIONE\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"NO\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000132\",\"data_modifica\":\"1645183587\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"ANIMAZIONE\",\"nome_materia_breve\":\"ANIMAZIONE\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000073\",\"1\":\"ANI\",\"2\":\"ANIMAZIONE\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"\",\"12\":\"NO\",\"13\":\"0\"},\"1000075\":{\"id_materia\":\"1000075\",\"codice\":\"BIO\",\"descrizione\":\"BIOLOGIA\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000132\",\"data_modifica\":\"1641913798\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"BIOLOGIA\",\"nome_materia_breve\":\"BIOLOGIA\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000075\",\"1\":\"BIO\",\"2\":\"BIOLOGIA\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"\",\"12\":\"SI\",\"13\":\"0\"},\"1000985\":{\"id_materia\":\"1000985\",\"codice\":\"BIOMED\",\"descrizione\":\"BIOMEDICA\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"3000132\",\"data_inserimento\":\"1725605960\",\"tipo_inserimento\":\"INTERFACCIA\",\"chi_modifica\":\"3000132\",\"data_modifica\":\"1725605969\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Discipline tecniche\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"BIOMEDICA\",\"nome_materia_breve\":\"BIOMED\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000985\",\"1\":\"BIOMED\",\"2\":\"BIOMEDICA\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"\",\"12\":\"SI\",\"13\":\"0\"},\"1000076\":{\"id_materia\":\"1000076\",\"codice\":\"CHI\",\"descrizione\":\"CHIMICA E LABORATORIO\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000132\",\"data_modifica\":\"1641913835\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"CHIMICA E LABORATORIO\",\"nome_materia_breve\":\"CHIMICA E LABORATORIO\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000076\",\"1\":\"CHI\",\"2\":\"CHIMICA E LABORATORIO\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"\",\"12\":\"SI\",\"13\":\"0\"},\"1000084\":{\"id_materia\":\"1000084\",\"codice\":\"DPO\",\"descrizione\":\"CLIL DPO MECCANICA\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000132\",\"data_modifica\":\"1641914409\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"CLIL DPO MECCANICA\",\"nome_materia_breve\":\"DPO CLIL\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000084\",\"1\":\"DPO\",\"2\":\"CLIL DPO MECCANICA\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"\",\"12\":\"SI\",\"13\":\"0\"},\"1000130\":{\"id_materia\":\"1000130\",\"codice\":\"SISTEMI\",\"descrizione\":\"CLIL SISTEMI ELETTRONICA\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000132\",\"data_modifica\":\"1641914662\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"CLIL SISTEMI ELETTRONICA\",\"nome_materia_breve\":\"SISTEMI CLIL\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000130\",\"1\":\"SISTEMI\",\"2\":\"CLIL SISTEMI ELETTRONICA\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"\",\"12\":\"SI\",\"13\":\"0\"},\"1000849\":{\"id_materia\":\"1000849\",\"codice\":\"COMP\",\"descrizione\":\"COMPORTAMENTO\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"\",\"scritto\":\"0\",\"orale\":\"0\",\"pratico\":\"0\",\"in_media_pagelle\":\"NO\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"3000146\",\"data_inserimento\":\"1706187632\",\"tipo_inserimento\":\"INTERFACCIA\",\"chi_modifica\":\"3000238\",\"data_modifica\":\"1737968764\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Comportamento\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"COMPORTAMENTO\",\"nome_materia_breve\":\"COMPORTAMENTO SCUOLA MEDIA\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000849\",\"1\":\"COMP\",\"2\":\"COMPORTAMENTO\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"0\",\"9\":\"0\",\"10\":\"0\",\"11\":\"\",\"12\":\"NO\",\"13\":\"0\"},\"1000077\":{\"id_materia\":\"1000077\",\"codice\":\"COM\",\"descrizione\":\"COMPORTAMENTO\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000025\",\"data_modifica\":\"1641910528\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"CONDOTTA\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"1\",\"nome_materia_sito\":\"COMPORTAMENTO\",\"nome_materia_breve\":\"COMPORTAMENTO\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000077\",\"1\":\"COM\",\"2\":\"COMPORTAMENTO\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"\",\"12\":\"SI\",\"13\":\"0\"},\"1000497\":{\"id_materia\":\"1000497\",\"codice\":\"COM\",\"descrizione\":\"COMPORTAMENTO\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"\",\"scritto\":\"0\",\"orale\":\"0\",\"pratico\":\"0\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"1\",\"chi_inserisce\":\"3000146\",\"data_inserimento\":\"1671458861\",\"tipo_inserimento\":\"INTERFACCIA\",\"chi_modifica\":\"3000146\",\"data_modifica\":\"1671458861\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"COMPORTAMENTO\",\"nome_materia_breve\":\"COMPORTAMENTO\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000497\",\"1\":\"COM\",\"2\":\"COMPORTAMENTO\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"0\",\"9\":\"0\",\"10\":\"0\",\"11\":\"\",\"12\":\"SI\",\"13\":\"1\"},\"1000079\":{\"id_materia\":\"1000079\",\"codice\":\"CON\",\"descrizione\":\"CONDOTTA\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000132\",\"data_modifica\":\"1679483260\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"CONDOTTA\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"1\",\"nome_materia_sito\":\"CONDOTTA\",\"nome_materia_breve\":\"CONDOTTA\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000079\",\"1\":\"CON\",\"2\":\"CONDOTTA\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"\",\"12\":\"SI\",\"13\":\"0\"},\"1000081\":{\"id_materia\":\"1000081\",\"codice\":\"DIR\",\"descrizione\":\"DIRITTO ED ECONOMIA\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000132\",\"data_modifica\":\"1641913862\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"DIRITTO ED ECONOMIA\",\"nome_materia_breve\":\"DIRITTO ED ECONOMIA\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000081\",\"1\":\"DIR\",\"2\":\"DIRITTO ED ECONOMIA\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"\",\"12\":\"SI\",\"13\":\"0\"},\"1000082\":{\"id_materia\":\"1000082\",\"codice\":\"DIS\",\"descrizione\":\"DISEGNO E STORIA DELL&#039;ARTE\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000132\",\"data_modifica\":\"1679483305\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"DISEGNO E STORIA DELL&#039;ARTE\",\"nome_materia_breve\":\"DISEGNO E STORIA DELL'ARTE\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000082\",\"1\":\"DIS\",\"2\":\"DISEGNO E STORIA DELL'ARTE\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"\",\"12\":\"SI\",\"13\":\"0\"},\"1000083\":{\"id_materia\":\"1000083\",\"codice\":\"DPO\",\"descrizione\":\"D.P.O.\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000132\",\"data_modifica\":\"1641914345\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"D.P.O.\",\"nome_materia_breve\":\"D.P.O.\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000083\",\"1\":\"DPO\",\"2\":\"D.P.O.\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"\",\"12\":\"SI\",\"13\":\"0\"},\"1000086\":{\"id_materia\":\"1000086\",\"codice\":\"EDU\",\"descrizione\":\"EDUCAZIONE FISICA\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000132\",\"data_modifica\":\"1679483412\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"EDUCAZIONE FISICA\",\"nome_materia_breve\":\"EDUCAZIONE FISICA\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000086\",\"1\":\"EDU\",\"2\":\"EDUCAZIONE FISICA\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"\",\"12\":\"SI\",\"13\":\"0\"},\"1000087\":{\"id_materia\":\"1000087\",\"codice\":\"ELN\",\"descrizione\":\"ELETTROTECNICA & ELETTRONICA\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000132\",\"data_modifica\":\"1641914521\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"ELETTROTECNICA & ELETTRONICA\",\"nome_materia_breve\":\"ELN&ELT\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000087\",\"1\":\"ELN\",\"2\":\"ELETTROTECNICA & ELETTRONICA\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"\",\"12\":\"SI\",\"13\":\"0\"},\"1000088\":{\"id_materia\":\"1000088\",\"codice\":\"FIL\",\"descrizione\":\"FILOSOFIA\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000132\",\"data_modifica\":\"1641913928\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"FILOSOFIA\",\"nome_materia_breve\":\"FILOSOFIA\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000088\",\"1\":\"FIL\",\"2\":\"FILOSOFIA\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"\",\"12\":\"SI\",\"13\":\"0\"},\"1000094\":{\"id_materia\":\"1000094\",\"codice\":\"GEO\",\"descrizione\":\"GEOGRAFIA ECONOMICA\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000132\",\"data_modifica\":\"1641913971\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"GEOGRAFIA ECONOMICA\",\"nome_materia_breve\":\"GEOGRAFIA ECONOMICA\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000094\",\"1\":\"GEO\",\"2\":\"GEOGRAFIA ECONOMICA\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"\",\"12\":\"SI\",\"13\":\"0\"},\"1000328\":{\"id_materia\":\"1000328\",\"codice\":\"\",\"descrizione\":\"GESTIONE PROGETTO ORGANIZZAZIONE DI IMPRESA\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"0\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"3000132\",\"data_inserimento\":\"1651479118\",\"tipo_inserimento\":\"INTERFACCIA\",\"chi_modifica\":\"3000132\",\"data_modifica\":\"1651479118\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"GESTIONE PROGETTO ORG. IMPRESA\",\"nome_materia_breve\":\"GPO\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000328\",\"1\":\"\",\"2\":\"GESTIONE PROGETTO ORGANIZZAZIONE DI IMPRESA\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"0\",\"11\":\"\",\"12\":\"SI\",\"13\":\"0\"},\"1000095\":{\"id_materia\":\"1000095\",\"codice\":\"IDP\",\"descrizione\":\"IMPIANTI ENERGETICI, DISEGNO E PROGETTAZIONE\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000132\",\"data_modifica\":\"1641914565\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"IMPIANTI ENERGETICI, DISEGNO E PROGETTAZIONE\",\"nome_materia_breve\":\"I.D.P.\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000095\",\"1\":\"IDP\",\"2\":\"IMPIANTI ENERGETICI, DISEGNO E PROGETTAZIONE\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"\",\"12\":\"SI\",\"13\":\"0\"},\"1000984\":{\"id_materia\":\"1000984\",\"codice\":\"LABAUTOM\",\"descrizione\":\"LAB AUTOMAZIONE\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"3000132\",\"data_inserimento\":\"1725605830\",\"tipo_inserimento\":\"INTERFACCIA\",\"chi_modifica\":\"3000132\",\"data_modifica\":\"1725606089\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Discipline tecniche\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"LAB AUTOMAZIONE\",\"nome_materia_breve\":\"LAB AUTO\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000984\",\"1\":\"LABAUTOM\",\"2\":\"LAB AUTOMAZIONE\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"\",\"12\":\"SI\",\"13\":\"0\"},\"1000982\":{\"id_materia\":\"1000982\",\"codice\":\"LABBIM\",\"descrizione\":\"LAB BIM\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"3000238\",\"data_inserimento\":\"1725442707\",\"tipo_inserimento\":\"INTERFACCIA\",\"chi_modifica\":\"3000238\",\"data_modifica\":\"1725442707\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Discipline tecniche\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"LAB BIM\",\"nome_materia_breve\":\"LAB BIM\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000982\",\"1\":\"LABBIM\",\"2\":\"LAB BIM\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"\",\"12\":\"SI\",\"13\":\"0\"},\"1000101\":{\"id_materia\":\"1000101\",\"codice\":\"MAD\",\"descrizione\":\"MADRELINGUA\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000132\",\"data_modifica\":\"1641914420\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"MADRELINGUA\",\"nome_materia_breve\":\"MADRELINGUA\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000101\",\"1\":\"MAD\",\"2\":\"MADRELINGUA\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"\",\"12\":\"SI\",\"13\":\"0\"},\"1000078\":{\"id_materia\":\"1000078\",\"codice\":\"MC\",\"descrizione\":\"MATEMATICA & COMPLEMENTI DI MATEMATICA\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000238\",\"data_modifica\":\"1748340584\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"MATE & COMPLEMENTI\",\"nome_materia_breve\":\"MATE & COMPL\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000078\",\"1\":\"MC\",\"2\":\"MATEMATICA & COMPLEMENTI DI MATEMATICA\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"\",\"12\":\"SI\",\"13\":\"0\"},\"1000105\":{\"id_materia\":\"1000105\",\"codice\":\"MAT\",\"descrizione\":\"MATHEMATICS IGCSE\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000146\",\"data_modifica\":\"1662539151\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"MATHEMATICS IGCSE\",\"nome_materia_breve\":\"MATHS IGCSE\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000105\",\"1\":\"MAT\",\"2\":\"MATHEMATICS IGCSE\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"\",\"12\":\"SI\",\"13\":\"0\"},\"1000107\":{\"id_materia\":\"1000107\",\"codice\":\"MEC\",\"descrizione\":\"MECC. MACCHINE ENERGIA\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000132\",\"data_modifica\":\"1641914606\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"MECC. MACCHINE ENERGIA\",\"nome_materia_breve\":\"MECC MACC ENER\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000107\",\"1\":\"MEC\",\"2\":\"MECC. MACCHINE ENERGIA\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"\",\"12\":\"SI\",\"13\":\"0\"},\"1000114\":{\"id_materia\":\"1000114\",\"codice\":\"SCI\",\"descrizione\":\"SCIENZE E TECNOLOGIE APPLICATE\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"3\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000238\",\"data_modifica\":\"1743752518\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Discipline tecniche\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"SCIENZE E TECNOLOGIE APPLICATE\",\"nome_materia_breve\":\"STA\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000114\",\"1\":\"SCI\",\"2\":\"SCIENZE E TECNOLOGIE APPLICATE\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"\",\"12\":\"SI\",\"13\":\"3\"},\"1000112\":{\"id_materia\":\"1000112\",\"codice\":\"SCI\",\"descrizione\":\"SCIENZE INTEGRATE (SCIENZE DELLA TERRA E BIOLOGIA)\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000146\",\"data_modifica\":\"1664969355\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"SCIENZE DELLA TERRA\",\"nome_materia_breve\":\"SCIENZE DELLA TERRA\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000112\",\"1\":\"SCI\",\"2\":\"SCIENZE INTEGRATE (SCIENZE DELLA TERRA E BIOLOGIA)\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"\",\"12\":\"SI\",\"13\":\"0\"},\"1000115\":{\"id_materia\":\"1000115\",\"codice\":\"SIS\",\"descrizione\":\"SISTEMI ED AUTOMAZIONE IND.LE\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000146\",\"data_modifica\":\"1663317266\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"SISTEMI ED AUTOMAZIONE IND.LE\",\"nome_materia_breve\":\"SISTEMI ED AUTOMAZIONE IND.LE\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000115\",\"1\":\"SIS\",\"2\":\"SISTEMI ED AUTOMAZIONE IND.LE\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"\",\"12\":\"SI\",\"13\":\"0\"},\"1000116\":{\"id_materia\":\"1000116\",\"codice\":\"SIS\",\"descrizione\":\"SISTEMI ELETTRONICI AUTOMATICI\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000146\",\"data_modifica\":\"1663317407\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"SISTEMI ELETTRONICI AUTOMATICI\",\"nome_materia_breve\":\"SISTEMI ELETTRONICI AUTOMATICI\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000116\",\"1\":\"SIS\",\"2\":\"SISTEMI ELETTRONICI AUTOMATICI\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"\",\"12\":\"SI\",\"13\":\"0\"},\"1000117\":{\"id_materia\":\"1000117\",\"codice\":\"SIS\",\"descrizione\":\"SISTEMI E RETI\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000132\",\"data_modifica\":\"1641914691\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"SISTEMI E RETI\",\"nome_materia_breve\":\"SISTEMI E RETI\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000117\",\"1\":\"SIS\",\"2\":\"SISTEMI E RETI\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"\",\"12\":\"SI\",\"13\":\"0\"},\"1000069\":{\"id_materia\":\"1000069\",\"codice\":\"STN\",\"descrizione\":\"SOSTEGNO\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"NO\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"-1\",\"data_inserimento\":\"0\",\"tipo_inserimento\":\"\",\"chi_modifica\":\"3000132\",\"data_modifica\":\"1712227443\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"SOSTEGNO\",\"codice_ministeriale\":\"STN\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"SOSTEGNO\",\"nome_materia_breve\":\"SOSTEGNO\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000069\",\"1\":\"STN\",\"2\":\"SOSTEGNO\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"\",\"12\":\"NO\",\"13\":\"0\"},\"1000986\":{\"id_materia\":\"1000986\",\"codice\":\"STEMROBOT\",\"descrizione\":\"STEM-ROBOTICA\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"3\",\"chi_inserisce\":\"3000238\",\"data_inserimento\":\"1725874357\",\"tipo_inserimento\":\"INTERFACCIA\",\"chi_modifica\":\"3000238\",\"data_modifica\":\"1743752305\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Discipline tecniche\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"STEM-ROBOTICA\",\"nome_materia_breve\":\"STEMROBOT\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000986\",\"1\":\"STEMROBOT\",\"2\":\"STEM-ROBOTICA\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"\",\"12\":\"SI\",\"13\":\"3\"},\"1000124\":{\"id_materia\":\"1000124\",\"codice\":\"TEC\",\"descrizione\":\"TECNO CLIL MECCANICA\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000132\",\"data_modifica\":\"1641914864\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"TECNO CLIL MECCANICA\",\"nome_materia_breve\":\"TECNO CLIL MECCANICA\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000124\",\"1\":\"TEC\",\"2\":\"TECNO CLIL MECCANICA\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"\",\"12\":\"SI\",\"13\":\"0\"},\"1000131\":{\"id_materia\":\"1000131\",\"codice\":\"TPS\",\"descrizione\":\"TECNOLOGIA E PROGETTAZIONE SISTEMI ELT E ELN\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000146\",\"data_modifica\":\"1662534486\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"TPS\",\"nome_materia_breve\":\"TPS ELT ELN\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000131\",\"1\":\"TPS\",\"2\":\"TECNOLOGIA E PROGETTAZIONE SISTEMI ELT E ELN\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"\",\"12\":\"SI\",\"13\":\"0\"},\"1000126\":{\"id_materia\":\"1000126\",\"codice\":\"TEC\",\"descrizione\":\"TECNOLOGIA E TECNICHE DI RAPPRESENTAZIONE GRAFICA\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000132\",\"data_modifica\":\"1641914462\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"TTECNOLOGIA E TECNICHE DI RAPPRESENTAZIONE GRAFICA\",\"nome_materia_breve\":\"TECNOLOGIA E TECNICHE DI RAPPRESENTAZIONE GRAFICA\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000126\",\"1\":\"TEC\",\"2\":\"TECNOLOGIA E TECNICHE DI RAPPRESENTAZIONE GRAFICA\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"\",\"12\":\"SI\",\"13\":\"0\"},\"1000127\":{\"id_materia\":\"1000127\",\"codice\":\"TEC\",\"descrizione\":\"TECNOLOGIE DI SISTEMI INFORMATICI\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000132\",\"data_modifica\":\"1641914838\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"TECNOLOGIE DI SISTEMI INFORMATICI\",\"nome_materia_breve\":\"TECNOLOGIE DI SISTEMI INFORMATICI\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000127\",\"1\":\"TEC\",\"2\":\"TECNOLOGIE DI SISTEMI INFORMATICI\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"\",\"12\":\"SI\",\"13\":\"0\"},\"1000125\":{\"id_materia\":\"1000125\",\"codice\":\"TEC\",\"descrizione\":\"TECNOLOGIE INFORMATICHE\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000132\",\"data_modifica\":\"1641914349\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"TECNOLOGIE INFORMATICHE\",\"nome_materia_breve\":\"TECNOLOGIE INFORMATICHE\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000125\",\"1\":\"TEC\",\"2\":\"TECNOLOGIE INFORMATICHE\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"\",\"12\":\"SI\",\"13\":\"0\"},\"1000123\":{\"id_materia\":\"1000123\",\"codice\":\"TEC\",\"descrizione\":\"TECNO MECCANICHE PROCESSO E PRODOTTO\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000146\",\"data_modifica\":\"1662534638\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"TECNO MECCANICHE PROCESSO E PRODOTTO\",\"nome_materia_breve\":\"TECNO MECCANICHE PROCESSO E PRODOTTO\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000123\",\"1\":\"TEC\",\"2\":\"TECNO MECCANICHE PROCESSO E PRODOTTO\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"\",\"12\":\"SI\",\"13\":\"0\"},\"1000129\":{\"id_materia\":\"1000129\",\"codice\":\"TEL\",\"descrizione\":\"TELECOMUNICAZIONI\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000146\",\"data_modifica\":\"1662534800\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"TELECOMUNICAZIONI\",\"nome_materia_breve\":\"TELECOMUNICAZIONI\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000129\",\"1\":\"TEL\",\"2\":\"TELECOMUNICAZIONI\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"\",\"12\":\"SI\",\"13\":\"0\"},\"1000136\":{\"id_materia\":\"1000136\",\"codice\":\"TEL\",\"descrizione\":\"TELECOMUNICAZIONI CLIL\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"\",\"scritto\":\"0\",\"orale\":\"0\",\"pratico\":\"0\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"1\",\"chi_inserisce\":\"3000147\",\"data_inserimento\":\"1631736572\",\"tipo_inserimento\":\"INTERFACCIA\",\"chi_modifica\":\"3000132\",\"data_modifica\":\"1641914798\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"TELECOMUNICAZIONI CLIL\",\"nome_materia_breve\":\"TELECOMUNICAZIONI CLIL\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000136\",\"1\":\"TEL\",\"2\":\"TELECOMUNICAZIONI CLIL\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"0\",\"9\":\"0\",\"10\":\"0\",\"11\":\"\",\"12\":\"SI\",\"13\":\"1\"},\"1000100\":{\"id_materia\":\"1000100\",\"codice\":\"ITA\",\"descrizione\":\"ITALIANO\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"1\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000132\",\"data_modifica\":\"1671793384\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"ITALIANO\",\"nome_materia_breve\":\"ITALIANO\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000100\",\"1\":\"ITA\",\"2\":\"ITALIANO\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"1\",\"12\":\"SI\",\"13\":\"0\"},\"1000110\":{\"id_materia\":\"1000110\",\"codice\":\"REL\",\"descrizione\":\"RELIGIONE\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"1\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"NO\",\"tipo_valutazione\":\"1\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000146\",\"data_modifica\":\"1717589720\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"I666\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"RELIGIONE\",\"nome_materia_breve\":\"RELIGIONE\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000110\",\"1\":\"REL\",\"2\":\"RELIGIONE\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"1\",\"12\":\"NO\",\"13\":\"1\"},\"1000074\":{\"id_materia\":\"1000074\",\"codice\":\"ART\",\"descrizione\":\"ARTE E IMMAGINE\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"10\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000146\",\"data_modifica\":\"1738565087\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"ARTE E IMMAGINE\",\"nome_materia_breve\":\"ARTE E IMMAGINE\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000074\",\"1\":\"ART\",\"2\":\"ARTE E IMMAGINE\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"10\",\"12\":\"SI\",\"13\":\"0\"},\"1000108\":{\"id_materia\":\"1000108\",\"codice\":\"MUS\",\"descrizione\":\"MUSICA\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"11\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000132\",\"data_modifica\":\"1671794145\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"MUSICA\",\"nome_materia_breve\":\"MUSICA\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000108\",\"1\":\"MUS\",\"2\":\"MUSICA\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"11\",\"12\":\"SI\",\"13\":\"0\"},\"1000122\":{\"id_materia\":\"1000122\",\"codice\":\"TEC\",\"descrizione\":\"TECNOLOGIA\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"12\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000146\",\"data_modifica\":\"1738565034\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"TECNOLOGIA\",\"nome_materia_breve\":\"TECNOLOGIA\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000122\",\"1\":\"TEC\",\"2\":\"TECNOLOGIA\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"12\",\"12\":\"SI\",\"13\":\"0\"},\"1000089\":{\"id_materia\":\"1000089\",\"codice\":\"FIS\",\"descrizione\":\"SCIENZE MOTORIE E SPORTIVE\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"13\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000132\",\"data_modifica\":\"1671794252\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"SCIENZE MOTORIE E SPORTIVE\",\"nome_materia_breve\":\"SCIENZE MOTORIE E SPORTIVE\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000089\",\"1\":\"FIS\",\"2\":\"SCIENZE MOTORIE E SPORTIVE\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"13\",\"12\":\"SI\",\"13\":\"0\"},\"1000109\":{\"id_materia\":\"1000109\",\"codice\":\"RELM\",\"descrizione\":\"RELIGIONE\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"14\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"NO\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"1000001\",\"data_modifica\":\"1675865271\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"RELIGIONE\",\"nome_materia_breve\":\"RELIGIONEM\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000109\",\"1\":\"RELM\",\"2\":\"RELIGIONE\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"14\",\"12\":\"NO\",\"13\":\"0\"},\"1000080\":{\"id_materia\":\"1000080\",\"codice\":\"CIV\",\"descrizione\":\"EDUCAZIONE CIVICA\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"15\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000146\",\"data_modifica\":\"1674458961\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"EDUCAZIONE CIVICA\",\"nome_materia_breve\":\"EDUCAZIONE CIVICA\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000080\",\"1\":\"CIV\",\"2\":\"EDUCAZIONE CIVICA\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"15\",\"12\":\"SI\",\"13\":\"0\"},\"1000102\":{\"id_materia\":\"1000102\",\"codice\":\"LET\",\"descrizione\":\"LETTERE ITALIANE\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"2\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000146\",\"data_modifica\":\"1743762845\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"LETTERE ITALIANE\",\"nome_materia_breve\":\"LETTERE ITALIANE\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000102\",\"1\":\"LET\",\"2\":\"LETTERE ITALIANE\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"2\",\"12\":\"SI\",\"13\":\"0\"},\"1000120\":{\"id_materia\":\"1000120\",\"codice\":\"STO\",\"descrizione\":\"STORIA\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"2\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000132\",\"data_modifica\":\"1671793458\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"STORIA\",\"nome_materia_breve\":\"STORIA\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000120\",\"1\":\"STO\",\"2\":\"STORIA\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"2\",\"12\":\"SI\",\"13\":\"0\"},\"1000092\":{\"id_materia\":\"1000092\",\"codice\":\"GEO\",\"descrizione\":\"GEOGRAFIA\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"3\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000132\",\"data_modifica\":\"1671793698\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"GEOGRAFIA\",\"nome_materia_breve\":\"GEOGRAFIA\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000092\",\"1\":\"GEO\",\"2\":\"GEOGRAFIA\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"3\",\"12\":\"SI\",\"13\":\"0\"},\"1000103\":{\"id_materia\":\"1000103\",\"codice\":\"LET\",\"descrizione\":\"LETTERE LATINE\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"3\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000132\",\"data_modifica\":\"1679482713\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"LETTERE LATINE\",\"nome_materia_breve\":\"LETTERE LATINE\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000103\",\"1\":\"LET\",\"2\":\"LETTERE LATINE\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"3\",\"12\":\"SI\",\"13\":\"0\"},\"1000093\":{\"id_materia\":\"1000093\",\"codice\":\"GEO\",\"descrizione\":\"GEOGRAFIA CLIL\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"4\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000146\",\"data_modifica\":\"1734422966\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"GEOGRAFIA CLIL\",\"nome_materia_breve\":\"GEOGRAFIA CLIL\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000093\",\"1\":\"GEO\",\"2\":\"GEOGRAFIA CLIL\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"4\",\"12\":\"SI\",\"13\":\"0\"},\"1000121\":{\"id_materia\":\"1000121\",\"codice\":\"STO\",\"descrizione\":\"STORIA E GEOGRAFIA\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"4\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000132\",\"data_modifica\":\"1679482743\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"STORIA E GEOGRAFIA\",\"nome_materia_breve\":\"STORIA E GEOGRAFIA\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000121\",\"1\":\"STO\",\"2\":\"STORIA E GEOGRAFIA\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"4\",\"12\":\"SI\",\"13\":\"0\"},\"1000098\":{\"id_materia\":\"1000098\",\"codice\":\"ING\",\"descrizione\":\"INGLESE\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"5\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000127\",\"data_modifica\":\"1685538997\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"INGLESE\",\"nome_materia_breve\":\"INGLESE\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000098\",\"1\":\"ING\",\"2\":\"INGLESE\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"5\",\"12\":\"SI\",\"13\":\"0\"},\"1000104\":{\"id_materia\":\"1000104\",\"codice\":\"MATM\",\"descrizione\":\"MATEMATICA\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"5\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000127\",\"data_modifica\":\"1685541624\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"MATEMATICA\",\"nome_materia_breve\":\"MATEMATICA\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000104\",\"1\":\"MATM\",\"2\":\"MATEMATICA\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"5\",\"12\":\"SI\",\"13\":\"0\"},\"1000106\":{\"id_materia\":\"1000106\",\"codice\":\"MAT\",\"descrizione\":\"MATEMATICA\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"6\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000238\",\"data_modifica\":\"1748244472\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"MATEMATICA\",\"nome_materia_breve\":\"MATEMATICA\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000106\",\"1\":\"MAT\",\"2\":\"MATEMATICA\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"6\",\"12\":\"SI\",\"13\":\"0\"},\"1000111\":{\"id_materia\":\"1000111\",\"codice\":\"SCI\",\"descrizione\":\"SCIENZE\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"6\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000132\",\"data_modifica\":\"1671793842\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"SCIENZE\",\"nome_materia_breve\":\"SCIENZE\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000111\",\"1\":\"SCI\",\"2\":\"SCIENZE\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"6\",\"12\":\"SI\",\"13\":\"0\"},\"1000097\":{\"id_materia\":\"1000097\",\"codice\":\"INGM\",\"descrizione\":\"INGLESE\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"7\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000127\",\"data_modifica\":\"1685538558\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"INGLESE\",\"nome_materia_breve\":\"INGLESE\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000097\",\"1\":\"INGM\",\"2\":\"INGLESE\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"7\",\"12\":\"SI\",\"13\":\"0\"},\"1000113\":{\"id_materia\":\"1000113\",\"codice\":\"SCI\",\"descrizione\":\"SCIENZE NATURALI\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"7\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000132\",\"data_modifica\":\"1679482872\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"SCIENZE NATURALI\",\"nome_materia_breve\":\"SCIENZE NATURALI\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000113\",\"1\":\"SCI\",\"2\":\"SCIENZE NATURALI\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"7\",\"12\":\"SI\",\"13\":\"0\"},\"1000090\":{\"id_materia\":\"1000090\",\"codice\":\"FIS\",\"descrizione\":\"FISICA\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"8\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000238\",\"data_modifica\":\"1748244563\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"FISICA\",\"nome_materia_breve\":\"FISICA\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000090\",\"1\":\"FIS\",\"2\":\"FISICA\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"8\",\"12\":\"SI\",\"13\":\"0\"},\"1000091\":{\"id_materia\":\"1000091\",\"codice\":\"FRA\",\"descrizione\":\"FRANCESE\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"8\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000132\",\"data_modifica\":\"1671794378\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"FRANCESE\",\"nome_materia_breve\":\"FRANCESE\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000091\",\"1\":\"FRA\",\"2\":\"FRANCESE\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"8\",\"12\":\"SI\",\"13\":\"0\"},\"1000118\":{\"id_materia\":\"1000118\",\"codice\":\"SPA\",\"descrizione\":\"SPAGNOLO\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"8\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000146\",\"data_modifica\":\"1672226059\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"SPAGNOLO\",\"nome_materia_breve\":\"SPAGNOLO\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000118\",\"1\":\"SPA\",\"2\":\"SPAGNOLO\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"8\",\"12\":\"SI\",\"13\":\"0\"},\"1000128\":{\"id_materia\":\"1000128\",\"codice\":\"TED\",\"descrizione\":\"TEDESCO\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"8\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000132\",\"data_modifica\":\"1671794453\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"TEDESCO\",\"nome_materia_breve\":\"TEDESCO\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000128\",\"1\":\"TED\",\"2\":\"TEDESCO\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"8\",\"12\":\"SI\",\"13\":\"0\"},\"1000096\":{\"id_materia\":\"1000096\",\"codice\":\"INF\",\"descrizione\":\"INFORMATICA\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"9\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000146\",\"data_modifica\":\"1733390480\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"INFORMATICA\",\"nome_materia_breve\":\"INFORMATICA\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000096\",\"1\":\"INF\",\"2\":\"INFORMATICA\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"9\",\"12\":\"SI\",\"13\":\"0\"},\"1000099\":{\"id_materia\":\"1000099\",\"codice\":\"ING\",\"descrizione\":\"INGLESE MADRELINGUA\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":\"9\",\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"3000146\",\"data_modifica\":\"1734424191\",\"tipo_modifica\":\"INTERFACCIA\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"INGLESE MADRELINGUA\",\"nome_materia_breve\":\"INGLESE MADRELINGUA\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000099\",\"1\":\"ING\",\"2\":\"INGLESE MADRELINGUA\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":\"9\",\"12\":\"SI\",\"13\":\"0\"},\"1000119\":{\"id_materia\":\"1000119\",\"codice\":\"STO\",\"descrizione\":\"STO-2 (STORIA)\",\"esonerabile\":\"N\",\"votazione_differenziata\":\"significati_voti\",\"codice_itp\":\"\",\"ordinamento\":null,\"scritto\":\"1\",\"orale\":\"1\",\"pratico\":\"1\",\"in_media_pagelle\":\"SI\",\"tipo_valutazione\":\"0\",\"chi_inserisce\":\"0\",\"data_inserimento\":\"1631011956\",\"tipo_inserimento\":\"MASTER_EXPORT\",\"chi_modifica\":\"0\",\"data_modifica\":\"1631011956\",\"tipo_modifica\":\"\",\"flag_canc\":\"0\",\"tipo_materia\":\"NORMALE\",\"codice_ministeriale\":\"\",\"descrizione_scuola_media\":\"\",\"tipologia_aggregamento\":\"Non definita\",\"descrizione_materia_straniera\":\"\",\"id_tipo_voto\":\"0\",\"id_flusso\":\"0\",\"classe_concorso\":\"\",\"tipo_voto_personalizzato\":\"0\",\"nome_materia_sito\":\"\",\"nome_materia_breve\":\"\",\"unico\":\"0\",\"id_materia_riferimento\":\"-1\",\"monteore\":\"0\",\"id_tipo_corso\":\"-1\",\"0\":\"1000119\",\"1\":\"STO\",\"2\":\"STO-2 (STORIA)\",\"4\":\"N\",\"5\":\"significati_voti\",\"6\":\"\",\"8\":\"1\",\"9\":\"1\",\"10\":\"1\",\"11\":null,\"12\":\"SI\",\"13\":\"0\"}}");
+                        var numero_studenti = 0;
+                </script>
+
+                <form method='post' action='/mastercom/index.php'>
+                    <table border=0 width="100%">
+
+                        <tr id='row_head_classes' class="sfondo_classi">
+                            <td>
+                                <img id='icon_classes' name='bottone' value='Conferma' src='icone/icona.php?icon=indietro' alt='Apri scelta classi' onclick="mostra_riga('row_grid_classes', this);
+                    mostra_riga('row_grid_operations', this);">
+                                <b><font color='#000000' size='3'>Selezione classi anno scolastico corrente</font></b>
+                            </td>
+                            <td align='right'>
+                                <input type='button' value='Nuova classe' onclick='this.form.id_classe.value = -1;
+                    this.form.submit();'>
+                                <input type='button' value='Nuovo indirizzo' onclick='this.form.id_indirizzo.value = -1;
+                    this.form.submit();'>
+                            </td>
+                            <td align='right'>
+                            </td>
+                        </tr>
+                        <tr id='row_grid_classes' class="sfondo_classi">
+                            <td colspan='3' width='100%'>
+                                <table width="100%" style="border-collapse:separate; padding: 5; font-size:10pt;background-color:#E0E0E0">
+                                    <tr style="background-color:#E0E0E0;">
+                                        <td align="center" width="25%"><strong></strong></td>
+                                        <td align="center" width="10%"><strong>Classi 1e</strong></td>
+                                        <td align="center" width="10%"><strong>Classi 2e</strong></td>
+                                        <td align="center" width="10%"><strong>Classi 3e</strong></td>
+                                        <td align="center" width="10%"><strong>Classi 4e</strong></td>
+                                        <td align="center" width="10%"><strong>Classi 5e</strong></td>
+                                    </tr>
+                                    <tr style="background-color: #BBD8FF;">
+                                        <td rowspan="3" align="right"><strong><input
+                                    type="button"
+                                    value="CLASSI ARTICOLATE"
+                                    style="width: 100%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal;"
+                                    onclick="this.form.id_indirizzo.value='1000050';this.form.submit();"></strong></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; padding:1px;font-size:10pt; white-space: normal; " value="1CASILLO" onclick="this.form.id_classe.value='1000150';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; padding:1px;font-size:10pt; white-space: normal; " value="2CASILLO" onclick="this.form.id_classe.value='1000153';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                    </tr>
+                                    <tr style="background-color: #BBD8FF;">
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; padding:1px;font-size:10pt; white-space: normal; " value="1FOCO" onclick="this.form.id_classe.value='1000461';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; padding:1px;font-size:10pt; white-space: normal; " value="2FOCO" onclick="this.form.id_classe.value='1000966';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                    </tr>
+                                    <tr style="background-color: #BBD8FF;">
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; padding:1px;font-size:10pt; white-space: normal; " value="1MERCURIO" onclick="this.form.id_classe.value='1000152';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; padding:1px;font-size:10pt; white-space: normal; " value="2GIANOLIO" onclick="this.form.id_classe.value='1000151';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                    </tr>
+                                    <tr style="background-color: #9DC5FC;">
+                                        <td rowspan="1" align="right"><strong><input
+                                    type="button"
+                                    value="ITI"
+                                    style="width: 100%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal;"
+                                    onclick="this.form.id_indirizzo.value='1000062';this.form.submit();"></strong></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; color: #800;" value="1X" onclick="this.form.id_classe.value='1000450';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                    </tr>
+                                    <tr style="background-color: #BBD8FF;">
+                                        <td rowspan="1" align="right"><strong><input
+                                    type="button"
+                                    value="ITI BIENNIO ELN"
+                                    style="width: 100%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal;"
+                                    onclick="this.form.id_indirizzo.value='1000029';this.form.submit();"></strong></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="1A" onclick="this.form.id_classe.value='1000132';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="2A" onclick="this.form.id_classe.value='1000131';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                    </tr>
+                                    <tr style="background-color: #9DC5FC;">
+                                        <td rowspan="1" align="right"><strong><input
+                                    type="button"
+                                    value="ITI BIENNIO INF"
+                                    style="width: 100%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal;"
+                                    onclick="this.form.id_indirizzo.value='1000044';this.form.submit();"></strong></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="1C" onclick="this.form.id_classe.value='1000133';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="2C" onclick="this.form.id_classe.value='1000130';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                    </tr>
+                                    <tr style="background-color: #BBD8FF;">
+                                        <td rowspan="1" align="right"><strong><input
+                                    type="button"
+                                    value="ITI BIENNIO MEC"
+                                    style="width: 100%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal;"
+                                    onclick="this.form.id_indirizzo.value='1000043';this.form.submit();"></strong></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="1B" onclick="this.form.id_classe.value='1000148';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="2B" onclick="this.form.id_classe.value='1000129';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                    </tr>
+                                    <tr style="background-color: #9DC5FC;">
+                                        <td rowspan="1" align="right"><strong><input
+                                    type="button"
+                                    value="ITI TRIENNIO ELN"
+                                    style="width: 100%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal;"
+                                    onclick="this.form.id_indirizzo.value='1000027';this.form.submit();"></strong></td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="3ELN" onclick="this.form.id_classe.value='1000115';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="4ELN" onclick="this.form.id_classe.value='1000114';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="5ELN" onclick="this.form.id_classe.value='1000111';this.form.submit();"></td>
+                                    </tr>
+                                    <tr style="background-color: #BBD8FF;">
+                                        <td rowspan="1" align="right"><strong><input
+                                    type="button"
+                                    value="ITI TRIENNIO ENE"
+                                    style="width: 100%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal;"
+                                    onclick="this.form.id_indirizzo.value='1000046';this.form.submit();"></strong></td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="3ENE" onclick="this.form.id_classe.value='1000117';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="4ENE" onclick="this.form.id_classe.value='1000277';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="5ENE" onclick="this.form.id_classe.value='1000452';this.form.submit();"></td>
+                                    </tr>
+                                    <tr style="background-color: #9DC5FC;">
+                                        <td rowspan="1" align="right"><strong><input
+                                    type="button"
+                                    value="ITI TRIENNIO INF"
+                                    style="width: 100%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal;"
+                                    onclick="this.form.id_indirizzo.value='1000047';this.form.submit();"></strong></td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="3INF" onclick="this.form.id_classe.value='1000118';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="4INF" onclick="this.form.id_classe.value='1000112';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="5INF" onclick="this.form.id_classe.value='1000278';this.form.submit();"></td>
+                                    </tr>
+                                    <tr style="background-color: #BBD8FF;">
+                                        <td rowspan="1" align="right"><strong><input
+                                    type="button"
+                                    value="ITI TRIENNIO MEC"
+                                    style="width: 100%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal;"
+                                    onclick="this.form.id_indirizzo.value='1000045';this.form.submit();"></strong></td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="3MEC" onclick="this.form.id_classe.value='1000116';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="4MEC" onclick="this.form.id_classe.value='1000113';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="5MEC" onclick="this.form.id_classe.value='1000110';this.form.submit();"></td>
+                                    </tr>
+                                    <tr style="background-color: #9DC5FC;">
+                                        <td rowspan="1" align="right"><strong><input
+                                    type="button"
+                                    value="Liceo Scientifico"
+                                    style="width: 100%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal;"
+                                    onclick="this.form.id_indirizzo.value='1000028';this.form.submit();"></strong></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="1A" onclick="this.form.id_classe.value='1000128';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="2A" onclick="this.form.id_classe.value='1000279';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="3A" onclick="this.form.id_classe.value='1000123';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="4A" onclick="this.form.id_classe.value='1000121';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="5A" onclick="this.form.id_classe.value='1000119';this.form.submit();"></td>
+                                    </tr>
+                                    <tr style="background-color: #BBD8FF;">
+                                        <td rowspan="2" align="right"><strong><input
+                                    type="button"
+                                    value="Liceo Scientifico scienze applicate"
+                                    style="width: 100%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal;"
+                                    onclick="this.form.id_indirizzo.value='1000048';this.form.submit();"></strong></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="1B" onclick="this.form.id_classe.value='1000127';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="2B" onclick="this.form.id_classe.value='1000125';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="3B" onclick="this.form.id_classe.value='1000124';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="4B" onclick="this.form.id_classe.value='1000122';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="5B" onclick="this.form.id_classe.value='1000120';this.form.submit();"></td>
+                                    </tr>
+                                    <tr style="background-color: #BBD8FF;">
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="1C" onclick="this.form.id_classe.value='1000460';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="2C" onclick="this.form.id_classe.value='1000944';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                    </tr>
+                                    <tr style="background-color: #9DC5FC;">
+                                        <td rowspan="1" align="right"><strong><input
+                                    type="button"
+                                    value="OSPITI"
+                                    style="width: 100%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal;"
+                                    onclick="this.form.id_indirizzo.value='1000056';this.form.submit();"></strong></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="1OS" onclick="this.form.id_classe.value='1000326';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                    </tr>
+                                    <tr style="background-color: #BBD8FF;">
+                                        <td rowspan="1" align="right"><strong><input
+                                    type="button"
+                                    value="PASTI CFP"
+                                    style="width: 100%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal;"
+                                    onclick="this.form.id_indirizzo.value='1000066';this.form.submit();"></strong></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="1CFP" onclick="this.form.id_classe.value='1000462';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                    </tr>
+                                    <tr style="background-color: #9DC5FC;">
+                                        <td rowspan="5" align="right"><strong><input
+                                    type="button"
+                                    value="Scuola Media"
+                                    style="width: 100%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal;"
+                                    onclick="this.form.id_indirizzo.value='1000030';this.form.submit();"></strong></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="1A" onclick="this.form.id_classe.value='1000144';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="2A" onclick="this.form.id_classe.value='1000142';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="3A" onclick="this.form.id_classe.value='1000136';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                    </tr>
+                                    <tr style="background-color: #9DC5FC;">
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="1B" onclick="this.form.id_classe.value='1000159';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="2B" onclick="this.form.id_classe.value='1000141';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="3B" onclick="this.form.id_classe.value='1000134';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                    </tr>
+                                    <tr style="background-color: #9DC5FC;">
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="1C" onclick="this.form.id_classe.value='1000146';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="2C" onclick="this.form.id_classe.value='1000143';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="3C" onclick="this.form.id_classe.value='1000138';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                    </tr>
+                                    <tr style="background-color: #9DC5FC;">
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="1D" onclick="this.form.id_classe.value='1000145';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="2D" onclick="this.form.id_classe.value='1000140';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="3D" onclick="this.form.id_classe.value='1000135';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                    </tr>
+                                    <tr style="background-color: #9DC5FC;">
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="1E" onclick="this.form.id_classe.value='1000147';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="2E" onclick="this.form.id_classe.value='1000139';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="3E" onclick="this.form.id_classe.value='1000137';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                    </tr>
+                                    <tr style="background-color: #BBD8FF;">
+                                        <td rowspan="1" align="right"><strong><input
+                                    type="button"
+                                    value="SOSPESI"
+                                    style="width: 100%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal;"
+                                    onclick="this.form.id_indirizzo.value='1000065';this.form.submit();"></strong></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; color: #800;" value="1SOSPESI" onclick="this.form.id_classe.value='1000459';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                    </tr>
+                                    <tr style="background-color: #9DC5FC;">
+                                        <td rowspan="1" align="right"><strong><input
+                                    type="button"
+                                    value="Test MasterCom"
+                                    style="width: 100%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal;"
+                                    onclick="this.form.id_indirizzo.value='1000035';this.form.submit();"></strong></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="1TEST MASTERCOM" onclick="this.form.id_classe.value='1000177';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                    </tr>
+                                    <tr style="background-color: #BBD8FF;">
+                                        <td rowspan="2" align="right"><strong><input
+                                    type="button"
+                                    value="X PASTI DOCENTI"
+                                    style="width: 100%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal;"
+                                    onclick="this.form.id_indirizzo.value='1000055';this.form.submit();"></strong></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="1DOCCFP" onclick="this.form.id_classe.value='1000741';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                    </tr>
+                                    <tr style="background-color: #BBD8FF;">
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="1PASTI DOCENTI" onclick="this.form.id_classe.value='1000295';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                    </tr>
+                                    <tr style="background-color: #9DC5FC;">
+                                        <td rowspan="1" align="right"><strong><input
+                                    type="button"
+                                    value="x preiscritti ITT"
+                                    style="width: 100%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal;"
+                                    onclick="this.form.id_indirizzo.value='1000068';this.form.submit();"></strong></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="1ITT" onclick="this.form.id_classe.value='1000721';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                    </tr>
+                                    <tr style="background-color: #BBD8FF;">
+                                        <td rowspan="1" align="right"><strong><input
+                                    type="button"
+                                    value="x preiscritti LICEO"
+                                    style="width: 100%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal;"
+                                    onclick="this.form.id_indirizzo.value='1000069';this.form.submit();"></strong></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="1LICEO" onclick="this.form.id_classe.value='1000722';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                    </tr>
+                                    <tr style="background-color: #9DC5FC;">
+                                        <td rowspan="1" align="right"><strong><input
+                                    type="button"
+                                    value="x preiscritti MEDIA"
+                                    style="width: 100%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal;"
+                                    onclick="this.form.id_indirizzo.value='1000067';this.form.submit();"></strong></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="1MEDIA" onclick="this.form.id_classe.value='1000720';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                    </tr>
+                                    <tr style="background-color: #BBD8FF;">
+                                        <td rowspan="1" align="right"><strong><input
+                                    type="button"
+                                    value="Xistruzione parentale"
+                                    style="width: 100%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal;"
+                                    onclick="this.form.id_indirizzo.value='1000072';this.form.submit();"></strong></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="1PAR" onclick="this.form.id_classe.value='1001071';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                    </tr>
+                                    <tr style="background-color: #9DC5FC;">
+                                        <td rowspan="1" align="right"><strong><input
+                                    type="button"
+                                    value="xRITIRATI  LICEO"
+                                    style="width: 100%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal;"
+                                    onclick="this.form.id_indirizzo.value='1000034';this.form.submit();"></strong></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="1RITIRATI LICEO" onclick="this.form.id_classe.value='1000158';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                    </tr>
+                                    <tr style="background-color: #BBD8FF;">
+                                        <td rowspan="3" align="right"><strong><input
+                                    type="button"
+                                    value="XRITIRATI CFP"
+                                    style="width: 100%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal;"
+                                    onclick="this.form.id_indirizzo.value='1000051';this.form.submit();"></strong></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; color: #800;" value="1A" onclick="this.form.id_classe.value='1000286';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; color: #800;" value="2M" onclick="this.form.id_classe.value='1000287';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; color: #800;" value="3A" onclick="this.form.id_classe.value='1000289';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                    </tr>
+                                    <tr style="background-color: #BBD8FF;">
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; color: #800;" value="2S" onclick="this.form.id_classe.value='1000288';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; color: #800;" value="3M" onclick="this.form.id_classe.value='1000291';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                    </tr>
+                                    <tr style="background-color: #BBD8FF;">
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; color: #800;" value="3S" onclick="this.form.id_classe.value='1000290';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                    </tr>
+                                    <tr style="background-color: #9DC5FC;">
+                                        <td rowspan="1" align="right"><strong><input
+                                    type="button"
+                                    value="xRITIRATI ITT"
+                                    style="width: 100%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal;"
+                                    onclick="this.form.id_indirizzo.value='1000033';this.form.submit();"></strong></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="1RITIRATI ITT" onclick="this.form.id_classe.value='1000156';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                    </tr>
+                                    <tr style="background-color: #BBD8FF;">
+                                        <td rowspan="1" align="right"><strong><input
+                                    type="button"
+                                    value="xRITIRATI MEDIA"
+                                    style="width: 100%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal;"
+                                    onclick="this.form.id_indirizzo.value='1000031';this.form.submit();"></strong></td>
+                                        <td align="center" style="white-space:nowrap;"> <input type='button' style="width: 70%; font-weight:bold; padding:1px;font-size:10pt; white-space: normal; " value="1RITIRATI MEDIA" onclick="this.form.id_classe.value='1000149';this.form.submit();"></td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                        <td align="center" style="white-space:nowrap;"> </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+
+                        <input type='hidden' name='form_stato' value='amministratore'>
+                        <input type='hidden' name='stato_principale' value='impostazioni_principale'>
+                        <input type='hidden' name='stato_secondario' value='gestione_classi_indirizzi_display'>
+                        <input type='hidden' name='id_classe' value=''>
+                        <input type='hidden' name='operazione' value=''>
+                        <input type='hidden' name='id_indirizzo' value=''>
+                        <input type='hidden' name='current_user' value='3001798'>
+                        <input type='hidden' name='current_key' value='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiJtY3VzZXJfMTczMDk3NjkwNC4xNjM3ZTYxMGUzYTNfYWduZWxsaS10byIsInR5cGUiOiJzZWdyZXRlcmlhIiwidGltZSI6MTc0ODUxMTY4OSwiY3JlYXRlZGJ5IjoibWN1c2VyXzE2MzEwMTM3MzkuOTIyMTM2MWY2YmMzX2FnbmVsbGktdG8iLCJleHBpcmF0aW9uIjoxNzQ4NTk4MDg5LCJkYXRlIjoiMjlcLzA1XC8yMDI1IDExOjQxIn0.LOlx_RlINiIaS3bsPqQKvkSDOKxbojmITz-H5CSjbUo'>
+                    </table>
+                </form>
+
+            </td>
+        </tr>
+
+        <tr>
+            <td><br></td>
+        </tr>
+        <tr>
+            <td valign='top' width='100%' align='center'>
+                <form method='post' action='/mastercom/index.php'>
+                    <table width='100%'>
+                        <tr>
+                            <td align='center' class="setup_contenitore">
+                                <table width='100%'>
+                                    <tr>
+                                        <td align='center' class="setup_titolo">
+                                            A - Impostazioni di base
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align='center'>
+                                            <SELECT onDblClick="this.form.stato_secondario.value=this.value; this.form.submit();" onChange="this.form.stato_secondario.value=this.value; this.form.submit();" name='tipo_stampa' size='20' style='width:100%'>
+<OPTION value="gestione_materie_display">A03 - Gestione materie</OPTION>
+<OPTION value="gestione_classi_indirizzi_display">A04 - Gestione classi e indirizzi</OPTION>
+
+</select>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td align='center' class="setup_contenitore">
+                                <table width='100%'>
+                                    <tr>
+                                        <td align='center' class="setup_titolo">
+                                            B - Operazioni di manutenzione
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align='center'>
+                                            <SELECT onDblClick="this.form.stato_secondario.value=this.value; this.form.submit();" onChange="this.form.stato_secondario.value=this.value; this.form.submit();" name='tipo_stampa' size='20' style='width:100%'>
+
+</select>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td align='center' class="setup_contenitore">
+                                <table width='100%'>
+                                    <tr>
+                                        <td align='center' class="setup_titolo">
+                                            C - Gestione operativa
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align='center'>
+                                            <SELECT onDblClick="this.form.stato_secondario.value=this.value; this.form.submit();" onChange="this.form.stato_secondario.value=this.value; this.form.submit();" name='tipo_stampa' size='20' style='width:100%'>
+
+</select>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align='center' class="setup_contenitore">
+                                <table width='100%'>
+                                    <tr>
+                                        <td align='center' class="setup_titolo">
+                                            D - Scrutini e esami di stato
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align='center'>
+                                            <SELECT onDblClick="this.form.stato_secondario.value=this.value; this.form.submit();" onChange="this.form.stato_secondario.value=this.value; this.form.submit();" name='tipo_stampa' size='8' style='width:100%'>
+
+</select>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td align='center' class="setup_contenitore">
+                                <table width='100%'>
+                                    <tr>
+                                        <td align='center' class="setup_titolo">
+                                            E - Orario e controllo accessi
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align='center'>
+                                            <SELECT onDblClick="this.form.stato_secondario.value=this.value; this.form.submit();" onChange="this.form.stato_secondario.value=this.value; this.form.submit();" name='tipo_stampa' size='8' style='width:100%'>
+
+</select>
+                                        </td>
+                                    </tr>
+                                </table>3INF
+                                    <tr>
+                                        <td align='center'>
+                                            <SELECT onDblClick="this.form.stato_secondario.value=this.value; this.form.submit();" onChange="this.form.stato_secondario.value=this.value; this.form.submit();" name='tipo_stampa' size='8' style='width:100%'>
+
+</select>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <input type='hidden' name='form_stato' value='amministratore'>
+                    <input type='hidden' name='stato_principale' value='impostazioni_principale'>
+                    <input type='hidden' name='stato_secondario' value=''>
+                    <input type='hidden' name='stato_recupero' value='seleziona_anno'>
+                    <input type='hidden' name='current_user' value='3001798'>
+                    <input type='hidden' name='current_key' value='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiJtY3VzZXJfMTczMDk3NjkwNC4xNjM3ZTYxMGUzYTNfYWduZWxsaS10byIsInR5cGUiOiJzZWdyZXRlcmlhIiwidGltZSI6MTc0ODUxMTY4OSwiY3JlYXRlZGJ5IjoibWN1c2VyXzE2MzEwMTM3MzkuOTIyMTM2MWY2YmMzX2FnbmVsbGktdG8iLCJleHBpcmF0aW9uIjoxNzQ4NTk4MDg5LCJkYXRlIjoiMjlcLzA1XC8yMDI1IDExOjQxIn0.LOlx_RlINiIaS3bsPqQKvkSDOKxbojmITz-H5CSjbUo'>
+                </form>
+            </td>
+        </tr>
+
+    </table>
+</body>
+
+</html>
+
+Succesfully logout

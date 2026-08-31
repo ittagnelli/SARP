@@ -15,10 +15,24 @@
 	export let data;
 	export let form;
 
-	// let insegnamenti = helper.data2arr(data.insegnamenti);
-	// let classi = helper.data2arr(data.classi);
 	let studenti = helper.data2arr(data.studenti);
+  let insegnamenti = helper.data2arr(data.insegnamenti);
 	let pdp_studenti = is_pdp_complete(studenti);
+
+  //conta gli insegnamenti o materie relative ad una specifica classe
+  function countMaterieClasse(classeId) {
+    return insegnamenti.filter(insegnamento => insegnamento.idClasse == classeId).length; 
+  }
+
+  //verifica che un pdp entry sia associato ad un insegnamento specifico
+  //per esempio se c'e' un PDP per TLC ma il docente non fa match, perchè è cambiato
+  //questo PDP non è valido. Il nuovo docente deve creare il PDP per lo studente e per la materia
+  //in tal modo gestisco il cambio di professore e le materie degli anni passati che non sono più valide
+  function pdpMatchInsegnamenti(idDocente, idMateria) {
+    return insegnamenti.filter(insegnamento => 
+              insegnamento.idDocente == idDocente &&
+              insegnamento.idMateria == idMateria).length == 1; 
+  }
 
 	function is_pdp_complete(studenti) {
 		return studenti.map((s, i) => {
@@ -27,19 +41,24 @@
 			s['sintesi_vocale'] = s.pdp.some((i) => i.sintesi_vocale == true);
 			s['tempo_esteso'] = s.pdp.some((i) => i.tempo_esteso == true);
 
-			let tot_materie = s.pdp.filter((m) => m.anno == helper.get_as()).length;
-			let materie_complete = s.pdp.filter((m) => m.completo == true && m.anno == helper.get_as()).length;
+      //ora il totale materie sonoo quelle insegnate (vedi insegnamenti)
+      let tot_materie = countMaterieClasse(s.classe.id);
+
+      //se tot materie è 0 allora non visualizzare pdp
+      s['can_show'] = tot_materie > 0;
+      
+      //ora le materie complete sono le entry nel PDP la cui materia è nella lista delle materie dello studente associata al docente dell'anno
+      let materie_complete = s.pdp.filter(p => 
+          p.completo == true &&
+          pdpMatchInsegnamenti(p.idDocente, p.idMateria) == true
+      ).length;
+
 			s['materie_col'] = `${materie_complete}/${tot_materie}`;
 			s['can_print'] =
 				materie_complete == tot_materie &&
-				tot_materie > 0 //&& //posso stampare solo se ci sono tutte le materi e sono >0
-				// s.griglia_valutazione_done &&
-				// s.griglia_pdp_a1_done &&
-				// s.griglia_pdp_c1_done &&
-				// s.griglia_pdp_c2_done &&
-				// s.griglia_pdp_b_done;
+				tot_materie > 0 //posso stampare solo se ci sono tutte le materi e sono >0
 			return s;
-		});
+		}).filter(p => p.can_show == true);
 	}
 
 	onMount(async () => {

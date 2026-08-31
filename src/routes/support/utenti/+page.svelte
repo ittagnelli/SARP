@@ -529,13 +529,18 @@
 							<!-- rimuovo la selezione per BES in quanto viene automaticamente impostato
 							se si crea un PDP per uno specifico studente
 							devo aggiungere il campo come hidden altrimenti lato server lo setta al default false (issue-618) -->
-							<input
+              <!-- PDP REFACTOR
+                   ripristino la scelta BES in quanto ora è automatico
+              -->
+							<!--
+              <input
 								type="hidden"
 								name="bes"
 								class="form-selectgroup-input"
 								value={form_values.bes_select}
 							/>
-							<!-- <div class="col-lg-4">
+              -->
+							<div class="col-lg-4">
 								<div class="mb-3">
 									<label class="form-label">BES</label>
 									<div class="form-selectgroup">
@@ -561,7 +566,7 @@
 										</label>
 									</div>
 								</div>
-							</div> -->
+							</div>
 							<!-- obiettivi minimi solo per studenti BES con PDP -->
 							{#if form_values.bes_select == 'SI'}
 							<div class="col-lg-4">

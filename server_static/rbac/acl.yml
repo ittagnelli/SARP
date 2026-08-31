@@ -9,7 +9,6 @@ menu_home:
 menu_utenti:
   view:
     - ADMIN
-    - TUTOR-SCOLASTICO
     - TUTOR-BES
 
 menu_classi:
@@ -167,6 +166,9 @@ menu_pdp_docente:
 
 pdp_docente:
   read:
+    - ADMIN
+    - DOCENTE
+  create:
     - ADMIN
     - DOCENTE
   update:

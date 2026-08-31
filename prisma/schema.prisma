@@ -1,4 +1,4 @@
-// v 0.38.0 2026-02-24
+// v 0.39.0 2026-08-03
 
 generator client {
     provider = "prisma-client-js"
@@ -91,6 +91,7 @@ model Materia {
     insegnata_in Insegnamenti[]
     template     programmazione_Template[]
     has_pdp      Boolean                   @default(true)
+    pdp_studenti PDP[]
 }
 
 model Insegnamenti {
@@ -108,7 +109,6 @@ model Insegnamenti {
     programma_secondo_quadrimestre          String?
     programma_primo_quadrimestre_completo   Boolean @default(false)
     programma_secondo_quadrimestre_completo Boolean @default(false)
-    pdp_studenti                            PDP[]
 }
 
 model Session {
@@ -267,10 +267,10 @@ model PDP {
     createdAt             DateTime     @default(now())
     updatedAt             DateTime     @updatedAt
     idDocente             Int
-    insegnamento          Insegnamenti @relation(fields: [idInsegnamento], references: [id])
-    idInsegnamento        Int
     studente              Utente       @relation(fields: [idStudente], references: [id])
     idStudente            Int
+    materia               Materia      @relation(fields: [idMateria], references: [id])
+    idMateria             Int          @default(0)
     anno                  Int
     dispensative          String
     compensative          String

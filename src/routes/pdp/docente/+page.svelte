@@ -15,19 +15,17 @@
 	export let form;
 
 	// sintesi vocale flag trigger overall PDP sintesi vocale only if for Lettere Italiane is true
-	const MATERIA_SINTESI_VOCALE = 'Lettere Italiane';
+	// const MATERIA_SINTESI_VOCALE = 'Lettere Italiane';
+  const MATERIA_SINTESI_VOCALE_ID = 2;
 
-	let obiettivi_minimi_templates = helper.data2arr(data.obiettivi_minimi_templates);
+	let obiettivi_minimi_templates = helper.data2arr(data.obiettiviMinTemplates);
 	let pdp = helper.data2arr(data.pdp);
 	//add field for easier table visualization
 	pdp.forEach((p) => {
 		p['studente_col'] = `${p.studente.cognome} ${p.studente.nome}`;
-		p[
-			'classe_col'
-		] = `${p.insegnamento.classe.classe} ${p.insegnamento.classe.istituto} ${p.insegnamento.classe.sezione}`;
-		p['materia_col'] = p.insegnamento.materia.nome;
+		p['materia_col'] = p.materia.nome;
 		p['obiettivi_minimi'] = p.studente.obiettivi_minimi;
-		p['docente_col'] = `${p.insegnamento.docente.cognome} ${p.insegnamento.docente.nome}`;
+		p['docente_col'] = `${p.docente.cognome} ${p.docente.nome}`;
 	});
 
 	let current_dispensative = JSON.parse(misure_dispensative);
@@ -54,6 +52,9 @@
 	let form_values = {
 		template_id: 0,
 		id: 0,
+    idDocente: 0,
+    idStudente: 0,
+    idMateria: 0,
 		dispensative: '',
 		compensative: '',
 		valutative: '',
@@ -85,13 +86,20 @@
 	let modal_action = 'create';
 	let errors = {};
 
-	async function start_update(e) {
-		modal_action = 'update';
-
+	async function start_editing(e) {
 		form_values.template_id = 0;
 		form_values.id = e.detail.id;
 		current_pdp = pdp.filter((i) => i.id == e.detail.id)[0];
 
+    //modal_action dipende dal tipo di PDP
+    //se è un PDP reale allora è un UPDATE 
+    //se invece e un vPDP allora è un CREATE in quanto la entry non esiste nella tabella PDP
+    // modal_action = current_pdp.hasOwnProperty('vPdp') ? 'create' : 'update';
+    modal_action = current_pdp.hasOwnProperty('virtualPdp') ? 'create' : 'update';
+
+    form_values.idDocente = current_pdp.idDocente;
+    form_values.idStudente = current_pdp.idStudente;
+    form_values.idMateria = current_pdp.idMateria;
 		current_dispensative = JSON.parse(current_pdp.dispensative);
 		current_compensative = JSON.parse(current_pdp.compensative);
 		current_valutative = JSON.parse(current_pdp.valutative);
@@ -139,8 +147,7 @@
 
 		//imposta i flag sintesi_vocale e tempo_esteso
 		form_values.sintesi_vocale =
-			current_pdp.insegnamento.materia.nome == MATERIA_SINTESI_VOCALE &&
-			current_compensative[1].selected;
+		  current_pdp.idMateria == MATERIA_SINTESI_VOCALE_ID && current_compensative[1].selected;
 		form_values.tempo_esteso = false;
 
 		try {
@@ -165,7 +172,7 @@
 	}
 
 	function update_template() {
-		const template = data.templates?.filter((t) => t.id == form_values.template_id)[0];
+		const template = data.pdpTemplates?.filter((t) => t.id == form_values.template_id)[0];
 
 		current_dispensative = JSON.parse(template.dispensative);
 		current_compensative = JSON.parse(template.compensative);
@@ -195,11 +202,9 @@
 <Table
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
-		{ name: 'classe_col', type: 'string', display: 'Classe', size: 20, search: true },
 		{ name: 'studente_col', type: 'string', display: 'Studente', size: 50, search: true },
 		{ name: 'materia_col', type: 'string', display: 'Materia', size: 50, search: true },
 		{ name: 'docente_col', type: 'string', display: 'Docente', size: 50, search: true },
-		{ name: 'anno', type: 'string', display: 'AS' },
 		{ name: 'obiettivi_minimi', type: 'boolean', display: 'Obiettivi Minimi', search: true },
 		{ name: 'completo', type: 'boolean', display: 'completo', search: true }
 	]}
@@ -211,12 +216,11 @@
 	print={false}
 	print_filter={false}
 	update={true}
-	update_filter={helper.is_admin(data) ? '' : 'completo'}
 	update_compare={false}
 	update_tip="Creo o aggiorna PDP per lo studente e la materia selezionati"
 	resource="pdp_docente"
 	modal_name={$page_action_modal}
-	on:update_start={start_update}
+	on:update_start={start_editing}
 	trash={false}
 />
 
@@ -240,6 +244,10 @@
 		<input type="hidden" name="compensative" bind:value={form_values.compensative} />
 		<input type="hidden" name="valutative" bind:value={form_values.valutative} />
 		<input type="hidden" name="strategie_classe" bind:value={form_values.strategie_classe} />
+    <input type="hidden" name="idDocente" bind:value={form_values.idDocente} />
+    <input type="hidden" name="idStudente" bind:value={form_values.idStudente} />
+    <input type="hidden" name="idMateria" bind:value={form_values.idMateria} />
+
 		<input
 			type="hidden"
 			name="strategie_didattiche"
@@ -270,7 +278,7 @@
 								bind:value={form_values.template_id}
 								on:change={update_template}
 							>
-								{#each data.templates as template}
+								{#each data.pdpTemplates as template}
 									<option value={template.id}>{template.nome}</option>
 								{/each}
 							</select>
