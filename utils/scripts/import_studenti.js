@@ -145,7 +145,8 @@ function get_provincia(luogo) {
 // all'inizio dell'anno settare tutti gli studenti a can_login=false (invoca disable_studenti_tutti.js)
 // poi fare ingestion (questo script)
 // ora settare tutti gli studenti con can_login=false a classeId=1
-// update Utente set classeId=1 where can_login=0 and tipo='STUDENTE';
+// eseguendo: set_classe0_studenti.js (non eseguire la query manualmente)
+// //update Utente set classeId=1 where can_login=0 and tipo='STUDENTE';
 // In questo modo gli studenti non sono più iscritti alla vecchia classe
 async function main(filename) {
     const ruolo_studente = await prisma.ruolo_Utente.findFirst({
@@ -156,8 +157,10 @@ async function main(filename) {
     readXlsxFile(filename).then(async (rows) => {
         console.log("Elaborazione XLSX...");
         /*
-    
-            NOME    COGNOME     NASCITA     NATO A      CF      EMAIL                           BES 
+            il file deve iniziare con queste prime due righe 
+
+   1-->     CLASSE: 1 ITT A 
+   2-->     NOME    COGNOME     NASCITA     NATO A      CF      EMAIL                           BES 
             Mario   Rossi       19/02/2005  Torino      xxx     mario.rossi@istitutoagnelli.it  NO
             Pino   Rossi       19/02/2005  Torino      xxx     pino.rossi@istitutoagnelli.it  NO
     
@@ -185,11 +188,12 @@ async function main(filename) {
         // let classe_db; // La classe che stiamo scrivendo nel DB
         let studenti_invalid = [];
         let sezione, anno, istituto;
-        rows.forEach(async (row) => {
+        // rows.forEach(async (row) => {
+        for(let row of rows) {
 
             sleep(100);
             if (clean_useless_info(row)) {  // Non facciamo nulla se il record non è uno studente o una classe
-                return;
+                // return;
             } else {
                 if (is_a_class(row[0])) {
                     const classe = filter_class(row).split(" ");    // Prendiamo la classe
@@ -198,20 +202,8 @@ async function main(filename) {
                     istituto = get_istituto(classe);  //  Prendiamo l'istituto
 
                     console.log("Inserimento di:", classe, decimal_to_roman(+anno), istituto, excel_to_db(sezione))
-
-                    
-
-                    // Qui l'await non aspetta il risultato e la classe risulta vuota, per il momento facciamo tutte la query dopo
-
-                    //classe_db = await prisma.classe.findFirstOrThrow({ // Con le informazioni ricavate prendiamo la classe dal DB
-                    //     where: {
-                    //         classe: decimal_to_roman(+anno),
-                    //         istituto: istituto,
-                    //         sezione: excel_to_db(sezione)
-                    //     }
-                    // });
                 } else {
-                    if (row[email_index].split("@").slice(-1) != "istitutoagnelli.it") {
+                    if (row[email_index].split("@").slice(-1)[0].toLowerCase() != "istitutoagnelli.it") {
                         console.log("L'utente non ha una mail valida, non verrà aggiunto su SARP.");
                         studenti_invalid.push("".concat(row[nome_index], " ", row[cognome_index], " ", row[email_index]))
                     } else {
@@ -223,7 +215,11 @@ async function main(filename) {
                                 sezione: excel_to_db(sezione)
                             }
                         });
-
+                        if(!classe) {
+                          console.log("Classe non esistente:")
+                          studenti_invalid.push("".concat(row[nome_index], " ", row[cognome_index], " ", row[email_index]))
+                        } else {
+                          const emailStr = row[email_index].toLowerCase();
                         await prisma.utente.upsert({
                             create: {   // Creaiamo un nuovo record secondo la regola di parsing spiegata sopra
                                 nome: capitalize(row[nome_index].replace("'", "").toLowerCase()),
@@ -234,7 +230,7 @@ async function main(filename) {
                                 residenza: row[indirizzo_index].concat(' ', row[residenza_index]),
                                 telefono: String(row[telefono_index]) != 'null' ? String(row[telefono_index]) : '',
                                 codiceF: row[cf_index],
-                                email: row[email_index],
+                                email: emailStr, //row[email_index],
                                 bes: mastercom_bool_to_real_bool(row[pdp_index]),
                                 obiettivi_minimi: mastercom_bool_to_real_bool(row[obiettivi_index]),
                                 can_login: true,
@@ -256,20 +252,21 @@ async function main(filename) {
                                 provincia: get_provincia(row[nato_a_index]),
                                 residenza: row[indirizzo_index].concat(' ', row[residenza_index]),
                                 telefono: String(row[telefono_index]) != 'null' ? String(row[telefono_index]) : '',
-                                email: row[email_index],
+                                email: emailStr, //row[email_index],
                                 // bes: mastercom_bool_to_real_bool(row[pdp_index]), //il flag PDP nel file segreteria non è sempre corretto quindi per evitare sovrascritture commento
                                 //obiettivi_minimi: mastercom_bool_to_real_bool(row[obiettivi_index]),
                                 istituto: classe.istituto,
                                 can_login: true,
                             },
                             where: {
-                                email: row[email_index]
+                                email: emailStr //row[email_index]
                             }
                         });
+                      }
                     }
                 }
             }
-        });
+        };
 
         write_invalid_email(studenti_invalid);
     });

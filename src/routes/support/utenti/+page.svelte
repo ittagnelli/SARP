@@ -264,10 +264,6 @@
 	actions={true}
 	update_tip="Aggiorna anagrafica utente"
 	trash_tip="Rimuovi anagrafica utente"
-	custom_actions={[
-		{ action: 'pdp', icon: 'checklist', tip: 'Aggiungi PDP', condition: 'not_bes' },
-	]}
-	on:custom_action={custom_action_handler}
 	resource="utenti"
 />
 
