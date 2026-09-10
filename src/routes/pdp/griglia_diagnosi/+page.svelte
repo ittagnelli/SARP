@@ -77,9 +77,8 @@
 	print={false}
 	print_filter={false}
 	update={true}
-	update_filter={helper.is_admin(data) ? '' : 'griglia_pdp_b_done'}
 	update_compare={false}
-	update_tip="Aggiorna Patto Educativo"
+	update_tip="Vedi/Aggiorna Griglia Diagnosi"
 	resource="pdp_griglia_diagnosi"
 />
 
@@ -490,6 +489,7 @@
 					<div class="row">
 						<div class="col-lg-4">
 							<br />
+              {#if helper.is_admin(data) ||  helper.is_tutor_bes(data) }
 							<label class="form-label">Griglia Diagnosi Completa</label>
 							<div class="form-selectgroup">
 								<label class="form-selectgroup-item">
@@ -513,6 +513,7 @@
 									<span class="form-selectgroup-label">NO</span>
 								</label>
 							</div>
+              {/if}
 						</div>
 					</div>
 					<br />
@@ -520,10 +521,12 @@
 						<a href="#" class="btn btn-danger" data-bs-dismiss="modal">
 							<b>Cancel</b>
 						</a>
+            {#if helper.is_admin(data) ||  helper.is_tutor_bes(data) }
 						<button class="btn btn-success ms-auto">
 							<i class="ti ti-mail-forward icon" />
 							<b>Invia Risposte</b>
 						</button>
+            {/if}
 					</div>
 				</div>
 			</div>

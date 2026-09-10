@@ -80,7 +80,7 @@
 	print={false}
 	print_filter={false}
 	update={true}
-	update_filter={helper.is_admin(data) ? '' : 'griglia_valutazione_done'}
+	update_filter={helper.is_admin(data) || helper.is_tutor_classe(data) ? '' : 'griglia_valutazione_done'}
 	update_compare={false}
 	update_tip="Aggiorna Griglia Osservativa"
 	resource="pdp_griglia_osservativa"

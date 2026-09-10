@@ -1,5 +1,14 @@
 import { PrismaDB } from '$js/prisma_db';
-import { route_protect, raise_error, is_admin, user_id, access_protect, is_tutor_classe, is_tutor_bes } from '$js/helper';
+import { 
+    route_protect, 
+    raise_error, 
+    is_admin, 
+    user_id, 
+    access_protect, 
+    is_tutor_classe, 
+    is_tutor_bes, 
+    is_docente,
+    get_as  } from '$js/helper';
 import { Logger } from '$js/logger';
 import { fail } from '@sveltejs/kit';
 import { PrismaClientValidationError } from '@prisma/client/runtime';
@@ -28,23 +37,39 @@ export async function load({ locals }) {
     access_protect(6000, locals, action, resource);
 
     try {
-        if (is_admin(locals) || is_tutor_bes(locals)) {
-            clausola_where = {
+        let classi = [];
+        if(is_docente(locals) && !is_tutor_bes(locals)) {
+            const idDocente = user_id(locals);
+            const insegnamenti = await SARP.insegnamenti.findMany({
+                select: {
+                    idClasse: true
+                },
+                where: {
+                    idDocente: idDocente,
+                    anno: get_as() -1 
+                }
+            });
+
+            let classiSet = new Set();
+            if(insegnamenti.length > 0)
+                insegnamenti.forEach(insegnamento => classiSet.add(insegnamento.idClasse));
+            classi = Array.from(classiSet);
+        }
+        const studenti = await SARP.Utente.findMany({
+            orderBy: [{ cognome: 'asc' }],
+            where: {
                 tipo: 'STUDENTE',
                 bes: true,
                 can_login: true
-            };
+            } 
+        });
+        const studentiReturn = 
+            is_docente(locals) && !is_tutor_bes(locals) ? 
+                studenti.filter(studente => classi.includes(studente.classeId)) :
+                studenti;
 
-            // query SQL al DB per tutte le entry nella tabella todo
-            const studenti = await SARP.Utente.findMany({
-                orderBy: [{ cognome: 'asc' }],
-                where: clausola_where
-            });
-
-            // restituisco il risultato della query SQL
-            return {
-                studenti
-            }
+        return {
+            studenti: studentiReturn
         }
     } catch (exception) {
         catch_error(exception, "la ricerca", 5000);

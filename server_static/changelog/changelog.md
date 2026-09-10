@@ -1,3 +1,8 @@
+## v5.0.2 - 10 Settembre 2026
+
+- Tutti i docenti possono visionare la griglia diagnosi pdp
+- Il tutor di classe può modificare la grigia valutativa dei PDP già esistenti
+
 ## v5.0.0 - 01 Settembre 2026
 
 - Il PDP non è più legato all'anno scolastico ma solo

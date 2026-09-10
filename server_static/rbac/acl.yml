@@ -150,11 +150,13 @@ menu_griglia_diagnosi:
   view:
     - ADMIN
     - TUTOR-BES
+    - DOCENTE
 
 pdp_griglia_diagnosi:
   read:
     - ADMIN
     - TUTOR-BES
+    - DOCENTE
   update:
     - ADMIN
     - TUTOR-BES
