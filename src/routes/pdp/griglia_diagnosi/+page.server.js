@@ -46,10 +46,10 @@ export async function load({ locals }) {
                 },
                 where: {
                     idDocente: idDocente,
-                    anno: get_as() -1 
+                    anno: get_as() 
                 }
             });
-
+        
             let classiSet = new Set();
             if(insegnamenti.length > 0)
                 insegnamenti.forEach(insegnamento => classiSet.add(insegnamento.idClasse));
