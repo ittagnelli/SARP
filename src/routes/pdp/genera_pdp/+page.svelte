@@ -28,10 +28,11 @@
   //per esempio se c'e' un PDP per TLC ma il docente non fa match, perchè è cambiato
   //questo PDP non è valido. Il nuovo docente deve creare il PDP per lo studente e per la materia
   //in tal modo gestisco il cambio di professore e le materie degli anni passati che non sono più valide
-  function pdpMatchInsegnamenti(idDocente, idMateria) {
+  function pdpMatchInsegnamenti(idDocente, idMateria, idClasse) {
     return insegnamenti.filter(insegnamento => 
               insegnamento.idDocente == idDocente &&
-              insegnamento.idMateria == idMateria).length == 1; 
+              insegnamento.idMateria == idMateria &&
+              insegnamento.idClasse == idClasse).length == 1; 
   }
 
 	function is_pdp_complete(studenti) {
@@ -50,7 +51,7 @@
       //ora le materie complete sono le entry nel PDP la cui materia è nella lista delle materie dello studente associata al docente dell'anno
       let materie_complete = s.pdp.filter(p => 
           p.completo == true &&
-          pdpMatchInsegnamenti(p.idDocente, p.idMateria) == true
+          pdpMatchInsegnamenti(p.idDocente, p.idMateria, s.classe.id) == true
       ).length;
 
 			s['materie_col'] = `${materie_complete}/${tot_materie}`;
