@@ -1,3 +1,13 @@
+## v5.0.6 - 30 Ottobre 2026
+
+- aggiunto memorizzazione pagina corrente sezione PDP Docenti
+- dopo l'editing di un PDP il sistema ritorna automaticamente all'ultima pagina selezionata dela tabella
+- questo è utile per rendere più agevole a compilazione da parte di chi ha molte pagine di PDP
+- aggiunto colonna classe in tabella PDP Docenti
+- risolto bug che nei PDP Alunni visualizzava sempre 0/x materie completate
+- risolto bug  relativo ad anno scolastico in PDP grigia diagnosi
+- TUTOR_BES può ora vedere e modificare tutte le sezioni (tranne griglia osservativa) anche se marcate come complete
+
 ## v5.0.2 - 10 Settembre 2026
 
 - Tutti i docenti possono visionare la griglia diagnosi pdp
