@@ -22,10 +22,11 @@
 	let pdp = helper.data2arr(data.pdp);
 	//add field for easier table visualization
 	pdp.forEach((p) => {
-		p['studente_col'] = `${p.studente.cognome} ${p.studente.nome}`;
+    p['studente_col'] = `${p.studente.cognome} ${p.studente.nome}`;
 		p['materia_col'] = p.materia.nome;
 		p['obiettivi_minimi'] = p.studente.obiettivi_minimi;
 		p['docente_col'] = `${p.docente.cognome} ${p.docente.nome}`;
+    p['classe_col'] = `${p.studente.classe.classe} ${p.studente.classe.istituto} ${p.studente.classe.sezione}`;
 	});
 
 	let current_dispensative = JSON.parse(misure_dispensative);
@@ -202,6 +203,7 @@
 <Table
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
+    { name: 'classe_col', type: 'string', display: 'Classe', size: 20, search: true },
 		{ name: 'studente_col', type: 'string', display: 'Studente', size: 50, search: true },
 		{ name: 'materia_col', type: 'string', display: 'Materia', size: 50, search: true },
 		{ name: 'docente_col', type: 'string', display: 'Docente', size: 50, search: true },

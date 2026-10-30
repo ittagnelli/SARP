@@ -134,7 +134,8 @@ const getRealPdps = async(docente, insegnamenti, studenti) => {
                     cognome: true,
                     bes: true,
                     obiettivi_minimi: true,
-                    classeId: true
+                    classeId: true,
+                    classe: true
                 }
             },
             materia: true,
@@ -270,7 +271,13 @@ const createVirtualPdpsEntries = async (docente, studenti, insegnamenti, virtual
                     sintesi_vocale: false,
                     tempo_esteso: false,
                     // studente: JSON.parse(JSON.stringify(studenti.filter(s => s.id == vstudente)[0], ['nome', 'cognome', 'obiettivi_minimi'])),
-                    studente: { nome: studenteFull.nome, cognome: studenteFull.cognome, obiettivi_minimi: studenteFull.obiettivi_minimi },
+                    studente: { nome: studenteFull.nome, cognome: studenteFull.cognome, obiettivi_minimi: studenteFull.obiettivi_minimi, 
+                    classe: {
+                        classe: studenteFull.classe.classe,
+                        istituto: studenteFull.classe.istituto,
+                        sezione: studenteFull.classe.sezione
+                      }
+                    },
                     // materia: insegnamenti[insegnamenti.findLastIndex(insegnamento => insegnamento.materia.id == k.idMateria)].materia,
                     materia: insegnamenti[insegnamenti.findLastIndex(insegnamento => insegnamento.materia.id === k.idMateria)].materia,
                     // docente: JSON.parse(JSON.stringify(docente, ['id', 'nome', 'cognome'])),
