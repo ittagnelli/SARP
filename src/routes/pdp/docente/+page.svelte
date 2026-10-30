@@ -10,13 +10,29 @@
 	import { misure_valutative } from '../template/valutative.js';
 	import { strategie_classe } from '../template/strategie_classe';
 	import { strategie_didattiche } from '../template/strategie_didattiche';
-
-	export let data;
+  import { browser } from '$app/environment';
+	
+  export let data;
 	export let form;
 
 	// sintesi vocale flag trigger overall PDP sintesi vocale only if for Lettere Italiane is true
 	// const MATERIA_SINTESI_VOCALE = 'Lettere Italiane';
   const MATERIA_SINTESI_VOCALE_ID = 2;
+
+  let current_page = 1;
+
+  const loadPage = () => {
+    if (!browser) return;
+    let page = localStorage.getItem('pdp-page');
+    if(page)
+      current_page = JSON.parse(page);
+  }
+
+  const savePage = () => {
+    if (!browser) return;
+    localStorage.setItem('pdp-page', JSON.stringify(current_page));
+  }
+
 
 	let obiettivi_minimi_templates = helper.data2arr(data.obiettiviMinTemplates);
 	let pdp = helper.data2arr(data.pdp);
@@ -28,6 +44,10 @@
 		p['docente_col'] = `${p.docente.cognome} ${p.docente.nome}`;
     p['classe_col'] = `${p.studente.classe.classe} ${p.studente.classe.istituto} ${p.studente.classe.sezione}`;
 	});
+
+  loadPage();
+  if(current_page > Math.ceil(pdp.length / 10))
+      current_page = 1;
 
 	let current_dispensative = JSON.parse(misure_dispensative);
 	let current_compensative = JSON.parse(misure_compensative);
@@ -86,6 +106,11 @@
 
 	let modal_action = 'create';
 	let errors = {};
+
+  async function update_page(e) {
+    current_page = e.detail.page;
+    savePage();
+  }
 
 	async function start_editing(e) {
 		form_values.template_id = 0;
@@ -224,6 +249,8 @@
 	modal_name={$page_action_modal}
 	on:update_start={start_editing}
 	trash={false}
+  current_page={current_page}
+  on:page_change={update_page}
 />
 
 <!-- Modal from Page action -->

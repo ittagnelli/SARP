@@ -32,7 +32,7 @@ const dispatch = createEventDispatcher();
 const MAX_PAGES = 20; //massimo numero di pagine visualizzabili nella barra
 
 let num_pages = Math.ceil(rows.length / page_size); //numero di pagines
-let current_page = 1; //pagina da visualizzare nella tabella
+export let current_page = 1; //pagina da visualizzare nella tabella
 let col_names = columns.map((item) => item.name); //nomi delle colonne
 let page_start = 0; //inizio della pagine nell'array rows
 let page_end = page_size; //fine della pagina nell'array rows
@@ -73,6 +73,10 @@ function change_page(page) {
     current_page = page;
     page_start = (current_page - 1) * page_size;
     page_end = page_start + page_size;
+
+    dispatch('page_change', {
+        page: current_page
+    });
 }
 
 function next_page() {
@@ -80,6 +84,9 @@ function next_page() {
         current_page++;
         page_start = page_end;
         page_end += page_size;
+        dispatch('page_change', {
+          page: current_page
+        });
     }
 }
 
@@ -88,6 +95,9 @@ function prev_page() {
         current_page--;
         page_end = page_start;
         page_start -= page_size;
+        dispatch('page_change', {
+          page: current_page
+        });
     }
 }
 
@@ -162,6 +172,7 @@ function table_filter(col, type, key) {
 
 onMount(async () => { 
     init_tippy();
+    change_page(current_page);
 });
 </script>
 
