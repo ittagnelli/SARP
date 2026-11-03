@@ -35,7 +35,24 @@
               insegnamento.idClasse == idClasse).length == 1; 
   }
 
+  function getMaterieComplete(studente) {
+    return studente.pdp.filter(p => p.completo == true).map(p => p.idMateria);
+  }
+
+  function getInsegnamentiMancanti(studente) {
+
+  }
+
 	function is_pdp_complete(studenti) {
+
+  let stu = studenti[0]
+    console.log(stu)
+    let cid = stu.classe.id
+    console.log(insegnamenti.filter(insegnamento => insegnamento.idClasse == cid))
+    let meterieCompleteId = getMaterieComplete(stu)
+    console.log(meterieCompleteId)
+
+
 		return studenti.map((s, i) => {
 			s['studente_col'] = `${s.cognome} ${s.nome}`;
 			s['classe_col'] = `${s.classe.classe} ${s.classe.istituto} ${s.classe.sezione}`;
@@ -58,6 +75,8 @@
 			s['can_print'] =
 				materie_complete == tot_materie &&
 				tot_materie > 0 //posso stampare solo se ci sono tutte le materi e sono >0
+
+     //s['materie_mancanti'] = [{materia: 'MATE'}, {materia: 'FISICA'}, {materia: 'GEOGRAFICA'}, {materia: 'FILOSOFIA'}];
 			return s;
 		}).filter(p => p.can_show == true);
 	}
@@ -91,7 +110,8 @@
 		{ name: 'griglia_pdp_c2_done', type: 'boolean', display: 'Patto Educativo', search: true },
 		{ name: 'griglia_pdp_b_done', type: 'boolean', display: 'Griglia Abilità', search: true },
 		{ name: 'materie_col', type: 'string', display: 'Materie Complete', size: 10 },
-		{ name: 'can_print', type: 'boolean', display: 'PDP Completo', search: true }
+		//{ name: 'materie_mancanti', type: 'array', subtype: 'object', key: 'materia', display: 'Materie Mancanti', size: 10 },
+    { name: 'can_print', type: 'boolean', display: 'PDP Completo', search: true }
 	]}
 	page_size={10}
 	rows={pdp_studenti}
