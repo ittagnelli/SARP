@@ -77,7 +77,9 @@ const getInsegnamentiOfDocente = async (idDocente) => {
         where: {
             idDocente: idDocente, 
             anno: get_as(),
-            titolare: true
+            // titolare: true
+            titolare: true,
+            materia: { has_pdp: true } // escludo le materie senza PDP (es. Religione, Scienze Motorie)
         },
         select: {
             idClasse: true,
@@ -92,7 +94,8 @@ const getInsegnamentiOfDocente = async (idDocente) => {
         ]
     });
 
-    if(insegnamenti.length == 0) throw new Error(`Non ci sono insegnamenti per il docente [${idDocente}]`);
+    // if(insegnamenti.length == 0) throw new Error(`Non ci sono insegnamenti per il docente [${idDocente}]`);
+    // lista vuota ammessa: il docente può insegnare solo materie senza PDP (has_pdp = false)
     return insegnamenti;
 }
 
@@ -309,6 +312,12 @@ export async function load({ locals }) {
 
         //trova insegnamenti del docente
         const insegnamenti = await getInsegnamentiOfDocente(idDocente);
+
+        //nessun insegnamento con PDP: niente da compilare
+        if(insegnamenti.length == 0) {
+            const { pdpTemplates, obiettiviMinTemplates } = await getTemplatesOfDocente(idDocente);
+            return { pdp: [], pdpTemplates, obiettiviMinTemplates };
+        }
 
         //determino le classi in cui il docente insegna
         const classiIds = Array.from(new Set(insegnamenti.map(item => item.idClasse)))

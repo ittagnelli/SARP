@@ -84,8 +84,11 @@ export async function load({ locals }) {
 
             const insegnamenti = await SARP.Insegnamenti.findMany({
                 where: {
-                  anno: get_as()
-                }
+                  // anno: get_as()
+                  anno: get_as(),
+                  materia: { has_pdp: true } // escludo le materie senza PDP (es. Religione, Scienze Motorie)
+                },
+                include: {materia: true}
             });
 
             return {
@@ -204,7 +207,9 @@ export const actions = {
             const insegnamenti = await SARP.Insegnamenti.findMany({
                 where: {
                   anno: get_as(),
-                  idClasse: studente.classeId
+                  // idClasse: studente.classeId
+                  idClasse: studente.classeId,
+                  materia: { has_pdp: true } // escludo le materie senza PDP anche dal documento generato
                 },
                 include: {
                   materia: true,
