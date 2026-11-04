@@ -1,16 +1,23 @@
 <script>
 	import Table from '$lib/components/common/table.svelte';
-	import { page_action_title, page_title, page_pre_title, page_action_modal } from '$js/store';
+	// import { page_action_title, page_title, page_pre_title, page_action_modal } from '$js/store';
+	import { page_action_title, page_title, page_pre_title, page_action_modal, page_header_link } from '$js/store';
 	import { saveAs } from 'file-saver';
-	import { onMount } from 'svelte';
+	// import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 	import * as helper from '$js/helper';
 	import { construct_svelte_component, identity } from 'svelte/internal';
+	// import { statoPdpStudente, PDP_COMPLETO, PDP_MAI_SALVATO } from '$js/pdp_status';
+	import { statoPdpStudente, PDP_COMPLETO } from '$js/pdp_status';
 
 	/* Page properties */
 	$page_action_title = '';
 	$page_pre_title = 'PDP';
 	$page_title = 'Generazione Documenti';
 	$page_action_modal = 'modal-template';
+	// pulsante download report Excel nell'header, accanto al titolo (generato da ./report/+server.js)
+	$page_header_link = { href: '/pdp/genera_pdp/report', title: 'Scarica report Excel', icon: 'file-spreadsheet' };
+	onDestroy(() => ($page_header_link = null)); // non deve restare visibile nelle altre pagine
 
 	export let data;
 	export let form;
@@ -45,12 +52,13 @@
 
 	function is_pdp_complete(studenti) {
 
-  let stu = studenti[0]
-    console.log(stu)
-    let cid = stu.classe.id
-    console.log(insegnamenti.filter(insegnamento => insegnamento.idClasse == cid))
-    let meterieCompleteId = getMaterieComplete(stu)
-    console.log(meterieCompleteId)
+  // codice di debug: rompeva la pagina se non ci sono studenti (studenti[0] undefined)
+  // let stu = studenti[0]
+  //   console.log(stu)
+  //   let cid = stu.classe.id
+  //   console.log(insegnamenti.filter(insegnamento => insegnamento.idClasse == cid))
+  //   let meterieCompleteId = getMaterieComplete(stu)
+  //   console.log(meterieCompleteId)
 
 
 		return studenti.map((s, i) => {
@@ -59,17 +67,22 @@
 			s['sintesi_vocale'] = s.pdp.some((i) => i.sintesi_vocale == true);
 			s['tempo_esteso'] = s.pdp.some((i) => i.tempo_esteso == true);
 
+      //stato PDP per ogni insegnamento della classe (regola condivisa in $js/pdp_status.js)
+      const stato_insegnamenti = statoPdpStudente(s, insegnamenti);
+
       //ora il totale materie sonoo quelle insegnate (vedi insegnamenti)
-      let tot_materie = countMaterieClasse(s.classe.id);
+      // let tot_materie = countMaterieClasse(s.classe.id);
+      let tot_materie = stato_insegnamenti.length;
 
       //se tot materie è 0 allora non visualizzare pdp
       s['can_show'] = tot_materie > 0;
-      
+
       //ora le materie complete sono le entry nel PDP la cui materia è nella lista delle materie dello studente associata al docente dell'anno
-      let materie_complete = s.pdp.filter(p => 
-          p.completo == true &&
-          pdpMatchInsegnamenti(p.idDocente, p.idMateria, s.classe.id) == true
-      ).length;
+      // let materie_complete = s.pdp.filter(p =>
+      //     p.completo == true &&
+      //     pdpMatchInsegnamenti(p.idDocente, p.idMateria, s.classe.id) == true
+      // ).length;
+      let materie_complete = stato_insegnamenti.filter(si => si.stato == PDP_COMPLETO).length;
 
 			s['materie_col'] = `${materie_complete}/${tot_materie}`;
 			s['can_print'] =
@@ -77,6 +90,12 @@
 				tot_materie > 0 //posso stampare solo se ci sono tutte le materi e sono >0
 
      //s['materie_mancanti'] = [{materia: 'MATE'}, {materia: 'FISICA'}, {materia: 'GEOGRAFICA'}, {materia: 'FILOSOFIA'}];
+      //materie il cui PDP non è completo, con il docente che lo deve completare
+      s['materie_mancanti'] = stato_insegnamenti
+        .filter(si => si.stato != PDP_COMPLETO)
+        // .map(si => ({ materia: `${si.materia} (${si.docente})${si.stato == PDP_MAI_SALVATO ? ' *' : ''}` }));
+        // .map(si => ({ materia: `${si.materia}${si.stato == PDP_MAI_SALVATO ? ' *' : ''}` })); //solo materia: con il docente l'etichetta era poco leggibile
+        .map(si => ({ materia: si.materia })); //non completo o mai salvato: per chi consulta la pagina è comunque un PDP da completare
 			return s;
 		}).filter(p => p.can_show == true);
 	}
@@ -90,6 +109,17 @@
 		}
 	});
 </script>
+
+<!-- report Excel con lo stato dei PDP di tutti gli studenti BES (generato da ./report/+server.js) -->
+<!-- <div class="d-flex justify-content-between align-items-center mb-3"> -->
+<!-- <small class="text-muted">Materie Mancanti: * = PDP mai salvato dal docente</small> -->
+<!-- <div class="d-flex justify-content-end align-items-center mb-3"> -->
+<!-- 	<a href="/pdp/genera_pdp/report" class="btn btn-primary" data-sveltekit-reload download> -->
+<!-- 		<i class="ti ti-file-spreadsheet icon" /> -->
+<!-- 		Scarica report Excel -->
+<!-- 	</a> -->
+<!-- </div> -->
+<!-- il pulsante "Scarica report Excel" è ora nell'header della pagina (vedi $page_header_link) -->
 
 <Table
 	columns={[
@@ -111,6 +141,8 @@
 		{ name: 'griglia_pdp_b_done', type: 'boolean', display: 'Griglia Abilità', search: true },
 		{ name: 'materie_col', type: 'string', display: 'Materie Complete', size: 10 },
 		//{ name: 'materie_mancanti', type: 'array', subtype: 'object', key: 'materia', display: 'Materie Mancanti', size: 10 },
+		// { name: 'materie_mancanti', type: 'array', subtype: 'object', key: 'materia', display: 'Materie Mancanti', size: 10, color: 'orange' },
+		{ name: 'materie_mancanti', type: 'array', subtype: 'object', key: 'materia', display: 'Materie Mancanti', size: 10, color: 'orange', wrap: 20 },
     { name: 'can_print', type: 'boolean', display: 'PDP Completo', search: true }
 	]}
 	page_size={10}

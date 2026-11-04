@@ -286,7 +286,11 @@ onMount(async () => {
                                 <td class="sort-{col}" valign="middle">
                                     <div class="badges-list badge-container">
                                         {#each row[col] as item }
-                                        <span class="badge bg-green">
+                                        <!-- <span class="badge bg-green"> -->
+                                        <!-- <span class="badge bg-{columns[i].color || 'green'}"> -->
+                                        <!-- wrap: se impostato, le etichette più lunghe di wrap caratteri vanno a capo -->
+                                        <span class="badge bg-{columns[i].color || 'green'}"
+                                            class:badge-multiline={columns[i].wrap && String(item[columns[i].key] ?? '').length > columns[i].wrap}>
                                             <b>{item[columns.filter((item) => item.name == col)[0].key]}</b>
                                         </span>
                                         {/each}
@@ -497,5 +501,12 @@ a {
 
 .wrap {
   text-wrap: wrap;
+}
+
+/* etichetta su più righe (opzione colonna wrap) */
+.badge-multiline {
+  white-space: normal;
+  text-align: left;
+  line-height: 1.3;
 }
 </style>

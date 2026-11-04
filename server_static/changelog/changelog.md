@@ -1,3 +1,24 @@
+## v5.0.8 - 04 Novembre 2026
+
+- PDP Alunni: aggiunto pulsante "Scarica report Excel" nell'header della pagina (visibile ad ADMIN e TUTOR-BES)
+- il report contiene lo stato dei PDP di tutti gli studenti BES per l'anno scolastico corrente: Dettaglio (studente/materia/docente/stato), Riepilogo studenti, Riepilogo docenti con l'elenco dei PDP da completare, Note
+- stati PDP nel report: COMPLETO, NON COMPLETO, MAI SALVATO
+- PDP Alunni: completata la colonna Materie Mancanti con l'elenco delle materie il cui PDP non è ancora completo
+- le etichette delle materie con nome lungo vanno a capo su più righe
+- calcolo dello stato PDP spostato in un modulo condiviso (pdp_status.js), usato sia dalla pagina che dal report
+- risolto bug che bloccava PDP Alunni in assenza di studenti BES (codice di debug rimosso)
+- Table: aggiunte opzioni colore e testo a capo per le colonne con etichette
+- Layout: possibilità di aggiungere un pulsante di download nell'header della pagina
+- aggiunta dipendenza exceljs (eseguire npm install sul server)
+
+## v5.0.7 - 03 Novembre 2026
+
+- esclusi gli insegnamenti di materie con has_pdp = false (es. Religione, Scienze Motorie) dal conteggio materie in PDP Alunni e dal documento PDP generato
+- esclusi gli stessi insegnamenti dalla sezione PDP Docenti
+- un docente senza materie con PDP vede ora una tabella vuota invece di un errore
+- PDP Alunni: bozza colonna Materie Mancanti
+- aggiornato template documento PDP
+
 ## v5.0.6 - 30 Ottobre 2026
 
 - aggiunto memorizzazione pagina corrente sezione PDP Docenti

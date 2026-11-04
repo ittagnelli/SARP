@@ -1,6 +1,6 @@
 {
 	"name": "sarp",
-	"version": "5.0.7",
+	"version": "5.0.8",
 	"private": true,
 	"scripts": {
 		"dev": "npm run policy && vite dev",
@@ -46,6 +46,7 @@
 		"ascii-text-generator": "^1.0.5",
 		"axios": "^1.2.2",
 		"docxtemplater": "^3.32.4",
+		"exceljs": "^4.4.0",
 		"file-saver": "^2.0.5",
 		"form-data": "^4.0.0",
 		"pdf-merger-js": "^4.2.0",

@@ -1,5 +1,6 @@
 <script>
-	import { page_pre_title, page_title, page_action_title, page_action_modal } from '$js/store';
+	// import { page_pre_title, page_title, page_action_title, page_action_modal } from '$js/store';
+	import { page_pre_title, page_title, page_action_title, page_action_modal, page_header_link } from '$js/store';
 	import Footer from '$lib/components/layout/footer.svelte';
 	import Navbar from '$lib/components/layout/nav_bar.svelte';
 	import NavItem from '$lib/components/layout/nav_item.svelte';
@@ -128,9 +129,23 @@
 								{$page_title}
 							</h2>
 						</div>
-						{#if $page_action_title}
+						<!-- {#if $page_action_title} -->
+						{#if $page_action_title || $page_header_link}
 							<div class="col-12 col-md-auto ms-auto d-print-none">
 								<div class="btn-list">
+									{#if $page_header_link}
+										<!-- link impostato dalla pagina (es. download report) -->
+										<a
+											href={$page_header_link.href}
+											class="btn btn-primary d-none d-sm-inline-block"
+											data-sveltekit-reload
+											download
+										>
+											<i class="ti ti-{$page_header_link.icon || 'download'} icon" />
+											{$page_header_link.title}
+										</a>
+									{/if}
+									{#if $page_action_title}
 									<a
 										href="/"
 										class="btn btn-primary d-none d-sm-inline-block"
@@ -141,6 +156,7 @@
 										<i class="ti ti-plus icon" />
 										{$page_action_title}
 									</a>
+									{/if}
 								</div>
 							</div>
 						{/if}

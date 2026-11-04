@@ -88,7 +88,11 @@ export async function load({ locals }) {
                   anno: get_as(),
                   materia: { has_pdp: true } // escludo le materie senza PDP (es. Religione, Scienze Motorie)
                 },
-                include: {materia: true}
+                // include: {materia: true}
+                include: {
+                    materia: true,
+                    docente: { select: { id: true, nome: true, cognome: true, email: true } } // per la colonna Materie Mancanti
+                }
             });
 
             return {
