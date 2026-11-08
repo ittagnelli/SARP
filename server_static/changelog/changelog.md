@@ -3,6 +3,7 @@
 - Sicurezza sul Lavoro / Corsi: durante la generazione degli attestati compare un messaggio di attesa che si chiude automaticamente al termine dei download
 - la generazione degli attestati non ricarica più la pagina ed è più veloce (circa 15 secondi per 27 attestati)
 - risolto crash del server per memoria esaurita nella generazione degli attestati di corsi con molti studenti (file ora inviati in base64)
+- anche la stampa del modulo presenze mostra il messaggio di attesa e non ricarica più la pagina
 
 ## v5.0.9 - 08 Novembre 2026
 

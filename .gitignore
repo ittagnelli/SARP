@@ -32,6 +32,9 @@ utils/security/endpoints.txt
 # Temp files from upload
 tmp/
 
+# File temporaneo della generazione programmazione annuale
+server_static/programmazione_annuale_template/_tmp_programmazione.docx
+
 # Generated files from Excel to Prisma
 utils/scripts/*.txt
 

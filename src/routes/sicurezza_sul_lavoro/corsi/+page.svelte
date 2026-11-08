@@ -29,8 +29,9 @@
 	let classi = helper.data2arr(data.classi);
 	let classi_iscritte = [];
 	let old_studenti = [];
-	let form_presenze;
-	let idCorso;
+	// let form_presenze;
+	// let idCorso;
+	let generate_what = 'gli attestati di sicurezza per gli studenti del corso'; // testo del modale di attesa
 
 	classi = helper.db_to_select(classi);
 
@@ -279,8 +280,12 @@
 		// let studenti = corso.seguitoDa.map(s => s.id);
 		// set the id of the classes to print
 		// send the hidden form
-		idCorso.value = id;
-		form_presenze.submit();
+		// idCorso.value = id;
+		// form_presenze.submit();
+		let formdata = new FormData();
+		formdata.append('idCorso', id);
+		generate_what = 'il modulo presenze del corso';
+		await generate_files('/sicurezza_sul_lavoro/corsi?/pdf_presenze', formdata, 'il modulo presenze');
 	}
 
 	// feedback all'utente durante la generazione degli attestati (può durare 30/45 secondi).
@@ -291,13 +296,29 @@
 		if (e.target?.getAttribute('id') != 'form-pdf') return;
 		e.preventDefault();
 
+		let formdata = new FormData();
+		formdata.append('id', e.submitter?.value);
+		generate_what = 'gli attestati di sicurezza per gli studenti del corso';
+		await generate_files(e.target.action, formdata, 'gli attestati');
+	}
+
+	// chiama via fetch un'action che restituisce { files: [{ file (base64), name }] },
+	// mostra il modale di attesa e lo chiude dopo aver salvato tutti i file
+	async function generate_files(action_url, formdata, what) {
 		const generate_modal = helper.get_modal('generate_modal');
+		// Bootstrap ignora hide() se l'animazione di apertura è ancora in corso (generazioni veloci,
+		// es. modulo presenze): prima di chiudere aspettiamo che il modale sia completamente aperto
+		const modal_shown = new Promise((resolve) =>
+			document.getElementById('generate_modal')?.addEventListener('shown.bs.modal', resolve, { once: true })
+		);
+		const close_modal = async () => {
+			await modal_shown;
+			generate_modal.hide();
+		};
 		generate_modal.show();
 
 		try {
-			let formdata = new FormData();
-			formdata.append('id', e.submitter?.value);
-			const res = await fetch(e.target.action, {
+			const res = await fetch(action_url, {
 				method: 'POST',
 				headers: { accept: 'application/json' },
 				body: formdata
@@ -312,17 +333,17 @@
 					saveAs(blob, doc.name);
 					await helper.delay(100); //chrome can download max 10 files at the time
 				}
-				generate_modal.hide();
+				await close_modal();
 			} else {
 				throw new Error(`risposta action: ${result.type} ${result.status ?? ''}`);
 			}
 		} catch (err) {
-			logger.error(`Errore nella generazione attestati sicurezza: ${err}`);
-			generate_modal.hide();
+			logger.error(`Errore nella generazione di ${what} sicurezza: ${err}`);
+			await close_modal();
 			helper.mbox_show(
 				'danger',
 				'Errore',
-				'Non è stato possibile generare gli attestati per questo corso.',
+				`Non è stato possibile generare ${what} per questo corso.`,
 				3000
 			);
 		}
@@ -509,6 +530,7 @@
 
 <!-- huge workaround since due to a bug in undici cannot send formData with POST
 so having an hidden form used to trigger the backend action to generate document creation -->
+<!-- sostituito da generate_files() via fetch (v5.0.11)
 <form
 	bind:this={form_presenze}
 	id="form-presenze"
@@ -517,6 +539,7 @@ so having an hidden form used to trigger the backend action to generate document
 >
 	<input bind:this={idCorso} type="hidden" id="idCorso" name="idCorso" value="0" />
 </form>
+-->
 
 <!-- modale di attesa durante la generazione degli attestati -->
 <div
@@ -534,8 +557,8 @@ so having an hidden form used to trigger the backend action to generate document
 			<div class="modal-body text-center py-4">
 				<div class="spinner-border text-primary mb-3" role="status" />
 				<div class="text-muted">
-					Sto generando gli attestati di sicurezza per gli studenti del corso.<br />
-					L'operazione può richiedere fino a un minuto: solo un attimo di pazienza!!!
+					Sto generando {generate_what}.<br />
+					Solo un attimo di pazienza!!!
 				</div>
 			</div>
 		</div>

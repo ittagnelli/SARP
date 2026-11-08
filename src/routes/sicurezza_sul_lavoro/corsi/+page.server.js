@@ -304,7 +304,8 @@ export const actions = {
             });
 
             return_files.push({
-                file: JSON.stringify(buf),
+                // file: JSON.stringify(buf),
+                file: buf.toString('base64'), // base64, letto da generate_files() lato client
                 name: `registro_presenze_${corso?.tipo}.docx`
             });
             logger.info('Generato registro presenze');
