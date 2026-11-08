@@ -229,7 +229,10 @@ export const actions = {
                 });
 
                 return_files.push({
-                    file: JSON.stringify(buf),
+                    // file: JSON.stringify(buf),
+                    // base64: JSON.stringify di un Buffer produce un array di numeri (~4 caratteri per byte)
+                    // che, serializzato da SvelteKit nella risposta fetch, fa esaurire la memoria a node
+                    file: buf.toString('base64'),
                     name: `attestato_corso_${corso.tipo}_${studente.cognome}_${studente.nome}.docx`.replace(" ", "_")
                 });
                 logger.info(`Generato attestato corso sicurezza per ${studente.cognome}_${studente.nome}`);

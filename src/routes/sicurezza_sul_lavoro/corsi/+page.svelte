@@ -16,6 +16,7 @@
 	import { Logger } from '../../../js/logger';
 	import { onMount } from 'svelte';
 	import { saveAs } from 'file-saver';
+	import { deserialize } from '$app/forms';
 	import MessageBox from '$lib/components/common/message_box.svelte';
 
 	let logger = new Logger('client');
@@ -281,10 +282,56 @@
 		idCorso.value = id;
 		form_presenze.submit();
 	}
+
+	// feedback all'utente durante la generazione degli attestati (può durare 30/45 secondi).
+	// Intercettiamo il submit del form "form-pdf" della Table e chiamiamo l'action ?/pdf via fetch
+	// (come in programmazione/classe), così il modale resta aperto fino al salvataggio di tutti i file
+	async function generate_attestati(e) {
+		// NB: non usare e.target.id, il pulsante del form si chiama name="id" e "oscura" la proprietà id del form
+		if (e.target?.getAttribute('id') != 'form-pdf') return;
+		e.preventDefault();
+
+		const generate_modal = helper.get_modal('generate_modal');
+		generate_modal.show();
+
+		try {
+			let formdata = new FormData();
+			formdata.append('id', e.submitter?.value);
+			const res = await fetch(e.target.action, {
+				method: 'POST',
+				headers: { accept: 'application/json' },
+				body: formdata
+			});
+			const result = deserialize(await res.text());
+
+			if (result.type == 'success' && result.data?.files) {
+				for (let doc of result.data.files) {
+					// il server restituisce il file in base64
+					const buffer = Uint8Array.from(atob(doc.file), (c) => c.charCodeAt(0));
+					var blob = new Blob([buffer], { type: 'application/msword' });
+					saveAs(blob, doc.name);
+					await helper.delay(100); //chrome can download max 10 files at the time
+				}
+				generate_modal.hide();
+			} else {
+				throw new Error(`risposta action: ${result.type} ${result.status ?? ''}`);
+			}
+		} catch (err) {
+			logger.error(`Errore nella generazione attestati sicurezza: ${err}`);
+			generate_modal.hide();
+			helper.mbox_show(
+				'danger',
+				'Errore',
+				'Non è stato possibile generare gli attestati per questo corso.',
+				3000
+			);
+		}
+	}
 </script>
 
 <MessageBox />
 
+<div on:submit={generate_attestati}>
 <Table
 	columns={[
 		{ name: 'id', type: 'hidden', display: 'ID' },
@@ -313,6 +360,7 @@
 	]}
 	on:custom_action={custom_action_handler}
 />
+</div>
 <!-- custom_actions={[{action: 'view', icon: 'eye'}, {action: 'issue', icon:'checklist'}]} -->
 
 <!-- Modal from Page action -->
@@ -469,3 +517,27 @@ so having an hidden form used to trigger the backend action to generate document
 >
 	<input bind:this={idCorso} type="hidden" id="idCorso" name="idCorso" value="0" />
 </form>
+
+<!-- modale di attesa durante la generazione degli attestati -->
+<div
+	class="modal modal-blur fade"
+	id="generate_modal"
+	tabindex="-1"
+	role="dialog"
+	aria-hidden="true"
+	data-bs-backdrop="static"
+	data-bs-keyboard="false"
+>
+	<div class="modal-dialog modal-sm modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-status bg-primary" />
+			<div class="modal-body text-center py-4">
+				<div class="spinner-border text-primary mb-3" role="status" />
+				<div class="text-muted">
+					Sto generando gli attestati di sicurezza per gli studenti del corso.<br />
+					L'operazione può richiedere fino a un minuto: solo un attimo di pazienza!!!
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
