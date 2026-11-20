@@ -284,7 +284,10 @@ export const actions = {
                     argomenti_q1: p.obiettivi_minimi ? JSON.parse(p.obiettivi_minimi)[0] : [], //issue-620
                     argomenti_q2: p.obiettivi_minimi ? JSON.parse(p.obiettivi_minimi)[1] : []
                 };
-              
+
+                if(studente.obiettivi_minimi == false)
+                  materia.has_obiettivi_minimi = '';
+
                 let firma = { materia: materia.materia, docente: materia.docente };
                 materie.push(materia);
                 firme.push(firma);
